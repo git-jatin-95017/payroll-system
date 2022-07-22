@@ -41,4 +41,21 @@
 
 @push('page_scripts')
 	{!! $html->scripts() !!}
+	<script>
+		$('#dataTableBuilder').on('click', '.btn-delete[data-remote]', function (e) { 
+		    e.preventDefault();		     
+		    var url = $(this).data('remote');
+		    // confirm then
+		    if (confirm('Are you sure you want to delete this?')) {
+		        $.ajax({
+		            url: url,
+		            type: 'DELETE',
+		            dataType: 'json',
+		            data: {method: '_DELETE', submit: true, "_token": "{{ csrf_token() }}",}
+		        }).always(function (data) {
+		            $('#dataTableBuilder').DataTable().draw(true);
+		        });
+		    }
+		});
+	</script>
 @endpush

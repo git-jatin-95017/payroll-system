@@ -34,30 +34,27 @@ class LocationPriceSampleController extends Controller
 			$data = LocationPriceSample::select('*');
 			return Datatables::of($data)
 					->addIndexColumn()
-					// ->addColumn('action', function($row){
-
-					//         $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">Delete</a>';
-
-					//         return $btn;
-					// })
+					->addColumn('action', function ($row) {
+		                return '<button data-remote="/admin/location-price/'.$row->id.'" class="btn btn-sm btn-danger btn-delete">Delete</button >';
+		            })
 					->rawColumns(['action'])
 					->make(true);
 		}
 
 		$html = $builder->columns([
+				['data' => 'action', 'footer' => 'Action'],
 				['data' => 'id', 'footer' => 'Id'],
-				['data' => 'location_codes', 'footer' => 'location_codes'],
-				['data' => 'item_codes', 'footer' => 'item_codes'],
-				['data' => 'zip_codes', 'footer' => 'zip_codes'],
-				['data' => 'product', 'footer' => 'product'],
-				['data' => 'price', 'footer' => 'price'],
-				['data' => 'currency_code', 'footer' => 'currency_code'],
-				['data' => 'amount', 'footer' => 'amount'],
-				['data' => 'units', 'footer' => 'units'],
-				['data' => 'website', 'footer' => 'website'],
-				['data' => 'store', 'footer' => 'store'],
-				['data' => 'store_address', 'footer' => 'store_address'],
-				['data' => 'address', 'footer' => 'address'],
+				['data' => 'location_codes', 'footer' => 'Location Codes'],
+				['data' => 'item_codes', 'footer' => 'Item Codes'],
+				['data' => 'zip_codes', 'footer' => 'Zip Codes'],
+				['data' => 'product', 'footer' => 'Product'],
+				['data' => 'price', 'footer' => 'Price'],
+				['data' => 'currency_code', 'footer' => 'Currency Code'],
+				['data' => 'amount', 'footer' => 'Amount'],
+				['data' => 'units', 'footer' => 'Units'],
+				['data' => 'website', 'footer' => 'Website'],
+				['data' => 'store', 'footer' => 'Store'],
+				['data' => 'store_address', 'footer' => 'Store Address'],
 				['data' => 'created_at', 'footer' => 'Created At'],
 				['data' => 'updated_at', 'footer' => 'Updated At'],
 			])->parameters([
@@ -141,7 +138,10 @@ class LocationPriceSampleController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($id)
-	{
-		//
-	}
+    {
+        $code = LocationPriceSample::find($id);
+        $code->delete();
+
+        return true;
+    }
 }

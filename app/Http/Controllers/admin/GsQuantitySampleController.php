@@ -34,27 +34,25 @@ class GsQuantitySampleController extends Controller
             $data = GsQuantitySample::select('*');
             return Datatables::of($data)
                     ->addIndexColumn()
-                    // ->addColumn('action', function($row){
-       
-                    //         $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">Delete</a>';
-      
-                    //         return $btn;
-                    // })
+                    ->addColumn('action', function ($row) {
+                        return '<button data-remote="/admin/gs-quantity/'.$row->id.'" class="btn btn-sm btn-danger btn-delete">Delete</button >';
+                    })
                     ->rawColumns(['action'])
                     ->make(true);
         }
 
         $html = $builder->columns([
+                ['data' => 'action', 'footer' => 'Action'],
                 ['data' => 'id', 'footer' => 'Id'],
-                ['data' => 'location_codes', 'footer' => 'location_codes'],
-                ['data' => 'item_codes', 'footer' => 'item_codes'],
-                ['data' => 'quantities', 'footer' => 'quantities'],                              
+                ['data' => 'location_codes', 'footer' => 'Location Codes'],
+                ['data' => 'item_codes', 'footer' => 'Item Codes'],
+                ['data' => 'quantities', 'footer' => 'Quantities'],                              
                 ['data' => 'created_at', 'footer' => 'Created At'],
                 ['data' => 'updated_at', 'footer' => 'Updated At'],
             ])->parameters([
                 // 'responsive' => true,
-                'autoWidth' => true,
-                'scrollX' =>true,
+                // 'autoWidth' => true,
+                // 'scrollX' =>true,
                 "scrollY"=> "400px",
             ]);
 
@@ -133,6 +131,9 @@ class GsQuantitySampleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $code = GsQuantitySample::find($id);
+        $code->delete();
+
+        return true;
     }
 }

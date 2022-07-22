@@ -34,28 +34,26 @@ class GsCodeSampleController extends Controller
             $data = GsCodeSample::select('*');
             return Datatables::of($data)
                     ->addIndexColumn()
-                    // ->addColumn('action', function($row){
-       
-                    //         $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">Delete</a>';
-      
-                    //         return $btn;
-                    // })
+                    ->addColumn('action', function ($row) {
+                        return '<button data-remote="/admin/gs-code/'.$row->id.'" class="btn btn-sm btn-danger btn-delete">Delete</button >';
+                    })
                     ->rawColumns(['action'])
                     ->make(true);
         }
 
         $html = $builder->columns([
+                ['data' => 'action', 'footer' => 'Action'],
                 ['data' => 'id', 'footer' => 'Id'],
-                ['data' => 'item_codes', 'footer' => 'item_codes'],
-                ['data' => 'master_item_codes', 'footer' => 'master_item_codes'],
-                ['data' => 'final_item', 'footer' => 'final_item'],
-                ['data' => 'component_items', 'footer' => 'component_items'],
-                ['data' => 'category', 'footer' => 'category'],
-                ['data' => 'store_type', 'footer' => 'store_type'],
-                ['data' => 'details', 'footer' => 'details'],                
-                ['data' => 'standard_amounts', 'footer' => 'standard_amounts'],  
-                ['data' => 'standard_units', 'footer' => 'standard_units'],  
-                ['data' => 'unit_type', 'footer' => 'unit_type'],  
+                ['data' => 'item_codes', 'footer' => 'Item Codes'],
+                ['data' => 'master_item_codes', 'footer' => 'Master Item Codes'],
+                ['data' => 'final_item', 'footer' => 'Final Item'],
+                ['data' => 'component_items', 'footer' => 'Component Items'],
+                ['data' => 'category', 'footer' => 'Category'],
+                ['data' => 'store_type', 'footer' => 'Store Type'],
+                ['data' => 'details', 'footer' => 'Details'],                
+                ['data' => 'standard_amounts', 'footer' => 'Standard Amounts'],  
+                ['data' => 'standard_units', 'footer' => 'Standard Units'],  
+                ['data' => 'unit_type', 'footer' => 'Unit Type'],  
                 ['data' => 'created_at', 'footer' => 'Created At'],
                 ['data' => 'updated_at', 'footer' => 'Updated At'],
             ])->parameters([
@@ -140,6 +138,9 @@ class GsCodeSampleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $code = GsCodeSample::find($id);
+        $code->delete();
+
+        return true;
     }
 }

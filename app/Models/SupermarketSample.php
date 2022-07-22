@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SupermarketSample extends Model
 {
     use HasFactory;
-
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -27,4 +27,13 @@ class SupermarketSample extends Model
         'number_of_units',
         'final_units',
     ];
+
+    public function getCreatedAtAttribute($date){
+        return date('Y-m-d H:i:s', strtotime($date));
+    }
+    
+    public function getUpdatedAtAttribute($date)
+    {
+        return date('Y-m-d H:i:s', strtotime($date));
+    }
 }

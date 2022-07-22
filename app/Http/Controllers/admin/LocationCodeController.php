@@ -34,17 +34,15 @@ class LocationCodeController extends Controller
 			$data = LocationCode::select('*');
 			return Datatables::of($data)
 					->addIndexColumn()
-					// ->addColumn('action', function($row){
-	   
-					//         $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">Delete</a>';
-	  
-					//         return $btn;
-					// })
-					->rawColumns(['action'])
+					->addColumn('action', function ($row) {
+		                return '<button data-remote="/admin/location-codes/'.$row->id.'" class="btn btn-sm btn-danger btn-delete">Delete</button >';
+		            })
+					->rawColumns(['action'])			
 					->make(true);
 		}
 
 		$html = $builder->columns([
+				['data' => 'action', 'footer' => 'Action'],
 				['data' => 'id', 'footer' => 'Id'],
 				['data' => 'location_codes', 'footer' => 'Location Codes'],
 				['data' => 'city', 'footer' => 'City'],
@@ -146,7 +144,10 @@ class LocationCodeController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($id)
-	{
-		//
-	}
+    {
+        $code = LocationCode::find($id);
+        $code->delete();
+
+        return true;
+    }
 }

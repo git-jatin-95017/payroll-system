@@ -34,26 +34,24 @@ class NationalSampleController extends Controller
             $data = NationalSample::select('*');
             return Datatables::of($data)
                     ->addIndexColumn()
-                    // ->addColumn('action', function($row){
-       
-                    //         $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">Delete</a>';
-      
-                    //         return $btn;
-                    // })
+                    ->addColumn('action', function ($row) {
+                        return '<button data-remote="/admin/national-data/'.$row->id.'" class="btn btn-sm btn-danger btn-delete">Delete</button >';
+                    })
                     ->rawColumns(['action'])
                     ->make(true);
         }
 
         $html = $builder->columns([
+                ['data' => 'action', 'footer' => 'Action'],
                 ['data' => 'id', 'footer' => 'Id'],
-                ['data' => 'location_codes', 'footer' => 'location_codes'],
-                ['data' => 'item_codes', 'footer' => 'item_codes'],
-                ['data' => 'product', 'footer' => 'product'],
-                ['data' => 'price', 'footer' => 'price'],
-                ['data' => 'currency', 'footer' => 'currency'],               
-                ['data' => 'website', 'footer' => 'website'],
-                ['data' => 'store', 'footer' => 'store'],
-                ['data' => 'notes', 'footer' => 'notes'],
+                ['data' => 'location_codes', 'footer' => 'Location Codes'],
+                ['data' => 'item_codes', 'footer' => 'Item Codes'],
+                ['data' => 'product', 'footer' => 'Product'],
+                ['data' => 'price', 'footer' => 'Price'],
+                ['data' => 'currency', 'footer' => 'Currency'],               
+                ['data' => 'website', 'footer' => 'Website'],
+                ['data' => 'store', 'footer' => 'Store'],
+                ['data' => 'notes', 'footer' => 'Notes'],
                 ['data' => 'created_at', 'footer' => 'Created At'],
                 ['data' => 'updated_at', 'footer' => 'Updated At'],
             ])->parameters([
@@ -138,6 +136,9 @@ class NationalSampleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $code = NationalSample::find($id);
+        $code->delete();
+
+        return true;
     }
 }

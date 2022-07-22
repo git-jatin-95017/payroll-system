@@ -12,6 +12,10 @@ use App\Http\Controllers\admin\NationalSampleController;
 use App\Http\Controllers\admin\PropertyTaxSampleController;
 use App\Http\Controllers\admin\SaleTaxSampleController;
 use App\Http\Controllers\admin\SupermarketSampleController;
+use App\Http\Controllers\admin\HousingFinalPriceController;
+use App\Http\Controllers\admin\HousingFinalPriceCountryController;
+use App\Http\Controllers\admin\GsRawPriceController;
+use App\Http\Controllers\admin\GsCleanedPriceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +32,8 @@ Route::get('/', function () {
 	return view('auth.login');
 });
 
+Route::get('sample-download/{file}', [App\Http\Controllers\admin\DashboardController::class, 'downloadSample'])->name('download-sample');
+
 Route::prefix('admin')->group(function () {
 	//Dashboard
 	Route::get('dashboard', [App\Http\Controllers\admin\DashboardController::class, 'index'])->name('dashboard');
@@ -42,6 +48,12 @@ Route::prefix('admin')->group(function () {
 	Route::resource('property-tax', PropertyTaxSampleController::class);
 	Route::resource('sale-tax', SaleTaxSampleController::class);
 	Route::resource('super-market', SupermarketSampleController::class);
+
+	//ERD CALC
+	Route::resource('housing-final-prices', HousingFinalPriceController::class);
+	Route::resource('housing-final-prices-country', HousingFinalPriceCountryController::class);
+	Route::resource('gs-raw-prices', GsRawPriceController::class);
+	Route::resource('gs-cleaned-prices', GsCleanedPriceController::class);	
 
 });
 

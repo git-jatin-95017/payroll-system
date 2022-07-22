@@ -5,12 +5,12 @@
 		<div class="container-fluid">
 			<div class="row mb-2">
 				<div class="col-sm-6">
-					<h1 class="m-0">Super Market</h1>
+					<h1 class="m-0">Supermarket Prices</h1>
 				</div>
 				<div class="col-sm-6">
 					<ol class="breadcrumb float-sm-right">
 						<li class="breadcrumb-item"><a href="#">Home</a></li>
-						<li class="breadcrumb-item active">Super Market</li>
+						<li class="breadcrumb-item active">Supermarket Prices</li>
 					</ol>
 				</div>
 			</div>
@@ -20,6 +20,19 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-12">
+					@if (count($errors) > 0)
+					<div class="row">
+						<div class="col-md-8 col-md-offset-1">
+						<div class="alert alert-danger alert-dismissible">
+							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+							<h4><i class="icon fa fa-ban"></i> Error!</h4>
+							@foreach($errors->all() as $error)
+							{{ $error }} <br>
+							@endforeach      
+						</div>
+						</div>
+					</div>
+					@endif
 					@if(session('status'))
 						<div class="alert alert-success">
 							{{ session('status') }}
@@ -27,7 +40,7 @@
 					@endif
 					<div class="card">
 						<div class="card-header">
-							<h3 class="card-title">Super market Data</h3>
+							<h3 class="card-title">Supermarket Prices</h3>
 						</div>
 						<div class="card-body">
 							{!! $html->table(['class' => 'table table-bordered table-hover nowrap'], true) !!}
@@ -41,4 +54,21 @@
 
 @push('page_scripts')
 	{!! $html->scripts() !!}
+	<script>
+		$('#dataTableBuilder').on('click', '.btn-delete[data-remote]', function (e) { 
+		    e.preventDefault();		     
+		    var url = $(this).data('remote');
+		    // confirm then
+		    if (confirm('Are you sure you want to delete this?')) {
+		        $.ajax({
+		            url: url,
+		            type: 'DELETE',
+		            dataType: 'json',
+		            data: {method: '_DELETE', submit: true, "_token": "{{ csrf_token() }}",}
+		        }).always(function (data) {
+		            $('#dataTableBuilder').DataTable().draw(true);
+		        });
+		    }
+		});
+	</script>
 @endpush

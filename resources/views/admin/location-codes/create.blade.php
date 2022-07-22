@@ -18,19 +18,34 @@
     </div>
     <section class="content">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
+        	@error('file')
+				<div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+			@enderror
+            <div class="row">                
+				<div class="col-sm-6">
 				    <div class="card card-primary">
 				        <div class="card-header">
-				            <h3 class="card-title">Upload Location Code File</h3>
+				            <h3 class="card-title">Sample File Template</h3>
+				        </div>
+				       	<div class="card-body">
+				       		<div id="heading-links" class="card-header">
+				       			<p class="font-light">Click here <a href="{{ route('download-sample', 'Location_Codes_Sample_Data.xlsx')}}">Download Sample File - (Location_Codes_Sample_Data.xlsx)</a> to download the template that should be used to upload location codes into the system. Once you've downloaded the template, open MS Excel, add your location codes in and then use the form to the right to load them into the system. </p>
+				       		</div>
+				       	</div>
+				       	 <div class="card-footer">
+			                &nbsp;
+			            </div>
+				    </div>
+				</div>
+				<div class="col-sm-6">
+				    <div class="card card-primary">
+				        <div class="card-header">
+				            <h3 class="card-title">Upload Sample File</h3>
 				        </div>
 				        <form id="excel-csv-import-form" method="POST"  action="{{ route('location-codes.store') }}" accept-charset="utf-8" enctype="multipart/form-data">
 				        	@csrf
 				            <div class="card-body">
-				                <div class="form-group col-sm-6">
-					            	@error('file')
-										<div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-									@enderror			              
+				                <div class="form-group col-sm-6">					            				             
 				                    <label for="exampleInputFile">File</label>
 				                    <div class="input-group">
 				                        <div class="custom-file">

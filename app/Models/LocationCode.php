@@ -34,4 +34,13 @@ class LocationCode extends Model
         'iso_4217_numeric_Codes',
         'tax_codes'
     ];
+
+    public function getCreatedAtAttribute($date){
+        return date('Y-m-d H:i:s', strtotime($date));
+    }
+    
+    public function getUpdatedAtAttribute($date)
+    {
+        return date('Y-m-d H:i:s', strtotime($date));
+    }
 }

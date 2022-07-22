@@ -56,7 +56,7 @@
 		<a href="#" class="nav-link">
 			<i class="nav-icon fas fa-home"></i>
 			<p>
-			Housing Data
+			Housing Prices
 				<i class="right fas fa-angle-left"></i>
 			</p>
 		</a>
@@ -80,7 +80,7 @@
 		<a href="#" class="nav-link">
 			<i class="nav-icon fas fa-home"></i>
 			<p>
-			National Data
+			National Prices
 				<i class="right fas fa-angle-left"></i>
 			</p>
 		</a>
@@ -104,7 +104,7 @@
 		<a href="#" class="nav-link">
 			<i class="nav-icon fas fa-home"></i>
 			<p>
-			Expenditure Data
+			Expenditure
 				<i class="right fas fa-angle-left"></i>
 			</p>
 		</a>
@@ -129,7 +129,7 @@
 		<a href="#" class="nav-link">
 			<i class="nav-icon fas fa-home"></i>
 			<p>
-			GS Codes Data
+			GS Codes
 				<i class="right fas fa-angle-left"></i>
 			</p>
 		</a>
@@ -177,7 +177,7 @@
 		<a href="#" class="nav-link">
 			<i class="nav-icon fas fa-home"></i>
 			<p>
-			Location Price Data
+			Local Prices
 				<i class="right fas fa-angle-left"></i>
 			</p>
 		</a>
@@ -225,7 +225,7 @@
 		<a href="#" class="nav-link">
 			<i class="nav-icon fas fa-home"></i>
 			<p>
-			Sale Tax
+			Sales Tax
 				<i class="right fas fa-angle-left"></i>
 			</p>
 		</a>
@@ -249,7 +249,7 @@
 		<a href="#" class="nav-link">
 			<i class="nav-icon fas fa-home"></i>
 			<p>
-			Super Market
+			Supermarket Prices
 				<i class="right fas fa-angle-left"></i>
 			</p>
 		</a>
@@ -268,4 +268,108 @@
 			</li>
 		</ul>
 	</li>
+
+	<li class="nav-item">
+		<a href="#" class="nav-link">
+			<i class="nav-icon fas fa-home"></i>
+			<p>
+				ERD & Calculations
+				<i class="right fas fa-angle-left"></i>
+			</p>
+		</a>
+		<ul class="nav nav-treeview">
+			<li class="nav-item">
+			<a href="{{ route('housing-final-prices.index') }}" class="nav-link">
+				<i class="far fa-circle nav-icon"></i>
+				<p>
+					Housing Final Prices
+				</p>
+			</a>		
+		</li>
+		<li class="nav-item">
+			<a href="{{ route('housing-final-prices-country.index') }}" class="nav-link">
+				<i class="far fa-circle nav-icon"></i>
+				<p>
+					Housing Final Prices Countries
+				</p>
+			</a>		
+		</li><li class="nav-item">
+			<a href="{{ route('gs-raw-prices.index') }}" class="nav-link">
+				<i class="far fa-circle nav-icon"></i>
+				<p>
+					GS Raw Prices
+				</p>
+			</a>		
+		</li><li class="nav-item">
+			<a href="{{ route('gs-cleaned-prices.index') }}" class="nav-link">
+				<i class="far fa-circle nav-icon"></i>
+				<p>
+					GS Cleaned Prices
+				</p>
+			</a>		
+		</li>		
+		<li class="nav-item">
+			<a href="#" class="nav-link">
+				<i class="far fa-circle nav-icon"></i>
+				<p>
+					GS FinalItem Prices
+				</p>
+			</a>		
+		</li><li class="nav-item">
+			<a href="#" class="nav-link">
+				<i class="far fa-circle nav-icon"></i>
+				<p>
+					GS Item Budgets
+				</p>
+			</a>		
+		</li><li class="nav-item">
+			<a href="#" class="nav-link">
+				<i class="far fa-circle nav-icon"></i>
+				<p>
+					GS City Budgets
+				</p>
+			</a>		
+		</li>
+		<li class="nav-item">
+			<a href="#" class="nav-link">
+				<i class="far fa-circle nav-icon"></i>
+				<p>
+					Exchange Rate
+				</p>
+			</a>		
+		</li>
+		<li class="nav-item">
+			<a href="#" class="nav-link">
+				<i class="far fa-circle nav-icon"></i>
+				<p>
+					GS Component Item Prices Locations
+				</p>
+			</a>		
+		</li>
+		<li class="nav-item">
+			<a href="#" class="nav-link">
+				<i class="far fa-circle nav-icon"></i>
+				<p>
+					GS Component Item Prices Cities
+				</p>
+			</a>		
+		</li><li class="nav-item">
+			<a href="#" class="nav-link">
+				<i class="far fa-circle nav-icon"></i>
+				<p>
+					GS Component Item Prices Countries
+				</p>
+			</a>		
+		</li>
+		<li class="nav-item">
+			<a href="#" class="nav-link">
+				<i class="far fa-circle nav-icon"></i>
+				<p>
+					GS Component Item Prices Adjusted Cities
+				</p>
+			</a>		
+		</li>
+		</ul>
+	</li>
+	<!-- <li class="nav-header">ERD & CALCULATIONS</li> -->	
 </li>

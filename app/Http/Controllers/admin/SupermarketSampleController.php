@@ -34,29 +34,27 @@ class SupermarketSampleController extends Controller
 			$data = SupermarketSample::select('*');
 			return Datatables::of($data)
 					->addIndexColumn()
-					// ->addColumn('action', function($row){
-
-					//         $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">Delete</a>';
-
-					//         return $btn;
-					// })
+					->addColumn('action', function ($row) {
+                        return '<button data-remote="/admin/super-market/'.$row->id.'" class="btn btn-sm btn-danger btn-delete">Delete</button >';
+                    })
 					->rawColumns(['action'])
 					->make(true);
 		}
 
 		$html = $builder->columns([
+				['data' => 'action', 'footer' => 'Action'],
 				['data' => 'id', 'footer' => 'Id'],
-				['data' => 'location_codes', 'footer' => 'location_codes'],
-				['data' => 'item_codes', 'footer' => 'item_codes'],
-				['data' => 'item_id', 'footer' => 'item_id'],
-				['data' => 'postal_code', 'footer' => 'postal_code'],
-				['data' => 'url', 'footer' => 'url'],
-				['data' => 'name', 'footer' => 'name'],
-				['data' => 'price', 'footer' => 'price'],
-				['data' => 'currency', 'footer' => 'currency'],
-				['data' => 'source', 'footer' => 'source'],
-				['data' => 'number_of_units', 'footer' => 'number_of_units'],
-				['data' => 'final_units', 'footer' => 'final_units'],
+				['data' => 'item_id', 'footer' => 'Item Id'],
+				['data' => 'postal_code', 'footer' => 'Postal Code'],
+				['data' => 'url', 'footer' => 'Url'],
+				['data' => 'name', 'footer' => 'Name'],
+				['data' => 'price', 'footer' => 'Price'],
+				['data' => 'currency', 'footer' => 'Currency'],
+				['data' => 'source', 'footer' => 'Source'],
+				['data' => 'number_of_units', 'footer' => 'Number Of Units'],
+				['data' => 'final_units', 'footer' => 'Final Units'],
+				['data' => 'item_codes', 'footer' => 'Item Codes'],
+				['data' => 'location_codes', 'footer' => 'Location Codes'],
 				['data' => 'created_at', 'footer' => 'Created At'],
 				['data' => 'updated_at', 'footer' => 'Updated At'],
 			])->parameters([
@@ -88,13 +86,14 @@ class SupermarketSampleController extends Controller
 	public function store(Request $request)
 	{
 		ini_set('max_execution_time', '300');
+		
 		$validatedData = $request->validate([
 		   'file' => 'required'
 		]);
 
 		// $headings = (new HeadingRowImport)->toArray( $request->file('file'));
 
-		Excel::import(new SupermarketSamplesImport, $request->file('file'));
+		$import = Excel::import(new SupermarketSamplesImport, $request->file('file'));
 
 		return redirect('admin/super-market')->with('status', 'The excel file has been imported successfully to database.');
 	}
@@ -140,7 +139,10 @@ class SupermarketSampleController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($id)
-	{
-		//
-	}
+    {
+        $code = SupermarketSample::find($id);
+        $code->delete();
+
+        return true;
+    }
 }

@@ -34,17 +34,15 @@ class HousingSampleController extends Controller
             $data = HousingSample::select('*');
             return Datatables::of($data)
                     ->addIndexColumn()
-                    // ->addColumn('action', function($row){
-       
-                    //         $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">Delete</a>';
-      
-                    //         return $btn;
-                    // })
+                    ->addColumn('action', function ($row) {
+                        return '<button data-remote="/admin/housing/'.$row->id.'" class="btn btn-sm btn-danger btn-delete">Delete</button >';
+                    })
                     ->rawColumns(['action'])
                     ->make(true);
         }
 
         $html = $builder->columns([
+                ['data' => 'action', 'footer' => 'Action'],
                 ['data' => 'id', 'footer' => 'Id'],
                 ['data' => 'location_codes', 'footer' => 'Location Codes'],
                 ['data' => 'source', 'footer' => 'Source'],
@@ -143,6 +141,9 @@ class HousingSampleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $code = HousingSample::find($id);
+        $code->delete();
+
+        return true;
     }
 }

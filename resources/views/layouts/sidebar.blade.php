@@ -1,9 +1,9 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
 	<a href="{{ route('dashboard') }}" class="brand-link">
-		<img src="https://assets.infyom.com/logo/blue_logo_150x150.png"
-			 alt="Logo"
-			 class="brand-image img-circle elevation-3">
-		<span class="brand-text font-weight-light">{{ config('app.name') }}</span>
+		<img src="/img/logo-side.jpg"
+			 alt="Logo" style="width: 235px; object-fit: unset;margin: 0;" 
+			 class="brand-image elevation-3">
+		<span class="brand-text font-weight-light">&nbsp;</span>
 	</a>
 
 	<div class="sidebar">
