@@ -32,7 +32,8 @@ class LocationCode extends Model
         'iso_4217_currency_name',
         'iso_4217_alphabetic_Codes',
         'iso_4217_numeric_Codes',
-        'tax_codes'
+        'tax_codes',
+        'city_province_country',
     ];
 
     public function getCreatedAtAttribute($date){

@@ -31,11 +31,23 @@ class GsQuantitySampleController extends Controller
     public function index(Builder $builder)
     {
         if (request()->ajax()) {
-            $data = GsQuantitySample::select('*');
+            $usersQuery = GsQuantitySample::query();
+ 
+            $start_date = (!empty($_GET["start_date"])) ? ($_GET["start_date"]) : ('');
+            $end_date = (!empty($_GET["end_date"])) ? ($_GET["end_date"]) : ('');
+     
+            if($start_date && $end_date){
+     
+             $start_date = date('Y-m-d', strtotime($start_date));
+             $end_date = date('Y-m-d', strtotime($end_date));
+     
+             $usersQuery->whereRaw("date(created_at) >= '" . $start_date . "' AND date(created_at) <= '" . $end_date . "'");
+            }
+            $data = $usersQuery->select('*');
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function ($row) {
-                        return '<button data-remote="/admin/gs-quantity/'.$row->id.'" class="btn btn-sm btn-danger btn-delete">Delete</button >';
+                        return '<input type="checkbox" class="delete_check" id="delcheck_'.$row->id.'" onclick="checkcheckbox();" value="'.$row->id.'">';
                     })
                     ->rawColumns(['action'])
                     ->make(true);
@@ -136,4 +148,17 @@ class GsQuantitySampleController extends Controller
 
         return true;
     }
+
+    public function deleteAll(Request $request)  
+    {  
+        if (request()->ajax()) {
+
+            if (request()->is_delete_request) {
+
+                GsQuantitySample::whereIn('id', $request->get('ids'))->delete();
+
+                return response()->json(['status'=>true,'message'=>"Records deleted successfully."]);
+            }
+        } 
+    } 
 }

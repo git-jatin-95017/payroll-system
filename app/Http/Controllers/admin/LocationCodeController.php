@@ -30,12 +30,26 @@ class LocationCodeController extends Controller
 	 */
 	public function index(Builder $builder)
 	{
-		if (request()->ajax()) {
-			$data = LocationCode::select('*');
+		if (request()->ajax()) {			
+
+			$usersQuery = LocationCode::query();
+ 
+	        $start_date = (!empty($_GET["start_date"])) ? ($_GET["start_date"]) : ('');
+	        $end_date = (!empty($_GET["end_date"])) ? ($_GET["end_date"]) : ('');
+	 
+	        if($start_date && $end_date){
+	 
+	         $start_date = date('Y-m-d', strtotime($start_date));
+	         $end_date = date('Y-m-d', strtotime($end_date));
+	 
+	         $usersQuery->whereRaw("date(location_codes.created_at) >= '" . $start_date . "' AND date(location_codes.created_at) <= '" . $end_date . "'");
+	        }
+			$data = $usersQuery->select('*');
 			return Datatables::of($data)
 					->addIndexColumn()
 					->addColumn('action', function ($row) {
-		                return '<button data-remote="/admin/location-codes/'.$row->id.'" class="btn btn-sm btn-danger btn-delete">Delete</button >';
+						return '<input type="checkbox" class="delete_check" id="delcheck_'.$row->id.'" onclick="checkcheckbox();" value="'.$row->id.'">';
+		                // return '<button data-remote="/admin/location-codes/'.$row->id.'" class="btn btn-sm btn-danger btn-delete">Delete</button >';
 		            })
 					->rawColumns(['action'])			
 					->make(true);
@@ -144,10 +158,23 @@ class LocationCodeController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($id)
-    {
+    {    	
         $code = LocationCode::find($id);
         $code->delete();
 
         return true;
     }
+
+    public function deleteAll(Request $request)  
+    {  
+        if (request()->ajax()) {
+
+			if (request()->is_delete_request) {
+
+		        LocationCode::whereIn('id', $request->get('ids'))->delete();
+
+		        return response()->json(['status'=>true,'message'=>"Records deleted successfully."]);
+			}
+		} 
+    }  
 }

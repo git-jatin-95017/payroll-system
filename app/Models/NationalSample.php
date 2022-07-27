@@ -23,6 +23,8 @@ class NationalSample extends Model
         'website',
         'store',
         'notes',
+        'amount',
+        'units',
     ];
 
     public function getCreatedAtAttribute($date){
