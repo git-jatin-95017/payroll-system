@@ -74,6 +74,7 @@
 										<th>ISO 4217 Alphabetic Codes</th>
 										<th>ISO 4217 Numeric Codes</th>
 										<th>Tax Codes</th>
+										<th>Price Date</th>
 										<th>Created At</th>
 										<th>Updated At</th>
 									</tr>
@@ -100,6 +101,7 @@
 										<th>ISO 4217 Alphabetic Codes</th>
 										<th>ISO 4217 Numeric Codes</th>
 										<th>Tax Codes</th>
+										<th>Price Date</th>
 										<th>Created At</th>
 										<th>Updated At</th>
 									</tr>
@@ -186,6 +188,7 @@
 						{data:'iso_4217_alphabetic_Codes', name: 'iso_4217_alphabetic_Codes'},
 						{data:'iso_4217_numeric_Codes', name: 'iso_4217_numeric_Codes'},
 						{data:'tax_codes', name: 'tax_codes'},
+						{data:'price_date', name: 'price_date'},
 						{data:'created_at', name: 'created_at'},
 						{data:'updated_at', name: 'updated_at'},
 			        ],

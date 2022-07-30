@@ -17,8 +17,13 @@ class PropertyTaxSample extends Model
     protected $fillable = [
         'location_codes',
         'rate',
+        'price_date'
     ];
 
+    public function getPriceDateAttribute($date){
+        return !empty($date) ? date('Y-m-d', strtotime($date)) : NULL;
+    }
+    
     public function getCreatedAtAttribute($date){
         return date('Y-m-d H:i:s', strtotime($date));
     }

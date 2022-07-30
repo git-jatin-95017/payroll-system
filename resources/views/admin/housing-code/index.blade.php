@@ -60,6 +60,7 @@
 										<th>Price Type</th>
 										<th>Housing Type</th>
 										<th>Bedroom Size</th>
+										<th>Price Date</th>
 										<th>Created At</th>
 										<th>Updated At</th>
 									</tr>
@@ -72,6 +73,7 @@
 										<th>Price Type</th>
 										<th>Housing Type</th>
 										<th>Bedroom Size</th>
+										<th>Price Date</th>
 										<th>Created At</th>
 										<th>Updated At</th>
 									</tr>
@@ -139,7 +141,8 @@
 						{data:'item_codes', name: 'item_codes'},
 						{data:'price_type', name: 'price_type'},
 						{data:'housing_type', name: 'housing_type'},
-						{data:'bedroom_size', name: 'bedroom_size'},						
+						{data:'bedroom_size', name: 'bedroom_size'},	
+						{data:'price_date', name: 'price_date'},					
 						{data:'created_at', name: 'created_at'},
 						{data:'updated_at', name: 'updated_at'},
 			        ],

@@ -26,8 +26,13 @@ class SupermarketSample extends Model
         'source',
         'number_of_units',
         'final_units',
+        'price_date'
     ];
 
+    public function getPriceDateAttribute($date){
+        return !empty($date) ? date('Y-m-d', strtotime($date)) : NULL;
+    }
+    
     public function getCreatedAtAttribute($date){
         return date('Y-m-d H:i:s', strtotime($date));
     }

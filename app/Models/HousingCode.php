@@ -18,9 +18,14 @@ class HousingCode extends Model
         'item_codes',
         'price_type',
         'housing_type',
-        'bedroom_size'
+        'bedroom_size',
+        'price_date'
     ];
 
+    public function getPriceDateAttribute($date){
+        return !empty($date) ? date('Y-m-d', strtotime($date)) : NULL;
+    }
+    
     public function getCreatedAtAttribute($date){
         return date('Y-m-d H:i:s', strtotime($date));
     }

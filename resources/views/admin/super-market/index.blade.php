@@ -80,6 +80,7 @@
 										<th>Final Units</th>
 										<th>Item Codes</th>
 										<th>Location Codes</th>
+										<th>Price Date</th>
 										<th>Created At</th>
 										<th>Updated At</th>
 									</tr>
@@ -99,6 +100,7 @@
 										<th>Final Units</th>
 										<th>Item Codes</th>
 										<th>Location Codes</th>
+										<th>Price Date</th>
 										<th>Created At</th>
 										<th>Updated At</th>
 									</tr>
@@ -178,6 +180,7 @@
 						{data:'final_units', name: 'final_units'},									
 						{data:'item_codes', name: 'item_codes'},
 						{data:'location_codes', name: 'location_codes'},
+						{data:'price_date', name: 'price_date'},
 						{data:'created_at', name: 'created_at'},
 						{data:'updated_at', name: 'updated_at'},
 			        ],

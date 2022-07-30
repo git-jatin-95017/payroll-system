@@ -34,8 +34,13 @@ class LocationCode extends Model
         'iso_4217_numeric_Codes',
         'tax_codes',
         'city_province_country',
+        'price_date'
     ];
 
+    public function getPriceDateAttribute($date){
+        return !empty($date) ? date('Y-m-d', strtotime($date)) : NULL;
+    }
+    
     public function getCreatedAtAttribute($date){
         return date('Y-m-d H:i:s', strtotime($date));
     }

@@ -52,27 +52,9 @@ class GsCleanedPriceController extends Controller
                     ->make(true);
         }
 
-        $html = $builder->columns([
-                ['data' => 'action', 'footer' => 'Action'],
-                ['data' => 'id', 'footer' => 'Id'],
-                ['data' => 'location_codes', 'footer' => 'Location Codes'],
-                ['data' => 'item_codes', 'footer' => 'Item Codes'],                        
-                ['data' => 'zip_codes', 'footer' => 'Zip Code'],
-                ['data' => 'price', 'footer' => 'Price'],
-                ['data' => 'currency_code', 'footer' => 'Currency Code'],
-                ['data' => 'amount', 'footer' => 'Amount'],
-                ['data' => 'units', 'footer' => 'Units'],
-                ['data' => 'website', 'footer' => 'Website'],               
-                ['data' => 'store', 'footer' => 'Store'],               
-                ['data' => 'store_address', 'footer' => 'Store Address']       
-            ])->parameters([
-                // 'responsive' => true,
-                // 'autoWidth' => true,
-                // 'scrollX' =>true,
-                // "scrollY"=> "400px",
-            ]);
+        
 
-        return view('admin.gs-cleaned-prices.index', compact('html'));
+        return view('admin.gs-cleaned-prices.index');
     }
 
     /**

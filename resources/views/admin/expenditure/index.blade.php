@@ -48,7 +48,6 @@
 							    </div>
 							</div>
 							<br>
-							<!-- {!! $html->table(['class' => 'table table-bordered table-hover nowrap'], true) !!} -->
 							<table class="table table-bordered table-hover nowrap" id="dataTableBuilder">
 								<thead>
 									<tr>
@@ -63,6 +62,7 @@
 										<th>No of child</th>
 										<th>Coefficient A</th>
 										<th>Coefficient B</th>
+										<th>Price Date</th>
 										<th>Created At</th>
 										<th>Updated At</th>
 									</tr>
@@ -78,6 +78,7 @@
 										<th>No of child</th>
 										<th>Coefficient A</th>
 										<th>Coefficient B</th>
+										<th>Price Date</th>
 										<th>Created At</th>
 										<th>Updated At</th>
 									</tr>
@@ -92,7 +93,6 @@
 @endsection
 
 @push('page_scripts')
-	<!-- {!! $html->scripts() !!} -->
 	<!-- <script src="https://cdn.datatables.net/fixedheader/3.2.3/css/fixedHeader.dataTables.min.css"></script> -->
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
@@ -153,6 +153,7 @@
 						{data:'num_of_child', name: 'num_of_child'},
 						{data:'coefficient_a', name: 'coefficient_a'},
 						{data:'coefficient_b', name: 'coefficient_b'},									
+						{data:'price_date', name: 'price_date'},
 						{data:'created_at', name: 'created_at'},
 						{data:'updated_at', name: 'updated_at'},
 			        ],

@@ -22,9 +22,14 @@ class ExpenditureSample extends Model
 		'num_of_child',
 		'coefficient_a',
 		'coefficient_b',
+		'price_date'
 	];
 	
-	public function getCreatedAtAttribute($date){
+	public function getPriceDateAttribute($date){
+        return !empty($date) ? date('Y-m-d', strtotime($date)) : NULL;
+    }
+
+    public function getCreatedAtAttribute($date){
         return date('Y-m-d H:i:s', strtotime($date));
     }
     

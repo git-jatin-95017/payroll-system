@@ -69,6 +69,7 @@
 										<th>Size Units</th>
 										<th>Address</th>
 										<th>Housing Codes</th>
+										<th>Price Date</th>
 										<th>Created At</th>
 										<th>Updated At</th>
 									</tr>
@@ -90,6 +91,7 @@
 										<th>Size Units</th>
 										<th>Address</th>
 										<th>Housing Codes</th>
+										<th>Price Date</th>
 										<th>Created At</th>
 										<th>Updated At</th>
 									</tr>
@@ -171,6 +173,7 @@
 						{data:'size_units', name: 'size_units'},
 						{data:'address', name: 'address'},
 						{data:'housing_codes', name: 'housing_codes'},						
+						{data:'price_date', name: 'price_date'},
 						{data:'created_at', name: 'created_at'},
 						{data:'updated_at', name: 'updated_at'},
 			        ],

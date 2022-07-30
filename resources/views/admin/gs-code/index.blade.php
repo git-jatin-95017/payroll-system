@@ -66,6 +66,7 @@
 										<th>Standard Amounts</th>
 										<th>Standard Units</th>
 										<th>Unit Type</th>
+										<th>Price Date</th>
 										<th>Created At</th>
 										<th>Updated At</th>
 									</tr>
@@ -84,6 +85,7 @@
 										<th>Standard Amounts</th>
 										<th>Standard Units</th>
 										<th>Unit Type</th>
+										<th>Price Date</th>
 										<th>Created At</th>
 										<th>Updated At</th>
 									</tr>
@@ -161,7 +163,8 @@
 						{data:'details', name: 'details'},									
 						{data:'standard_amounts', name: 'standard_amounts'},									
 						{data:'standard_units', name: 'standard_units'},									
-						{data:'unit_type', name: 'unit_type'},									
+						{data:'unit_type', name: 'unit_type'},		
+						{data:'price_date', name: 'price_date'},							
 						{data:'created_at', name: 'created_at'},
 						{data:'updated_at', name: 'updated_at'},
 			        ],

@@ -59,6 +59,7 @@
 										<th>Location Codes</th>
 										<th>Item Codes</th>
 										<th>Quantities</th>
+										<th>Price Date</th>
 										<th>Created At</th>
 										<th>Updated At</th>
 									</tr>
@@ -70,6 +71,7 @@
 										<th>Location Codes</th>
 										<th>Item Codes</th>
 										<th>Quantities</th>
+										<th>Price Date</th>
 										<th>Created At</th>
 										<th>Updated At</th>
 									</tr>
@@ -140,7 +142,8 @@
 						{data:'id', name: 'id'},
 						{data:'location_codes', name: 'location_codes'},
 						{data:'item_codes', name: 'item_codes'},
-						{data:'quantities', name: 'quantities'},							
+						{data:'quantities', name: 'quantities'},
+						{data:'price_date', name: 'price_date'},							
 						{data:'created_at', name: 'created_at'},
 						{data:'updated_at', name: 'updated_at'},
 			        ],

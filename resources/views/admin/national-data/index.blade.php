@@ -66,6 +66,7 @@
 										<th>Website</th>
 										<th>Store</th>
 										<th>Notes</th>
+										<th>Price Date</th>
 										<th>Created At</th>
 										<th>Updated At</th>
 									</tr>
@@ -84,6 +85,7 @@
 										<th>Website</th>
 										<th>Store</th>
 										<th>Notes</th>
+										<th>Price Date</th>
 										<th>Created At</th>
 										<th>Updated At</th>
 									</tr>
@@ -161,7 +163,8 @@
 						{data:'units', name: 'units'},	
 						{data:'website', name: 'website'},
 						{data:'store', name: 'store'},
-						{data:'notes', name: 'notes'},					
+						{data:'notes', name: 'notes'},		
+						{data:'price_date', name: 'price_date'},			
 						{data:'created_at', name: 'created_at'},
 						{data:'updated_at', name: 'updated_at'},
 			        ],
