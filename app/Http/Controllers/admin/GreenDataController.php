@@ -147,7 +147,6 @@ class GreenDataController extends Controller
 				FROM
 				    `gs_component_item_prices_locations`
 				GROUP BY
-					location_codes,
 				    SUBSTRING(location_codes, 1, 12),
 				    price_level,
 				    CONCAT(
@@ -192,7 +191,6 @@ class GreenDataController extends Controller
 			FROM
 			    `gs_component_item_prices_cities`
 			GROUP BY
-				location_codes,
 			    SUBSTRING(location_codes, 1, 7),
 			    price_level,
 			    CONCAT(
