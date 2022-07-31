@@ -273,139 +273,153 @@
 		<a href="#" class="nav-link">
 			<i class="nav-icon fas fa-home"></i>
 			<p>
-				ERD & Calculations
+				GS & Calculations
+				<i class="right fas fa-angle-left"></i>
+			</p>
+		</a>
+		<ul class="nav nav-treeview">			
+
+			<li class="nav-item">
+				<a href="{{ route('gs-cleaned-prices.index') }}" class="nav-link">
+					<i class="far fa-circle nav-icon"></i>
+					<p>
+						GS Cleaned Prices
+					</p>
+				</a>		
+			</li>
+			<li class="nav-item">
+				<a href="{{ route('gsc-itemprice-locations.index') }}" class="nav-link">
+					<i class="far fa-circle nav-icon"></i>
+					<p>
+						GS Component Item Prices Locations
+					</p>
+				</a>		
+			</li>
+			<li class="nav-item">
+				<a href="{{ route('gsc-itemprice-cities.index') }}" class="nav-link">
+					<i class="far fa-circle nav-icon"></i>
+					<p>
+						GS Component Item Prices Cities
+					</p>
+				</a>		
+			</li><li class="nav-item">
+				<a href="{{ route('gsc-itemprice-countries.index') }}" class="nav-link">
+					<i class="far fa-circle nav-icon"></i>
+					<p>
+						GS Component Item Prices Countries
+					</p>
+				</a>		
+			</li>
+			<li class="nav-item">
+				<a href="{{ route('gsc-itemprice-adjusted-cities.index') }}" class="nav-link">
+					<i class="far fa-circle nav-icon"></i>
+					<p>
+						GS Component Item Prices Adjusted Cities
+					</p>
+				</a>		
+			</li>		
+			<li class="nav-item">
+				<a href="{{ route('gs-final-item-prices.index') }}" class="nav-link">
+					<i class="far fa-circle nav-icon"></i>
+					<p>
+						GS FinalItem Prices
+					</p>
+				</a>		
+			</li><li class="nav-item">
+				<a href="{{ route('gs-item-budgets.index') }}" class="nav-link">
+					<i class="far fa-circle nav-icon"></i>
+					<p>
+						GS Item Budgets
+					</p>
+				</a>		
+			</li><li class="nav-item">
+				<a href="{{ route('gs-city-budgets.index') }}" class="nav-link">
+					<i class="far fa-circle nav-icon"></i>
+					<p>
+						GS City Budgets
+					</p>
+				</a>		
+			</li>
+						
+			<li class="nav-item">
+				<a href="{{ route('gs-raw-prices.index') }}" class="nav-link">
+					<i class="far fa-circle nav-icon"></i>
+					<p>
+						GS Raw Prices
+					</p>
+				</a>		
+			</li>
+			<li class="nav-item">
+				<a href="{{ route('exchange-rates.index') }}" class="nav-link">
+					<i class="far fa-circle nav-icon"></i>
+					<p>
+						Exchange Rate
+					</p>
+				</a>		
+			</li>
+		</ul>
+	</li>
+
+	<li class="nav-item">
+		<a href="#" class="nav-link">
+			<i class="nav-icon fas fa-home"></i>
+			<p>
+				Housing & Calculations
 				<i class="right fas fa-angle-left"></i>
 			</p>
 		</a>
 		<ul class="nav nav-treeview">
 			<li class="nav-item">
-			<a href="{{ route('housing-final-prices.index') }}" class="nav-link">
-				<i class="far fa-circle nav-icon"></i>
-				<p>
-					Housing Final Prices
-				</p>
-			</a>		
-		</li>
-		<li class="nav-item">
-			<a href="{{ route('housing-final-prices-country.index') }}" class="nav-link">
-				<i class="far fa-circle nav-icon"></i>
-				<p>
-					Housing Final Prices Countries
-				</p>
-			</a>		
-		</li>
-		<li class="nav-item">
-			<a href="{{ route('housing-final-rental-prices.index') }}" class="nav-link">
-				<i class="far fa-circle nav-icon"></i>
-				<p>
-					Housing Final Rental Prices
-				</p>
-			</a>		
-		</li>
+				<a href="{{ route('housing-final-prices.index') }}" class="nav-link">
+					<i class="far fa-circle nav-icon"></i>
+					<p>
+						Housing Final Prices
+					</p>
+				</a>		
+			</li>
+			<li class="nav-item">
+				<a href="{{ route('housing-final-prices-country.index') }}" class="nav-link">
+					<i class="far fa-circle nav-icon"></i>
+					<p>
+						Housing Final Prices Countries
+					</p>
+				</a>		
+			</li>
+			<li class="nav-item">
+				<a href="{{ route('housing-final-rental-prices.index') }}" class="nav-link">
+					<i class="far fa-circle nav-icon"></i>
+					<p>
+						Housing Final Rental Prices
+					</p>
+				</a>		
+			</li>
 
-		<li class="nav-item">
-			<a href="{{ route('housing-home-indices-prices.index') }}" class="nav-link">
-				<i class="far fa-circle nav-icon"></i>
-				<p>
-					Housing Home Indices Prices
-				</p>
-			</a>		
-		</li>
+			<li class="nav-item">
+				<a href="{{ route('housing-home-indices-prices.index') }}" class="nav-link">
+					<i class="far fa-circle nav-icon"></i>
+					<p>
+						Housing Home Indices Prices
+					</p>
+				</a>		
+			</li>
 
-		<li class="nav-item">
-			<a href="{{ route('housing-prop-tax-ind-prices.index') }}" class="nav-link">
-				<i class="far fa-circle nav-icon"></i>
-				<p>
-					Housing Property Tax Indices Prices
-				</p>
-			</a>		
-		</li>
+			<li class="nav-item">
+				<a href="{{ route('housing-prop-tax-ind-prices.index') }}" class="nav-link">
+					<i class="far fa-circle nav-icon"></i>
+					<p>
+						Housing Property Tax Indices Prices
+					</p>
+				</a>		
+			</li>
 
-		<li class="nav-item">
-			<a href="{{ route('housing-rental-indices-prices.index') }}" class="nav-link">
-				<i class="far fa-circle nav-icon"></i>
-				<p>
-					Housing Rental Indices Prices
-				</p>
-			</a>		
-		</li>
-
-		<li class="nav-item">
-			<a href="{{ route('gs-raw-prices.index') }}" class="nav-link">
-				<i class="far fa-circle nav-icon"></i>
-				<p>
-					GS Raw Prices
-				</p>
-			</a>		
-		</li><li class="nav-item">
-			<a href="{{ route('gs-cleaned-prices.index') }}" class="nav-link">
-				<i class="far fa-circle nav-icon"></i>
-				<p>
-					GS Cleaned Prices
-				</p>
-			</a>		
-		</li>		
-		<li class="nav-item">
-			<a href="{{ route('gs-final-item-prices.index') }}" class="nav-link">
-				<i class="far fa-circle nav-icon"></i>
-				<p>
-					GS FinalItem Prices
-				</p>
-			</a>		
-		</li><li class="nav-item">
-			<a href="{{ route('gs-item-budgets.index') }}" class="nav-link">
-				<i class="far fa-circle nav-icon"></i>
-				<p>
-					GS Item Budgets
-				</p>
-			</a>		
-		</li><li class="nav-item">
-			<a href="{{ route('gs-city-budgets.index') }}" class="nav-link">
-				<i class="far fa-circle nav-icon"></i>
-				<p>
-					GS City Budgets
-				</p>
-			</a>		
-		</li>
-		<li class="nav-item">
-			<a href="{{ route('exchange-rates.index') }}" class="nav-link">
-				<i class="far fa-circle nav-icon"></i>
-				<p>
-					Exchange Rate
-				</p>
-			</a>		
-		</li>
-		<li class="nav-item">
-			<a href="{{ route('gsc-itemprice-locations.index') }}" class="nav-link">
-				<i class="far fa-circle nav-icon"></i>
-				<p>
-					GS Component Item Prices Locations
-				</p>
-			</a>		
-		</li>
-		<li class="nav-item">
-			<a href="{{ route('gsc-itemprice-cities.index') }}" class="nav-link">
-				<i class="far fa-circle nav-icon"></i>
-				<p>
-					GS Component Item Prices Cities
-				</p>
-			</a>		
-		</li><li class="nav-item">
-			<a href="{{ route('gsc-itemprice-countries.index') }}" class="nav-link">
-				<i class="far fa-circle nav-icon"></i>
-				<p>
-					GS Component Item Prices Countries
-				</p>
-			</a>		
-		</li>
-		<li class="nav-item">
-			<a href="{{ route('gsc-itemprice-adjusted-cities.index') }}" class="nav-link">
-				<i class="far fa-circle nav-icon"></i>
-				<p>
-					GS Component Item Prices Adjusted Cities
-				</p>
-			</a>		
-		</li>
+			<li class="nav-item">
+				<a href="{{ route('housing-rental-indices-prices.index') }}" class="nav-link">
+					<i class="far fa-circle nav-icon"></i>
+					<p>
+						Housing Rental Indices Prices
+					</p>
+				</a>		
+			</li>
 		</ul>
 	</li>
 	<a href="{{ route('run-script-view') }}" class="nav-link {{ Request::is('run-script-view') ? 'active' : '' }}">

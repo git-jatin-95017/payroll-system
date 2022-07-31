@@ -17,7 +17,7 @@
 		</div>
 	</div>
 	<section class="content">
-		@error('file')
+		@error('flush_table')
 			<div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
 		@enderror
 		<div class="container-fluid">
@@ -46,7 +46,7 @@
 				<div class="col-sm-6">
 					<div class="card card-primary">
 						<div class="card-header">
-							<h3 class="card-title">Truncate / Empty Green Tables Data</h3>
+							<h3 class="card-title">Truncate / Delete - Green Tables Data</h3>
 						</div>
 						<form id="excel-csv-import-form" method="POST"  action="{{ route('flush-data') }}" accept-charset="utf-8" enctype="multipart/form-data">
 							@csrf

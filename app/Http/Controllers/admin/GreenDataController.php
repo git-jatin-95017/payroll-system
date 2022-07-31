@@ -11,6 +11,10 @@ use App\Models\GsComponentItemPricesLocation;
 use App\Models\GsComponentItemPricesCity;
 use App\Models\GsComponentItemPricesCountry;
 use App\Models\GsComponentItemPricesAdjustedCity;
+use App\Models\GsFinalItemPrice;
+use App\Models\GsItemBudget;
+use App\Models\GsCityBudget;
+use App\Models\GsQuantitySample;
 use Illuminate\Support\Facades\DB;
 
 
@@ -23,6 +27,7 @@ class GreenDataController extends Controller
 	public function runScript() {
 		ini_set('max_execution_time', '300');
 		
+		//STEP 1
 		$result = DB::select("SELECT *, (price * (1+rate)) as amount_with_tax
 			FROM sale_tax_samples as stax
 			INNER JOIN
@@ -58,6 +63,7 @@ class GreenDataController extends Controller
 			]);
 		}
 
+		//STEP 1
 		$lowPrice = DB::select("SELECT temp.price FROM 
 			(SELECT t.*,  @row_num :=@row_num + 1 AS row_num FROM gs_cleaned_prices t, 
 			    (SELECT @row_num:=0) counter ORDER BY price) 
@@ -73,7 +79,7 @@ class GreenDataController extends Controller
 			    (SELECT @row_num:=0) counter ORDER BY price) 
 			temp WHERE temp.row_num = ROUND (.75* @row_num)");
 
-		if ($lowPrice[0]->price) {
+		if (!empty($lowPrice[0]->price)) {
 			$lowLevelData = GsCleanedPrice::where('price', '<=', $lowPrice[0]->price)->get();
 
 			if ($lowLevelData->count() > 0) {
@@ -90,7 +96,7 @@ class GreenDataController extends Controller
 			}
 		}
 
-		if ($mediumPrice[0]->price) {
+		if (!empty($mediumPrice[0]->price)) {
 			$mediumLevelData = GsCleanedPrice::where('price', '>', $lowPrice[0]->price)->where('price', '<=', $mediumPrice[0]->price)->get();
 			
 			if ($mediumLevelData->count() > 0) {
@@ -107,7 +113,7 @@ class GreenDataController extends Controller
 			}
 		}
 
-		if ($highPrice[0]->price) {
+		if (!empty($highPrice[0]->price)) {
 			$highLevelData =  GsCleanedPrice::where('price', '>', $mediumPrice[0]->price)->where('price', '<=', $highPrice[0]->price)->get();
 
 			if ($highLevelData->count() > 0) {
@@ -124,6 +130,7 @@ class GreenDataController extends Controller
 			}
 		}
 
+		//STEP 3
 		$fetchGSPriceLocationsData = DB::select("SELECT
 				    SUBSTRING(location_codes, 1, 12),
 				    AVG(price) as price,
@@ -258,6 +265,137 @@ class GreenDataController extends Controller
 			}
 		}
 
+		//STEP 6
+		$stepFiveData = DB::select("
+			SELECT
+			    location_codes,
+			    AVG(price) as price,
+			    price_level,
+			    SUBSTRING(item_codes, 1, 7) AS master_item_codes,
+			    substring_index(group_concat(currency), ',', 1 ) as currency_code
+			FROM
+			    `gs_component_item_prices_adjusted_cities`
+			GROUP BY
+			    location_codes,
+			    SUBSTRING(item_codes, 1, 7),
+			    price_level
+		");
+
+		if ($stepFiveData) {
+			foreach($stepFiveData as $k => $v) {
+				GsFinalItemPrice::create([
+					'location_codes' => $v->location_codes,
+					'master_item_codes' => $v->master_item_codes,
+					'price_level' => $v->price_level,
+					'price' => $v->price,
+					'currency' => $v->currency_code,
+					'price_date'=> date('Y-m-d H:i:s')
+				]);
+			}
+		}
+
+		//STEP 7
+		$stepSixData = DB::select("
+			SELECT
+			    final_prices.location_codes,
+			    final_prices.master_item_codes,
+			    price_level,
+			    (final_prices.price * gs_quantity.quantities) AS budget,
+			    final_prices.price_date,
+			    final_prices.currency as currency_code
+			FROM
+			    `gs_final_item_prices` AS final_prices
+			INNER JOIN gs_quantity_samples AS gs_quantity
+			ON
+			    final_prices.location_codes = gs_quantity.location_codes
+		");
+
+		if ($stepSixData) {
+			foreach($stepSixData as $k => $v) {
+				GsItemBudget::create([
+					'location_codes' => $v->location_codes,
+					'master_item_codes' => $v->master_item_codes,
+					'price_level' => $v->price_level,
+					'budget' => $v->budget,
+					'currency' => $v->currency_code,
+					'price_date'=> date('Y-m-d H:i:s')
+				]);
+			}
+		}
+
+		//STEP 8
+		$stepSevenData = DB::select("
+			SELECT
+			    location_codes,
+			    price_level,
+			     substring_index(group_concat(currency), ',', 1 ) as currency_code,
+			    SUM(budget) AS sum_by_level
+			FROM
+			    `gs_item_budgets`
+			GROUP BY
+			    location_codes, price_level;
+		");
+
+		if ($stepSevenData) {
+			foreach($stepSevenData as $k => $v) {
+				GsCityBudget::create([
+					'location_codes' => $v->location_codes,
+					'price_level' => $v->price_level,
+					'budget' => $v->sum_by_level,
+					'currency' => $v->currency_code,
+					'price_date'=> date('Y-m-d H:i:s')
+				]);
+			}
+		}
+
 		return redirect('admin/run-script-view')->with('status', 'Script Executed Successfully.');        
+	}
+
+
+	public function store(Request $request) {
+		
+		 $validatedData = $request->validate([
+           'flush_table' => 'required'
+        ], ['flush_table.required' => 'Please select atleast one table to delete.'], []);
+
+		$tableId = $request->flush_table;
+
+		if (in_array(1, $tableId)) {
+			GsCleanedPrice::truncate();
+		}
+
+		if (in_array(2, $tableId)) {
+			GsComponentItemPricesLocation::truncate();
+		}
+
+		if (in_array(3, $tableId)) {
+			GsComponentItemPricesCity::truncate();
+		}
+
+		if (in_array(4, $tableId)) {
+			GsComponentItemPricesCountry::truncate();
+		}
+
+		if (in_array(5, $tableId)) {
+			GsComponentItemPricesAdjustedCity::truncate();
+		}
+
+		if (in_array(6, $tableId)) {
+			GsFinalItemPrice::truncate();
+		}
+
+		if (in_array(7, $tableId)) {
+			GsQuantitySample::truncate();
+		}
+
+		if (in_array(8, $tableId)) {
+			GsItemBudget::truncate();
+		}
+
+		if (in_array(9, $tableId)) {
+			GsCityBudget::truncate();
+		}
+
+		return redirect('admin/run-script-view')->with('status', 'Data deleted Successfully.');        
 	}
 }

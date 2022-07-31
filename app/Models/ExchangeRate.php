@@ -9,7 +9,7 @@ class ExchangeRate extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['*'];
+    protected $guarded = [];
 
     public function getPriceDateAttribute($date){
         return !empty($date) ? date('Y-m-d', strtotime($date)) : NULL;
