@@ -79,7 +79,7 @@ class GreenDataController extends Controller
 			    (SELECT @row_num:=0) counter ORDER BY price) 
 			temp WHERE temp.row_num = ROUND (.75* @row_num)");
 
-		if ($lowPrice[0]->price) {
+		if (!empty($lowPrice[0]->price)) {
 			$lowLevelData = GsCleanedPrice::where('price', '<=', $lowPrice[0]->price)->get();
 
 			if ($lowLevelData->count() > 0) {
@@ -96,7 +96,7 @@ class GreenDataController extends Controller
 			}
 		}
 
-		if ($mediumPrice[0]->price) {
+		if (!empty($mediumPrice[0]->price)) {
 			$mediumLevelData = GsCleanedPrice::where('price', '>', $lowPrice[0]->price)->where('price', '<=', $mediumPrice[0]->price)->get();
 			
 			if ($mediumLevelData->count() > 0) {
@@ -113,7 +113,7 @@ class GreenDataController extends Controller
 			}
 		}
 
-		if ($highPrice[0]->price) {
+		if (!empty($highPrice[0]->price)) {
 			$highLevelData =  GsCleanedPrice::where('price', '>', $mediumPrice[0]->price)->where('price', '<=', $highPrice[0]->price)->get();
 
 			if ($highLevelData->count() > 0) {
@@ -300,14 +300,25 @@ class GreenDataController extends Controller
 			    final_prices.location_codes,
 			    final_prices.master_item_codes,
 			    price_level,
-			    (final_prices.price * gs_quantity.quantities) AS budget,
+			    (
+			        final_prices.price * gs_quantity.quantities
+			    ) AS budget,
 			    final_prices.price_date,
 			    final_prices.currency as currency_code
 			FROM
 			    `gs_final_item_prices` AS final_prices
 			INNER JOIN gs_quantity_samples AS gs_quantity
 			ON
-			    final_prices.location_codes = gs_quantity.location_codes
+			    SUBSTRING(
+			        final_prices.location_codes,
+			        1,
+			        12
+			    ) = SUBSTRING(
+			        gs_quantity.location_codes,
+			        1,
+			        12
+			    ) 
+			AND final_prices.master_item_codes = SUBSTRING(gs_quantity.item_codes, 1, 7);		
 		");
 
 		if ($stepSixData) {
