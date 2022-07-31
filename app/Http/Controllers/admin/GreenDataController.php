@@ -79,7 +79,7 @@ class GreenDataController extends Controller
 			    (SELECT @row_num:=0) counter ORDER BY price) 
 			temp WHERE temp.row_num = ROUND (.75* @row_num)");
 
-		if (!empty($lowPrice[0]->price)) {
+		if ($lowPrice[0]->price) {
 			$lowLevelData = GsCleanedPrice::where('price', '<=', $lowPrice[0]->price)->get();
 
 			if ($lowLevelData->count() > 0) {
@@ -96,7 +96,7 @@ class GreenDataController extends Controller
 			}
 		}
 
-		if (!empty($mediumPrice[0]->price)) {
+		if ($mediumPrice[0]->price) {
 			$mediumLevelData = GsCleanedPrice::where('price', '>', $lowPrice[0]->price)->where('price', '<=', $mediumPrice[0]->price)->get();
 			
 			if ($mediumLevelData->count() > 0) {
@@ -113,7 +113,7 @@ class GreenDataController extends Controller
 			}
 		}
 
-		if (!empty($highPrice[0]->price)) {
+		if ($highPrice[0]->price) {
 			$highLevelData =  GsCleanedPrice::where('price', '>', $mediumPrice[0]->price)->where('price', '<=', $highPrice[0]->price)->get();
 
 			if ($highLevelData->count() > 0) {
