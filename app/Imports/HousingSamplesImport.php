@@ -31,12 +31,22 @@ class HousingSamplesImport implements ToModel, WithHeadingRow,  WithChunkReading
             'size' => $row['size'],
             'size_units' => $row['size_units'],
             'address' => $row['address'],
-            'housing_codes' => $row['housing_codes']
+            'housing_codes' => $row['housing_codes'],
+            'price_date' => !empty($row['price_date']) ? $this->transformDate($row['price_date']) : NULL
         ]);
     }
 
     public function chunkSize(): int
     {
         return 1000;
+    }
+
+    public function transformDate($value, $format = 'Y-m-d')
+    {
+        try {
+            return \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value));
+        } catch (\ErrorException $e) {
+            return \Carbon\Carbon::createFromFormat($format, $value);
+        }
     }
 }

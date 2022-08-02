@@ -47,12 +47,22 @@ class LocationCodesImport implements ToModel, WithHeadingRow,  WithChunkReading,
             'iso_4217_currency_name' => $row['iso_4217_currency_name'],
             'iso_4217_alphabetic_Codes' => $row['iso_4217_alphabetic_codes'],
             'iso_4217_numeric_Codes' => $row['iso_4217_numeric_codes'],
-            'tax_codes' => $row['tax_codes']
+            'tax_codes' => $row['tax_codes'],
+            'price_date' => !empty($row['price_date']) ? $this->transformDate($row['price_date']) : NULL
         ]);
     }
 
     public function chunkSize(): int
     {
         return 1000;
+    }
+
+    public function transformDate($value, $format = 'Y-m-d')
+    {
+        try {
+            return \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value));
+        } catch (\ErrorException $e) {
+            return \Carbon\Carbon::createFromFormat($format, $value);
+        }
     }
 }

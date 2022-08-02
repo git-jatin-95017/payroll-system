@@ -26,12 +26,22 @@ class NationalSamplesImport implements ToModel, WithHeadingRow,  WithChunkReadin
             'currency' => $row['currency'],
             'website' => $row['website'],
             'store' => $row['store'],
-            'notes' => $row['notes']
+            'notes' => $row['notes'],
+            'price_date' => !empty($row['price_date']) ? $this->transformDate($row['price_date']) : NULL
         ]);
     }
 
     public function chunkSize(): int
     {
         return 1000;
+    }
+
+    public function transformDate($value, $format = 'Y-m-d')
+    {
+        try {
+            return \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value));
+        } catch (\ErrorException $e) {
+            return \Carbon\Carbon::createFromFormat($format, $value);
+        }
     }
 }

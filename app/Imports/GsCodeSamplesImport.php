@@ -28,12 +28,22 @@ class GsCodeSamplesImport implements ToModel, WithHeadingRow,  WithChunkReading,
             'details' => $row['details'],
             'standard_amounts' => $row['standard_amounts'],
             'standard_units' => $row['standard_units'],
-            'unit_type' => $row['unit_type']
+            'unit_type' => $row['unit_type'],
+            'price_date' => !empty($row['price_date']) ? $this->transformDate($row['price_date']) : NULL
         ]);
     }
 
     public function chunkSize(): int
     {
         return 1000;
+    }
+
+    public function transformDate($value, $format = 'Y-m-d')
+    {
+        try {
+            return \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value));
+        } catch (\ErrorException $e) {
+            return \Carbon\Carbon::createFromFormat($format, $value);
+        }
     }
 }

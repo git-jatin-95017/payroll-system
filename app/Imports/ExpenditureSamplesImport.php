@@ -25,12 +25,22 @@ class ExpenditureSamplesImport implements ToModel, WithHeadingRow,  WithChunkRea
             'num_of_adult' => $row['num_of_adult'],
             'num_of_child' => $row['num_of_child'],
             'coefficient_a' => $row['coefficient_a'],
-            'coefficient_b' => $row['coefficient_b']
+            'coefficient_b' => $row['coefficient_b'],
+            'price_date' => !empty($row['price_date']) ? $this->transformDate($row['price_date']) : NULL
         ]);
     }
 
     public function chunkSize(): int
     {
         return 1000;
+    }
+
+    public function transformDate($value, $format = 'Y-m-d')
+    {
+        try {
+            return \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value));
+        } catch (\ErrorException $e) {
+            return \Carbon\Carbon::createFromFormat($format, $value);
+        }
     }
 }

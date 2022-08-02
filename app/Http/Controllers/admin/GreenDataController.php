@@ -52,14 +52,14 @@ class GreenDataController extends Controller
 				'item_codes'=> $v->item_codes,
 				'zip_codes'=> $v->zip_codes,
 				'product'=> $v->product,
-				'price'=> $v->price,
+				'price'=> $v->amount_with_tax,
 				'currency_code'=> $v->currency_code,
 				'amount'=> NULL,
 				'units'=> $v->units??NULL,
 				'website'=> $v->website,
 				'store'=> $v->store,
 				'store_address'=> NULL,
-				'price_date' => date('Y-m-d')
+				'price_date' => !empty($v->price_date) ? $v->price_date : date('Y-m-d')
 			]);
 		}
 
@@ -87,10 +87,10 @@ class GreenDataController extends Controller
 					GsComponentItemPricesLocation::create([
 						'location_codes' => $v->location_codes,
 						'item_codes' => $v->item_codes,
-						'price_level' => 'low',
+						'price_level' => 'Low',
 						'price' => $v->price,
 						'currency' => $v->currency_code,
-						'price_date'=> date('Y-m-d')
+						'price_date'=> !empty($v->price_date) ? $v->price_date : date('Y-m-d')
 					]);
 				}
 			}
@@ -104,10 +104,10 @@ class GreenDataController extends Controller
 					GsComponentItemPricesLocation::create([
 						'location_codes' => $v->location_codes,
 						'item_codes' => $v->item_codes,
-						'price_level' => 'medium',
+						'price_level' => 'Medium',
 						'price' => $v->price,
 						'currency' => $v->currency_code,
-						'price_date'=> date('Y-m-d')
+						'price_date'=> !empty($v->price_date) ? $v->price_date : date('Y-m-d')
 					]);
 				}
 			}
@@ -121,10 +121,10 @@ class GreenDataController extends Controller
 					GsComponentItemPricesLocation::create([
 						'location_codes' => $v->location_codes,
 						'item_codes' => $v->item_codes,
-						'price_level' => 'medium',
+						'price_level' => 'High',
 						'price' => $v->price,
 						'currency' => $v->currency_code,
-						'price_date'=> date('Y-m-d')
+						'price_date'=> !empty($v->price_date) ? $v->price_date : date('Y-m-d')
 					]);
 				}
 			}
@@ -135,6 +135,7 @@ class GreenDataController extends Controller
 				    SUBSTRING(location_codes, 1, 12),
 				    AVG(price) as price,
 				    price_level,
+				    price_date,
 				    substring_index(group_concat(item_codes), ',', 1 ) as item_codes,
 			    	substring_index(group_concat(currency), ',', 1 ) as currency_code,	
 				    CONCAT(
@@ -167,7 +168,7 @@ class GreenDataController extends Controller
 					'price_level' => $v->price_level,
 					'price' => $v->price,
 					'currency' => $v->currency_code,
-					'price_date'=> date('Y-m-d')
+					'price_date'=> !empty($v->price_date) ? $v->price_date : date('Y-m-d')
 				]);
 			}
 		}
@@ -179,6 +180,7 @@ class GreenDataController extends Controller
 			    SUBSTRING(location_codes, 1, 7),
 			    AVG(price) as price,
 			    price_level,
+			    price_date,
 			    substring_index(group_concat(item_codes), ',', 1 ) as item_codes,
 			   	substring_index(group_concat(currency), ',', 1 ) as currency_code,	
 			    CONCAT(
@@ -211,7 +213,7 @@ class GreenDataController extends Controller
 					'price_level' => $v->price_level,
 					'price' => $v->price,
 					'currency' => $v->currency_code,
-					'price_date'=> date('Y-m-d H:i:s')
+					'price_date'=> !empty($v->price_date) ? $v->price_date : date('Y-m-d')
 				]);
 			}
 		}
@@ -260,7 +262,7 @@ class GreenDataController extends Controller
 					'price_level' => $v->price_level,
 					'price' => $v->city_avg + $v->country_avg_10,
 					'currency' => $v->currency_code_city,
-					'price_date'=> date('Y-m-d H:i:s')
+					'price_date'=> !empty($v->price_date) ? $v->price_date : date('Y-m-d')
 				]);
 			}
 		}
@@ -271,6 +273,7 @@ class GreenDataController extends Controller
 			    location_codes,
 			    AVG(price) as price,
 			    price_level,
+			    price_date,
 			    SUBSTRING(item_codes, 1, 7) AS master_item_codes,
 			    substring_index(group_concat(currency), ',', 1 ) as currency_code
 			FROM
@@ -289,7 +292,7 @@ class GreenDataController extends Controller
 					'price_level' => $v->price_level,
 					'price' => $v->price,
 					'currency' => $v->currency_code,
-					'price_date'=> date('Y-m-d H:i:s')
+					'price_date'=> !empty($v->price_date) ? $v->price_date : date('Y-m-d')
 				]);
 			}
 		}
@@ -329,7 +332,7 @@ class GreenDataController extends Controller
 					'price_level' => $v->price_level,
 					'budget' => $v->budget,
 					'currency' => $v->currency_code,
-					'price_date'=> date('Y-m-d H:i:s')
+					'price_date'=> !empty($v->price_date) ? $v->price_date : date('Y-m-d')
 				]);
 			}
 		}
@@ -339,6 +342,7 @@ class GreenDataController extends Controller
 			SELECT
 			    location_codes,
 			    price_level,
+			    price_date,
 			     substring_index(group_concat(currency), ',', 1 ) as currency_code,
 			    SUM(budget) AS sum_by_level
 			FROM
@@ -354,7 +358,7 @@ class GreenDataController extends Controller
 					'price_level' => $v->price_level,
 					'budget' => $v->sum_by_level,
 					'currency' => $v->currency_code,
-					'price_date'=> date('Y-m-d H:i:s')
+					'price_date'=> !empty($v->price_date) ? $v->price_date : date('Y-m-d')
 				]);
 			}
 		}
