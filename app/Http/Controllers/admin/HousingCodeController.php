@@ -159,6 +159,13 @@ class HousingCodeController extends Controller
 
                 return response()->json(['status'=>true,'message'=>"Records deleted successfully."]);
             }
+
+            if (request()->is_delete_request_all) {
+
+                HousingCode::truncate();
+
+                return response()->json(['status'=>true,'message'=>"All Records deleted successfully."]);
+            }
         } 
     }
 }

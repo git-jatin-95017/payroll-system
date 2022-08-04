@@ -42,20 +42,28 @@
 @push('page_scripts')
 	{!! $html->scripts() !!}
 	<script>
-		$('#dataTableBuilder').on('click', '.btn-delete[data-remote]', function (e) { 
-		    e.preventDefault();		     
-		    var url = $(this).data('remote');
-		    // confirm then
-		    if (confirm('Are you sure you want to delete this?')) {
-		        $.ajax({
-		            url: url,
-		            type: 'DELETE',
-		            dataType: 'json',
-		            data: {method: '_DELETE', submit: true, "_token": "{{ csrf_token() }}",}
-		        }).always(function (data) {
-		            $('#dataTableBuilder').DataTable().draw(true);
-		        });
-		    }
+		$('#delete-all').on('click', function (e) { 
+			e.preventDefault();		     
+			// Confirm alert
+			var confirmdelete = confirm("Do you really want to delete all records?");
+
+			if (confirmdelete == true) {
+				$.ajax({
+				   url: $(this).data('remote'),
+				   type: 'POST',
+				   data: {is_delete_request_all:true, "_token": "{{ csrf_token() }}"},
+				   success: function(response) {
+				   	Swal.fire(
+				      'Success!',
+				      'Records deleted successfully!',
+				      'success'
+				    )
+				    
+				    // tabelD.ajax.reload();
+				    $('#dataTableBuilder').DataTable().draw(true);
+				   }
+				});
+			} 
 		});
 	</script>
 @endpush

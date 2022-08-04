@@ -20,6 +20,13 @@
 		@error('flush_table')
 			<div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
 		@enderror
+		@error('start_date')
+			<div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+		@enderror
+		@error('end_date')
+			<div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+		@enderror
+
 		<div class="container-fluid">
 			@if(session('status'))
 				<div class="alert alert-success">
@@ -32,11 +39,28 @@
 						<div class="card-header">
 							<h3 class="card-title">Run Script</h3>
 						</div>
-						<div class="card-body text-center">
-							<div id="heading-links" class="card-header">
-								<a class="btn btn-lg btn-success" href="{{ route('run-script') }}">Run Script</a>
-								<!-- <p class="font-light">Click to execute script</p> -->
-							</div>
+						<div class="card-body">							
+							<form id="excel-csv-import-form" method="POST"  action="{{ route('run-script') }}" accept-charset="utf-8">
+							@csrf
+								<div class="col-sm-12">
+									<div class="row">
+										<div class="col-sm-4">
+											<label>Start Date</label>
+											<input name="start_date" type="date" class="form-control">											
+										</div>
+										<div class="col-sm-4">
+											<label>End Date</label>
+											<input name="end_date" type="date" class="form-control">
+										</div>
+									</div>
+								</div>
+								<br>
+								<div id="heading-links" class="card-header text-center">							
+									<button type="submit" class="btn btn-lg btn-success">Run Script</button>
+									<!-- <a class="btn btn-lg btn-success" href="{{ route('run-script') }}"></a> -->
+									<!-- <p class="font-light">Click to execute script</p> -->
+								</div>
+							</form>
 						</div>
 						 <div class="card-footer">
 							&nbsp;

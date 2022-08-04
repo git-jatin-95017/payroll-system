@@ -46,6 +46,9 @@
 							    <div class="col">
 							      <button type="text" id="btnFiterSubmitSearch" class="btn btn-info">Submit</button>
 							    </div>
+							    <div class="col text-right">
+							      <button type="text" id="delete-all" data-remote="{{ route('location-codes.multi-delete') }}" class="btn btn-danger">Delete All</button>
+							    </div>
 							</div>
 							<br>
 							<!-- {!! $html->table(['class' => 'table table-bordered table-hover nowrap'], true) !!} -->
@@ -121,20 +124,28 @@
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 	<script>
-		$('#dataTableBuilder').on('click', '.btn-delete[data-remote]', function (e) { 
+		$('#delete-all').on('click', function (e) { 
 			e.preventDefault();		     
-			var url = $(this).data('remote');
-			// confirm then
-			if (confirm('Are you sure you want to delete this?')) {
+			// Confirm alert
+			var confirmdelete = confirm("Do you really want to delete all records?");
+
+			if (confirmdelete == true) {
 				$.ajax({
-					url: url,
-					type: 'DELETE',
-					dataType: 'json',
-					data: {method: '_DELETE', submit: true, "_token": "{{ csrf_token() }}"}
-				}).always(function (data) {
-					$('#dataTableBuilder').DataTable().draw(true);
+				   url: $(this).data('remote'),
+				   type: 'POST',
+				   data: {is_delete_request_all:true, "_token": "{{ csrf_token() }}"},
+				   success: function(response) {
+				   	Swal.fire(
+				      'Success!',
+				      'Records deleted successfully!',
+				      'success'
+				    )
+				    
+				    // tabelD.ajax.reload();
+				    $('#dataTableBuilder').DataTable().draw(true);
+				   }
 				});
-			}
+			} 
 		});
 	</script>
 

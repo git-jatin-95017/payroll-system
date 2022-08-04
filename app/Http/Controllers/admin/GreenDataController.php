@@ -24,9 +24,19 @@ class GreenDataController extends Controller
 		return view('admin.green-tables.index');
 	}
 
-	public function runScript() {
+	public function runScript(Request $request) {
+		
+		$request->validate([
+	        'start_date' => 'required|date',
+    		'end_date' => 'required|date|after_or_equal:start_date',
+	    ]);
+
 		ini_set('max_execution_time', '300');
 		
+		$startDate = $request->start_date;
+		
+		$endDate = $request->end_date;
+
 		//STEP 1
 		$result = DB::select("SELECT *, (price * (1+rate)) as amount_with_tax
 			FROM sale_tax_samples as stax
@@ -40,10 +50,11 @@ class GreenDataController extends Controller
 				nation.currency AS currency_code,
 				nation.units,
 				nation.website,
-				nation.store 
+				nation.store,
+				nation.price_date
 			FROM `national_samples` as nation
-			INNER JOIN location_codes as location ON SUBSTR(nation.location_codes, 1, 3) = SUBSTR(location.location_codes, 1, 3)
-			) as first ON first.l_location_codes = stax.location_codes and first.item_codes = stax.item_codes
+			INNER JOIN location_codes as location ON SUBSTR(nation.location_codes, 1, 3) = SUBSTR(location.location_codes, 1, 3) WHERE DATE(nation.price_date) BETWEEN '{$startDate}' AND '{$endDate}'
+			) as first ON first.l_location_codes = stax.location_codes and first.item_codes = stax.item_codes WHERE DATE(stax.price_date) BETWEEN '{$startDate}' AND '{$endDate}'
 		");
 
 		foreach($result as $k => $v) {
@@ -66,17 +77,17 @@ class GreenDataController extends Controller
 		//STEP 1
 		$lowPrice = DB::select("SELECT temp.price FROM 
 			(SELECT t.*,  @row_num :=@row_num + 1 AS row_num FROM gs_cleaned_prices t, 
-			    (SELECT @row_num:=0) counter ORDER BY price) 
+			    (SELECT @row_num:=0) counter WHERE DATE(t.price_date) BETWEEN '{$startDate}' AND '{$endDate}' ORDER BY price) 
 			temp WHERE temp.row_num = ROUND (.25* @row_num)");
 
 		$mediumPrice = DB::select("SELECT temp.price FROM 
 			(SELECT t.*,  @row_num :=@row_num + 1 AS row_num FROM gs_cleaned_prices t, 
-			    (SELECT @row_num:=0) counter ORDER BY price) 
+			    (SELECT @row_num:=0) counter WHERE DATE(t.price_date) BETWEEN '{$startDate}' AND '{$endDate}' ORDER BY price) 
 			temp WHERE temp.row_num = ROUND (.50* @row_num)");
 
 		$highPrice = DB::select("SELECT temp.price FROM 
 			(SELECT t.*,  @row_num :=@row_num + 1 AS row_num FROM gs_cleaned_prices t, 
-			    (SELECT @row_num:=0) counter ORDER BY price) 
+			    (SELECT @row_num:=0) counter WHERE DATE(t.price_date) BETWEEN '{$startDate}' AND '{$endDate}' ORDER BY price) 
 			temp WHERE temp.row_num = ROUND (.75* @row_num)");
 
 		if (!empty($lowPrice[0]->price)) {
@@ -147,6 +158,7 @@ class GreenDataController extends Controller
 				    ) AS masked_location_codes
 				FROM
 				    `gs_component_item_prices_locations`
+				WHERE DATE(gs_component_item_prices_locations.price_date) BETWEEN '{$startDate}' AND '{$endDate}'
 				GROUP BY
 				    SUBSTRING(location_codes, 1, 12),
 				    price_level,
@@ -192,6 +204,7 @@ class GreenDataController extends Controller
 			    ) AS masked_location_codes
 			FROM
 			    `gs_component_item_prices_cities`
+			WHERE DATE(gs_component_item_prices_cities.price_date) BETWEEN '{$startDate}' AND '{$endDate}'
 			GROUP BY
 			    SUBSTRING(location_codes, 1, 7),
 			    price_level,
@@ -232,6 +245,7 @@ class GreenDataController extends Controller
 			        substring_index(group_concat(currency), ',', 1 ) as currency_code_city
 			    FROM
 			        `gs_component_item_prices_cities`
+			    WHERE DATE(gs_component_item_prices_cities.price_date) BETWEEN '{$startDate}' AND '{$endDate}'
 			    GROUP BY
 			        location_codes,
 			        item_codes,
@@ -246,6 +260,7 @@ class GreenDataController extends Controller
 			        substring_index(group_concat(currency), ',', 1 ) as currency_code
 			    FROM
 			        `gs_component_item_prices_cities`
+			    WHERE DATE(gs_component_item_prices_cities.price_date) BETWEEN '{$startDate}' AND '{$endDate}'
 			    GROUP BY
 			        location_codes,
 			        item_codes,
@@ -278,6 +293,7 @@ class GreenDataController extends Controller
 			    substring_index(group_concat(currency), ',', 1 ) as currency_code
 			FROM
 			    `gs_component_item_prices_adjusted_cities`
+			WHERE DATE(gs_component_item_prices_adjusted_cities.price_date) BETWEEN '{$startDate}' AND '{$endDate}'
 			GROUP BY
 			    location_codes,
 			    SUBSTRING(item_codes, 1, 7),
@@ -288,7 +304,7 @@ class GreenDataController extends Controller
 			foreach($stepFiveData as $k => $v) {
 				GsFinalItemPrice::create([
 					'location_codes' => $v->location_codes,
-					'master_item_codes' => $v->master_item_codes,
+					'master_item_codes' => $v->master_item_codes . '-0000',
 					'price_level' => $v->price_level,
 					'price' => $v->price,
 					'currency' => $v->currency_code,
@@ -321,7 +337,8 @@ class GreenDataController extends Controller
 			        1,
 			        12
 			    ) 
-			AND final_prices.master_item_codes = SUBSTRING(gs_quantity.item_codes, 1, 7);		
+			AND final_prices.master_item_codes = SUBSTRING(gs_quantity.item_codes, 1, 7)
+			WHERE DATE(final_prices.price_date) BETWEEN '{$startDate}' AND '{$endDate}'		
 		");
 
 		if ($stepSixData) {
@@ -347,6 +364,7 @@ class GreenDataController extends Controller
 			    SUM(budget) AS sum_by_level
 			FROM
 			    `gs_item_budgets`
+			WHERE DATE(gs_item_budgets.price_date) BETWEEN '{$startDate}' AND '{$endDate}'
 			GROUP BY
 			    location_codes, price_level;
 		");

@@ -135,7 +135,7 @@ Route::prefix('admin')->group(function () {
 	Route::resource('housing-rental-indices-prices', HousingRentalIndicePriceController::class);
 
 	Route::get('run-script-view', [GreenDataController::class, 'index'])->name('run-script-view');
-	Route::get('run-script', [GreenDataController::class, 'runScript'])->name('run-script');
+	Route::post('run-script', [GreenDataController::class, 'runScript'])->name('run-script');
 	Route::post('flush-data', [GreenDataController::class, 'store'])->name('flush-data');
 
 });

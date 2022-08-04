@@ -133,6 +133,13 @@ class HousingPropertyTaxIndicePriceController extends Controller
 
                 return response()->json(['status'=>true,'message'=>"Records deleted successfully."]);
             }
+
+            if (request()->is_delete_request_all) {
+
+                HousingPropertyTaxIndicesPrice::truncate();
+
+                return response()->json(['status'=>true,'message'=>"All Records deleted successfully."]);
+            }
         } 
     } 
 }

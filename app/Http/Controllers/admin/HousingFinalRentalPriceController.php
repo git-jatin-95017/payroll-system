@@ -133,6 +133,13 @@ class HousingFinalRentalPriceController extends Controller
 
                 return response()->json(['status'=>true,'message'=>"Records deleted successfully."]);
             }
+
+            if (request()->is_delete_request_all) {
+
+                HousingFinalRentalPrice::truncate();
+
+                return response()->json(['status'=>true,'message'=>"All Records deleted successfully."]);
+            }
         } 
     } 
 }
