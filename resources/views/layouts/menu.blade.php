@@ -348,15 +348,7 @@
 						GS Raw Prices
 					</p>
 				</a>		
-			</li>
-			<li class="nav-item">
-				<a href="{{ route('exchange-rates.index') }}" class="nav-link">
-					<i class="far fa-circle nav-icon"></i>
-					<p>
-						Exchange Rate
-					</p>
-				</a>		
-			</li>
+			</li>			
 		</ul>
 	</li>
 
@@ -422,6 +414,12 @@
 			</li>
 		</ul>
 	</li>
+	<a href="{{ route('exchange-rates.index') }}" class="nav-link">
+		<i class="far fa-circle nav-icon"></i>
+		<p>
+			Exchange Rates 
+		</p>
+	</a>
 	<a href="{{ route('run-script-view') }}" class="nav-link {{ Request::is('run-script-view') ? 'active' : '' }}">
 		<i class="nav-icon fas fa-circle"></i>
 		<p>Run SCRIPT</p>

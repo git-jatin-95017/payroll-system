@@ -136,6 +136,7 @@ Route::prefix('admin')->group(function () {
 
 	Route::get('run-script-view', [GreenDataController::class, 'index'])->name('run-script-view');
 	Route::post('run-script', [GreenDataController::class, 'runScript'])->name('run-script');
+	Route::post('exhange-rate', [GreenDataController::class, 'exchangeRate'])->name('exhange-rate');
 	Route::post('flush-data', [GreenDataController::class, 'store'])->name('flush-data');
 
 });

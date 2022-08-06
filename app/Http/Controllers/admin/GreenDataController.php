@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\ExchangeRate;
 use App\Models\LocationCode;
 use App\Models\NationalSample;
 use App\Models\GsCleanedPrice;
@@ -515,5 +516,47 @@ class GreenDataController extends Controller
 		}
 
 		return redirect('admin/run-script-view')->with('status', 'Data deleted Successfully.');        
+	}
+
+	public function exchangeRate(Request $request) {
+		$request->validate([
+	        'start_date' => 'required|date',
+    		'end_date' => 'required|date|after_or_equal:start_date',
+	    ]);
+		
+		$startDate = $request->start_date;
+		
+		$endDate = $request->end_date;
+
+		// set API Endpoint and access key (and any options of your choice)
+
+		$endpoint = 'live';
+
+		$access_key = 'df990ab0e9fc0c0468d72082bb60dde7';
+
+		// Initialize CURL:
+		$ch = curl_init('https://api.currencylayer.com/'.$endpoint.'?access_key='.$access_key.'& currencies = USD,GBP,EUR & start_date = '.$startDate.' & end_date = '. $endDate);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		// Store the data:
+		$json = curl_exec($ch);
+		curl_close($ch);
+
+		// Decode JSON response:
+		$exchangeRates = json_decode($json, true);
+
+		if (count($exchangeRates['quotes']) > 0) {
+			ExchangeRate::truncate();
+			foreach($exchangeRates['quotes'] as $key => $value) {
+				$currency = str_replace('USD', '', $key);
+				ExchangeRate::create([
+					'currency' => $currency,
+					'rate' =>$value,
+					'date' => date('Y-m-d H:i:s')
+				]);
+			}
+		}	
+
+		return redirect('admin/run-script-view')->with('status', 'Exhange rate table data inserted successfully.');  
 	}
 }

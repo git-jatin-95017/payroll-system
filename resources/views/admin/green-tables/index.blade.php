@@ -46,17 +46,48 @@
 									<div class="row">
 										<div class="col-sm-4">
 											<label>Start Date</label>
-											<input name="start_date" type="date" class="form-control">											
+											<input name="start_date" type="date" value="2021-10-01" class="form-control">											
 										</div>
 										<div class="col-sm-4">
 											<label>End Date</label>
-											<input name="end_date" type="date" class="form-control">
+											<input name="end_date" type="date" value="2021-10-01" class="form-control">
 										</div>
 									</div>
 								</div>
 								<br>
 								<div id="heading-links" class="card-header text-center">							
 									<button type="submit" class="btn btn-lg btn-success">Run Script</button>
+									<!-- <a class="btn btn-lg btn-success" href="{{ route('run-script') }}"></a> -->
+									<!-- <p class="font-light">Click to execute script</p> -->
+								</div>
+							</form>
+						</div>
+						 <div class="card-footer">
+							&nbsp;
+						</div>
+					</div>
+					<div class="card card-primary">
+						<div class="card-header">
+							<h3 class="card-title">Exchange Rate API</h3>
+						</div>
+						<div class="card-body">							
+							<form id="excel-csv-import-form" method="POST" action="{{ route('exhange-rate') }}" accept-charset="utf-8">
+							@csrf
+								<div class="col-sm-12">
+									<div class="row">
+										<div class="col-sm-4">
+											<label>Start Date</label>
+											<input name="start_date" value="2010-03-01" type="date" class="form-control">											
+										</div>
+										<div class="col-sm-4">
+											<label>End Date</label>
+											<input name="end_date" type="date" value="2010-04-01" class="form-control">
+										</div>
+									</div>
+								</div>
+								<br>
+								<div id="heading-links" class="card-header text-center">							
+									<button type="submit" class="btn btn-sm btn-success">Get & Save Exchange Rates</button>
 									<!-- <a class="btn btn-lg btn-success" href="{{ route('run-script') }}"></a> -->
 									<!-- <p class="font-light">Click to execute script</p> -->
 								</div>
