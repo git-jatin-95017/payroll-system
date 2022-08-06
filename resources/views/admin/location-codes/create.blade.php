@@ -29,7 +29,7 @@
 				        </div>
 				       	<div class="card-body">
 				       		<div id="heading-links" class="card-header">
-				       			<p class="font-light">Click here <a href="{{ route('download-sample', 'Location_Codes_Sample_Data.xlsx')}}">Download Sample File - (Location_Codes_Sample_Data.xlsx)</a> to download the template that should be used to upload location codes into the system. Once you've downloaded the template, open MS Excel, add your location codes in and then use the form to the right to load them into the system. </p>
+				       			<p class="font-light">Click here <a href="{{ route('download-sample', 'Location List - Upload - 8.4.2022.xlsx')}}">Download Sample File - (Location List - Upload - 8.4.2022.xlsx)</a> to download the template that should be used to upload location codes into the system. Once you've downloaded the template, open MS Excel, add your location codes in and then use the form to the right to load them into the system. </p>
 				       		</div>
 				       	</div>
 				       	 <div class="card-footer">

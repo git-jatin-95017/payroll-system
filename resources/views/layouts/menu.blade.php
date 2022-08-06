@@ -404,19 +404,19 @@
 			</li>
 
 			<li class="nav-item">
-				<a href="{{ route('housing-prop-tax-ind-prices.index') }}" class="nav-link">
+				<a href="{{ route('housing-rental-indices-prices.index') }}" class="nav-link">
 					<i class="far fa-circle nav-icon"></i>
 					<p>
-						Housing Property Tax Indices Prices
+						Housing Rental Indices Prices
 					</p>
 				</a>		
 			</li>
 
 			<li class="nav-item">
-				<a href="{{ route('housing-rental-indices-prices.index') }}" class="nav-link">
+				<a href="{{ route('housing-prop-tax-ind-prices.index') }}" class="nav-link">
 					<i class="far fa-circle nav-icon"></i>
 					<p>
-						Housing Rental Indices Prices
+						Housing Property Tax Indices Prices
 					</p>
 				</a>		
 			</li>

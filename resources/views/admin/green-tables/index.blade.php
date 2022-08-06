@@ -137,22 +137,22 @@
 								</div>
 								<div class="form-check">
 								  <label class="form-check-label">
-									<input type="checkbox" class="form-check-input" name="flush_table[]" value="12"> Housing_Final_Prices_Rental
+									<input type="checkbox" class="form-check-input" name="flush_table[]" value="12"> Housing Final Prices Rental
 								  </label>
 								</div>
 								<div class="form-check">
 								  <label class="form-check-label">
-									<input type="checkbox" class="form-check-input" name="flush_table[]" value="13">Housing_Home_Price_Indices Countries
+									<input type="checkbox" class="form-check-input" name="flush_table[]" value="13">Housing Home Price Indices Countries
 								  </label>
 								</div>
 								<div class="form-check">
 								  <label class="form-check-label">
-									<input type="checkbox" class="form-check-input" name="flush_table[]" value="14">Housing_Rental_Price_Indices
+									<input type="checkbox" class="form-check-input" name="flush_table[]" value="14">Housing Rental Price Indices
 								  </label>
 								</div>
 								<div class="form-check">
 								  <label class="form-check-label">
-									<input type="checkbox" class="form-check-input" name="flush_table[]" value="15">Housing_Property_Tax_Price_Indices
+									<input type="checkbox" class="form-check-input" name="flush_table[]" value="15">Housing Property Tax Price Indices
 								  </label>
 								</div>								
 							</div>

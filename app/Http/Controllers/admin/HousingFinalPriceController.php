@@ -126,4 +126,24 @@ class HousingFinalPriceController extends Controller
 
         return true;
     }
+
+     public function deleteAll(Request $request)  
+    {  
+        if (request()->ajax()) {
+
+            if (request()->is_delete_request) {
+
+                HousingFinalPrice::whereIn('id', $request->get('ids'))->delete();
+
+                return response()->json(['status'=>true,'message'=>"Records deleted successfully."]);
+            }
+
+            if (request()->is_delete_request_all) {
+
+                HousingFinalPrice::truncate();
+
+                return response()->json(['status'=>true,'message'=>"All Records deleted successfully."]);
+            }
+        } 
+    } 
 }

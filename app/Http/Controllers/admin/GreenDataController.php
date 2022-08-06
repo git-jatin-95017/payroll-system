@@ -15,6 +15,13 @@ use App\Models\GsFinalItemPrice;
 use App\Models\GsItemBudget;
 use App\Models\GsCityBudget;
 use App\Models\GsQuantitySample;
+use App\Models\HousingFinalPrice;
+use App\Models\HousingFinalPriceCountry;
+use App\Models\HousingFinalRentalPrice;
+use App\Models\HousingHomeIndicesPrice;
+use App\Models\HousingRentalIndicesPrice;
+use App\Models\HousingPropertyTaxIndicesPrice;
+
 use Illuminate\Support\Facades\DB;
 
 
@@ -107,7 +114,7 @@ class GreenDataController extends Controller
 			}
 		}
 
-		if (!empty($mediumPrice[0]->price)) {
+		if (!empty($mediumPrice[0]->price) && !empty($lowPrice[0]->price)) {
 			$mediumLevelData = GsCleanedPrice::where('price', '>', $lowPrice[0]->price)->where('price', '<=', $mediumPrice[0]->price)->get();
 			
 			if ($mediumLevelData->count() > 0) {
@@ -124,7 +131,7 @@ class GreenDataController extends Controller
 			}
 		}
 
-		if (!empty($highPrice[0]->price)) {
+		if (!empty($highPrice[0]->price) && !empty($mediumPrice[0]->price)) {
 			$highLevelData =  GsCleanedPrice::where('price', '>', $mediumPrice[0]->price)->where('price', '<=', $highPrice[0]->price)->get();
 
 			if ($highLevelData->count() > 0) {
@@ -381,6 +388,59 @@ class GreenDataController extends Controller
 			}
 		}
 
+		//Housing Data Insertion Script
+
+		$first = DB::select("
+			INSERT INTO housing_final_prices (price_level,location_codes,housing_codes,price_type,house_type,bedrooms,price,currency,price_date)
+			SELECT filtered.*
+			FROM (
+			    SELECT (CASE
+			        WHEN sorted.row_num < ROUND (.15* @row_num) THEN 'lowest'
+			        WHEN sorted.row_num > ROUND (.15* @row_num) AND sorted.row_num < ROUND (.25* @row_num) THEN 'low'
+			        WHEN sorted.row_num > ROUND (.25* @row_num) AND sorted.row_num < ROUND (.50* @row_num) THEN 'median'
+			        WHEN sorted.row_num > ROUND (.50* @row_num) AND sorted.row_num < ROUND (.75* @row_num) THEN 'high'
+			        WHEN sorted.row_num > ROUND (.75* @row_num) AND sorted.row_num < ROUND (.85* @row_num) THEN 'Highest'
+			        ELSE 'Highest'
+			    END
+			    ) as price_level,
+			    location_codes,housing_codes,price_type,house_type,bedrooms,price,currency,price_date
+			    FROM (
+			            SELECT t.*,  @row_num :=@row_num + 1 AS row_num 
+			            FROM housing_samples t, (SELECT @row_num:=0) counter
+			            WHERE DATE(t.price_date) BETWEEN '{$startDate}' AND '{$endDate}'
+			            ORDER BY price
+			    ) as sorted
+			    order by sorted.price DESC
+			) as filtered
+		");
+
+
+		$second = DB::select("
+			INSERT INTO housing_final_price_countries (price, price_level, location_codes, housing_codes, price_type, house_type, bedrooms, currency, price_date)
+			SELECT cte1.level_avg_price, cte1.price_level ,
+			cte2.location_codes, cte2.housing_codes, cte2.price_type, cte2.house_type, cte2.bedrooms, cte2.currency,  cte2.price_date
+			FROM 
+			(
+			        SELECT SUBSTRING(location_codes,1,3) AS location_codes, price_level, AVG(price) as level_avg_price
+			        FROM housing_final_prices
+			        WHERE DATE(housing_final_prices.price_date) BETWEEN '{$startDate}' AND '{$endDate}'
+			        GROUP BY SUBSTRING(location_codes,1,3), price_level
+			) cte1
+			INNER JOIN (
+			        SELECT * FROM housing_final_prices WHERE DATE(housing_final_prices.price_date) BETWEEN '{$startDate}' AND '{$endDate}'
+			) cte2 
+			ON cte1.price_level = cte2.price_level AND cte1.location_codes = SUBSTRING(cte2.location_codes,1,3)
+		");
+
+		$three = DB::select("
+			INSERT INTO housing_final_rental_prices (price, price_level, location_codes, housing_codes, price_type, house_type, bedrooms, currency, price_date)
+			SELECT * FROM (
+			        SELECT price, price_level, location_codes, housing_codes, price_type, house_type, bedrooms, currency, price_date 
+			FROM housing_final_prices 
+			WHERE SUBSTRING(housing_codes, 1,3)='002' AND DATE(housing_final_prices.price_date) BETWEEN '{$startDate}' AND '{$endDate}'
+			) AS cte1
+		");
+
 		return redirect('admin/run-script-view')->with('status', 'Script Executed Successfully.');        
 	}
 
@@ -427,6 +487,31 @@ class GreenDataController extends Controller
 
 		if (in_array(9, $tableId)) {
 			GsCityBudget::truncate();
+		}
+
+		//
+		if (in_array(10, $tableId)) {
+			HousingFinalPrice::truncate();
+		}
+
+		if (in_array(11, $tableId)) {
+			HousingFinalPriceCountry::truncate();
+		}
+
+		if (in_array(12, $tableId)) {
+			HousingFinalRentalPrice::truncate();
+		}
+		
+		if (in_array(13, $tableId)) {
+			HousingHomeIndicesPrice::truncate();
+		}
+		
+		if (in_array(14, $tableId)) {
+			HousingRentalIndicesPrice::truncate();
+		}
+
+		if (in_array(15, $tableId)) {
+			HousingPropertyTaxIndicesPrice::truncate();
 		}
 
 		return redirect('admin/run-script-view')->with('status', 'Data deleted Successfully.');        
