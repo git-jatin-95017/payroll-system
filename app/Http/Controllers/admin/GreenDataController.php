@@ -534,31 +534,22 @@ class GreenDataController extends Controller
 
 		$access_key = 'df990ab0e9fc0c0468d72082bb60dde7';
 
-		// Initialize CURL:
-		try {			
-			$ch = curl_init('https://api.currencylayer.com/'.$endpoint.'?access_key='.$access_key.'& currencies = USD,GBP,EUR & start_date = '.$startDate.' & end_date = '. $endDate);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$url = 'https://api.currencylayer.com/'.$endpoint.'?access_key='.$access_key.'& currencies = USD,GBP,EUR & start_date = '.$startDate.' & end_date = '. $endDate;
 
-			// Store the data:
-			$json = curl_exec($ch);
-			curl_close($ch);
+		$result = file_get_contents($url);
 
-			// Decode JSON response:
-			$exchangeRates = json_decode($json, true);
+		$exchangeRates = json_decode($result, true);
 
-			if ($exchangeRates['quotes']) {
-				ExchangeRate::truncate();
-				foreach($exchangeRates['quotes'] as $key => $value) {
-					$currency = str_replace('USD', '', $key);
-					ExchangeRate::create([
-						'currency' => $currency,
-						'rate' =>$value,
-						'date' => date('Y-m-d H:i:s')
-					]);
-				}
-			}	
-		} catch (\Exception $e) {
-			return redirect('admin/run-script-view')->with('status', $e->getMessage()); 
+		if (count($exchangeRates['quotes']) > 0) {
+			ExchangeRate::truncate();
+			foreach($exchangeRates['quotes'] as $key => $value) {
+				$currency = str_replace('USD', '', $key);
+				ExchangeRate::create([
+					'currency' => $currency,
+					'rate' =>$value,
+					'date' => date('Y-m-d H:i:s')
+				]);
+			}
 		}
 
 		return redirect('admin/run-script-view')->with('status', 'Exhange rate table data inserted successfully.');  
