@@ -565,6 +565,130 @@ class GreenDataController extends Controller
 				    ) = price_indicies.metro_location_codes
 		");
 
+		$five = DB::select("
+			INSERT INTO housing_rental_indices_prices(location_codes, price)
+				SELECT
+				    location_codes,
+				    indices
+				FROM
+				    (
+				    SELECT
+				        *,
+				        (m_avg / c_avg) * 100 AS indices
+				    FROM
+				        (
+				        SELECT
+				            SUM(
+				                (housing_count / metro_count) * avg_item_price
+				            ) AS m_avg,
+				            metro_location_codes
+				        FROM
+				            (
+				            SELECT
+				                housing_codes,
+				                COUNT(housing_codes) AS housing_count,
+				                SUBSTRING(location_codes, 1, 12) AS housing_location_codes,
+				                ROUND(AVG(price)) AS avg_item_price
+				            FROM
+				                housing_final_prices
+				            WHERE
+				                SUBSTRING(housing_codes, 1, 3) = '001'
+				            GROUP BY
+				                SUBSTRING(location_codes, 1, 12),
+				                housing_codes
+				        ) AS ct1
+				    INNER JOIN(
+				        SELECT COUNT(*) AS metro_count,
+				            SUBSTRING(location_codes, 1, 12) AS metro_location_codes
+				        FROM
+				            housing_final_prices
+				        WHERE
+				            SUBSTRING(housing_codes, 1, 3) = '001'
+				        GROUP BY
+				            SUBSTRING(location_codes, 1, 12)
+				    ) AS ct2
+				ON
+				    ct1.housing_location_codes = ct2.metro_location_codes
+				GROUP BY
+				    metro_location_codes
+				    ) AS metro_weight_avg
+				INNER JOIN(
+				    SELECT SUM(
+				            country_avg_item_price * housing_weight
+				        ) AS c_avg,
+				        country_code
+				    FROM
+				        (
+				        SELECT
+				            housing_codes,
+				            AVG(price) AS country_avg_item_price,
+				            SUBSTRING(location_codes, 1, 3) AS country_code
+				        FROM
+				            housing_final_prices
+				        WHERE
+				            SUBSTRING(housing_codes, 1, 3) = '001'
+				        GROUP BY
+				            SUBSTRING(location_codes, 1, 3),
+				            housing_codes
+				    ) AS country_avg
+				INNER JOIN(
+				    SELECT housing_codes,
+				        (housing_count / metro_count) AS housing_weight
+				    FROM
+				        (
+				        SELECT
+				            housing_codes,
+				            COUNT(housing_codes) AS housing_count,
+				            SUBSTRING(location_codes, 1, 12) AS housing_location_codes,
+				            ROUND(AVG(price)) AS avg_item_price
+				        FROM
+				            housing_final_prices
+				        WHERE
+				            SUBSTRING(housing_codes, 1, 3) = '001'
+				        GROUP BY
+				            SUBSTRING(location_codes, 1, 12),
+				            housing_codes
+				    ) AS ct1
+				INNER JOIN(
+				    SELECT COUNT(*) AS metro_count,
+				        SUBSTRING(location_codes, 1, 12) AS metro_location_codes
+				    FROM
+				        housing_final_prices
+				    WHERE
+				        SUBSTRING(housing_codes, 1, 3) = '001'
+				    GROUP BY
+				        SUBSTRING(location_codes, 1, 12)
+				) AS ct2
+				ON
+				    ct1.housing_location_codes = ct2.metro_location_codes
+				) housing_weight
+				ON
+				    country_avg.housing_codes = housing_weight.housing_codes
+				GROUP BY
+				    country_code
+				) AS country_weight_avg
+				ON
+				    SUBSTRING(
+				        metro_weight_avg.metro_location_codes,
+				        1,
+				        3
+				    ) = country_weight_avg.country_code
+				) AS price_indicies
+				INNER JOIN(
+				    SELECT location_codes
+				    FROM
+				        housing_final_prices
+				    WHERE
+				        SUBSTRING(housing_codes, 1, 3) = '001'
+				) AS all_location_codes
+				ON
+				    SUBSTRING(
+				        all_location_codes.location_codes,
+				        1,
+				        12
+				    ) = price_indicies.metro_location_codes
+		");
+
 		return redirect('admin/run-script-view')->with('status', 'Script Executed Successfully.');        
 	}
 
