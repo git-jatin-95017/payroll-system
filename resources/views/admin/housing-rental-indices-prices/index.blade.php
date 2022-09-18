@@ -11,12 +11,12 @@
 		<div class="container-fluid">
 			<div class="row mb-2">
 				<div class="col-sm-6">
-					<h1 class="m-0">ERD - Housing Property Tax indicies</h1>
+					<h1 class="m-0">ERD - Housing Rental Indices </h1>
 				</div>
 				<div class="col-sm-6">
 					<ol class="breadcrumb float-sm-right">
 						<li class="breadcrumb-item"><a href="#">Home</a></li>
-						<li class="breadcrumb-item active">Housing Property Tax indicies</li>
+						<li class="breadcrumb-item active">Housing Rental Indices </li>
 					</ol>
 				</div>
 			</div>
@@ -33,7 +33,7 @@
 					@endif
 					<div class="card">
 						<div class="card-header">
-							<h3 class="card-title">ERD - Housing Property Tax indicies</h3>
+							<h3 class="card-title">ERD - Housing Rental Indices </h3>
 						</div>
 						<div class="card-body">
 							<div class="row">
@@ -61,8 +61,9 @@
 										<th>Location Codes</th>										
 										<th>Price</th>
 										<th>Price Date</th>
+										<th>Price Level</th>
 										<th>Created At</th>
-										<th>Updated At</th>
+										<!-- <th>Updated At</th> -->
 									</tr>
 								</thead>
 								<tfoot>
@@ -72,8 +73,9 @@
 										<th>Location Codes</th>										
 										<th>Price</th>
 										<th>Price Date</th>
+										<th>Price Level</th>
 										<th>Created At</th>
-										<th>Updated At</th>
+										<!-- <th>Updated At</th> -->
 									</tr>
 								</tfoot>
 							</table>
@@ -148,8 +150,9 @@
 						{data:'location_codes', name: 'location_codes'},
 						{data:'price', name: 'price'},
 						{data:'price_date', name: 'price_date'},							
+						{data:'price_level', name: 'price_level'},							
 						{data:'created_at', name: 'created_at'},
-						{data:'updated_at', name: 'updated_at'},
+						// {data:'updated_at', name: 'updated_at'},
 			        ],
 			        orderCellsTop: true,
         			// fixedHeader: true,
