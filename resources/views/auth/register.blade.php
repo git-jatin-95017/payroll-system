@@ -79,7 +79,7 @@
                     </span>
                     @enderror
                 </div>
-
+                <input type="hidden" name="role_id" value="1">
                 <div class="input-group mb-3">
                     <input type="password"
                            name="password_confirmation"

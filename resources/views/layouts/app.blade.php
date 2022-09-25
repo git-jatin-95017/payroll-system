@@ -37,24 +37,26 @@
 		<ul class="navbar-nav ml-auto">
 			<li class="nav-item dropdown user-menu">
 				<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-					<img src="/img/logo3.png"
+					<img src="/img/logo3.jpg"
 						 class="user-image img-circle elevation-2" alt="User Image">
-					<span class="d-none d-md-inline">{{ Auth::user()->name }}</span>
+					<span class="d-none d-md-inline">Welcome {{ ucwords(Auth::user()->name) }}</span>
 				</a>
 				<ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
 					<!-- User image -->
 					<li class="user-header bg-primary">
-						<img src="/img/logo.jpg"
+						<img src="/img/logo3.jpg"
 							 class="img-circle elevation-2" style="object-fit: contain;"
 							 alt="User Image">
 						<p>
-							{{ Auth::user()->name }}
+							{{ ucwords(Auth::user()->name) }}
 							<small>Member since {{ Auth::user()->created_at->format('M. Y') }}</small>
 						</p>
 					</li>
 					<!-- Menu Footer-->
 					<li class="user-footer">
-						<a href="#" class="btn btn-default btn-flat">Profile</a>
+						@if(Auth::user()->role_id == 1)
+						<a href="{{ route('edit-my-profile.edit', Auth::user()->id) }}" class="btn btn-default btn-flat">Profile</a>
+						@endif
 						<a href="#" class="btn btn-default btn-flat float-right"
 						   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
 							Sign out
@@ -65,6 +67,7 @@
 					</li>
 				</ul>
 			</li>
+			
 		</ul>
 	</nav>
 
@@ -81,7 +84,7 @@
 		<div class="float-right d-none d-sm-block">
 			<!-- <b>Version</b> 3.0.5 -->
 		</div>
-		<strong>Copyright &copy; 2022 <a href="/">Global-IQ</a>.</strong> All rights
+		<strong>Copyright &copy; 2022 <a href="/">Payroll Management</a>.</strong> All rights
 		reserved.
 	</footer>
 </div>

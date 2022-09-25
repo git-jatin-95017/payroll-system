@@ -1,10 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\client;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\LocationCode;
+use App\Models\ExpenditureSample;
+use App\Models\GsCodeSample;
+use App\Models\GsQuantitySample;
+use App\Models\HousingCode;
+use App\Models\HousingSample;
+use App\Models\LocationPriceSample;
+use App\Models\NationalSample;
+use App\Models\PropertyTaxSample;
+use App\Models\SaleTaxSample;
+use App\Models\SupermarketSample;
 use File;
 use Response;
 use DB;

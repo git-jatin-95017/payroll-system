@@ -21,6 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
+        'phone_number',
+        'user_code'
     ];
 
     /**
@@ -41,4 +44,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $appends = ['created_at_formatted', 'updated_at_formatted'];
+
+    public function employeeProfile() {
+        return $this->hasOne(EmployeeProfile::class);
+    }
+
+    public function getCreatedAtFormattedAttribute() {
+        return date('Y-m-d H:i:s', strtotime($this->attributes['created_at']));
+    }
+    
+    public function getUpdatedAtFormattedAttribute()
+    {
+        return date('Y-m-d H:i:s', strtotime($this->attributes['created_at']));
+    }
 }

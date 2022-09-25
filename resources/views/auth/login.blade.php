@@ -21,13 +21,16 @@
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
-    <div class="login-logo">
+    <!-- <div class="login-logo">
         <a href="{{ url('/admin/dashboard') }}"><b>{{ config('app.name') }}</b></a>
-    </div>
+    </div> -->
     <!-- /.login-logo -->
 
     <!-- /.login-box-body -->
-    <div class="card">
+    <div class="card card-outline card-primary">
+        <div class="card-header text-center">
+            <a href="/" class="h2"><b>Payroll </b>Management</a>
+        </div>
         <div class="card-body login-card-body">
             @include('layouts.flash-admin-message')
             <p class="login-box-msg">Sign in to start your session</p>
