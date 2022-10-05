@@ -52,11 +52,11 @@ class User extends Authenticatable
     }
 
     public function getCreatedAtFormattedAttribute() {
-        return date('Y-m-d H:i:s', strtotime($this->attributes['created_at']));
+        return !empty($this->attributes['created_at']) ? date('Y-m-d H:i:s', strtotime($this->attributes['created_at'])) : NULL;
     }
     
     public function getUpdatedAtFormattedAttribute()
     {
-        return date('Y-m-d H:i:s', strtotime($this->attributes['created_at']));
+        return !empty($this->attributes['created_at']) ? date('Y-m-d H:i:s', strtotime($this->attributes['created_at'])) : NULL;
     }
 }

@@ -23,7 +23,7 @@
 					<div class="small-box bg-info">
 						<div class="inner">
 							<h3>0</h3>
-							<p>Total Employees</p>
+							<p>Total Leaves</p>
 						</div>
 						<div class="icon">
 							<i class="ion ion-bag"></i>

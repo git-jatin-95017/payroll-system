@@ -9,7 +9,7 @@
 			<a href="#" class="nav-link">
 				<i class="nav-icon fas fa-user"></i>
 				<p>
-				Manage Clients
+				 Clients
 					<i class="right fas fa-angle-left"></i>
 				</p>
 			</a>
@@ -28,6 +28,11 @@
 				</li>
 			</ul>
 		</li>
+		<li class="nav-item <?php //echo $page_name == "attendance" ? 'active' : ''; ?>">
+			<a href="{{ route('attendance.index') }}" class="nav-link">
+				<i class="fa fa-calendar nav-icon"></i> <span>Attendance</span>
+			</a>
+		</li>
 	@endif
 
 	@if(auth()->user()->role_id == 2)
@@ -35,7 +40,7 @@
 			<a href="#" class="nav-link">
 				<i class="nav-icon fas fa-user"></i>
 				<p>
-				Manage Employees
+				 Employees
 					<i class="right fas fa-angle-left"></i>
 				</p>
 			</a>
@@ -58,7 +63,7 @@
 			<a href="#" class="nav-link">
 				<i class="nav-icon fas fa-table"></i>
 				<p>
-				Manage Holidays
+				 Holidays
 					<i class="right fas fa-angle-left"></i>
 				</p>
 			</a>
@@ -88,18 +93,18 @@
 			</a>		
 		</li> -->
 		<li class="nav-item">
-			<a href="#" class="nav-link">
+			<a href="{{ route('leaves.index') }}" class="nav-link">
 				<i class="nav-icon fas fa-book"></i>
 				<p>
-					Manage Leaves
+					Leaves
 				</p>
 			</a>		
-		</li> 
+		</li>
 		<li class="nav-item">
 			<a href="#" class="nav-link">
 				<i class="nav-icon far fa-calendar-alt"></i>
 				<p>
-				Manage Attendance
+				 Attendance
 					<i class="right fas fa-angle-left"></i>
 				</p>
 			</a>
@@ -122,7 +127,7 @@
 			<a href="#" class="nav-link">
 				<i class="nav-icon fas fa-file"></i>
 				<p>
-				Manage Salaries
+				 Salaries
 					<i class="right fas fa-angle-left"></i>
 				</p>
 			</a>
@@ -137,14 +142,36 @@
 		</li>
 	@endif
 
-	<li class="nav-item">
-		<a href="{{ route('edit-my-profile.edit', auth()->user()->id) }}" class="nav-link">
-			<i class="nav-icon fas fa-edit"></i>
-			<p>
-				Edit Profile
-			</p>
-		</a>		
-	</li>
+	@if(auth()->user()->role_id == 3)
+		<li class="nav-item">
+			<a href="{{ route('my-leaves.index') }}" class="nav-link">
+				<i class="nav-icon fas fa-book"></i>
+				<p>
+					Leaves
+				</p>
+			</a>		
+		</li>
+	@endif
+
+	@if(auth()->user()->role_id == 3)
+		<li class="nav-item">
+			<a href="{{ route('emp-my-profile.edit', auth()->user()->id) }}" class="nav-link">
+				<i class="nav-icon fas fa-edit"></i>
+				<p>
+					Edit Profile
+				</p>
+			</a>		
+		</li>
+	@else
+		<li class="nav-item">
+			<a href="{{ route('edit-my-profile.edit', auth()->user()->id) }}" class="nav-link">
+				<i class="nav-icon fas fa-edit"></i>
+				<p>
+					Edit Profile
+				</p>
+			</a>		
+		</li>
+	@endif
 	<li class="nav-item">
 		<a href="#" class="nav-link"
 		   onclick="event.preventDefault(); document.getElementById('logout-form-1').submit();">

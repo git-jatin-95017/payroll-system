@@ -5,13 +5,15 @@
 	        width: 100%;
 	    }
 	</style>
+	<link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/responsive.bootstrap4.min.css') }}">
 @endpush
 @section('content')
 	<div class="content-header">
 		<div class="container-fluid">
 			<div class="row mb-2">
 				<div class="col-sm-6">
-					<h1 class="m-0">Manage Employees</h1>
+					<h1 class="m-0">Employees</h1>
 				</div>
 				<div class="col-sm-6">
 					<ol class="breadcrumb float-sm-right">
@@ -78,14 +80,12 @@
 										<th>ID</th>
 										<th>IMAGE</th>
 										<th>NAME</th>
-										<th>EMAIL</th>										
 										<th>CONTACT</th>										
-										<th>IDENTITY</th>										
-										<th>DOB</th>										
-										<th>JOINING</th>										
-										<th>BLOOD</th>										
-										<th>EMP TYPE</th>										
-										<th>CREATED AT</th>										
+										<th>SOCIAL SECURITY</th>										
+										<th>MEDICAL BENEFITS</th>										
+										<th>START DATE</th>										
+										<th>POSITION</th>										
+										<th>PAY RATE</th>										
 										<th>ACTION</th>										
 									</tr>
 								</thead>
@@ -99,9 +99,11 @@
 @endsection
 
 @push('page_scripts')
-	<!-- <script src="https://cdn.datatables.net/fixedheader/3.2.3/css/fixedHeader.dataTables.min.css"></script> -->
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-
+	<script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+	<script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
+	<script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
+	<script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
 	<script>
 		$('#delete-all').on('click', function (e) { 
 			e.preventDefault();		     
@@ -184,7 +186,7 @@
 					// scrollX: true,
 					scrollY: "400px",
 					ajax: {
-						url: "{{ route('employee.index') }}",
+						url: "{{route('employee.getData')}}",
 					  	type: 'GET',
 					  	data: function (d) {
 					  		d.start_date = $('#start_date').val();
@@ -193,19 +195,51 @@
 					},
 					columns: [
 			           	// {data: 'action', name: 'Action', orderable: false, searchable: false},
-						{data:'id', name: 'ID'},
-						{data:'avatar', name: 'IMAGE', orderable: false, searchable: false},
-						{data:'name', name: 'NAME'},
-						{data:'email', name: 'EMAIL'},						
-						{data:'mobile', name: 'CONTACT'},						
-						{data:'identity_document', name: 'IDENTITY'},						
-						{data:'dob', name: 'DOB'},						
-						{data:'doj', name: 'JOINING'},						
-						{data:'blood_group', name: 'BLOOD'},						
-						{data:'emp_type', name: 'EMP TYPE'},						
-						{data:'created_at_formatted', name: 'CREATED AT'},
-						// {data:'updated_at_formatted', name: 'updated_at'},
-						{data:'action_button', name: 'ACTION', orderable: false, searchable: false},
+						{data:'user_code'},
+						{
+							data:'file', 
+							orderable: false, 
+							searchable: false,
+							render: function(data, type, row, meta) {
+			                	if(row.file) {
+									var avatar = `<img src='/files/${row.file}' width='65' height='65' class='table-user-thumb'>`;
+								} else {
+									var avatar = "<img src='/img/user2-160x160.jpg' width='65' height='65' class='table-user-thumb'>";
+								}
+			                	return avatar;
+			                }
+						},
+						{
+							data:'name', 
+							// orderable: true
+						},
+						{data:'phone_number'},						
+						{data:'pan_number'},						
+						{data:'ifsc_code'},						
+						{data:'start_date'},						
+						{data:'designation'},						
+						{data:'pay_rate'},
+						{
+			                data: 'actions',
+			                orderable : false,
+			                searchable : false,
+			                render: function(data, type, row, meta) {
+			                	var viewRoute = "{{ route('employee.show', "+row.id+") }}";
+			                	var editRoute = "{{ route('employee.edit', "+row.id+") }}";
+			                	var destrRoute = "{{ route('employee.destroy', "+row.id+") }}";
+			                	var action = `<div class="table-actions">`;
+
+			                	action += "<a href=" + viewRoute + " class='btn btn-sm btn-info'><i class='fas fa-eye'></i></a>";
+
+			                	action += "<a href=" + editRoute + " class='btn btn-sm btn-primary'><i class='fas fa-pen'></i></a>";
+
+			                	action += "<a href=" + destrRoute + " class='btn btn-sm btn-danger delete'><i class='fas fa-pen'></i></a>";
+
+			                	action += `</div>`;
+
+			                	return action;
+			                }
+			            }
 			        ],
 			        orderCellsTop: true,
         			// fixedHeader: true,

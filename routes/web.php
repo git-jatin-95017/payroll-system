@@ -6,6 +6,11 @@ use App\Http\Controllers\admin\ClientController;
 use App\Http\Controllers\admin\ProfileController;
 use App\Http\Controllers\client\EmployeeController;
 use App\Http\Controllers\client\HolidayController;
+use App\Http\Controllers\client\LeavesController;
+use App\Http\Controllers\employee\LeaveController;
+use App\Http\Controllers\employee\MyProfileController;
+use App\Http\Controllers\PunchController;
+use App\Http\Controllers\AttendanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,15 +33,40 @@ Route::prefix('admin')->group(function () {
 	//Dashboard
 	Route::get('dashboard', [App\Http\Controllers\admin\DashboardController::class, 'index'])->name('dashboard');	
 	Route::resource('client', ClientController::class);
+
+	Route::get('attendance/getData/', [AttendanceController::class, 'getData'])->name('attendance.getData');
+	Route::resource('attendance', AttendanceController::class);	
 });
 
 Route::prefix('client')->group(function () {
 	//Dashboard
 	Route::get('dashboard', [App\Http\Controllers\client\DashboardController::class, 'index'])->name('dashboard');	
+
+	Route::get('employee/getData/', [EmployeeController::class, 'getData'])->name('employee.getData');
 	Route::resource('employee', EmployeeController::class);	
+	Route::get('leaves/getData/', [LeavesController::class, 'getData'])->name('leaves.getData');
+	Route::resource('leaves', LeavesController::class);	
+
 	Route::resource('holidays', HolidayController::class);	
+
+	Route::get('attendance/getData/', [AttendanceController::class, 'getData'])->name('attendance.getData');
+	Route::resource('attendance', AttendanceController::class);	
+});
+
+Route::prefix('employee')->group(function () {
+	//Dashboard
+	Route::get('dashboard', [App\Http\Controllers\employee\DashboardController::class, 'index'])->name('dashboard');	
+
+	Route::get('my-leaves/getData/', [LeaveController::class, 'getData'])->name('my.leaves.getData');
+	Route::resource('my-leaves', LeaveController::class);	
+	
+	Route::resource('holidays', HolidayController::class);	
+
+	Route::resource('emp-my-profile', MyProfileController::class);
 });
 
 Route::resource('edit-my-profile', ProfileController::class);
+
+Route::resource('punch', PunchController::class);
 
 Auth::routes();

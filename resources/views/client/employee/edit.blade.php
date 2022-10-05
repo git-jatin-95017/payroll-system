@@ -59,7 +59,7 @@
 							<div class="card-body">
 								<div class="form-row mb-3">
 									<div class="col-md-4">
-										<label for="name">Emp Code</label>
+										<label for="name">Employee ID number</label>
 										<input id="emp_code" type="text" class="form-control {{ $errors->has('emp_code') ? ' is-invalid' : '' }}" name="emp_code" value="{{ $employee->user_code }}">
 
 										@if ($errors->has('emp_code'))
@@ -91,7 +91,7 @@
 								</div>
 								<div class="form-row mb-3">
 									<div class="col-md-4">
-										<label for="name" >Employee DOB</label>
+										<label for="name">Date of Birth</label>
 										<input id="dob" type="date" class="form-control {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" value="{{ $employee->employeeProfile->dob }}">
 
 										@if ($errors->has('dob'))
@@ -116,8 +116,13 @@
 									</div>
 									<div class="col-md-4">
 										<label for="name" >Marital Status</label>
-										<input id="marital_status" type="text" class="form-control {{ $errors->has('marital_status') ? ' is-invalid' : '' }}" name="marital_status" value="{{ $employee->employeeProfile->marital_status }}">
-
+										<select class="form-control" id="marital_status" name="marital_status">
+				                            <option selected value disabled>Please make a choice</option>
+				                            <option @if($employee->employeeProfile->marital_status == "single") selected @endif value="single">Single</option>
+				                            <option @if($employee->employeeProfile->marital_status == "married") selected @endif value="married">Married</option>
+				                            <option @if($employee->employeeProfile->marital_status == "other") selected @endif value="other">Other</option>
+				                        </select>
+										<!-- <input id="marital_status" type="text" class="form-control {{ $errors->has('marital_status') ? ' is-invalid' : '' }}" name="marital_status" value="{{ $employee->employeeProfile->marital_status }}"> -->
 										@if ($errors->has('marital_status'))
 											<span class="text-danger">
 												{{ $errors->first('marital_status') }}
@@ -136,7 +141,7 @@
 											</span>
 										@endif
 									</div>
-									<div class="col-md-4">
+									<!-- <div class="col-md-4">
 										<label for="name">Blood Group</label>
 										<input id="blood_group" type="text" class="form-control {{ $errors->has('blood_group') ? ' is-invalid' : '' }}" name="blood_group" value="{{ $employee->employeeProfile->blood_group }}">
 
@@ -145,7 +150,7 @@
 												{{ $errors->first('blood_group') }}
 											</span>
 										@endif
-									</div>
+									</div> -->
 									<div class="col-md-4">
 										<label for="name" >City</label>
 										<input id="city" type="text" class="form-control {{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" value="{{ $employee->employeeProfile->city }}">
@@ -171,7 +176,7 @@
 								</div>
 
 								<div class="form-row mb-3">
-									<div class="col-md-4">
+									<!-- <div class="col-md-4">
 										<label for="name" >State</label>
 										<input id="state" type="text" class="form-control {{ $errors->has('state') ? ' is-invalid' : '' }}" name="state" value="{{ $employee->employeeProfile->state }}">
 
@@ -180,7 +185,7 @@
 												{{ $errors->first('state') }}
 											</span>
 										@endif
-									</div>
+									</div> -->
 
 									<div class="col-md-4">
 										<label for="name" >Country</label>
@@ -205,7 +210,7 @@
 									</div>
 								</div>
 								<div class="form-row mb-3">
-									<div class="col-md-4">
+									<!-- <div class="col-md-4">
 										<label for="name" >Mobile</label>
 										<input id="mobile" type="text" class="form-control {{ $errors->has('mobile') ? ' is-invalid' : '' }}" name="mobile" value="{{ $employee->employeeProfile->mobile }}">
 
@@ -214,7 +219,7 @@
 												{{ $errors->first('mobile') }}
 											</span>
 										@endif
-									</div>
+									</div> -->
 
 									<div class="col-md-4">
 										<label for="name" >Phone Number</label>
@@ -261,10 +266,9 @@
 										<!-- <input id="emp_type" type="text" class="form-control {{ $errors->has('emp_type') ? ' is-invalid' : '' }}" name="emp_type" value="{{ $employee->employeeProfile->emp_type }}"> -->
 										<select class="form-control {{ $errors->has('emp_type') ? ' is-invalid' : '' }}" id="emp_type" name="emp_type">
 				                            <option selected value disabled>Please make a choice</option>
-				                            <option @if($employee->employeeProfile->emp_type == "Part Time Employee") selected @endif value="Part Time Employee">Part Time Employee</option>
-				                            <option @if($employee->employeeProfile->emp_type == "Intern") selected @endif value="Intern">Intern</option>
-				                            <option @if($employee->employeeProfile->emp_type == "Holiday Worker") selected @endif value="Holiday Worker">Holiday Worker</option>
-				                            <option @if($employee->employeeProfile->emp_type == "Permanent Position") selected @endif value="Permanent Position">Permanent Position</option>
+				                            <option @if($employee->employeeProfile->emp_type == "hourly") selected @endif value="hourly">Hourly</option>
+				                            <option @if($employee->employeeProfile->emp_type == "part-time") selected @endif value="part-time">Part Time</option>
+				                           	<option @if($employee->employeeProfile->emp_type == "full-time") selected @endif value="full-time">Full Time</option>
 				                        </select>
 										@if ($errors->has('emp_type'))
 											<span class="text-danger">
@@ -272,9 +276,35 @@
 											</span>
 										@endif
 									</div>
-
 									<div class="col-md-4">
-										<label for="name" >DOJ(MM/DD/YYYY)</label>
+										<label for="name" >Pay Type</label>
+										<select class="form-control {{ $errors->has('pay_type') ? ' is-invalid' : '' }}" id="pay_type" name="pay_type">
+				                            <option selected value disabled>Please make a choice</option>
+				                            <option @if($employee->employeeProfile->pay_type == "hourly") selected @endif value="hourly">Hourly</option>
+				                            <option @if($employee->employeeProfile->pay_type == "weekly") selected @endif value="weekly">Weekly</option>
+				                            <option @if($employee->employeeProfile->pay_type == "biweekly") selected @endif value="biweekly">Biweekly</option>
+				                            <option @if($employee->employeeProfile->pay_type == "semi-monthly") selected @endif value="semi-monthly">Semi Monthly</option>
+				                           	<option @if($employee->employeeProfile->pay_type == "monthly") selected @endif value="monthly">Monthly</option>
+				                        </select>
+
+										@if ($errors->has('pay_type'))
+											<span class="text-danger">
+												{{ $errors->first('pay_type') }}
+											</span>
+										@endif
+									</div>
+									<div class="col-md-4 mt-3">
+										<label for="name" >Pay Rate</label>
+										<input id="pay_rate" type="number" class="form-control {{ $errors->has('pay_rate') ? ' is-invalid' : '' }}" name="pay_rate" value="{{ $employee->employeeProfile->pay_rate }}">
+
+										@if ($errors->has('pay_rate'))
+											<span class="text-danger">
+												{{ $errors->first('pay_rate') }}
+											</span>
+										@endif
+									</div>
+									<div class="col-md-4 mt-3">
+										<label for="name" >Start Date</label>
 										<input id="doj" type="date" class="form-control {{ $errors->has('doj') ? ' is-invalid' : '' }}" name="doj" value="{{ $employee->employeeProfile->doj }}">
 
 										@if ($errors->has('doj'))
@@ -286,7 +316,7 @@
 								</div>
 								<div class="form-row mb-3">
 									<div class="col-md-4">
-										<label for="name" >Designation</label>
+										<label for="name" >Position</label>
 										<input id="designation" type="text" class="form-control {{ $errors->has('designation') ? ' is-invalid' : '' }}" name="designation" value="{{ $employee->employeeProfile->designation }}">
 
 										@if ($errors->has('designation'))
@@ -308,7 +338,7 @@
 									</div>
 
 									<div class="col-md-4">
-										<label for="name" >PAN Number</label>
+										<label for="name" >Social Security Number</label>
 										<input id="pan_number" type="text" class="form-control {{ $errors->has('pan_number') ? ' is-invalid' : '' }}" name="pan_number" value="{{ $employee->employeeProfile->pan_number }}">
 
 										@if ($errors->has('pan_number'))
@@ -331,7 +361,7 @@
 									</div>
 
 									<div class="col-md-4">
-										<label for="name" >Bank A/C No</label>
+										<label for="name" >Bank Account Number</label>
 										<input id="bank_acc_number" type="text" class="form-control {{ $errors->has('bank_acc_number') ? ' is-invalid' : '' }}" name="bank_acc_number" value="{{ $employee->employeeProfile->bank_acc_number }}">
 
 										@if ($errors->has('bank_acc_number'))
@@ -342,7 +372,7 @@
 									</div>
 
 									<div class="col-md-4">
-										<label for="name" >IFSC Code</label>
+										<label for="name" >Medical Benefits Number</label>
 										<input id="ifsc_code" type="text" class="form-control {{ $errors->has('ifsc_code') ? ' is-invalid' : '' }}" name="ifsc_code" value="{{ $employee->employeeProfile->ifsc_code }}">
 
 										@if ($errors->has('ifsc_code'))
@@ -380,6 +410,20 @@
 										<img src="/files/{{$employee->employeeProfile->file}}" class="img-thumbnail"
 										style="object-fit: contain;width: 200px; height: 150px;" />
 										@endif								
+									</div>
+									<div class="col-md-4">
+										<label for="name" >Employee Status</label>
+										<select class="form-control" id="status" name="status">
+				                            <option selected value disabled>Please make a choice</option>
+				                            <option @if($employee->employeeProfile->status == "1") selected @endif value="1">Active</option>
+				                            <option @if($employee->employeeProfile->status == "0") selected @endif value="0">Inactive</option>
+				                        </select>
+
+										@if ($errors->has('status'))
+											<span class="text-danger">
+												{{ $errors->first('status') }}
+											</span>
+										@endif
 									</div>
 								</div>
 							</div>

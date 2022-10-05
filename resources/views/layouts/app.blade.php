@@ -10,9 +10,6 @@
 		  crossorigin="anonymous"/>
 
 	<link href="{{ asset('css/all.min.css') }}" rel="stylesheet">
-	<link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/responsive.bootstrap4.min.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/buttons.bootstrap4.min.css') }}">
 	  <!-- icheck bootstrap -->
 	<link href="{{ asset('css/icheck-bootstrap.min.css') }}" rel="stylesheet">
 	<!-- Theme style -->
@@ -90,14 +87,11 @@
 </div>
 
 <script src="{{ asset('js/jquery.min.js') }}"></script>
-<script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
-<script src="{{ asset('js/responsive.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('js/buttons.bootstrap4.min.js') }}"></script>
+<!-- <script src="{{ asset('js/responsive.bootstrap4.min.js') }}"></script> -->
+<!-- <script src="{{ asset('js/buttons.bootstrap4.min.js') }}"></script> -->
 <script src="{{ asset('js/adminlte.min.js') }}"></script>
+<script src="{{ asset('js/notify.min.js') }}"></script>
 
 @yield('third_party_scripts')
 

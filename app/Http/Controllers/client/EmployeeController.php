@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\EmployeeProfile;
-use DataTables;
-use Yajra\DataTables\Html\Builder;
+use Illuminate\Support\Facades\DB;
+// use DataTables;
+// use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 // use App\Models\{User};
@@ -33,68 +34,86 @@ class EmployeeController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index(Builder $builder)
-	{
-		if (request()->ajax()) {
-			$usersQuery = User::query();
- 
-			$start_date = (!empty($_GET["start_date"])) ? ($_GET["start_date"]) : ('');
-			$end_date = (!empty($_GET["end_date"])) ? ($_GET["end_date"]) : ('');
-	 
-			if ($start_date && $end_date) {
-	 
-				$start_date = date('Y-m-d', strtotime($start_date));
-				$end_date = date('Y-m-d', strtotime($end_date));    
-				$usersQuery->whereRaw("date(created_at) >= '" . $start_date . "' AND date(created_at) <= '" . $end_date . "'");
-			}
-
-			$data = $usersQuery->select('*')->where('role_id', 3)->get();
-			
-			return Datatables::of($data)
-					->addIndexColumn()   
-					->addColumn('avatar', function($data) {
-						if(!empty($data->employeeProfile->file)) {
-							$avatar = "<img src='/files/{$data->employeeProfile->file}' width='65' height='65' class='table-user-thumb'>";
-						} else{
-							$avatar = "<img src='/img/user2-160x160.jpg' width='65' height='65' class='table-user-thumb'>";
-						}
-						return $avatar;
-					})
-					->addColumn('mobile', function($data){
-                        return $data->employeeProfile->mobile;
-                    })
-                    ->addColumn('identity_document', function($data){
-                        return $data->employeeProfile->identity_document;
-                    }) 
-                    ->addColumn('dob', function($data){
-                        return $data->employeeProfile->dob;
-                    }) 
-                    ->addColumn('doj', function($data){
-                        return $data->employeeProfile->doj;
-                    }) 
-                    ->addColumn('blood_group', function($data){
-                        return $data->employeeProfile->blood_group;
-                    }) 
-                    ->addColumn('emp_type', function($data){
-                        return $data->employeeProfile->emp_type;
-                    })                 
-					->addColumn('action', function ($row) {
-						return '<input type="checkbox" class="delete_check" id="delcheck_'.$row->id.'" onclick="checkcheckbox();" value="'.$row->id.'">';
-					})
-					->addColumn('action_button', function($data){
-							$btn = "<div class='table-actions'>                           
-							<a href='".route("employee.show",$data->id)."' class='btn btn-sm btn-info'><i class='fas fa-eye'></i></a>
-							<a href='".route("employee.edit",$data->id)."' class='btn btn-sm btn-primary'><i class='fas fa-pen'></i></a>
-							<a data-href='".route("employee.destroy",$data->id)."' class='btn btn-sm btn-danger delete'><i class='fas fa-trash'></i></a>
-							</div>";
-							return $btn;
-					})
-					->rawColumns(['action', 'action_button', 'avatar', 'mobile', 'identity_document', 'dob', 'doj', 'blood_group', 'emp_type'])
-					->make(true);
-		}
-
+	public function index(Request $request)
+	{		
 		return view('client.employee.index');
 	}
+
+	public function getData(Request $request)
+	{
+		if ($request->ajax()) {
+            $draw = $request->get('draw');
+            $start = $request->get("start");
+            $rowperpage = $request->get("length"); // total number of rows per page
+
+            $columnIndex_arr = $request->get('order');
+            $columnName_arr = $request->get('columns');
+            $order_arr = $request->get('order');
+            $search_arr = $request->get('search');
+
+            $columnIndex = $columnIndex_arr[0]['column']; // Column index
+            $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+            $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+            $searchValue = $search_arr['value']; // Search value
+
+            $folder = date('Y-m-d', strtotime($request->filter_date));
+
+            // Total records
+            $totalRecords = User::select('count(*) as allcount')->count();
+            $totalRecordswithFilter = User::select('count(*) as allcount')->join('employee_profile', function($join) {
+                $join->on('users.id', '=', 'employee_profile.user_id');
+            })
+            // ->where('users.email', 'like', '%' . $searchValue . '%')
+            ->count();
+
+            // Get records, also we have included search filter as well
+            $records = User::orderBy($columnName, $columnSortOrder)
+                ->join('employee_profile', function($join) {
+	                $join->on('users.id', '=', 'employee_profile.user_id');
+	            })                         
+                ->orWhere(DB::raw("CONCAT(employee_profile.first_name, ' ', employee_profile.last_name)"), 'like', '%' . $searchValue . '%')
+                ->orWhere('users.user_code', 'like', '%' . $searchValue . '%')
+                ->orWhere('employee_profile.phone_number', 'like', '%' . $searchValue . '%')
+                ->orWhere('employee_profile.pan_number', 'like', '%' . $searchValue . '%')
+                ->orWhere('employee_profile.ifsc_code', 'like', '%' . $searchValue . '%')
+                ->orWhere('employee_profile.designation', 'like', '%' . $searchValue . '%')
+                ->orWhere('employee_profile.pay_rate', 'like', '%' . $searchValue . '%')
+                ->select(
+                    'users.id',
+                    'users.user_code',
+                   	DB::raw("CONCAT(employee_profile.first_name, ' ' , employee_profile.last_name) AS name"),
+                    'employee_profile.file',
+                    DB::raw('DATE_FORMAT(employee_profile.dob, "%m/%d/%Y") as date_of_birth'),
+                    DB::raw('DATE_FORMAT(employee_profile.doj, "%m/%d/%Y") as start_date'),
+                    'employee_profile.phone_number',
+                    'employee_profile.pan_number',
+                    'employee_profile.ifsc_code',
+                    'employee_profile.designation',
+                    'employee_profile.pay_rate',
+                    
+                )
+                ->skip($start)
+                ->take($rowperpage)
+                ->get();
+
+            // $data_arr = array();
+
+            // foreach ($records as $k => $record) {
+            //     $createdDate = date('m/d/Y', strtotime($record->created_date));
+            //     $records[$k]['created_date'] = $createdDate;
+            //     // $data_arr[$k] = $record;
+            // }
+
+            $response = array(
+                "draw" => intval($draw),
+                "iTotalRecords" => $totalRecords,
+                "iTotalDisplayRecords" => $totalRecordswithFilter,
+                "aaData" => $records,
+            );
+
+            return response()->json($response);
+        }
+    }
 
 	/**
 	 * Show the form for creating a new resource.
@@ -114,26 +133,30 @@ class EmployeeController extends Controller
 			'emp_code' => 'required|max:255',		
 			'first_name' => ['required'],
 			'last_name' => ['required'],
-			'dob' => ['required', 'date'],
-			'gender' => ['required'],
 			'marital_status' => ['required'],
-			'nationality' => ['required'],
-			'blood_group' => ['required'],
-			'city' => ['required'],
-			'state' => ['required'],
-			'address' => ['required'],
-			'country' => ['required'],
-			'mobile' => ['required'],
-			'email' => ['required', 'email', 'max:191', 'unique:users'],			
-			'identity_document' => ['required'],
-			'identity_number' => ['required'],
 			'emp_type' => ['required'],
+			'pay_type' => ['required'],
+			'dob' => ['required', 'date'],
 			'doj' => ['required', 'date'],
-			'designation' => ['required'],
-			'department' => ['required'],
+			'country' => ['required'],
+			'address' => ['required'],
+			'nationality' => ['required'],
+			'pay_rate' => ['required'],
+			//'gender' => ['required'],
+			// 'blood_group' => ['required'],
+			// 'state' => ['required'],
+			// 'mobile' => ['required'],
+			'email' => ['required', 'email', 'max:191', 'unique:users'],			
+			// 'identity_document' => ['required'],
+			// 'identity_number' => ['required'],
+			// 'designation' => ['required'],
+			// 'department' => ['required'],
 			'password' => ['required', 'string', 'min:8', 'confirmed'],
 			'password_confirmation' => 'required_with:password',
 			'file' => 'mimes:png,jpg,jpeg|max:2048'
+		],[],[
+			'emp_code' => 'Employee ID number',
+			'doj' => 'Start Date',
 		]);
 
 		$user = User::create([
@@ -153,12 +176,12 @@ class EmployeeController extends Controller
 			'gender' => $request->gender,
 			'marital_status' => $request->marital_status,
 			'nationality' => $request->nationality,
-			'blood_group' => $request->blood_group,
+			'blood_group' => NULL,
 			'city' => $request->city,
 			'address' => $request->address,
-			'state' => $request->state,
+			'state' => NULL,
 			'country' => $request->country,
-			'mobile' => $request->mobile,
+			'mobile' => NULL,
 			'phone_number' => $request->phone_number,
 			'identity_document' => $request->identity_document,
 			'identity_number' => $request->identity_number,
@@ -210,26 +233,29 @@ class EmployeeController extends Controller
 			'emp_code' => 'required|max:255',		
 			'first_name' => ['required'],
 			'last_name' => ['required'],
-			'dob' => ['required', 'date'],
-			'gender' => ['required'],
 			'marital_status' => ['required'],
-			'nationality' => ['required'],
-			'blood_group' => ['required'],
-			'city' => ['required'],
-			'state' => ['required'],
-			'address' => ['required'],
-			'country' => ['required'],
-			'mobile' => ['required'],
-			'email' => ['required', 'email', 'max:191', 'unique:users,email,'.$employee->id],	
-			'identity_document' => ['required'],
-			'identity_number' => ['required'],
 			'emp_type' => ['required'],
+			'pay_type' => ['required'],
+			'dob' => ['required', 'date'],
 			'doj' => ['required', 'date'],
-			'designation' => ['required'],
-			'department' => ['required'],
+			'country' => ['required'],
+			'address' => ['required'],
+			'nationality' => ['required'],
+			'pay_rate' => ['required'],
+			// 'mobile' => ['required'],
+			'email' => ['required', 'email', 'max:191', 'unique:users,email,'.$employee->id],	
+			// 'identity_document' => ['required'],
+			// 'identity_number' => ['required'],
+			// 'emp_type' => ['required'],
+			// 'doj' => ['required', 'date'],
+			// 'designation' => ['required'],
+			// 'department' => ['required'],
 			// 'password' => ['required', 'string', 'min:8', 'confirmed'],
 			// 'password_confirmation' => 'required_with:password',
 			'file' => 'nullable|mimes:png,jpg,jpeg|max:2048'
+		],[],[
+			'emp_code' => 'Employee ID number',
+			'doj' => 'Start Date',
 		]);
 
 		$employee->update([
@@ -246,12 +272,12 @@ class EmployeeController extends Controller
 			'gender' => $request->gender,
 			'marital_status' => $request->marital_status,
 			'nationality' => $request->nationality,
-			'blood_group' => $request->blood_group,
+			'blood_group' => NULL,
 			'city' => $request->city,
 			'address' => $request->address,
-			'state' => $request->state,
+			'state' => NULL,
 			'country' => $request->country,
-			'mobile' => $request->mobile,
+			'mobile' => NULL,
 			'phone_number' => $request->phone_number,
 			'identity_document' => $request->identity_document,
 			'identity_number' => $request->identity_number,
