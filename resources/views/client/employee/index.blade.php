@@ -224,16 +224,19 @@
 			                orderable : false,
 			                searchable : false,
 			                render: function(data, type, row, meta) {
-			                	var viewRoute = "{{ route('employee.show', "+row.id+") }}";
-			                	var editRoute = "{{ route('employee.edit', "+row.id+") }}";
-			                	var destrRoute = "{{ route('employee.destroy', "+row.id+") }}";
+			                	var viewRoute = '{{ route("employee.show", ":id") }}';
+			                	viewRoute = viewRoute.replace(':id', row.id);
+			                	var editRoute = '{{ route("employee.edit", ":id") }}';
+			                	editRoute = editRoute.replace(':id', row.id);
+			                	var destrRoute = '{{ route("employee.destroy", ":id") }}';
+			                	destrRoute = destrRoute.replace(':id', row.id);
 			                	var action = `<div class="table-actions">`;
 
 			                	action += "<a href=" + viewRoute + " class='btn btn-sm btn-info'><i class='fas fa-eye'></i></a>";
 
-			                	action += "<a href=" + editRoute + " class='btn btn-sm btn-primary'><i class='fas fa-pen'></i></a>";
+			                	action += " <a href=" + editRoute + " class='btn btn-sm btn-primary'><i class='fas fa-pen'></i></a>";
 
-			                	action += "<a href=" + destrRoute + " class='btn btn-sm btn-danger delete'><i class='fas fa-pen'></i></a>";
+			                	action += " <a data-href=" + destrRoute + " class='btn btn-sm btn-danger delete'><i class='fas fa-trash'></i></a>";
 
 			                	action += `</div>`;
 
