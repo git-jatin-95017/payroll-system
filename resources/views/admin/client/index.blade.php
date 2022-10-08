@@ -89,7 +89,10 @@
 @push('page_scripts')
 	<!-- <script src="https://cdn.datatables.net/fixedheader/3.2.3/css/fixedHeader.dataTables.min.css"></script> -->
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-
+	<script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+	<script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
+	<script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
+	<script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>	
 	<script>
 		$('#delete-all').on('click', function (e) { 
 			e.preventDefault();		     
