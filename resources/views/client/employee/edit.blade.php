@@ -411,20 +411,7 @@
 										style="object-fit: contain;width: 200px; height: 150px;" />
 										@endif								
 									</div>
-									<div class="col-md-4">
-										<label for="name" >Employee Status</label>
-										<select class="form-control" id="status" name="status">
-				                            <option selected value disabled>Please make a choice</option>
-				                            <option @if($employee->employeeProfile->status == "1") selected @endif value="1">Active</option>
-				                            <option @if($employee->employeeProfile->status == "0") selected @endif value="0">Inactive</option>
-				                        </select>
-
-										@if ($errors->has('status'))
-											<span class="text-danger">
-												{{ $errors->first('status') }}
-											</span>
-										@endif
-									</div>
+									
 								</div>
 							</div>
 							<div class="card-footer">

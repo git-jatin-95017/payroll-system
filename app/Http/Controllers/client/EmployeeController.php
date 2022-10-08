@@ -196,6 +196,7 @@ class EmployeeController extends Controller
 			'bank_acc_number' => $request->bank_acc_number,
 			'ifsc_code' => $request->ifsc_code,
 			'pf_account_number' => $request->pf_account_number,
+			'status' => $request->status,
 		];
 
 		if ($request->file('file')) {			
