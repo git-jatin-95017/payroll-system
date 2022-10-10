@@ -8,13 +8,17 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
 		  integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
 		  crossorigin="anonymous"/>
+		  <link rel="preconnect" href="https://fonts.googleapis.com">
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+			<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;1,200;1,300;1,400;1,600&display=swap" rel="stylesheet">
 
 	<link href="{{ asset('css/all.min.css') }}" rel="stylesheet">
 	  <!-- icheck bootstrap -->
 	<link href="{{ asset('css/icheck-bootstrap.min.css') }}" rel="stylesheet">
 	<!-- Theme style -->
 	<link href="{{ asset('css/adminlte.min.css') }}" rel="stylesheet">
-
+	{{-- cutom css --}}
+	<link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 	@yield('third_party_stylesheets')
 
 	@stack('page_css')
@@ -34,7 +38,7 @@
 		<ul class="navbar-nav ml-auto">
 			<li class="nav-item dropdown user-menu">
 				<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-					<img src="/img/logo3.jpg"
+					<img src="/img/logo3.png"
 						 class="user-image img-circle elevation-2" alt="User Image">
 					<span class="d-none d-md-inline">Welcome {{ ucwords(Auth::user()->name) }}</span>
 				</a>
@@ -64,7 +68,7 @@
 					</li>
 				</ul>
 			</li>
-			
+
 		</ul>
 	</nav>
 

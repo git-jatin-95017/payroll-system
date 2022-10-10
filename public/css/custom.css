@@ -1,0 +1,19 @@
+.nav-sidebar .nav-item>.nav-link {
+    position: relative;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.custom-sidebar a.nav-link i {
+    font-size: 15px !important;
+}
+.user-menu img.user-image {
+    box-shadow: none !important;
+}
+
+.table thead th {
+    font-size: 14px;
+    font-weight: 700;
+}
+.table-bordered td{
+    font-size: 14px;
+}

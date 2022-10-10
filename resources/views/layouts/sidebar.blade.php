@@ -1,12 +1,10 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
 	<a href="{{ route('dashboard') }}" class="brand-link">
-		<img src="/img/logo-side.jpg"
-			 alt="Logo" style="width: 235px; object-fit: unset;margin: 0;" 
-			 class="brand-image elevation-3">
+		<img src="/img/logo-new.jpg" class="w-100" alt="Logo" class="">
 		<span class="brand-text font-weight-light">&nbsp;</span>
 	</a>
 
-	<div class="sidebar">
+	<div class="sidebar custom-sidebar">
 		<div class="user-panel mt-3 pb-3 mb-3 d-flex">
 			<div class="image">
 				<img src="/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
@@ -20,7 +18,7 @@
 		@if(auth()->user()->role_id == 3)
 		<?php
 			$attendanceData = App\Models\Attendance::where('emp_code', auth()->user()->user_code)->whereDate('attendance_date', date('Y-m-d'))->get();
-			
+
 			if (!$attendanceData->isEmpty()) {
 				$attendanceROW = $attendanceData->count();
 				if ( $attendanceROW == 0 ) {
@@ -36,7 +34,7 @@
 			} else {
 				$attendanceROW = 0;
 				$action_name = 'Punch In';
-			} 
+			}
 		?>
 
 		<div class="form-inline">
@@ -49,7 +47,7 @@
 						<button class="btn btn-sidebar bg-warning" id="action_btn">
 							{{$action_name}}
 						</button>
-					</div>				
+					</div>
 				</div>
 			</form>
 			@endif
@@ -70,7 +68,7 @@
 		if ( $('#attendance-form').length > 0 ) {
 			$(document).on('submit', '#attendance-form', function(e) {
 				e.preventDefault();
-				
+
 				var form = $(this);
 				$.ajax({
 					type     : "POST",
