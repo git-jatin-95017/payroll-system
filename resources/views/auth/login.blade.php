@@ -17,7 +17,7 @@
     <link href="{{ asset('css/icheck-bootstrap.min.css') }}" rel="stylesheet">
     <!-- Theme style -->
     <link href="{{ asset('css/adminlte.min.css') }}" rel="stylesheet">
-
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
@@ -29,7 +29,9 @@
     <!-- /.login-box-body -->
     <div class="card card-outline card-primary">
         <div class="card-header text-center">
-            <a href="/" class="h2"><b>Payroll </b>Management</a>
+            <a href="/" class="h2">
+                <img src="{{URL::asset('img/logo-color.svg')}}" alt="logo">
+            </a>
         </div>
         <div class="card-body login-card-body">
             @include('layouts.flash-admin-message')
