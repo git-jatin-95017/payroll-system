@@ -395,8 +395,8 @@
 											<label for="name" >Payment Method</label>
 											<select class="form-control {{ $errors->has('payment_method') ? ' is-invalid' : '' }}" id="payment_method" name="payment_method" {{$disabled}}>
 												<option value="" disabled>Please make a choice</option>
-												<option @if($employee->employeeProfile->payment_method == "check") selected @endif value="check">Check</option>
-												<option @if($employee->employeeProfile->payment_method == "deposit") selected @endif value="deposit">Direct Deposit</option>
+												<option @if($employee->paymentProfile->payment_method == "check") selected @endif value="check">Check</option>
+												<option @if($employee->paymentProfile->payment_method == "deposit") selected @endif value="deposit">Direct Deposit</option>
 											</select>
 											@if ($errors->has('payment_method'))
 												<span class="text-danger">
@@ -407,7 +407,7 @@
 										<div class="col-md-4">
 											<label for="routing_number" class="col-md-4 control-label">Routing Number</label>
 											<div class="col-md-12">
-												<input id="routing_number" type="routing_number" class="form-control {{ $errors->has('routing_number') ? ' is-invalid' : '' }}" name="routing_number" value="{{ $employee->employeeProfile->routing_number }}" {{$disabled}}>
+												<input id="routing_number" type="routing_number" class="form-control {{ $errors->has('routing_number') ? ' is-invalid' : '' }}" name="routing_number" value="{{ $employee->paymentProfile->routing_number }}" {{$disabled}}>
 
 												@if ($errors->has('routing_number'))
 													<span class="text-danger">
@@ -419,7 +419,7 @@
 										<div class="col-md-4">
 											<label for="account_number" class="col-md-4 control-label">Account Number</label>
 											<div class="col-md-12">
-												<input id="account_number" type="account_number" class="form-control {{ $errors->has('account_number') ? ' is-invalid' : '' }}" value="{{ $employee->employeeProfile->account_number }}" name="account_number" {{$disabled}}>
+												<input id="account_number" type="account_number" class="form-control {{ $errors->has('account_number') ? ' is-invalid' : '' }}" value="{{ $employee->paymentProfile->account_number }}" name="account_number" {{$disabled}}>
 
 												@if ($errors->has('account_number'))
 													<span class="text-danger">
@@ -433,8 +433,8 @@
 										<div class="col-md-4">
 											<label for="name" >Account Type</label>
 											<select class="form-control {{ $errors->has('account_type') ? ' is-invalid' : '' }}" id="account_type" name="account_type" {{$disabled}}>
-												<option selected value disabled>Please make a choice</option>
-												<option @if($employee->employeeProfile->account_type == "saving") selected @endif value="saving">Saving</option>
+												<option value="" disabled>Please make a choice</option>
+												<option @if($employee->paymentProfile->account_type == "saving") selected @endif value="saving">Saving</option>
 											</select>
 											@if ($errors->has('account_type'))
 												<span class="text-danger">
