@@ -4,6 +4,11 @@
 		thead input.top-filter {
 	        width: 100%;
 	    }
+
+	    table.dataTable tbody td {
+			word-break: break-word;
+		  	vertical-align: top;
+		}
 	</style>
 	<link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('css/responsive.bootstrap4.min.css') }}">
@@ -64,7 +69,20 @@
 							@csrf
 							<div class="card-body">
 								<div class="form-group">
-									<label for="leave_subject" class="col-md-8 control-label">Leave Subject</label>
+									<label for="leave_dates" class="col-md-8 control-label">Date (MM/DD/YYYY)</label>
+									<div class="col-md-12">
+										<input id="leave_dates" type="text" class="form-control multidatepicker {{ $errors->has('leave_dates') ? ' is-invalid' : '' }}" name="leave_dates" value="{{ old('leave_dates', '') }}">
+										<small class="text-muted">You can select multiple dates separated by comma.</small>
+										@if ($errors->has('leave_dates'))
+											<span class="text-danger">
+												{{ $errors->first('leave_dates') }}
+											</span>
+										@endif
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="leave_subject" class="col-md-8 control-label">Subject</label>
 									<div class="col-md-12">
 										<input id="leave_subject" type="text" class="form-control {{ $errors->has('leave_subject') ? ' is-invalid' : '' }}" name="leave_subject" value="{{ old('leave_subject', '') }}">
 
@@ -74,20 +92,7 @@
 											</span>
 										@endif
 									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="leave_dates" class="col-md-8 control-label">Leave Date (MM/DD/YYYY)</label>
-									<div class="col-md-12">
-										<input id="leave_dates" type="date" class="form-control {{ $errors->has('leave_dates') ? ' is-invalid' : '' }}" name="leave_dates" value="{{ old('leave_dates', '') }}">
-
-										@if ($errors->has('leave_dates'))
-											<span class="text-danger">
-												{{ $errors->first('leave_dates') }}
-											</span>
-										@endif
-									</div>
-								</div>
+								</div>						
 
 								<div class="form-group">
 									<label for="leave_message" class="col-md-8 control-label">Leave Message</label>
@@ -139,7 +144,7 @@
 							</div>
 						</div>					
 						<div class="card-body">							
-							<table class="table table-bordered table-hover nowrap" id="dataTableBuilder">
+							<table class="table table-bordered table-hover wrap" id="dataTableBuilder">
 								<thead>
 									<tr>										
 										<th>ID</th>
@@ -158,6 +163,9 @@
 		</div>		
 	</section>    
 @endsection
+@push('page_css')
+	<link rel="stylesheet" href="{{ asset('js/datepicker/datepicker3.css') }}">
+@endpush
 
 @push('page_scripts')
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
@@ -165,6 +173,17 @@
 	<script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
 	<script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
 	<script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
+	<script src="{{ asset('js/datepicker/bootstrap-datepicker.js') }}"></script>
+	<script>
+		if ( $('.multidatepicker').length > 0 ) {
+	        $('.multidatepicker').datepicker({
+	            format: 'mm/dd/yyyy',
+	            startDate : new Date(),
+	            multidate: true,
+	            autoclose: true
+	        });
+	    }
+	</script>
 	<script>
 		$('#delete-all').on('click', function (e) { 
 			e.preventDefault();		     
@@ -243,9 +262,10 @@
 		  	var table = $('#dataTableBuilder').DataTable({
 					processing: true,
 					serverSide: true,
+					autoWidth: false,
 					// autoWidth: true,
 					// scrollX: true,
-					scrollY: "300px",
+					scrollY: "400px",
 					ajax: {
 						url: "{{route('my.leaves.getData')}}",
 					  	type: 'GET',

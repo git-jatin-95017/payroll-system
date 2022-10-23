@@ -163,6 +163,16 @@
 												{{ $errors->first('city') }}
 											</span>
 										@endif
+									</div>
+									<div class="col-md-4">
+										<label for="name">Country</label>
+										<input id="country" type="text" class="form-control {{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ old('country', '') }}">
+
+										@if ($errors->has('country'))
+											<span class="text-danger">
+												{{ $errors->first('country') }}
+											</span>
+										@endif
 									</div>								
 								</div>
 								<div class="form-row mb-3">
@@ -189,17 +199,7 @@
 											</span>
 										@endif
 									</div>
- -->
-									<div class="col-md-4">
-										<label for="name" >Country</label>
-										<input id="country" type="text" class="form-control {{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ old('country', '') }}">
-
-										@if ($errors->has('country'))
-											<span class="text-danger">
-												{{ $errors->first('country') }}
-											</span>
-										@endif
-									</div>
+ -->									
 
 									<div class="col-md-4">
 										<label for="email" >Email</label>
@@ -211,19 +211,6 @@
 											</span>
 										@endif
 									</div>
-								</div>
-								<div class="form-row mb-3">
-									<!-- <div class="col-md-4">
-										<label for="name" >Mobile</label>
-										<input id="mobile" type="text" class="form-control {{ $errors->has('mobile') ? ' is-invalid' : '' }}" name="mobile" value="{{ old('mobile', '') }}">
-
-										@if ($errors->has('mobile'))
-											<span class="text-danger">
-												{{ $errors->first('mobile') }}
-											</span>
-										@endif
-									</div> -->
-
 									<div class="col-md-4">
 										<label for="name" >Phone Number</label>
 										<input id="phone_number" type="text" class="form-control {{ $errors->has('phone_number') ? ' is-invalid' : '' }}" name="phone_number" value="{{ old('phone_number', '') }}">
@@ -252,6 +239,20 @@
 											</span>
 										@endif
 									</div>
+								</div>
+								<div class="form-row mb-3">
+									<!-- <div class="col-md-4">
+										<label for="name" >Mobile</label>
+										<input id="mobile" type="text" class="form-control {{ $errors->has('mobile') ? ' is-invalid' : '' }}" name="mobile" value="{{ old('mobile', '') }}">
+
+										@if ($errors->has('mobile'))
+											<span class="text-danger">
+												{{ $errors->first('mobile') }}
+											</span>
+										@endif
+									</div> -->
+
+									
 								</div>
 								<div class="form-row mb-3">
 									<div class="col-md-4">
@@ -411,7 +412,7 @@
 										@endif
 									</div>
 									<div class="col-md-4">
-										<label for="name" >Employee Status</label>
+										<label for="name">Employee Status</label>
 										<select class="form-control" id="status" name="status">
 				                            <option selected value disabled>Please make a choice</option>
 				                            <option @if(old('status') == "1") selected @endif value="1">Active</option>
@@ -421,6 +422,19 @@
 										@if ($errors->has('status'))
 											<span class="text-danger">
 												{{ $errors->first('status') }}
+											</span>
+										@endif
+									</div>
+									<div class="col-md-4 mt-3">
+										<label for="name">Profile Lock?</label>
+										<select class="form-control" id="is_proifle_edit_access" name="is_proifle_edit_access">
+				                            <option @if(old('is_proifle_edit_access') == "0") selected @endif value="0">No</option>
+				                            <option @if(old('is_proifle_edit_access') == "1") selected @endif value="1">Yes</option>
+				                        </select>
+
+										@if ($errors->has('is_proifle_edit_access'))
+											<span class="text-danger">
+												{{ $errors->first('is_proifle_edit_access') }}
 											</span>
 										@endif
 									</div>

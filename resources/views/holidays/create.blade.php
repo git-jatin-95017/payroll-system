@@ -100,8 +100,11 @@
 										<label for="name" >Holiday Type</label>
 										<select class="form-control" id="type" name="type">
 				                            <option selected value disabled>Please make a choice</option>
-				                            <option @if(old('type') == "1") selected @endif value="1">Compulsory Holiday</option>
-				                            <option @if(old('type') == "2") selected @endif value="2">Restricted Holiday</option>
+				                            <!-- <option @if(old('type') == "1") selected @endif value="1">Compulsory Holiday</option> -->
+				                            <!-- <option @if(old('type') == "2") selected @endif value="2">Restricted Holiday</option> -->
+				                            <option @if(old('type') == "1") selected @endif value="1">Public Holiday</option>
+				                            <option @if(old('type') == "2") selected @endif value="2">National Day</option>
+				                            <option @if(old('type') == "3") selected @endif value="3">Voluntary</option>
 				                        </select>
 
 										@if ($errors->has('type'))

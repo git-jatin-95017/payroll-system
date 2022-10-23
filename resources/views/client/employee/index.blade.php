@@ -185,6 +185,7 @@
 					// autoWidth: true,
 					// scrollX: true,
 					scrollY: "400px",
+					fixedHeader: true,
 					ajax: {
 						url: "{{route('employee.getData')}}",
 					  	type: 'GET',

@@ -158,7 +158,7 @@
 			<a href="{{ route('emp-my-profile.edit', auth()->user()->id) }}" class="nav-link">
 				<i class="nav-icon fas fa-edit"></i>
 				<p>
-					Edit Profile
+					Profile
 				</p>
 			</a>		
 		</li>
@@ -167,7 +167,7 @@
 			<a href="{{ route('edit-my-profile.edit', auth()->user()->id) }}" class="nav-link">
 				<i class="nav-icon fas fa-edit"></i>
 				<p>
-					Edit Profile
+					Profile
 				</p>
 			</a>		
 		</li>

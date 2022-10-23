@@ -160,6 +160,16 @@
 												{{ $errors->first('city') }}
 											</span>
 										@endif
+									</div>
+									<div class="col-md-4">
+										<label for="name" >Country</label>
+										<input id="country" type="text" class="form-control {{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ $employee->employeeProfile->country }}">
+
+										@if ($errors->has('country'))
+											<span class="text-danger">
+												{{ $errors->first('country') }}
+											</span>
+										@endif
 									</div>								
 								</div>
 								<div class="form-row mb-3">
@@ -187,17 +197,7 @@
 										@endif
 									</div> -->
 
-									<div class="col-md-4">
-										<label for="name" >Country</label>
-										<input id="country" type="text" class="form-control {{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ $employee->employeeProfile->country }}">
-
-										@if ($errors->has('country'))
-											<span class="text-danger">
-												{{ $errors->first('country') }}
-											</span>
-										@endif
-									</div>
-
+									
 									<div class="col-md-4">
 										<label for="email" >Email</label>
 										<input id="email" type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ $employee->email }}">
@@ -208,19 +208,6 @@
 											</span>
 										@endif
 									</div>
-								</div>
-								<div class="form-row mb-3">
-									<!-- <div class="col-md-4">
-										<label for="name" >Mobile</label>
-										<input id="mobile" type="text" class="form-control {{ $errors->has('mobile') ? ' is-invalid' : '' }}" name="mobile" value="{{ $employee->employeeProfile->mobile }}">
-
-										@if ($errors->has('mobile'))
-											<span class="text-danger">
-												{{ $errors->first('mobile') }}
-											</span>
-										@endif
-									</div> -->
-
 									<div class="col-md-4">
 										<label for="name" >Phone Number</label>
 										<input id="phone_number" type="text" class="form-control {{ $errors->has('phone_number') ? ' is-invalid' : '' }}" name="phone_number" value="{{ $employee->employeeProfile->phone_number }}">
@@ -294,7 +281,7 @@
 										@endif
 									</div>
 									<div class="col-md-4 mt-3">
-										<label for="name" >Pay Rate</label>
+										<label for="name">Pay Rate</label>
 										<input id="pay_rate" type="number" class="form-control {{ $errors->has('pay_rate') ? ' is-invalid' : '' }}" name="pay_rate" value="{{ $employee->employeeProfile->pay_rate }}">
 
 										@if ($errors->has('pay_rate'))
@@ -304,12 +291,22 @@
 										@endif
 									</div>
 									<div class="col-md-4 mt-3">
-										<label for="name" >Start Date</label>
+										<label for="name">Start Date</label>
 										<input id="doj" type="date" class="form-control {{ $errors->has('doj') ? ' is-invalid' : '' }}" name="doj" value="{{ $employee->employeeProfile->doj }}">
 
 										@if ($errors->has('doj'))
 											<span class="text-danger">
 												{{ $errors->first('doj') }}
+											</span>
+										@endif
+									</div>
+									<div class="col-md-4 mt-3">
+										<label for="name">PF A/C No</label>
+										<input id="pf_account_number" type="text" class="form-control {{ $errors->has('pf_account_number') ? ' is-invalid' : '' }}" name="pf_account_number" value="{{ $employee->employeeProfile->pf_account_number }}">
+
+										@if ($errors->has('pf_account_number'))
+											<span class="text-danger">
+												{{ $errors->first('pf_account_number') }}
 											</span>
 										@endif
 									</div>
@@ -384,17 +381,6 @@
 								</div>
 								<div class="form-row mb-3">
 									<div class="col-md-4">
-										<label for="name" >PF A/C No</label>
-										<input id="pf_account_number" type="text" class="form-control {{ $errors->has('pf_account_number') ? ' is-invalid' : '' }}" name="pf_account_number" value="{{ $employee->employeeProfile->pf_account_number }}">
-
-										@if ($errors->has('pf_account_number'))
-											<span class="text-danger">
-												{{ $errors->first('pf_account_number') }}
-											</span>
-										@endif
-									</div>
-
-									<div class="col-md-4">
 										<label for="name" >Upload Image</label>
 										<input id="file" type="file" class="form-control {{ $errors->has('file') ? ' is-invalid' : '' }}" name="file" value="{{ old('file', '') }}">
 
@@ -412,6 +398,19 @@
 										@endif								
 									</div>
 									
+								</div>
+								<div class="col-md-4 mt-3">
+									<label for="name">Profile Lock?</label>
+									<select class="form-control" id="is_proifle_edit_access" name="is_proifle_edit_access">
+			                            <option @if($employee->is_proifle_edit_access) == "0") selected @endif value="0">No</option>
+			                            <option @if($employee->is_proifle_edit_access) == "1") selected @endif value="1">Yes</option>
+			                        </select>
+
+									@if ($errors->has('is_proifle_edit_access'))
+										<span class="text-danger">
+											{{ $errors->first('is_proifle_edit_access') }}
+										</span>
+									@endif
 								</div>
 							</div>
 							<div class="card-footer">
