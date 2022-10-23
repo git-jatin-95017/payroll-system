@@ -197,7 +197,6 @@ class EmployeeController extends Controller
 			'ifsc_code' => $request->ifsc_code,
 			'pf_account_number' => $request->pf_account_number,
 			'status' => $request->status,
-			'is_proifle_edit_access' => $request->is_proifle_edit_access,
 		];
 
 		if ($request->file('file')) {			
@@ -296,7 +295,6 @@ class EmployeeController extends Controller
 			'bank_acc_number' => $request->bank_acc_number,
 			'ifsc_code' => $request->ifsc_code,
 			'pf_account_number' => $request->pf_account_number,
-			'is_proifle_edit_access' => $request->is_proifle_edit_access,
 		];
 
 		if ($request->file('file')) {
