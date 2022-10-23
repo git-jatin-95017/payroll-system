@@ -165,7 +165,8 @@ class EmployeeController extends Controller
 			'phone_number' => $data['phone_number'],
 			'password' => Hash::make($data['password']),
 			'role_id' => 3,
-			'user_code' => $request->emp_code
+			'user_code' => $request->emp_code,
+			'is_proifle_edit_access' => $request->is_proifle_edit_access,
 		]);		
 
 		$data = [
@@ -265,7 +266,8 @@ class EmployeeController extends Controller
 			'name' => $data['first_name'] . ' '. $data['last_name'],
 			'email' => $data['email'],
 			'phone_number' => $data['phone_number'],
-			'user_code' => $request->emp_code
+			'user_code' => $request->emp_code,
+			'is_proifle_edit_access' => $request->is_proifle_edit_access,
 		]);
 
 		$data = [
