@@ -5,6 +5,8 @@ namespace App\Http\Controllers\employee;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\PaymentDetail;
+use App\Models\EmployeeProfile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -51,7 +53,7 @@ class MyProfileController extends Controller
 			]);
 
 			unset($data['update_request']);
-			$employee->employeeProfile->updateOrCreate(
+			EmployeeProfile::updateOrCreate(
 			    ['user_id' => auth()->user()->id],
 			    $data
 			);
@@ -73,7 +75,7 @@ class MyProfileController extends Controller
 
 			unset($data['update_request']);
 
-			$employee->paymentProfile->updateOrCreate(
+			PaymentDetail::updateOrCreate(
 			    ['user_id' => auth()->user()->id],
 			    $data
 			);
