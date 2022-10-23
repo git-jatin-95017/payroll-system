@@ -26,7 +26,7 @@ class MyProfileController extends Controller
 
 		$disabled = 'disabled="disabled"';
 
-		if ($employee->is_proifle_edit_access == 1) {
+		if ($employee->is_proifle_edit_access == "1") {
 			$disabled = '';
 		}
 
