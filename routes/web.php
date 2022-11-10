@@ -11,6 +11,7 @@ use App\Http\Controllers\employee\LeaveController;
 use App\Http\Controllers\employee\MyProfileController;
 use App\Http\Controllers\PunchController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\client\PayrollController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +52,7 @@ Route::prefix('client')->group(function () {
 
 	Route::get('attendance/getData/', [AttendanceController::class, 'getData'])->name('attendance.getData');
 	Route::resource('attendance', AttendanceController::class);	
+	Route::resource('payroll', PayrollController::class);	
 });
 
 Route::prefix('employee')->group(function () {

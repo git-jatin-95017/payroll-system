@@ -65,6 +65,26 @@
 									{{ method_field('PUT') }}
 										<input type="hidden" name="update_request" value="personal">
 										<div class="form-row mb-3">
+											<div class="col-md-4">
+												<label for="name" >Upload Image</label>
+												<input id="file" type="file" class="form-control {{ $errors->has('file') ? ' is-invalid' : '' }}" name="file" value="{{ old('file', '') }}" {{$disabled}}>
+
+												@if ($errors->has('file'))
+													<span class="text-danger">
+														{{ $errors->first('file') }}
+													</span>
+												@endif
+
+											</div>
+											<div class="col-md-4">
+												@if(!empty($employee->employeeProfile->file))
+												<img src="/files/{{$employee->employeeProfile->file}}" class="img-thumbnail"
+												style="object-fit: contain;width: 150px; height: 80px;" />
+												@endif								
+											</div>													
+										</div>
+										<hr>
+										<div class="form-row mb-3">
 											<!-- <div class="col-md-4">
 												<label for="name">Employee ID number</label>
 												<input id="emp_code" type="text" class="form-control {{ $errors->has('emp_code') ? ' is-invalid' : '' }}" name="emp_code" value="{{ $employee->user_code }}" disabled>
@@ -124,7 +144,7 @@
 											<div class="col-md-4">
 												<label for="name" >Marital Status</label>
 												<select class="form-control" id="marital_status" name="marital_status" {{$disabled}}>
-													<option selected value disabled>Please make a choice</option>
+													<option selected value disabled>Please Select</option>
 													<option @if($employee->employeeProfile->marital_status == "single") selected @endif value="single">Single</option>
 													<option @if($employee->employeeProfile->marital_status == "married") selected @endif value="married">Married</option>
 													<option @if($employee->employeeProfile->marital_status == "other") selected @endif value="other">Other</option>
@@ -215,7 +235,7 @@
 											<div class="col-md-4">
 												<label for="name" >Identity Document</label>
 												<select class="form-control {{ $errors->has('identity_document') ? ' is-invalid' : '' }}" id="identity_document" name="identity_document" {{$disabled}}>
-													<option selected value disabled>Please make a choice</option>
+													<option selected value disabled>Please Select</option>
 													<option @if($employee->employeeProfile->identity_document == "Voter Id") selected @endif value="Voter Id">Voter Id</option>
 													<option @if($employee->employeeProfile->identity_document == "Aadhar Card") selected @endif value="Aadhar Card">Aadhar Card</option>
 													<option @if($employee->employeeProfile->identity_document == "Driving License") selected @endif value="Driving License">Driving License</option>
@@ -237,26 +257,7 @@
 													</span>
 												@endif
 											</div>
-										</div>
-										<div class="form-row mb-3">
-											<div class="col-md-4">
-												<label for="name" >Upload Image</label>
-												<input id="file" type="file" class="form-control {{ $errors->has('file') ? ' is-invalid' : '' }}" name="file" value="{{ old('file', '') }}" {{$disabled}}>
-
-												@if ($errors->has('file'))
-													<span class="text-danger">
-														{{ $errors->first('file') }}
-													</span>
-												@endif
-
-											</div>
-											<div class="col-md-4">
-												@if(!empty($employee->employeeProfile->file))
-												<img src="/files/{{$employee->employeeProfile->file}}" class="img-thumbnail"
-												style="object-fit: contain;width: 200px; height: 150px;" />
-												@endif								
-											</div>													
-										</div>
+										</div>										
 										<div class="form-group row text-right">
 											<div class="offset-sm-2 col-sm-10">
 												<button type="submit" class="btn btn-danger">Submit</button>
@@ -326,7 +327,7 @@
 										<div class="col-md-4">
 											<label for="name">Employee Type</label>
 											<select class="form-control {{ $errors->has('emp_type') ? ' is-invalid' : '' }}" id="emp_type" name="emp_type" {{$disabled}}>
-												<option selected value disabled>Please make a choice</option>
+												<option selected value disabled>Please Select</option>
 												<option @if($employee->employeeProfile->emp_type == "part-time") selected @endif value="part-time">Part Time</option>
 												<option @if($employee->employeeProfile->emp_type == "full-time") selected @endif value="full-time">Full Time</option>
 											</select>
@@ -341,7 +342,7 @@
 										<div class="col-md-4">
 											<label for="name" >Pay Type</label>
 											<select class="form-control {{ $errors->has('pay_type') ? ' is-invalid' : '' }}" id="pay_type" name="pay_type" {{$disabled}}>
-												<option selected value disabled>Please make a choice</option>
+												<option selected value disabled>Please Select</option>
 												<option @if($employee->employeeProfile->pay_type == "salary") selected @endif value="salary">Salary</option>
 												<option @if($employee->employeeProfile->pay_type == "hourly") selected @endif value="hourly">Hourly</option>
 											</select>
@@ -365,11 +366,12 @@
 										<div class="col-md-4">
 											<label for="name">Rate</label>
 											<select class="form-control {{ $errors->has('rate') ? ' is-invalid' : '' }}" id="rate" name="rate" {{$disabled}}>
-												<option selected value disabled>Please make a choice</option>
+												<option selected value disabled>Please Select</option>
 												<option @if($employee->employeeProfile->rate == "hourly") selected @endif value="hourly">Hourly</option>
 												<option @if($employee->employeeProfile->rate == "weekly") selected @endif value="weekly">Weekly</option>
 												<option @if($employee->employeeProfile->rate == "monthly") selected @endif value="monthly">Monthly</option>
 												<option @if($employee->employeeProfile->rate == "yearly") selected @endif value="yearly">Yearly</option>
+												<option @if($employee->employeeProfile->rate == "daily") selected @endif value="daily">Daily</option>
 											</select>
 											@if ($errors->has('rate'))
 												<span class="text-danger">
@@ -393,10 +395,10 @@
 									<div class="form-row mb-3">
 										<div class="col-md-4">
 											<label for="name" >Payment Method</label>
-											<select class="form-control {{ $errors->has('payment_method') ? ' is-invalid' : '' }}" id="payment_method" name="payment_method" {{$disabled}}>
-												<option value="" disabled>Please make a choice</option>
-												<option @if($employee->paymentProfile->payment_method == "check") selected @endif value="check">Check</option>
-												<option @if($employee->paymentProfile->payment_method == "deposit") selected @endif value="deposit">Direct Deposit</option>
+											<select class="form-control {{ $errors->has('payment_method') ? ' is-invalid' : '' }}" id="payment_method" name="payment_method" {{$disabled}} onchange="showDiv(this)">
+												<option value="" disabled>Please Select</option>
+												<option @if(!empty($employee->paymentProfile->payment_method) && $employee->paymentProfile->payment_method == "check") selected @endif value="check">Check</option>
+												<option @if(!empty($employee->paymentProfile->payment_method) && $employee->paymentProfile->payment_method == "deposit") selected @endif value="deposit">Direct Deposit</option>
 											</select>
 											@if ($errors->has('payment_method'))
 												<span class="text-danger">
@@ -404,10 +406,10 @@
 												</span>
 											@endif
 										</div>
-										<div class="col-md-4">
-											<label for="routing_number" class="col-md-4 control-label">Routing Number</label>
+										<div class="col-md-4 d-none" id="routing_number_div">
+											<label for="routing_number" class="control-label">Routing Number</label>
 											<div class="col-md-12">
-												<input id="routing_number" type="routing_number" class="form-control {{ $errors->has('routing_number') ? ' is-invalid' : '' }}" name="routing_number" value="{{ $employee->paymentProfile->routing_number }}" {{$disabled}}>
+												<input id="routing_number" type="routing_number" class="form-control {{ $errors->has('routing_number') ? ' is-invalid' : '' }}" name="routing_number" value="{{ !empty($employee->paymentProfile->routing_number) ? $employee->paymentProfile->routing_number : '' }}" {{$disabled}}>
 
 												@if ($errors->has('routing_number'))
 													<span class="text-danger">
@@ -416,10 +418,10 @@
 												@endif
 											</div>
 										</div>
-										<div class="col-md-4">
-											<label for="account_number" class="col-md-4 control-label">Account Number</label>
+										<div class="col-md-4 d-none" id="account_number_div">
+											<label for="account_number" class="control-label">Account Number</label>
 											<div class="col-md-12">
-												<input id="account_number" type="account_number" class="form-control {{ $errors->has('account_number') ? ' is-invalid' : '' }}" value="{{ $employee->paymentProfile->account_number }}" name="account_number" {{$disabled}}>
+												<input id="account_number" type="account_number" class="form-control {{ $errors->has('account_number') ? ' is-invalid' : '' }}" value="{{ !empty($employee->paymentProfile->account_number) ? $employee->paymentProfile->account_number:'' }}" name="account_number" {{$disabled}}>
 
 												@if ($errors->has('account_number'))
 													<span class="text-danger">
@@ -429,12 +431,13 @@
 											</div>
 										</div>
 									</div>
-									<div class="form-row mb-3">
+									<div class="form-row mb-3 d-none" id="account_type_div">
 										<div class="col-md-4">
 											<label for="name" >Account Type</label>
 											<select class="form-control {{ $errors->has('account_type') ? ' is-invalid' : '' }}" id="account_type" name="account_type" {{$disabled}}>
-												<option value="" disabled>Please make a choice</option>
-												<option @if($employee->paymentProfile->account_type == "saving") selected @endif value="saving">Saving</option>
+												<option value="" disabled>Please Select</option>
+												<option @if(!empty($employee->paymentProfile->account_type) && $employee->paymentProfile->account_type == "checking") selected @endif value="checking">Checking</option>
+												<option @if(!empty($employee->paymentProfile->account_type) && $employee->paymentProfile->account_type == "saving") selected @endif value="saving">Saving</option>
 											</select>
 											@if ($errors->has('account_type'))
 												<span class="text-danger">
@@ -535,3 +538,21 @@
 	</section>
 
 @endsection
+
+@push('page_scripts')
+<script>
+	function showDiv(obj) {
+		if ($(obj).val() == 'check') {
+			$('#routing_number_div').addClass('d-none');
+			$('#account_number_div').addClass('d-none');
+			$('#account_type_div').addClass('d-none');
+		}
+
+		if ($(obj).val() == 'deposit') {
+			$('#routing_number_div').removeClass('d-none');
+			$('#account_number_div').removeClass('d-none');
+			$('#account_type_div').removeClass('d-none');
+		}
+	}
+</script>
+@endpush

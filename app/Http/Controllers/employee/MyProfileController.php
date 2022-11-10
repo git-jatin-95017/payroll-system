@@ -60,17 +60,17 @@ class MyProfileController extends Controller
 
 		} else if ($data['update_request'] == 'payment') {
 			$request->validate([
-				'routing_number' => ['required'],
-				'account_number' => ['required'],
-				'account_type' => ['required'],
-				'payment_method' => ['required'],
+				'payment_method' =>['required'],
+				'routing_number' => ['required_if:payment_method,==,deposit'],
+				'account_number' => ['required_if:payment_method,==,deposit'],
+				'account_type' => ['required_if:payment_method,==,deposit']
 			], [], []);
 
 			$data = [
-				'routing_number' => $request->routing_number,
-				'account_number' => $request->account_number,
-				'account_type' => $request->account_type,
-				'payment_method' => $request->payment_method
+				'routing_number' => $request->routing_number ?? '',
+				'account_number' => $request->account_number ?? '',
+				'account_type' => $request->account_type ?? '',
+				'payment_method' => $request->payment_method ?? ''
 			];
 
 			unset($data['update_request']);
