@@ -112,7 +112,6 @@
 									      <td>{{ $v->name }}</td>
 									      <td>{{ !empty($v->employeeProfile) ? $v->employeeProfile->designation : ''}}</td>
 									      <td>{{ !empty($v->employeeProfile) ? $v->employeeProfile->doj : ''}}</td>
-									      <!-- <td>{{ $v->employeeProfile->address }}</td> -->
 									      <td>{{ !empty($v->employeeProfile) ? $v->employeeProfile->pay_rate : 0}}</td>
 									      <?php
 									      for ($i=1;$i<=13;$i++) {
