@@ -55,26 +55,93 @@
 				<div class="col-sm-12">
 					<div class="card card-primary">
 						<div class="card-header">
-							<h3 class="card-title">Payroll</h3>
+							<h3 class="card-title">Payroll - {{ $year }} - {{ $month }}</h3>
 						</div>
 						<form class="form-horizontal" method="POST" action="{{ route('employee.store') }}" enctype="multipart/form-data">
 							@csrf
+							<?php
+								// $default_week = date('W');
+								// $week = $default_week; // get week
+								$y = 2022; // get year
+								$first_date =  date('d-m-Y', strtotime($y."W".$week));
+								$two_week_days = [$first_date];							
+							?>
 							<div class="card-body">
-								<div class="form-row mb-3">
-									<div class="col-md-4">
-										<label for="name">Employee ID number</label>
-										<input id="emp_code" type="text" class="form-control {{ $errors->has('emp_code') ? ' is-invalid' : '' }}" name="emp_code" value="{{ old('emp_code', '') }}">
+								<table class="table table-bordered">
+								  <thead>
+								  	<tr>
+								      	<th scope="col"></th>
+								      	<th scope="col"></th>
+								      	<th scope="col"></th>
+								      	<th scope="col"><a href="{{ route('payroll.create', ['week' => $week-1]) }}">Prev</a></th>
+								      	<!-- <th scope="col"></th>								      	 -->
+								      	<th scope="col">								      		
+								      		<a href="{{ route('payroll.create', ['week' => $week+1]) }}">Next</a>
+								      	</th>								      	
+								      	<?php								      	
+											
+											for ($i=1;$i<=13;$i++) {
+										?>
+												<th scope="col">{{ date("d", strtotime("+$i day", strtotime($first_date))) }}</th>
+										<?php
+											    // $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
+											}										
+								      	?>
+								    </tr>
+								    <tr>
+								      <th scope="col">#</th>
+								      <th scope="col">Name</th>
+								      <th scope="col">Position</th>
+								      <th scope="col">Start Date</th>
+								      <!-- <th scope="col">Address</th> -->
+								      <th scope="col">Pay/h</th>
+								      <?php
+								      for ($i=1;$i<=13;$i++) {
+										?>
+												<th scope="col">{{ strtoupper(date("D", strtotime("+$i day", strtotime($first_date)))) }}</th>
+										<?php
+											    // $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
+											}										
+								      	?>								      
+								    </tr>
+								  </thead>
+								  <tbody>
+								  	@foreach($employees as $k => $v)
+									    <tr>
+									      <th scope="row">{{ $k+1 }}</th>
+									      <td>{{ $v->name }}</td>
+									      <td>{{ $v->employeeProfile->designation }}</td>
+									      <td>{{ $v->employeeProfile->doj }}</td>
+									      <!-- <td>{{ $v->employeeProfile->address }}</td> -->
+									      <td>{{ $v->employeeProfile->pay_rate }}</td>
+									      <?php
+									      for ($i=1;$i<=13;$i++) {
+									      	$dateToday = date("Y-m-d", strtotime("+$i day", strtotime($first_date)));
+									      	$xcellData = NULL;
+									      	$result = $tempDatesArr[$v->id];
+									      	if (array_key_exists($dateToday, $result)) {
 
-										@if ($errors->has('emp_code'))
-											<span class="text-danger">
-												{{ $errors->first('emp_code') }}
-											</span>
-										@endif
-									</div>													
-								</div>								
+									      		$xcellData = $result[$dateToday];
+									      	}									      
+										?>
+													<th scope="col">
+														<input type="text" name="" class="form-control payroll_date_cell" 
+														data-date="{{ $dateToday }}"
+														data-empid="{{ $v->id }}"
+														value="{{ $xcellData }}"
+														>
+													</th>
+											<?php
+												    // $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
+												}										
+									      	?>
+									    </tr>
+									@endforeach								    
+								  </tbody>
+								</table>
 							</div>
 							<div class="card-footer">
-								<button type="submit" class="btn btn-primary">Submit</button>
+								<!-- <button type="submit" class="btn btn-primary">Submit</button> -->
 							</div>
 						</form>
 					</div>
@@ -83,3 +150,22 @@
 		</div>
 	</section>
 @endsection
+@push('page_scripts')
+<script>
+    $(document).ready(function() {
+        $(".payroll_date_cell").blur(function() {
+        	if ($(this).val() != '' || $(this).val() != null) {        	
+	            $.ajax({
+	                url: "{{ route('payroll.store') }}", 
+	                type: 'POST',
+	                data: {_token: "{{ csrf_token() }}", emp_id: $(this).data('empid'), payroll_date: $(this).data('date'), daily_hrs: $(this).val() },
+	                dataType: 'JSON',
+	                success: function (data) {
+	                    // alert('Record Saved Successfully.');
+	                }
+	            }); 
+        	}
+        });
+   });    
+</script>
+@endpush

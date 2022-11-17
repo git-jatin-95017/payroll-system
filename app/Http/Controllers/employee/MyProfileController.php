@@ -26,10 +26,10 @@ class MyProfileController extends Controller
 	{		
 		$employee = User::find($id);
 
-		$disabled = 'disabled="disabled"';
+		$disabled = '';
 
 		if ($employee->is_proifle_edit_access == "1") {
-			$disabled = '';
+			$disabled = 'readonly="readonly"';
 		}
 
 	   	return view('employee.profile.edit', compact('employee', 'disabled'));

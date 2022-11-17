@@ -212,6 +212,8 @@ class EmployeeController extends Controller
 
 	        $data['file'] = $filename;
 	   	}
+	   	
+	   	unset($data['status']);
 
 		EmployeeProfile::create($data);
 	
@@ -226,7 +228,13 @@ class EmployeeController extends Controller
 
 	public function edit(User $employee)
 	{
-	   return view('client.employee.edit', compact('employee'));
+		$disabled = '';
+
+		if ($employee->is_proifle_edit_access == "1") {
+			$disabled = 'readonly="readonly"';
+		}
+
+	   return view('client.employee.edit', compact('employee', 'disabled'));
 	}
 
 	public function update(Request $request, User $employee)

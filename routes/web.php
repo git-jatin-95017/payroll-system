@@ -52,6 +52,7 @@ Route::prefix('client')->group(function () {
 
 	Route::get('attendance/getData/', [AttendanceController::class, 'getData'])->name('attendance.getData');
 	Route::resource('attendance', AttendanceController::class);	
+	Route::get('register-entry', [PayrollController::class, 'registerEntry']);
 	Route::resource('payroll', PayrollController::class);	
 });
 

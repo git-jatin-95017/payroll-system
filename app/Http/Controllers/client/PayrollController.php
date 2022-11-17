@@ -4,7 +4,9 @@ namespace App\Http\Controllers\client;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Holiday;
+use App\Models\PayrollSheet;
+use App\Models\User;
+use App\Models\Attendance;
 use DataTables;
 use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\Hash;
@@ -38,83 +40,97 @@ class PayrollController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function create()
+	public function create(Request $request)
 	{
-	   return view('client.payroll.create');
+		$week = $request->week ?? date('W');
+
+		$year = $request->year ?? date('Y');
+
+		$month = date('F', strtotime($year.'-W'.$week));
+
+		$employees = User::where('role_id', 3)->get();
+
+		$tempDatesArr = [];
+
+		foreach ($employees as $k => $v) {
+			if (!empty($v->payrollSheet)) {
+				foreach ($v->payrollSheet as $key => $value) {	
+					$tempDatesArr[$v->id][$value->payroll_date] = $value->daily_hrs;
+				}
+			}
+		}
+
+	   	return view('client.payroll.create', compact('employees', 'tempDatesArr', 'week', 'year', 'month'));
 	}
 
 	public function store(Request $request)
 	{   
-		$data = $request->all();
+		if ($request->ajax()) {
+			$data = $request->all();
 
-		$request->validate([
-			'title' => 'required|max:255',		
-			'description' => ['required', 'max:500'],
-			'holiday_date' => ['required', 'date'],
-			'type' => ['required']
-		]);
+			$isExist = PayrollSheet::where('emp_id', $data['emp_id'])->where('payroll_date', $data['payroll_date'])->count();
 
-		Holiday::create([
-			'title' => $data['title'],
-			'description' => $data['description'],
-			'holiday_date' => $data['holiday_date'],
-			'type' => $data['type']
-		]);		
+			if ($isExist) {
+				$isExist = PayrollSheet::where('emp_id', $data['emp_id'])->where('payroll_date', $data['payroll_date'])->first();
+				$isExist->payroll_date = $data['payroll_date'];
+				$isExist->daily_hrs = $data['daily_hrs'];
+				$isExist->save();
+			} else{
+				PayrollSheet::create([
+					'payroll_date' => $data['payroll_date'],
+					'daily_hrs' => $data['daily_hrs'],
+					'emp_id' => $data['emp_id'],
+					'created_at' => date('Y-m-d H:i:s')
+				]);	
+			}	
 
-		
-		return redirect()->route('holidays.index')->with('message', 'Holiday created successfully.');	
+			return response()->json(['status'=>true, 'message'=>"Record saved successfully."]);
+		}	
 	}
 
-	public function show(Holiday $holiday) {   
-		return view('holidays.show', compact('holiday'));
+	protected function differenceInHours($startdate,$enddate){
+		$starttimestamp = strtotime($startdate);
+		$endtimestamp = strtotime($enddate);
+		$difference = abs($endtimestamp - $starttimestamp)/3600;
+		return $difference;
 	}
 
-	public function edit(Holiday $holiday)
-	{
-	   return view('holidays.edit', compact('holiday'));
-	}
+	public function registerEntry() {
+		$dateStart = 1;
+		$dateEnd = date('t');
 
-	public function update(Request $request, Holiday $holiday)
-	{
-		$data = $request->all();
+		$employees = User::where('role_id', 3)->get();
 
-		$request->validate([
-			'title' => 'required|max:255',		
-			'description' => ['required', 'max:500'],
-			'holiday_date' => ['required', 'date'],
-			'type' => ['required']
-		]);
+		foreach($employees as $k => $v) {
+			for($i = 1; $i <= $dateEnd; $i++) {
+				$dateS = date('Y-m-'.$i);
 
-		$holiday->update([
-			'title' => $data['title'],
-			'description' => $data['description'],
-			'holiday_date' => $data['holiday_date'],
-			'type' => $data['type']
-		]);		
-	
-		return redirect()->route('holidays.index')->with('message', 'Holiday updated successfully.');	
-	}   
+				$count = Attendance::where('attendance_date', $dateS)->count();				
 
-	protected function permanentDelete($id){
-        $trash = Holiday::find($id);
+				$hours = 8;
 
-        $trash->delete();
+				if ($count == 2) {
+					$attendance = Attendance::where('attendance_date', $dateS)->get();					
 
-        return true;
-    }
+					$hours = $this->differenceInHours($attendance[0]->action_time, $attendance[1]->action_time);
 
-   	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy(Request $request, $id)
-	{
-		if (request()->ajax()) {
-			 $trash = $this->permanentDelete($id);
+				}
 
-			return response()->json(['status'=>true, 'message'=>"Holiday deleted successfully."]);
+				$isExist = PayrollSheet::where('emp_id', $v->id)->where('payroll_date', $dateS)->first();
+
+				if (!$isExist) {				
+					PayrollSheet::create([
+						'emp_id' => $v->id,
+						'hourly_pay' => $v->employeeProfile->pay_rate,
+						'payroll_date' => $dateS,
+						'daily_hrs' => $hours,
+						'created_at' => date('Y-m-d'),
+					]);
+				}
+			}
 		}
+
+		die('-------SUCCESS-------');
 	}
+
 }

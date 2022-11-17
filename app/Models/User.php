@@ -64,4 +64,8 @@ class User extends Authenticatable
     {
         return !empty($this->attributes['created_at']) ? date('Y-m-d H:i:s', strtotime($this->attributes['created_at'])) : NULL;
     }
+
+    public function payrollSheet() {
+        return $this->hasMany(PayrollSheet::class, 'emp_id');
+    }
 }

@@ -67,7 +67,7 @@
 										<div class="form-row mb-3">
 											<div class="col-md-4">
 												<label for="name" >Upload Image</label>
-												<input id="file" type="file" class="form-control {{ $errors->has('file') ? ' is-invalid' : '' }}" name="file" value="{{ old('file', '') }}" {{$disabled}}>
+												<input id="file" type="file" class="form-control {{ $errors->has('file') ? ' is-invalid' : '' }}" name="file" value="{{ old('file', '') }}" @if($employee->is_proifle_edit_access == "1") disabled="disabled" @endif>
 
 												@if ($errors->has('file'))
 													<span class="text-danger">
@@ -368,10 +368,10 @@
 											<select class="form-control {{ $errors->has('rate') ? ' is-invalid' : '' }}" id="rate" name="rate" {{$disabled}}>
 												<option selected value disabled>Please Select</option>
 												<option @if($employee->employeeProfile->rate == "hourly") selected @endif value="hourly">Hourly</option>
+												<option @if($employee->employeeProfile->rate == "daily") selected @endif value="daily">Daily</option>
 												<option @if($employee->employeeProfile->rate == "weekly") selected @endif value="weekly">Weekly</option>
 												<option @if($employee->employeeProfile->rate == "monthly") selected @endif value="monthly">Monthly</option>
 												<option @if($employee->employeeProfile->rate == "yearly") selected @endif value="yearly">Yearly</option>
-												<option @if($employee->employeeProfile->rate == "daily") selected @endif value="daily">Daily</option>
 											</select>
 											@if ($errors->has('rate'))
 												<span class="text-danger">
@@ -396,8 +396,8 @@
 										<div class="col-md-4">
 											<label for="name" >Payment Method</label>
 											<select class="form-control {{ $errors->has('payment_method') ? ' is-invalid' : '' }}" id="payment_method" name="payment_method" {{$disabled}} onchange="showDiv(this)">
-												<option value="" disabled>Please Select</option>
-												<option @if(!empty($employee->paymentProfile->payment_method) && $employee->paymentProfile->payment_method == "check") selected @endif value="check">Check</option>
+												<option value="" selected disabled>Please Select</option>
+												<option @if(!empty($employee->paymentProfile->payment_method) && $employee->paymentProfile->payment_method == "check") selected @endif value="check">Cheque</option>
 												<option @if(!empty($employee->paymentProfile->payment_method) && $employee->paymentProfile->payment_method == "deposit") selected @endif value="deposit">Direct Deposit</option>
 											</select>
 											@if ($errors->has('payment_method'))
@@ -436,7 +436,7 @@
 											<label for="name" >Account Type</label>
 											<select class="form-control {{ $errors->has('account_type') ? ' is-invalid' : '' }}" id="account_type" name="account_type" {{$disabled}}>
 												<option value="" disabled>Please Select</option>
-												<option @if(!empty($employee->paymentProfile->account_type) && $employee->paymentProfile->account_type == "checking") selected @endif value="checking">Checking</option>
+												<option @if(!empty($employee->paymentProfile->account_type) && $employee->paymentProfile->account_type == "checking") selected @endif value="checking">Chequing</option>
 												<option @if(!empty($employee->paymentProfile->account_type) && $employee->paymentProfile->account_type == "saving") selected @endif value="saving">Saving</option>
 											</select>
 											@if ($errors->has('account_type'))
