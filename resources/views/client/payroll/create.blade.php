@@ -110,10 +110,10 @@
 									    <tr>
 									      <th scope="row">{{ $k+1 }}</th>
 									      <td>{{ $v->name }}</td>
-									      <td>{{ $v->employeeProfile->designation }}</td>
-									      <td>{{ $v->employeeProfile->doj }}</td>
+									      <td>{{ $v->employeeProfile->designation ??'' }}</td>
+									      <td>{{ $v->employeeProfile->doj ??''}}</td>
 									      <!-- <td>{{ $v->employeeProfile->address }}</td> -->
-									      <td>{{ $v->employeeProfile->pay_rate }}</td>
+									      <td>{{ $v->employeeProfile->pay_rate??0 }}</td>
 									      <?php
 									      for ($i=1;$i<=13;$i++) {
 									      	$dateToday = date("Y-m-d", strtotime("+$i day", strtotime($first_date)));
