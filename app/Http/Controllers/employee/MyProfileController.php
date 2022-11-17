@@ -81,14 +81,14 @@ class MyProfileController extends Controller
 			);
 		} else if ($data['update_request'] == 'changepwd') {
 
-			$user = User::where('email', $request->email_address)->first();
+			// $user = User::where('email', $request->email_address)->first();
 
-			if (!$user) {
-				return redirect()->back()->with('error', 'Email does not exist.');
-			}
+			// if (!$user) {
+			// 	return redirect()->back()->with('error', 'Email does not exist.');
+			// }
 
 			$request->validate([
-				'email_address' => ['required', 'email'],
+	//			'email_address' => ['required', 'email'],
 				'old_password' => ['required'],
 				'password' => ['required', 'string', 'min:8', 'confirmed'],
 				'password_confirmation' => 'required_with:password',
