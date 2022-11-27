@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.employee')
 @push('page_css')
 	<style>
 		thead input.top-filter {
