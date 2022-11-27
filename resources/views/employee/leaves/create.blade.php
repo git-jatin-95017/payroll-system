@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.employee')
 
 @section('content')
 	<div class="content-header">
@@ -57,7 +57,7 @@
 							@csrf
 							<div class="card-body">
 								<div class="form-group">
-									<label for="leave_subject" class="col-md-4 control-label">Leave Subject</label>
+									<label for="leave_subject" class="col-md-4 control-label">Subject</label>
 									<div class="col-md-6">
 										<input id="leave_subject" type="text" class="form-control {{ $errors->has('leave_subject') ? ' is-invalid' : '' }}" name="leave_subject" value="{{ old('leave_subject', '') }}">
 
@@ -70,10 +70,10 @@
 								</div>
 
 								<div class="form-group">
-									<label for="leave_dates" class="col-md-4 control-label">Leave Date (DD/MM/YYY)</label>
+									<label for="leave_dates" class="col-md-4 control-label">Date (DD/MM/YYY)</label>
 									<div class="col-md-6">
-										<input id="leave_dates" type="date" class="form-control {{ $errors->has('leave_dates') ? ' is-invalid' : '' }}" name="leave_dates" value="{{ old('leave_dates', '') }}">
-
+										<input id="leave_dates" type="text" class="form-control multidatepicker {{ $errors->has('leave_dates') ? ' is-invalid' : '' }}" name="leave_dates" value="{{ old('leave_dates', '') }}">
+										<small class="text-muted">You can select multiple dates separated by comma.</small>
 										@if ($errors->has('leave_dates'))
 											<span class="text-danger">
 												{{ $errors->first('leave_dates') }}
@@ -125,3 +125,20 @@
 		</div>
 	</section>
 @endsection
+@push('page_css')
+	<link rel="stylesheet" href="{{ asset('js/datepicker/datepicker3.css') }}">
+@endpush
+
+@push('page_scripts')
+	<script src="{{ asset('js/datepicker/bootstrap-datepicker.js') }}"></script>
+	<script>
+		 if ( $('.multidatepicker').length > 0 ) {
+		        $('.multidatepicker').datepicker({
+		            format: 'mm/dd/yyyy',
+		            startDate : new Date(),
+		            multidate: true,
+		            autoclose: true
+		        });
+		    }
+	</script>
+@endpush

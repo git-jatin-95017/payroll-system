@@ -40,7 +40,17 @@ class HolidayController extends Controller
 						return '<input type="checkbox" class="delete_check" id="delcheck_'.$row->id.'" onclick="checkcheckbox();" value="'.$row->id.'">';
 					})
 					->addColumn('holiday_type', function ($row) {
-						return $row->type == 1 ? 'Compulsory Holiday' : 'Restricted Holiday';
+
+						$type = NULL;
+						if ($row->type == 1) {
+							$type = 'Public Holiday';
+						} elseif ($row->type == 2) {
+							$type = 'National Day';
+						} elseif ($row->type == 3) {
+							$type = 'Voluntary';
+						}
+
+						return $type;
 					})
 					->addColumn('action_button', function($data){
 							$btn = "<div class='table-actions'>                           

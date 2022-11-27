@@ -71,7 +71,7 @@
 							   	
 							</div> -->
 							<!-- <br> -->
-							<table class="table table-bordered table-hover nowrap" id="dataTableBuilder">
+							<table class="table table-bordered table-hover nowrap" style="width:100%" id="dataTableBuilder">
 								<thead>
 									<tr>
 										<!-- <th><input type="checkbox" class='checkall' id='checkall'>
@@ -182,8 +182,8 @@
 		  	var table = $('#dataTableBuilder').DataTable({
 					processing: true,
 					serverSide: true,
-					// autoWidth: true,
-					// scrollX: true,
+					autoWidth: true,
+					scrollX: true,
 					scrollY: "400px",
 					ajax: {
 						url: "{{route('employee.getData')}}",

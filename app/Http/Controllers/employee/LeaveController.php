@@ -123,10 +123,12 @@ class LeaveController extends Controller
 			'leave_type' => ['required']
 		]);
 
+		$leave_dates   = addslashes($data['leave_dates']);
+
 		Leave::create([
 			'user_id' => auth()->user()->id,
 			'leave_subject' => $data['leave_subject'],
-			'leave_dates' => $data['leave_dates'],
+			'leave_dates' => $leave_dates,
 			'leave_message' => $data['leave_message'],
 			'leave_type' => $data['leave_type'],
 			'leave_status' => 'pending',

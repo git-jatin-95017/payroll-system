@@ -4,6 +4,11 @@
 		thead input.top-filter {
 	        width: 100%;
 	    }
+
+	    table.dataTable tbody td {
+			word-break: break-word;
+		  	vertical-align: top;
+		}
 	</style>
 	<link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('css/responsive.bootstrap4.min.css') }}">
@@ -66,7 +71,7 @@
 							</div>
 						</div>					
 						<div class="card-body">							
-							<table class="table table-bordered table-hover nowrap" id="dataTableBuilder">
+							<table class="table table-bordered table-hover wrap" id="dataTableBuilder">
 								<thead>
 									<tr>										
 										<th>ID</th>

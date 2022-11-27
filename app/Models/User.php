@@ -23,7 +23,8 @@ class User extends Authenticatable
         'password',
         'role_id',
         'phone_number',
-        'user_code'
+        'user_code',
+        'is_proifle_edit_access'
     ];
 
     /**
@@ -51,6 +52,10 @@ class User extends Authenticatable
         return $this->hasOne(EmployeeProfile::class);
     }
 
+    public function paymentProfile() {
+        return $this->hasOne(PaymentDetail::class);
+    }
+
     public function getCreatedAtFormattedAttribute() {
         return !empty($this->attributes['created_at']) ? date('Y-m-d H:i:s', strtotime($this->attributes['created_at'])) : NULL;
     }
@@ -58,5 +63,9 @@ class User extends Authenticatable
     public function getUpdatedAtFormattedAttribute()
     {
         return !empty($this->attributes['created_at']) ? date('Y-m-d H:i:s', strtotime($this->attributes['created_at'])) : NULL;
+    }
+
+    public function payrollSheet() {
+        return $this->hasMany(PayrollSheet::class, 'emp_id');
     }
 }

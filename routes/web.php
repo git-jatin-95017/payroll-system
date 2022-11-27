@@ -7,10 +7,13 @@ use App\Http\Controllers\admin\ProfileController;
 use App\Http\Controllers\client\EmployeeController;
 use App\Http\Controllers\client\HolidayController;
 use App\Http\Controllers\client\LeavesController;
+use App\Http\Controllers\client\DepartmentController;
+use App\Http\Controllers\client\LeaveTypeController;
 use App\Http\Controllers\employee\LeaveController;
 use App\Http\Controllers\employee\MyProfileController;
 use App\Http\Controllers\PunchController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\client\PayrollController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +54,14 @@ Route::prefix('client')->group(function () {
 
 	Route::get('attendance/getData/', [AttendanceController::class, 'getData'])->name('attendance.getData');
 	Route::resource('attendance', AttendanceController::class);	
+	Route::get('register-entry', [PayrollController::class, 'registerEntry']);
+	Route::resource('payroll', PayrollController::class);
+
+	Route::get('department/getData/', [DepartmentController::class, 'getData'])->name('department.getData');
+	Route::resource('department', DepartmentController::class);		
+
+	Route::get('leave-type/getData/', [LeaveTypeController::class, 'getData'])->name('leave-type.getData');
+	Route::resource('leave-type', LeaveTypeController::class);
 });
 
 Route::prefix('employee')->group(function () {

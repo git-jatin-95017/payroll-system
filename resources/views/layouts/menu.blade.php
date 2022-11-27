@@ -140,6 +140,14 @@
 				</li>
 			</ul>
 		</li>
+		<li class="nav-item">
+			<a href="{{ route('payroll.create') }}" class="nav-link">
+				<i class="nav-icon far fa-calendar-alt"></i>
+				<p>
+				 Payroll Sheet
+				</p>
+			</a>
+		</li>
 	@endif
 
 	@if(auth()->user()->role_id == 3)
@@ -151,6 +159,29 @@
 				</p>
 			</a>		
 		</li>
+		<li class="nav-item">
+			<a href="#" class="nav-link">
+				<i class="nav-icon fas fa-table"></i>
+				<p>
+				 Holidays
+					<i class="right fas fa-angle-left"></i>
+				</p>
+			</a>
+			<ul class="nav nav-treeview">
+				<li class="nav-item">
+					<a href="{{ route('holidays.create') }}" class="nav-link">
+						<i class="far fa-circle nav-icon"></i>
+						<p>Add New Holiday</p>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a href="{{ route('holidays.index') }}" class="nav-link">
+						<i class="far fa-circle nav-icon"></i>
+						<p>List Of Holidays</p>
+					</a>
+				</li>
+			</ul>
+		</li>
 	@endif
 
 	@if(auth()->user()->role_id == 3)
@@ -158,7 +189,7 @@
 			<a href="{{ route('emp-my-profile.edit', auth()->user()->id) }}" class="nav-link">
 				<i class="nav-icon fas fa-edit"></i>
 				<p>
-					Edit Profile
+					Profile
 				</p>
 			</a>		
 		</li>
@@ -167,7 +198,7 @@
 			<a href="{{ route('edit-my-profile.edit', auth()->user()->id) }}" class="nav-link">
 				<i class="nav-icon fas fa-edit"></i>
 				<p>
-					Edit Profile
+					Profile
 				</p>
 			</a>		
 		</li>

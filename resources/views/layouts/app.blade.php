@@ -38,7 +38,7 @@
 		<ul class="navbar-nav ml-auto">
 			<li class="nav-item dropdown user-menu">
 				<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-					<img src="../img/logo3.png"
+					<img src="/img/logo3.png"
 						 class="user-image img-circle elevation-2" alt="User Image">
 					<span class="d-none d-md-inline">Welcome {{ ucwords(Auth::user()->name) }}</span>
 				</a>

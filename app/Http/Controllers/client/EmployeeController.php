@@ -165,7 +165,8 @@ class EmployeeController extends Controller
 			'phone_number' => $data['phone_number'],
 			'password' => Hash::make($data['password']),
 			'role_id' => 3,
-			'user_code' => $request->emp_code
+			'user_code' => $request->emp_code,
+			'is_proifle_edit_access' => $request->is_proifle_edit_access,
 		]);		
 
 		$data = [
@@ -211,6 +212,8 @@ class EmployeeController extends Controller
 
 	        $data['file'] = $filename;
 	   	}
+	   	
+	   	unset($data['status']);
 
 		EmployeeProfile::create($data);
 	
@@ -225,7 +228,13 @@ class EmployeeController extends Controller
 
 	public function edit(User $employee)
 	{
-	   return view('client.employee.edit', compact('employee'));
+		$disabled = '';
+
+		if ($employee->is_proifle_edit_access == "1") {
+			$disabled = 'readonly="readonly"';
+		}
+
+	   return view('client.employee.edit', compact('employee', 'disabled'));
 	}
 
 	public function update(Request $request, User $employee)
@@ -265,7 +274,8 @@ class EmployeeController extends Controller
 			'name' => $data['first_name'] . ' '. $data['last_name'],
 			'email' => $data['email'],
 			'phone_number' => $data['phone_number'],
-			'user_code' => $request->emp_code
+			'user_code' => $request->emp_code,
+			'is_proifle_edit_access' => $request->is_proifle_edit_access,
 		]);
 
 		$data = [
