@@ -69,14 +69,18 @@ class LeavesController extends Controller
                 ->orWhere('leaves.leave_type', 'like', '%' . $searchValue . '%')
                 ->orWhere('leaves.leave_status', 'like', '%' . $searchValue . '%')
                 ->orWhere('leaves.apply_date', 'like', '%' . $searchValue . '%')
+                ->orWhere('leaves.start_date', 'like', '%' . $searchValue . '%')
+                ->orWhere('leaves.end_date', 'like', '%' . $searchValue . '%')
                 ->select(
                     'leaves.id',
                     'users.user_code',                   
-                    'leaves.leave_dates',
+                    'leaves.start_date',
+                    'leaves.end_date',
                     'leaves.leave_subject',
                     'leaves.leave_message',
                     'leaves.leave_type',
                     'leaves.leave_status',
+                    'leaves.leave_duration',
                     'leaves.apply_date'
                 )
                 ->skip($start)

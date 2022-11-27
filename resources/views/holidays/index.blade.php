@@ -51,11 +51,13 @@
 					<div class="card">
 						<div class="card-header">
 							<h3 class="card-title">List of Holidays</h3>
-							<div class="card-tools">
-								<div class="input-group input-group-sm">
-									<a href="{{ route('holidays.create' )}}" class="btn btn-primary">Add New</a>
+							@if(auth()->user()->role_id != 3)
+								<div class="card-tools">
+									<div class="input-group input-group-sm">
+										<a href="{{ route('holidays.create' )}}" class="btn btn-primary">Add New</a>
+									</div>
 								</div>
-							</div>
+							@endif
 						</div>
 						<div class="card-body">
 							<!-- <div class="row">
@@ -81,8 +83,10 @@
 										<th>HOLIDAY TITLE</th>
 										<th>HOLIDAY DESCRIPTION</th>
 										<th>HOLIDAY DATE</th>										
-										<th>HOLIDAY TYPE</th>																	
-										<th>ACTION</th>										
+										<th>HOLIDAY TYPE</th>	
+										@if(auth()->user()->role_id == 1)
+										<th>ACTION</th>			
+										@endif							
 									</tr>
 								</thead>
 							</table>
@@ -164,7 +168,9 @@
 						{data:'description'},						
 						{data:'holiday_date'},						
 						{data:'holiday_type'},
+						@if(auth()->user()->role_id == 1)
 						{data:'action_button', name: 'ACTION', orderable: false, searchable: false}
+						@endif
 			        ],
 			        orderCellsTop: true,
         			// fixedHeader: true,

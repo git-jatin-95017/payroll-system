@@ -77,7 +77,8 @@
 										<th>ID</th>
 										<th>EMP CODE</th>
 										<th>SUBJECT</th>
-										<th>DATES</th>
+										<th>START DATE</th>
+										<th>END DATE</th>
 										<th>MESSAGE</th>										
 										<th>TYPE</th>										
 										<th>STATUS</th>								
@@ -203,7 +204,8 @@
 							data:'leave_subject', 
 							// orderable: true
 						},
-						{data:'leave_dates'},						
+						{data:'start_date'},						
+						{data:'end_date'},						
 						{data:'leave_message'},						
 						{data:'leave_type'},
 						{

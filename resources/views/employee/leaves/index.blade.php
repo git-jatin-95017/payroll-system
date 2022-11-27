@@ -65,22 +65,9 @@
 						<div class="card-header">
 							<h3 class="card-title">Apply for Leave</h3>
 						</div>
-						<form class="form-horizontal" method="POST" action="{{ route('my-leaves.store') }}">
+						<form class="form-horizontal" id="leaveapply" method="POST" action="{{ route('my-leaves.store') }}">
 							@csrf
-							<div class="card-body">
-								<div class="form-group">
-									<label for="leave_dates" class="col-md-8 control-label">Date (MM/DD/YYYY)</label>
-									<div class="col-md-12">
-										<input id="leave_dates" type="text" class="form-control multidatepicker {{ $errors->has('leave_dates') ? ' is-invalid' : '' }}" name="leave_dates" value="{{ old('leave_dates', '') }}">
-										<small class="text-muted">You can select multiple dates separated by comma.</small>
-										@if ($errors->has('leave_dates'))
-											<span class="text-danger">
-												{{ $errors->first('leave_dates') }}
-											</span>
-										@endif
-									</div>
-								</div>
-
+							<div class="card-body">								
 								<div class="form-group">
 									<label for="leave_subject" class="col-md-8 control-label">Subject</label>
 									<div class="col-md-12">
@@ -92,10 +79,72 @@
 											</span>
 										@endif
 									</div>
-								</div>						
+								</div>
+								<div class="form-group">
+									<div class="col-md-12">
+	                                	<label>Leave Type</label>
+		                                <select class="form-control custom-select assignleave" name="typeid" id="leavetype">
+		                                    <option value="">Select Here..</option>
+		                                    <?php foreach($leavetypes as $value): ?>
+
+		                                    <option value="<?php echo $value->id ?>"><?php echo $value->name ?></option>
+
+		                                    <?php endforeach; ?>
+		                                </select>
+									</div>
+	                            </div>
+	                            <div class="form-group">
+	                            	<div class="col-md-12">
+		                                <span style="color:red" id="total"></span>
+		                                <div class="span pull-right">
+		                                    <button class="btn btn-info fetchLeaveTotal">Fetch Total Leave</button>
+		                                </div>
+	                                	<br>
+	                                </div>
+	                            </div>
+	                            <div class="form-group">
+	                            	<div class="col-md-12">
+		                                <label class="control-label">Leave Duration</label><br>
+		                                <input name="type" type="radio" id="radio_1" data-value="Half" class="duration" value="Half Day" checked="">
+		                                <label for="radio_1">Hourly</label>
+		                                <input name="type" type="radio" id="radio_2" data-value="Full" class="type" value="Full Day">
+		                                <label for="radio_2">Full Day</label>
+		                                <input name="type" type="radio" class="with-gap duration" id="radio_3" data-value="More" value="More than One day">
+		                                <label for="radio_3">Above a Day</label>
+		                            </div>
+	                            </div>
+	                            <div class="form-group">
+	                            	<div class="col-md-12">
+	                                	<label class="control-label" id="hourlyFix">Date</label>
+	                                	<input type="date" name="startdate" class="form-control" id="recipient-name1" >
+	                                </div>
+	                            </div>
+	                            <div class="form-group" id="enddate" style="display:none">
+	                            	<div class="col-md-12">
+	                                <label class="control-label">End Date</label>
+	                                <input type="date" name="enddate" class="form-control" id="recipient-name1">
+	                               	</div>
+	                            </div>
+
+	                            <div class="form-group" id="hourAmount">
+	                            	<div class="col-md-12">
+	                                <label>Length</label>
+	                                <select id="hourAmountVal" class=" form-control custom-select" name="hourAmount" >
+	                                    <option value="">Select Hour</option>
+	                                    <option value="1">One hour</option>
+	                                    <option value="2">Two hour</option>
+	                                    <option value="3">Three hour</option>
+	                                    <option value="4">Four hour</option>
+	                                    <option value="5">Five hour</option>
+	                                    <option value="6">Six hour</option>
+	                                    <option value="7">Seven hour</option>
+	                                    <option value="8">Eight hour</option>
+	                                </select>
+	                            	</div>
+	                            </div>						
 
 								<div class="form-group">
-									<label for="leave_message" class="col-md-8 control-label">Leave Message</label>
+									<label for="leave_message" class="col-md-8 control-label">Reason</label>
 									<div class="col-md-12">
 										<textarea name="leave_message" id="leave_message" class="form-control {{ $errors->has('leave_message') ? ' is-invalid' : '' }}" rows="4">{{ old('leave_message', '') }}</textarea>
 
@@ -107,25 +156,6 @@
 									</div>
 								</div>					
 
-								<div class="form-group">
-									<div class="col-md-12">
-										<label for="name" >Leave Type</label>
-										<select class="form-control" id="leave_type" name="leave_type">
-				                            <option selected value disabled>Please make a choice</option>
-				                            <option @if(old('leave_type') == "Casual Leave") selected @endif value="Casual Leave">Casual Leave</option>
-				                            <option @if(old('leave_type') == "Earned Leave") selected @endif value="Earned Leave">Privileged / Earned Leave</option>
-				                            <option @if(old('leave_type') == "Sick Leave") selected @endif value="Sick Leave">Medical / Sick Leave</option>
-				                            <option @if(old('leave_type') == "Maternity Leave") selected @endif value="Maternity Leave">Maternity Leave</option>
-				                            <option @if(old('leave_type') == "Leave Without Pay") selected @endif value="Leave Without Pay">Leave Without Pay</option>
-				                        </select>
-
-										@if ($errors->has('leave_type'))
-											<span class="text-danger">
-												{{ $errors->first('leave_type') }}
-											</span>
-										@endif
-									</div>
-								</div>
 							</div>
 							<div class="card-footer">
 								<button type="submit" class="btn btn-primary">Apply for Leave</button>
@@ -148,8 +178,10 @@
 								<thead>
 									<tr>										
 										<th>ID</th>
+										<th>LEAVE</th>
 										<th>SUBJECT</th>
-										<th>DATES</th>
+										<th>START DATE</th>
+										<th>END DATE</th>
 										<th>MESSAGE</th>										
 										<th>TYPE</th>										
 										<th>STATUS</th>								
@@ -174,6 +206,68 @@
 	<script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
 	<script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
 	<script src="{{ asset('js/datepicker/bootstrap-datepicker.js') }}"></script>
+	<script>
+        $(document).ready(function () {
+            $('#leaveapply input').on('change', function(e) {
+                e.preventDefault(e);
+
+                // Get the record's ID via attribute  
+                var duration = $('input[name=type]:checked', '#leaveapply').attr('data-value');
+
+                if(duration =='Half'){
+                    $('#enddate').hide();
+                    $('#hourlyFix').text('Date');
+                    $('#hourAmount').show();
+                }
+                else if(duration =='Full'){
+                    $('#enddate').hide();  
+                    $('#hourAmount').hide();  
+                    $('#hourlyFix').text('Start date');  
+                }
+                else if(duration =='More'){
+                    $('#enddate').show();
+                    $('#hourAmount').hide();
+                }
+            });
+        }); 
+    </script>
+    <script>
+	    $(document).ready(function () {
+	        $('.fetchLeaveTotal').on('click', function (e) {
+	            e.preventDefault();
+	            
+	            var selectedEmployeeID = "{{ auth()->user()->id }}"; //$('.selectedEmployeeID').val();
+	            var leaveTypeID = $('#leavetype').val();
+	            
+	            if (leaveTypeID == '' || leaveTypeID == null) {
+	            	alert('Please select leave type first.');
+	            	return false;
+	            }
+	            // console.log(selectedEmployeeID, leaveTypeID);
+
+	            $.ajax({
+	                url: "{{ route('my-leaves.create') }}", //'LeaveAssign?leaveID=' + leaveTypeID + '&employeeID=' +selectedEmployeeID,
+	                method: 'GET',
+	                dataType:'JSON',
+	                data: {
+	                	leaveID: leaveTypeID,
+	                	employeeID: selectedEmployeeID,
+	                }
+	            }).done(function (response) {
+	                //console.log(response);
+	                $("#total").html(response.totalday);
+	            });
+	        });
+	    });
+	</script>
+    <script type="text/javascript">
+        $('#duration').on('input', function() {
+            var day = parseInt($('#duration').val());
+            console.log('gfhgf');
+            var hour = 8;
+            $('.totalhour').val((day * hour ? day * hour : 0).toFixed(2));
+        });
+    </script>
 	<script>
 		if ( $('.multidatepicker').length > 0 ) {
 	        $('.multidatepicker').datepicker({
@@ -277,11 +371,13 @@
 					columns: [
 			           	// {data: 'action', name: 'Action', orderable: false, searchable: false},
 						{data:'id'},						
+						{data:'name'},						
 						{
 							data:'leave_subject', 
 							// orderable: true
 						},
-						{data:'leave_dates'},						
+						{data:'start_date'},						
+						{data:'end_date'},						
 						{data:'leave_message'},						
 						{data:'leave_type'},
 						{
