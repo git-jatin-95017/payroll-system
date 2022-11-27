@@ -38,6 +38,40 @@
 	@if(auth()->user()->role_id == 2)
 		<li class="nav-item">
 			<a href="#" class="nav-link">
+				<i class="nav-icon fas fa-table"></i>
+				<p>
+				 Departments
+					<i class="right fas fa-angle-left"></i>
+				</p>
+			</a>
+			<ul class="nav nav-treeview">				
+				<li class="nav-item">
+					<a href="{{ route('department.index') }}" class="nav-link">
+						<i class="far fa-circle nav-icon"></i>
+						<p>List Of Departments</p>
+					</a>
+				</li>
+			</ul>
+		</li>
+		<li class="nav-item">
+			<a href="#" class="nav-link">
+				<i class="nav-icon fas fa-table"></i>
+				<p>
+				 Leave Types
+					<i class="right fas fa-angle-left"></i>
+				</p>
+			</a>
+			<ul class="nav nav-treeview">				
+				<li class="nav-item">
+					<a href="{{ route('leave-type.index') }}" class="nav-link">
+						<i class="far fa-circle nav-icon"></i>
+						<p>List Leave Types</p>
+					</a>
+				</li>
+			</ul>
+		</li>
+		<li class="nav-item">
+			<a href="#" class="nav-link">
 				<i class="nav-icon fas fa-user"></i>
 				<p>
 				 Employees

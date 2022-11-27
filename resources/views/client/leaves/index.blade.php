@@ -103,8 +103,15 @@
 	<script type="text/javascript">
 		//single record move to delete
 		$(document).on('click','a.approve',function() {
+			id = $(this).data('href');
+		    employeeId = $(this).attr('data-employeeId');
+	        lid = $(this).attr('data-id');
+	        lvalue = $(this).attr('data-value');
+	        duration = $(this).attr('data-duration');
+	        type = $(this).attr('data-type');
+
 		    var approveUrl = '/client/leaves/' + $(this).data('href');
-		    approveLeave(approveUrl);
+		    approveLeave(approveUrl,employeeId, lid,lvalue,duration,type,id);
 		});
 		$(document).on('click','a.reject',function(){
 		    var rejectUrl = '/client/leaves/' + $(this).data('href');
@@ -112,7 +119,7 @@
 		});
 
 		// move to Delete single record by just pass the url of 
-		function approveLeave(approveUrl) {
+		function approveLeave(approveUrl,employeeId, lid,lvalue,duration,type,id) {
 		  Swal.fire({
 		      text: "You Want to Approve?",
 		      showCancelButton: true,
@@ -129,7 +136,12 @@
 		          	type: 'PUT',
 		          	data: {
 	                	_token: "{{ csrf_token() }}",
-	                	action:'approve'
+	                	action:'approve',
+	                	employeeId: employeeId,
+		              	lid: lid,
+		              	lvalue: lvalue,
+		              	duration: duration,
+		              	type: type
 	             	},
 		          	dataType:'JSON',
 		          	success:(result)=>{
@@ -234,13 +246,15 @@
 			                data: 'actions',
 			                orderable : false,
 			                searchable : false,
-			                render: function(data, type, row, meta) {
-			                	
+			                render: function(data, type, row, meta) {			                
 			                	var id = row.id;
+			                	var userid = row.user_id;
+			                	var duration = row.leave_duration;
+			                	var typeid = row.typeid;			                	
 			                
 			                	var action = `<div class="table-actions">`;
 			                	if (row.leave_status == 'pending') {
-			                		action += `<a data-href="${id}" class="btn btn-sm btn-info approve">Approve</a>`;
+			                		action += `<a data-href="${id}" data-employeeId="${userid}" data-value="Approve" data-duration="${duration}" data-type="${typeid}" class="btn btn-sm btn-info approve">Approve</a>`;
 			                		action += ` <a data-href="${id}" class="btn btn-sm btn-primary reject">Reject</a>`;
 			                	}
 			                	action += `</div>`;

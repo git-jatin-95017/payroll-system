@@ -1,4 +1,13 @@
-@extends('layouts.app')
+@php
+   if(auth()->user()->role_id == 3) {
+      $layoutDirectory = 'layouts.employee';
+   } else {
+      $layoutDirectory = 'layouts.app';
+   }
+@endphp
+
+@extends($layoutDirectory)
+
 @push('page_css')
 	<link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('css/responsive.bootstrap4.min.css') }}">
@@ -10,7 +19,7 @@
 
 @endpush
 @section('content')
-	<div class="content-header">
+	<!-- <div class="content-header">
 		<div class="container-fluid">
 			<div class="row mb-2">
 				<div class="col-sm-6">
@@ -24,7 +33,19 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
+	<div class="row page-titles">
+        <div class="col-md-5 align-self-center">
+            <h3 class="text-themecolor"><i class="mdi mdi-rocket" style="color:#1976d2"></i> Manage Holidays</h3>
+        </div>
+		
+        <div class="col-md-7 align-self-center">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                <li class="breadcrumb-item active">List Of Holidays</li>
+            </ol>
+        </div>
+    </div>
 	<section class="content">
 		<div class="container-fluid">
 			<div class="row">
