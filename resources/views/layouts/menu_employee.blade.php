@@ -1,64 +1,57 @@
 <!-- need to remove -->
-<li class="nav-item">
-	<a href="{{ route('dashboard') }}" class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}">
-		<i class="nav-icon fas fa-tachometer-alt"></i>
-		<p>Dashboard</p>
+<li>
+	<a href="{{ route('dashboard') }}" class=" {{ Request::is('dashboard') ? '' : '' }}">
+		<i class="mdi mdi-gauge"></i>
+		<span class="hide-menu">Dashboard</span>
 	</a>
 	
 	@if(auth()->user()->role_id == 3)
-		<li class="nav-item">
-			<a href="{{ route('my-leaves.index') }}" class="nav-link">
-				<i class="nav-icon fas fa-book"></i>
-				<p>
+		<li>
+			<a href="{{ route('my-leaves.index') }}">
+				<i class="mdi mdi-rocket"></i>
+				<span class="hide-menu">
 					Leaves
-				</p>
+				</span>
 			</a>		
 		</li>
-		<li class="nav-item">
-			<a href="#" class="nav-link">
-				<i class="nav-icon fas fa-table"></i>
-				<p>
-				 Holidays
-					<i class="right fas fa-angle-left"></i>
-				</p>
-			</a>
-			<ul class="nav nav-treeview">				
-				<li class="nav-item">
-					<a href="{{ route('holidays.index') }}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>List Of Holidays</p>
-					</a>
-				</li>
-			</ul>
-		</li>
+		<li> 
+        	<a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
+             	<i class="mdi mdi-account-off"></i>
+            	<span class="hide-menu">Holidays </span>
+             </a>
+            <ul aria-expanded="false" class="collapse ">
+            	<li><a href="{{ route('holidays.index') }}"> List Of Holidays </a></li>
+            </ul>
+    	</li>
+
 	@endif
 
 	@if(auth()->user()->role_id == 3)
-		<li class="nav-item">
-			<a href="{{ route('emp-my-profile.edit', auth()->user()->id) }}" class="nav-link">
-				<i class="nav-icon fas fa-edit"></i>
-				<p>
+		<li>
+			<a href="{{ route('emp-my-profile.edit', auth()->user()->id) }}">
+				<i class="mdi mdi-account-multiple"></i>
+				<span class="hide-menu">
 					Profile
-				</p>
+				</span>
 			</a>		
 		</li>
 	@else
-		<li class="nav-item">
-			<a href="{{ route('edit-my-profile.edit', auth()->user()->id) }}" class="nav-link">
-				<i class="nav-icon fas fa-edit"></i>
-				<p>
+		<li>
+			<a href="{{ route('edit-my-profile.edit', auth()->user()->id) }}">
+				<i class="mdi mdi-account-multiple"></i>
+				<span class="hide-menu">
 					Profile
-				</p>
+				</span>
 			</a>		
 		</li>
 	@endif
-	<li class="nav-item">
-		<a href="#" class="nav-link"
+	<li>
+		<a href="#"
 		   onclick="event.preventDefault(); document.getElementById('logout-form-1').submit();">
-			<i class="nav-icon fas fa-sign-out-alt"></i>
-			<p>
+			<i class="mdi mdi-power"></i>
+			<span class="hide-menu">
 				Logout
-			</p>
+			</span>
 		</a>
 		<form id="logout-form-1" action="{{ route('logout') }}" method="POST" class="d-none">
 			@csrf
