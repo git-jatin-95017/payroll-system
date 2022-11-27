@@ -14,7 +14,7 @@
 	<link rel="stylesheet" href="{{ asset('css/responsive.bootstrap4.min.css') }}">
 @endpush
 @section('content')
-	<div class="content-header">
+	<!-- <div class="content-header">
 		<div class="container-fluid">
 			<div class="row mb-2">
 				<div class="col-sm-6">
@@ -28,7 +28,21 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
+
+	<div class="row page-titles">
+                <div class="col-md-5 align-self-center">
+                    <h3 class="text-themecolor"><i class="mdi mdi-rocket" style="color:#1976d2"></i> Leaves	</h3>
+                </div>
+				
+                <div class="col-md-7 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                        <li class="breadcrumb-item active">Leaves</li>
+                    </ol>
+                </div>
+            </div>
+
 	<section class="content">
 		<div class="container-fluid">
 			@if ($errors->any())
@@ -61,7 +75,7 @@
 			@endif
 			<div class="row">            	
 				<div class="col-sm-4">
-					<div class="card card-primary">
+					<div class="card">
 						<div class="card-header">
 							<h3 class="card-title">Apply for Leave</h3>
 						</div>
@@ -164,7 +178,7 @@
 					</div>
 				</div>		
 				<div class="col-8">					
-					<div class="card card-primary">
+					<div class="card">
 						<div class="card-header">
 							<h3 class="card-title">My Leaves</h3>
 							<div class="card-tools">
