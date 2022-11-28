@@ -81,3 +81,12 @@ Route::resource('edit-my-profile', ProfileController::class);
 Route::resource('punch', PunchController::class);
 
 Auth::routes();
+
+//Logout
+Route::get('/employee/logout', function() {
+	//logout user
+    auth()->logout();
+    
+    // redirect to homepage
+    return redirect('/');
+});
