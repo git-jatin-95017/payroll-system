@@ -1,22 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
-	<section class="content-header">
-		<div class="container-fluid">
-			<div class="row mb-2">
-				<div class="col-sm-6">
-					<h1 class="m-0">Payroll</h1>
-				</div>
-				<div class="col-sm-6">
-					<ol class="breadcrumb float-sm-right">
-						<li class="breadcrumb-item"><a href="#">Home</a></li>
-						<li class="breadcrumb-item"><a href="#">Payroll</a></li>
-						<li class="breadcrumb-item active">Create</li>
-					</ol>
-				</div>
-			</div>
-		</div>
-	</section>
+<div class="row page-titles">
+    <div class="col-md-5 align-self-center">
+        <h3 class="text-themecolor">
+            <i class="fa fa-braille" style="color:#1976d2"></i>
+            Payroll
+        </h3>
+    </div>
+
+    <div class="col-md-7 align-self-center">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="javascript:void(0)">Home</a>
+            </li>
+            <li class="breadcrumb-item active">Payroll</li>
+			<li class="breadcrumb-item active">Create</li>
+        </ol>
+    </div>
+</div>
 	<section class="content">
 		<div class="container-fluid">
 			<?php
@@ -53,7 +55,7 @@
 			@endif
 			<div class="row">            	
 				<div class="col-sm-12">
-					<div class="card card-primary">
+					<div class="card ">
 						<div class="card-header">
 							<h3 class="card-title">Payroll - {{ $year }} - {{ $month }}</h3>
 						</div>

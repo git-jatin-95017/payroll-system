@@ -1,21 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
-	<div class="content-header">
-		<div class="container-fluid">
-			<div class="row mb-2">
-				<div class="col-sm-6">
-					<h1 class="m-0">My Profile</h1>
-				</div>
-				<div class="col-sm-6">
-					<ol class="breadcrumb float-sm-right">
-						<li class="breadcrumb-item"><a href="#">Home</a></li>
-						<li class="breadcrumb-item active">My Profile</li>
-					</ol>
-				</div>
-			</div>
-		</div>
-	</div>
+<div class="row page-titles">
+    <div class="col-md-5 align-self-center">
+        <h3 class="text-themecolor">
+            <i class="fa fa-braille" style="color:#1976d2"></i>
+            My Profile
+        </h3>
+    </div>
+
+    <div class="col-md-7 align-self-center">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="javascript:void(0)">Home</a>
+            </li>
+            <li class="breadcrumb-item active">My Profile</li>
+        </ol>
+    </div>
+</div>
 	<section class="content">
 		<div class="container-fluid">
 			@if ($errors->any())
@@ -51,7 +53,7 @@
 					<form class="form-horizontal" method="POST" action="{{ route('edit-my-profile.update', auth()->user()->id) }}">
 					@csrf
 					{{ method_field('PUT') }}
-					<div class="card card-primary">
+					<div class="card">
 						<div class="card-header">
 							<h3 class="card-title">Edit My Profile</h3>
 						</div>								
@@ -99,7 +101,7 @@
 					</div>
 				</div>
 				<div class="col-sm-6">
-					<div class="card card-primary">
+					<div class="card">
 						<div class="card-header">
 							<h3 class="card-title">Change Password</h3>
 						</div>								

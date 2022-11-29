@@ -1,124 +1,112 @@
 <!-- need to remove -->
-<li class="nav-item">
+<li>
 	<a href="{{ route('dashboard') }}" class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}">
-		<i class="nav-icon fas fa-tachometer-alt"></i>
-		<p>Dashboard</p>
+		<i class="mdi mdi-gauge"></i>
+		<span class="hide-menu">Dashboard</span>
 	</a>
 	@if(auth()->user()->role_id == 1)
-		<li class="nav-item">
-			<a href="#" class="nav-link">
+		<li>
+			<a href="#" href="#" class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
 				<i class="nav-icon fas fa-user"></i>
-				<p>
-				 Clients
-					<i class="right fas fa-angle-left"></i>
-				</p>
+				<span class="hide-menu">
+				 	Clients
+				</span>
 			</a>
-			<ul class="nav nav-treeview">
-				<li class="nav-item">
-					<a href="{{ route('client.create') }}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>Add New Client</p>
+			<ul aria-expanded="false" class="collapse ">
+				<li>
+					<a href="{{ route('client.create') }}">
+						<span class="hide-menu">Add New Client</span>
 					</a>
 				</li>
-				<li class="nav-item">
-					<a href="{{ route('client.index') }}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>List Of Client</p>
+				<li>
+					<a href="{{ route('client.index') }}">
+						<span class="hide-menu">List Of Client</span>
 					</a>
 				</li>
 			</ul>
 		</li>
-		<li class="nav-item <?php //echo $page_name == "attendance" ? 'active' : ''; ?>">
-			<a href="{{ route('attendance.index') }}" class="nav-link">
-				<i class="fa fa-calendar nav-icon"></i> <span>Attendance</span>
+		<li class=" <?php //echo $page_name == "attendance" ? 'active' : ''; ?>">
+			<a href="{{ route('attendance.index') }}">
+				<i class="fa fa-calendar nav-icon"></i> 
+				<span class="hide-menu">Attendance</span>
 			</a>
 		</li>
 	@endif
 
 	@if(auth()->user()->role_id == 2)
-		<li class="nav-item">
-			<a href="#" class="nav-link">
-				<i class="nav-icon fas fa-table"></i>
-				<p>
-				 Departments
-					<i class="right fas fa-angle-left"></i>
-				</p>
+		<li>
+			<a href="#" class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
+				<i class="fa fa-building-o"></i>
+				<span class="hide-menu">
+				 	Departments
+				</span>
 			</a>
-			<ul class="nav nav-treeview">				
-				<li class="nav-item">
-					<a href="{{ route('department.index') }}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>List Of Departments</p>
+			<ul aria-expanded="false" class="collapse ">				
+				<li>
+					<a href="{{ route('department.index') }}">
+						<span class="hide-menu">List Of Departments</span>
 					</a>
 				</li>
 			</ul>
 		</li>
-		<li class="nav-item">
-			<a href="#" class="nav-link">
-				<i class="nav-icon fas fa-table"></i>
-				<p>
+		<li>
+			<a href="#" class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
+				<i class="mdi mdi-file-outline"></i>
+				<span class="hide-menu">
 				 Leave Types
-					<i class="right fas fa-angle-left"></i>
-				</p>
+				</span>
 			</a>
-			<ul class="nav nav-treeview">				
-				<li class="nav-item">
-					<a href="{{ route('leave-type.index') }}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
+			<ul aria-expanded="false" class="collapse ">				
+				<li>
+					<a href="{{ route('leave-type.index') }}">
 						<p>List Leave Types</p>
 					</a>
 				</li>
 			</ul>
 		</li>
-		<li class="nav-item">
-			<a href="#" class="nav-link">
-				<i class="nav-icon fas fa-user"></i>
-				<p>
+		<li>
+			<a href="#" class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
+				<i class="mdi mdi-account-multiple"></i>
+				<span class="hide-menu">
 				 Employees
-					<i class="right fas fa-angle-left"></i>
-				</p>
+				</span>
 			</a>
-			<ul class="nav nav-treeview">
-				<li class="nav-item">
-					<a href="{{ route('employee.create') }}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>Add New Employee</p>
+			<ul aria-expanded="false" class="collapse ">
+				<li>
+					<a href="{{ route('employee.create') }}">
+						<span class="hide-menu">Add New Employee</span>
 					</a>
 				</li>
-				<li class="nav-item">
-					<a href="{{ route('employee.index') }}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>List Of Employees</p>
+				<li>
+					<a href="{{ route('employee.index') }}">
+						<span class="hide-menu">List Of Employees</span>
 					</a>
 				</li>
 			</ul>
 		</li>		
-		<li class="nav-item">
-			<a href="#" class="nav-link">
-				<i class="nav-icon fas fa-table"></i>
-				<p>
+		<li>
+			<a href="#" class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
+				<i class="mdi mdi-rocket"></i>
+				<span class="hide-menu">
 				 Holidays
-					<i class="right fas fa-angle-left"></i>
-				</p>
+				</span>
 			</a>
-			<ul class="nav nav-treeview">
+			<ul aria-expanded="false" class="collapse ">
 				<li class="nav-item">
-					<a href="{{ route('holidays.create') }}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>Add New Holiday</p>
+					<a href="{{ route('holidays.create') }}">
+						<span class="hide-menu">Add New Holiday</span>
 					</a>
 				</li>
 				<li class="nav-item">
-					<a href="{{ route('holidays.index') }}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>List Of Holidays</p>
+					<a href="{{ route('holidays.index') }}">
+						<span class="hide-menu">List Of Holidays</span>
 					</a>
 				</li>
 			</ul>
 		</li>
 		
 		<!-- <li class="nav-item">
-			<a href="#" class="nav-link">
+			<a href="#">
 				<i class="nav-icon fas fa-home"></i>
 				<p>
 					Overtime
@@ -126,92 +114,84 @@
 				</p>
 			</a>		
 		</li> -->
-		<li class="nav-item">
-			<a href="{{ route('leaves.index') }}" class="nav-link">
-				<i class="nav-icon fas fa-book"></i>
-				<p>
+		<li>
+			<a href="{{ route('leaves.index') }}">
+				<i class="mdi mdi-account-off"></i>
+				<span class="hide-menu">
 					Leaves
-				</p>
+				</span>
 			</a>		
 		</li>
-		<li class="nav-item">
-			<a href="#" class="nav-link">
-				<i class="nav-icon far fa-calendar-alt"></i>
-				<p>
-				 Attendance
-					<i class="right fas fa-angle-left"></i>
-				</p>
+		<li>
+			<a href="#" class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
+				<i class="mdi mdi-calendar"></i>
+				<span class="hide-menu">
+				 	Attendance
+				</span>
 			</a>
-			<ul class="nav nav-treeview">
-				<li class="nav-item">
-					<a href="#" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>List Of Attendance</p>
+			<ul aria-expanded="false" class="collapse ">
+				<li>
+					<a href="#">
+						<span class="hide-menu">List Of Attendance</span>
 					</a>
 				</li>
-				<li class="nav-item">
-					<a href="#" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>Add New Attendance</p>
+				<li>
+					<a href="#">
+						<span class="hide-menu">Add New Attendance</span>
 					</a>
 				</li>
 			</ul>
 		</li>
-		<li class="nav-item">
-			<a href="#" class="nav-link">
-				<i class="nav-icon fas fa-file"></i>
-				<p>
-				 Salaries
-					<i class="right fas fa-angle-left"></i>
-				</p>
+		<li>
+			<a href="#" class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
+				<i class="mdi mdi-credit-card"></i>
+				<span class="hide-menu">
+				 	Salaries
+				</span>
 			</a>
-			<ul class="nav nav-treeview">
-				<li class="nav-item">
-					<a href="#" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>List</p>
+			<ul aria-expanded="false" class="collapse ">
+				<li>
+					<a href="#">
+						<span class="hide-menu">List</span>
 					</a>
 				</li>
 			</ul>
 		</li>
-		<li class="nav-item">
-			<a href="{{ route('payroll.create') }}" class="nav-link">
-				<i class="nav-icon far fa-calendar-alt"></i>
-				<p>
-				 Payroll Sheet
-				</p>
+		<li>
+			<a href="{{ route('payroll.create') }}">
+				<i class="mdi mdi-receipt"></i>
+				<span class="hide-menu">
+				 	Payroll Sheet
+				 </span>
 			</a>
 		</li>
 	@endif
 
 	@if(auth()->user()->role_id == 3)
-		<li class="nav-item">
-			<a href="{{ route('my-leaves.index') }}" class="nav-link">
+		<li>
+			<a href="{{ route('my-leaves.index') }}">
 				<i class="nav-icon fas fa-book"></i>
-				<p>
+				<span class="hide-menu">
 					Leaves
-				</p>
+				</span>
 			</a>		
 		</li>
-		<li class="nav-item">
-			<a href="#" class="nav-link">
+		<li>
+			<a href="#" class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
 				<i class="nav-icon fas fa-table"></i>
-				<p>
-				 Holidays
-					<i class="right fas fa-angle-left"></i>
-				</p>
+				<span class="hide-menu">
+				 	Holidays
+				</span>
 			</a>
-			<ul class="nav nav-treeview">
-				<li class="nav-item">
-					<a href="{{ route('holidays.create') }}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>Add New Holiday</p>
+			<ul aria-expanded="false" class="collapse">
+				<li>
+					<a href="{{ route('holidays.create') }}">
+						<span class="hide-menu">Add New Holiday</span>
 					</a>
 				</li>
-				<li class="nav-item">
-					<a href="{{ route('holidays.index') }}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>List Of Holidays</p>
+				<li>
+					<a href="{{ route('holidays.index') }}">
+						<span class="hide-menu">List Of Holidays</span>
 					</a>
 				</li>
 			</ul>
@@ -219,31 +199,31 @@
 	@endif
 
 	@if(auth()->user()->role_id == 3)
-		<li class="nav-item">
-			<a href="{{ route('emp-my-profile.edit', auth()->user()->id) }}" class="nav-link">
-				<i class="nav-icon fas fa-edit"></i>
-				<p>
+		<li>
+			<a href="{{ route('emp-my-profile.edit', auth()->user()->id) }}">
+				<i class="mdi mdi-account-outline"></i>
+				<span class="hide-menu">
 					Profile
-				</p>
+				</span>
 			</a>		
 		</li>
 	@else
-		<li class="nav-item">
-			<a href="{{ route('edit-my-profile.edit', auth()->user()->id) }}" class="nav-link">
-				<i class="nav-icon fas fa-edit"></i>
-				<p>
+		<li>
+			<a href="{{ route('edit-my-profile.edit', auth()->user()->id) }}">
+				<i class="mdi mdi-account-outline"></i>
+				<span class="hide-menu">
 					Profile
-				</p>
+				</span>
 			</a>		
 		</li>
 	@endif
-	<li class="nav-item">
-		<a href="#" class="nav-link"
+	<li>
+		<a href="#"
 		   onclick="event.preventDefault(); document.getElementById('logout-form-1').submit();">
-			<i class="nav-icon fas fa-sign-out-alt"></i>
-			<p>
+			<i class="mdi mdi-lock-outline"></i>
+			<span class="hide-menu">
 				Logout
-			</p>
+			</span>
 		</a>
 		<form id="logout-form-1" action="{{ route('logout') }}" method="POST" class="d-none">
 			@csrf

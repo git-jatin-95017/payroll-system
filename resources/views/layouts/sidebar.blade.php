@@ -1,21 +1,18 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
-	<a href="{{ route('dashboard') }}" class="brand-link">
-		<!-- <img src="../img/logo-new.jpg" class="w-100" alt="Logo" class=""> -->
-		<img src="{{URL::asset('/img/logo-sidebar.svg')}}" class="w-100" alt="logo">
-		<span class="brand-text font-weight-light">&nbsp;</span>
-	</a>
+
+<aside class="left-sidebar">
+	<div class="scroll-sidebar">
+	<div class="user-profile my-4">
+                <div class="profile-img"> 
+					<img src="{{asset('img/user-new.svg') }}">
+                </div>
+                <div class="profile-text">
+                    <h5>{{ ucwords(Auth::user()->name) }}</h5>
+                    <a href="#" class="dropdown-toggle u-dropdown" role="button" aria-haspopup="true" aria-expanded="true"><i class="mdi mdi-settings"></i></a>
+                    <a href="#" class="" data-toggle="tooltip" title="Logout"><i class="mdi mdi-power"></i></a>
+                </div>
+		</div>
 
 	<div class="sidebar custom-sidebar">
-		<div class="user-panel mt-3 pb-3 mb-3 d-flex">
-			<div class="image">
-				<img src="/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-			</div>
-			<div class="info">
-				<a href="#" class="d-block">
-					{{ ucwords(Auth::user()->name) }}
-				</a>
-			</div>
-		</div>
 		@if(auth()->user()->role_id == 3)
 		<?php
 			$attendanceData = App\Models\Attendance::where('emp_code', auth()->user()->user_code)->whereDate('attendance_date', date('Y-m-d'))->get();
@@ -54,14 +51,16 @@
 			@endif
 		</div>
 		@endif
-		<nav class="mt-2">
-			<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+		<nav class="sidebar-nav">
+			<ul id="sidebarnav">
+			<li class="nav-devider"></li>
 				@include('layouts.menu')
 			</ul>
 		</nav>
 	</div>
-
+	</div>
 </aside>
+
 
 @push('page_scripts')
 	<script>

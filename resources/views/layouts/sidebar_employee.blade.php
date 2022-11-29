@@ -1,20 +1,27 @@
-<aside class="left-sidebar">
-	<div class="scroll-sidebar">
-	<div class="user-profile my-4">
-                <div class="profile-img"> 
-					<img src="{{asset('img/user-new.svg') }}">
-                </div>
-                <div class="profile-text">
-                    <h5>{{ ucwords(Auth::user()->name) }}</h5>
-                    <a href="#" class="dropdown-toggle u-dropdown" role="button" aria-haspopup="true" aria-expanded="true"><i class="mdi mdi-settings"></i></a>
-                    <a href="#" class="" data-toggle="tooltip" title="Logout"><i class="mdi mdi-power"></i></a>
-                </div>
-		</div>
+<aside class = "left-sidebar" > <div class="scroll-sidebar">
+    <div class="user-profile my-4">
+        <div class="profile-img">
+            <img src="{{asset('img/user-new.svg') }}"></div>
+            <div class="profile-text">
+                <h5>{{ ucwords(Auth::user()->name) }}</h5>
+                <a
+                    href="#"
+                    class="dropdown-toggle u-dropdown"
+                    role="button"
+                    aria-haspopup="true"
+                    aria-expanded="true">
+                    <i class="mdi mdi-settings"></i>
+                </a>
+                <a href="#" class="" data-toggle="tooltip" title="Logout">
+                    <i class="mdi mdi-power"></i>
+                </a>
+            </div>
+        </div>
 
-	<div class="sidebar custom-sidebar">
-		
-		@if(auth()->user()->role_id == 3)
-		<?php
+        <div class="sidebar custom-sidebar">
+
+            @if(auth()->user()->role_id == 3)
+        <?php
 			// $attendanceData = App\Models\Attendance::where('emp_code', auth()->user()->user_code)->whereDate('attendance_date', date('Y-m-d'))->get();
 
 			// if (!$attendanceData->isEmpty()) {
@@ -35,7 +42,7 @@
 			// }
 		?>
 
-		<?php
+        <?php
 
 		/*<div class="px-3">
 			@if ($attendanceROW < 2)
