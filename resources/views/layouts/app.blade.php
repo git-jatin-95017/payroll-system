@@ -93,14 +93,25 @@
                                         <div class="dw-user-box">
                                             <div class="u-img"><img src="https://placeimg.com/640/480/any" alt="user"></div>
                                             <div class="u-text">
-                                                <h4>Rakesh singh</h4>
-                                                <p class="text-muted">rajputrakesh@gmail.com</p>
+                                                <h4>Welcome {{ ucwords(Auth::user()->name) }}</h4>
+                                                <p class="text-muted">{{ ucwords(Auth::user()->name) }}</p>
                                         </div>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li><a href="#"><i class="ti-user"></i> My Profile</a></li>
-                                    <li><a href="#"><i class="ti-settings"></i> Account Setting</a></li>
-                                    <li><a href="#"><i class="fa fa-power-off"></i> Logout</a></li>
+                                    <li><a href="{{ route('edit-my-profile.edit', Auth::user()->id) }}"><i class="ti-user"></i> My Profile</a></li>
+                                    <!-- <li><a href="#"><i class="ti-settings"></i> Account Setting</a></li> -->
+                                    <li>
+									@if(Auth::user()->role_id == 1)
+										<a href="{{ route('edit-my-profile.edit', Auth::user()->id) }}" >Profile</a>
+										@endif
+										<a href="#"
+										onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+										<i class="fa fa-power-off"></i> Logout
+										</a>
+										<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+											@csrf
+										</form>
+									</li>
                                 </ul>
                             </div>
                         </li>
