@@ -108,42 +108,46 @@
 
 
 <section id="wrapper" class="login-register login-sidebar" style="background-image: url(./img/hrbbg.jpg);">
-         <div class="login-box card">
-             <div class="card-body loginpage">  
+         <div class="login-box ">
+             <div class="bg-white h-100 loginpage">  
                 @include('layouts.flash-admin-message')                                      
-                 <form class="form-horizontal form-material" method="post" id="loginform" action="{{ url('/login') }}">
-                    @csrf
-                     <a href="javascript:void(0)" class="text-center db">
-                        <br/><img src="{{URL::asset('/img/logo-color.svg')}}" width="250px" alt="Home" /></a>
-                     <div class="form-group m-t-40">
-                         <div class="col-xs-12">
-                             <input class="form-control" name="email" value="" type="text" required placeholder="Email">
-                         </div>
-                         @error('email')
-                            <span class="error invalid-feedback">{{ $message }}</span>
-                         @enderror
-                     </div>
-                     <div class="form-group">
-                         <div class="col-xs-12">
-                             <input class="form-control" name="password" value="" type="password" required placeholder="Password">
-                         </div>
-                         @error('password')
-                            <span class="error invalid-feedback">{{ $message }}</span>
-                        @enderror
-                     </div>
-                  <div class="form-check">
-                      <input type="checkbox" name="remember" class="form-check-input" id="remember-me">
-                      <label class="form-check-label" for="remember-me">Remember Me</label>
-                  </div>                     
-                     <div class="form-group text-center m-t-20">
-                         <div class="col-xs-12">
-                             <button class="btn btn-success btn-login btn-block text-uppercase waves-effect waves-light" type="submit">Log In</button>
-                         </div>
-                     </div>
-                 </form>
-                 <p class="mb-1 text-center forget-password">
-                    <a href="{{ route('password.request') }}">I forgot my password</a>
-                </p>
+                <div class="login-inner d-flex justify-content-center align-items-center">
+                    <div class="login-fix">
+                    <form class="form-horizontal form-material" method="post" id="loginform" action="{{ url('/login') }}">
+                        @csrf
+                        <a href="javascript:void(0)" class="text-center db">
+                            <br/><img src="{{URL::asset('/img/logo-color.svg')}}" width="250px" alt="Home" /></a>
+                        <div class="form-group m-t-40">
+                            <div class="col-xs-12">
+                                <input class="form-control" name="email" value="" type="text" required placeholder="Email">
+                            </div>
+                            @error('email')
+                                <span class="error invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <input class="form-control" name="password" value="" type="password" required placeholder="Password">
+                            </div>
+                            @error('password')
+                                <span class="error invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    <div class="form-check">
+                        <input type="checkbox" name="remember" class="form-check-input" id="remember-me">
+                        <label class="form-check-label" for="remember-me">Remember Me</label>
+                    </div>                     
+                        <div class="form-group text-center m-t-20">
+                            <div class="col-xs-12">
+                                <button class="btn btn-success py-3 rounded btn-login btn-block text-uppercase waves-effect waves-light" type="submit">Log In</button>
+                            </div>
+                        </div>
+                    </form>
+                    <p class="mb-1 text-center forget-password">
+                        <a href="{{ route('password.request') }}">I forgot my password</a>
+                    </p>
+                    <div>
+                </div> 
              </div>
          </div>
      </section>

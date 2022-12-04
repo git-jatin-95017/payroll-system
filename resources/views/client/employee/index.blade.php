@@ -50,7 +50,7 @@
 						</div>
 					@endif
 					<div class="card">
-						<div class="card-header">
+						<div class="card-header d-flex justify-content-between">
 							<h3 class="card-title">List of employees</h3>
 							<div class="card-tools">
 								<div class="input-group input-group-sm">
@@ -234,11 +234,11 @@
 			                	destrRoute = destrRoute.replace(':id', row.id);
 			                	var action = `<div class="table-actions">`;
 
-			                	action += "<a href=" + viewRoute + " class='btn btn-sm btn-info'><i class='fas fa-eye'></i></a>";
+			                	action += "<a href=" + viewRoute + " class='btn btn-sm text-info'><i class='fas fa-eye'></i></a>";
 
-			                	action += " <a href=" + editRoute + " class='btn btn-sm btn-primary'><i class='fas fa-pen'></i></a>";
+			                	action += " <a href=" + editRoute + " class='btn btn-sm text-info'><i class='fas fa-pen'></i></a>";
 
-			                	action += " <a data-href=" + destrRoute + " class='btn btn-sm btn-danger delete'><i class='fas fa-trash'></i></a>";
+			                	action += " <a data-href=" + destrRoute + " class='btn btn-sm text-danger delete'><i class='fas fa-trash'></i></a>";
 
 			                	action += `</div>`;
 

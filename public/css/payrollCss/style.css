@@ -6083,8 +6083,16 @@ a.mytooltip {
 }
 
 .login-box {
-    width: 400px;
+    width: 40%;
     margin: 0 auto
+}
+.login-inner {
+    height: 100%;
+}
+
+.login-fix{
+    max-width:450px;
+    width:100%;
 }
 
 .login-box .footer {

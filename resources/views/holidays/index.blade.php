@@ -70,7 +70,7 @@
 						</div>
 					@endif
 					<div class="card">
-						<div class="card-header">
+						<div class="card-header d-flex justify-content-between">
 							<h3 class="card-title">List of Holidays</h3>
 							@if(auth()->user()->role_id != 3)
 								<div class="card-tools">
