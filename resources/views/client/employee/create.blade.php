@@ -439,7 +439,7 @@
 											</div>
 											<div class="col-md-4 d-none" id="routing_number_div">
 												<label for="routing_number">Routing Number</label>
-												<div class="col-md-12">
+												<div class="form-group mb-0">
 													<input id="routing_number" type="routing_number" class="form-control {{ $errors->has('routing_number') ? ' is-invalid' : '' }}" name="routing_number">
 													@if ($errors->has('routing_number'))
 														<span class="text-danger">
@@ -450,7 +450,7 @@
 											</div>
 											<div class="col-md-4 d-none" id="account_number_div">
 												<label for="account_number">Account Number</label>
-												<div class="col-md-12">
+												<div class="form-group mb-0">
 													<input id="account_number" type="account_number" class="form-control {{ $errors->has('account_number') ? ' is-invalid' : '' }}" name="account_number">
 													@if ($errors->has('account_number'))
 														<span class="text-danger">

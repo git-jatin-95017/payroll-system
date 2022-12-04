@@ -6094,7 +6094,10 @@ a.mytooltip {
     max-width:450px;
     width:100%;
 }
-
+ /* .table  th,
+ .table  td{
+    white-space: nowrap;
+ } */
 .login-box .footer {
     width: 100%;
     left: 0px;
@@ -10189,7 +10192,16 @@ color: #67757c!important
 }
 
 /*ADDitional Invoice CSS*/
+body.fix-header footer.main-footer {
+    padding: 20px;
+    text-align: center;
+    width: calc(100% - 240px);
+    margin-left: auto;
+}
 
+body.mini-sidebar footer.main-footer{
+    width: calc(100% - 60px);
+}
 
 /* INVOICE CSS */
 .payslip_print {
