@@ -8,11 +8,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 
-class AssignLeave extends Model
+class EarnedLeave extends Model
 {
 	use HasApiTokens, HasFactory, Notifiable;
 
-	protected $table = 'assign_leaves';
+	protected $table = 'earned_leaves';
 
 	public $timestamps = false;
 	

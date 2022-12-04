@@ -102,7 +102,7 @@
 									</div>
 									<div class="col-md-4">
 										<label for="name" >Gender</label>
-										<select class="form-control" id="gender" name="gender" {{$disabled}}>
+										<select class="form-control" id="gender" name="gender" @if($disabledDrop) style="pointer-events: none;" @endif>
 											<option @if($employee->employeeProfile->gender == "Male") selected @endif value="Male">Male</option>
 				                            <option @if($employee->employeeProfile->gender == "Female") selected @endif value="Female">Female</option>
 				                            <option @if($employee->employeeProfile->gender == "Other") selected @endif value="Other">Other</option>
@@ -116,7 +116,7 @@
 									</div>
 									<div class="col-md-4">
 										<label for="name" >Marital Status</label>
-										<select class="form-control" id="marital_status" name="marital_status" {{$disabled}}>
+										<select class="form-control" id="marital_status" name="marital_status" @if($disabledDrop) style="pointer-events: none;" @endif>
 				                            <option selected value disabled>Please make a choice</option>
 				                            <option @if($employee->employeeProfile->marital_status == "single") selected @endif value="single">Single</option>
 				                            <option @if($employee->employeeProfile->marital_status == "married") selected @endif value="married">Married</option>
@@ -133,7 +133,7 @@
 								<div class="form-row mb-3">
 									<div class="col-md-4">
 										<label for="name">Nationality</label>
-										<input id="nationality" type="text" class="form-control {{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" value="{{ $employee->employeeProfile->nationality }}" {{$disabled}}>
+										<input id="nationality" type="text" class="form-control {{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" value="{{ $employee->employeeProfile->nationality }}" @if($disabledDrop) style="pointer-events: none;" @endif>
 
 										@if ($errors->has('nationality'))
 											<span class="text-danger">
@@ -222,7 +222,7 @@
 									<div class="col-md-4">
 										<label for="name" >Identity Document</label>
 										<!-- <input id="identity_document" type="text" class="form-control {{ $errors->has('identity_document') ? ' is-invalid' : '' }}" name="identity_document" value="{{ $employee->employeeProfile->identity_document }}"> -->
-										<select class="form-control {{ $errors->has('identity_document') ? ' is-invalid' : '' }}" id="identity_document" name="identity_document" {{$disabled}}>
+										<select class="form-control {{ $errors->has('identity_document') ? ' is-invalid' : '' }}" id="identity_document" name="identity_document" @if($disabledDrop) style="pointer-events: none;" @endif>
 				                            <option selected value disabled>Please make a choice</option>
 				                            <option @if($employee->employeeProfile->identity_document == "Voter Id") selected @endif value="Voter Id">Voter Id</option>
 				                            <option @if($employee->employeeProfile->identity_document == "Aadhar Card") selected @endif value="Aadhar Card">Aadhar Card</option>
@@ -251,7 +251,7 @@
 									<div class="col-md-4">
 										<label for="name" >Employee Type</label>
 										<!-- <input id="emp_type" type="text" class="form-control {{ $errors->has('emp_type') ? ' is-invalid' : '' }}" name="emp_type" value="{{ $employee->employeeProfile->emp_type }}"> -->
-										<select class="form-control {{ $errors->has('emp_type') ? ' is-invalid' : '' }}" id="emp_type" name="emp_type" {{$disabled}}>
+										<select class="form-control {{ $errors->has('emp_type') ? ' is-invalid' : '' }}" id="emp_type" name="emp_type" @if($disabledDrop) style="pointer-events: none;" @endif>
 				                            <option selected value disabled>Please make a choice</option>
 				                            <option @if($employee->employeeProfile->emp_type == "hourly") selected @endif value="hourly">Hourly</option>
 				                            <option @if($employee->employeeProfile->emp_type == "part-time") selected @endif value="part-time">Part Time</option>
@@ -265,7 +265,7 @@
 									</div>
 									<div class="col-md-4">
 										<label for="name" >Pay Type</label>
-										<select class="form-control {{ $errors->has('pay_type') ? ' is-invalid' : '' }}" id="pay_type" name="pay_type" {{$disabled}}>
+										<select class="form-control {{ $errors->has('pay_type') ? ' is-invalid' : '' }}" id="pay_type" name="pay_type" @if($disabledDrop) style="pointer-events: none;" @endif>
 				                            <option selected value disabled>Please make a choice</option>
 				                            <option @if($employee->employeeProfile->pay_type == "hourly") selected @endif value="hourly">Hourly</option>
 				                            <option @if($employee->employeeProfile->pay_type == "weekly") selected @endif value="weekly">Weekly</option>

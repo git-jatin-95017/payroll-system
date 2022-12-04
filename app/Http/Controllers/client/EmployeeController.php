@@ -229,12 +229,12 @@ class EmployeeController extends Controller
 	public function edit(User $employee)
 	{
 		$disabled = '';
-
+		$disabledDrop = false;
 		if ($employee->is_proifle_edit_access == "1") {
-			$disabled = 'readonly="readonly"';
+			$disabled = 'readonly="readonly"';$disabledDrop = (int) true;
 		}
 
-	   return view('client.employee.edit', compact('employee', 'disabled'));
+	   return view('client.employee.edit', compact('employee', 'disabled', 'disabledDrop'));
 	}
 
 	public function update(Request $request, User $employee)
