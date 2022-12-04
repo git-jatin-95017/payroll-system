@@ -20,7 +20,7 @@
     <div class="col-md-5 align-self-center">
         <h3 class="text-themecolor">
             <i class="fa fa-braille" style="color:#1976d2"></i>
-            Departments
+            Locations
         </h3>
     </div>
 
@@ -29,7 +29,7 @@
             <li class="breadcrumb-item">
                 <a href="javascript:void(0)">Home</a>
             </li>
-            <li class="breadcrumb-item active">Departments</li>
+            <li class="breadcrumb-item active">Locations</li>
         </ol>
     </div>
 </div>
@@ -69,7 +69,7 @@
 				<div class="col-sm-4">
 					<div class="card">
 						<div class="card-header">
-							<h3 class="card-title">Department</h3>
+							<h3 class="card-title">Location</h3>
 						</div>
 						<form class="form-horizontal" method="POST" action="{{ route('department.store') }}">
 							@csrf
@@ -96,7 +96,7 @@
 				<div class="col-8">					
 					<div class="card">
 						<div class="card-header">
-							<h3 class="card-title">Departments</h3>
+							<h3 class="card-title">Locations</h3>
 							<div class="card-tools">
 								<div class="input-group input-group-sm">
 									<!-- <a href="{{ route('department.create' )}}" class="btn btn-primary">Add New</a> -->

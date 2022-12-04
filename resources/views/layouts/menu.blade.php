@@ -38,13 +38,13 @@
 			<a href="#" class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
 				<i class="fa fa-building-o"></i>
 				<span class="hide-menu">
-				 	Departments
+				 	Locations
 				</span>
 			</a>
 			<ul aria-expanded="false" class="collapse ">				
 				<li>
 					<a href="{{ route('department.index') }}">
-						<span class="hide-menu">List Of Departments</span>
+						<span class="hide-menu">List Of Locations</span>
 					</a>
 				</li>
 			</ul>
