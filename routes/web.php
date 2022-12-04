@@ -14,6 +14,7 @@ use App\Http\Controllers\employee\MyProfileController;
 use App\Http\Controllers\PunchController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\client\PayrollController;
+use App\Http\Controllers\client\PayheadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +63,9 @@ Route::prefix('client')->group(function () {
 
 	Route::get('leave-type/getData/', [LeaveTypeController::class, 'getData'])->name('leave-type.getData');
 	Route::resource('leave-type', LeaveTypeController::class);
+
+	Route::get('pay-head/getData/', [PayheadController::class, 'getData'])->name('pay-head.getData');
+	Route::resource('pay-head', PayheadController::class);
 });
 
 Route::prefix('employee')->group(function () {

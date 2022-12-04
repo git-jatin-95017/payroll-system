@@ -66,6 +66,21 @@
 		</li>
 		<li>
 			<a href="#" class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
+				<i class="fa fa-building-o"></i>
+				<span class="hide-menu">
+				 	Pay Heads
+				</span>
+			</a>
+			<ul aria-expanded="false" class="collapse ">				
+				<li>
+					<a href="{{ route('pay-head.index') }}">
+						<span class="hide-menu">List Of Pay Heads</span>
+					</a>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<a href="#" class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
 				<i class="mdi mdi-account-multiple"></i>
 				<span class="hide-menu">
 				 Employees

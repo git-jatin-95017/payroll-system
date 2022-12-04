@@ -22,29 +22,26 @@
 
             @if(auth()->user()->role_id == 3)
         <?php
-			// $attendanceData = App\Models\Attendance::where('emp_code', auth()->user()->user_code)->whereDate('attendance_date', date('Y-m-d'))->get();
+			$attendanceData = App\Models\Attendance::where('emp_code', auth()->user()->user_code)->whereDate('attendance_date', date('Y-m-d'))->get();
 
-			// if (!$attendanceData->isEmpty()) {
-			// 	$attendanceROW = $attendanceData->count();
-			// 	if ( $attendanceROW == 0 ) {
-			// 		$action_name = 'Punch In';
-			// 	} else {
-			// 		$attendanceDATA = $attendanceData->first();
-			// 		if ($attendanceDATA->action_name == 'punchin' ) {
-			// 			$action_name = 'Punch Out';
-			// 		} else {
-			// 			$action_name = 'Punch In';
-			// 		}
-			// 	}
-			// } else {
-			// 	$attendanceROW = 0;
-			// 	$action_name = 'Punch In';
-			// }
+			if (!$attendanceData->isEmpty()) {
+				$attendanceROW = $attendanceData->count();
+				if ( $attendanceROW == 0 ) {
+					$action_name = 'Punch In';
+				} else {
+					$attendanceDATA = $attendanceData->first();
+					if ($attendanceDATA->action_name == 'punchin' ) {
+						$action_name = 'Punch Out';
+					} else {
+						$action_name = 'Punch In';
+					}
+				}
+			} else {
+				$attendanceROW = 0;
+				$action_name = 'Punch In';
+			}
 		?>
-
-        <?php
-
-		/*<div class="px-3">
+		<div class="px-3">
 			@if ($attendanceROW < 2)
 			<form method="POST" class="employee sidebar-form" role="form" id="attendance-form">
 				@csrf
@@ -59,8 +56,6 @@
 			</form>
 			@endif
 		</div>
-		*/
-		?>
 		@endif
 		<nav class="sidebar-nav">
 			<ul id="sidebarnav">
