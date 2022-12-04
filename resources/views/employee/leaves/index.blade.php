@@ -74,7 +74,7 @@
 				</div>
 			@endif
 			<div class="row">            	
-				<div class="col-sm-4">
+				<div class="col-lg-5">
 					<div class="card">
 						<div class="card-header">
 							<h3 class="card-title">Apply for Leave</h3>
@@ -118,13 +118,21 @@
 	                            </div>
 	                            <div class="form-group">
 	                            	<div class="col-md-12">
-		                                <label class="control-label">Leave Duration</label><br>
-		                                <input name="type" type="radio" id="radio_1" data-value="Half" class="duration" value="Half Day" checked="">
-		                                <label for="radio_1">Hourly</label>
-		                                <input name="type" type="radio" id="radio_2" data-value="Full" class="type" value="Full Day">
-		                                <label for="radio_2">Full Day</label>
-		                                <input name="type" type="radio" class="with-gap duration" id="radio_3" data-value="More" value="More than One day">
-		                                <label for="radio_3">Above a Day</label>
+		                                <label class="control-label d-block w-100">Leave Duration</label>
+		                                <div class="d-flex">
+											<div class="mr-2">
+												<input name="type" type="radio" id="radio_1" data-value="Half" class="duration" value="Half Day" checked="">
+												<label for="radio_1">Hourly</label>
+											</div>
+											<div class="mr-2">
+												<input name="type" type="radio" id="radio_2" data-value="Full" class="type" value="Full Day">
+												<label for="radio_2">Full Day</label>
+											</div>
+											<div>
+												<input name="type" type="radio" class="with-gap duration" id="radio_3" data-value="More" value="More than One day">
+												<label for="radio_3">Above a Day</label>
+											</div>
+										</div>
 		                            </div>
 	                            </div>
 	                            <div class="form-group">
@@ -177,7 +185,7 @@
 						</form>
 					</div>
 				</div>		
-				<div class="col-8">					
+				<div class="col-lg-7">					
 					<div class="card">
 						<div class="card-header">
 							<h3 class="card-title">My Leaves</h3>

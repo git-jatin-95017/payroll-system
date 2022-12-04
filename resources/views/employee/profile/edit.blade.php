@@ -280,9 +280,9 @@
 												@endif
 											</div>
 										</div>										
-										<div class="form-group row text-right">
-											<div class="offset-sm-2 col-sm-10">
-												<button type="submit" class="btn btn-danger">Submit</button>
+										<div class="form-group row ">
+											<div class="col-12">
+												<button type="submit" class="btn btn-primary">Submit</button>
 											</div>
 										</div>
 									</form>
@@ -430,7 +430,7 @@
 										</div>
 										<div class="col-md-4 d-none" id="routing_number_div">
 											<label for="routing_number" class="control-label">Routing Number</label>
-											<div class="col-md-12">
+											<div class="form-group mb-0">
 												<input id="routing_number" type="routing_number" class="form-control {{ $errors->has('routing_number') ? ' is-invalid' : '' }}" name="routing_number" value="{{ !empty($employee->paymentProfile->routing_number) ? $employee->paymentProfile->routing_number : '' }}" {{$disabled}}>
 
 												@if ($errors->has('routing_number'))
@@ -442,7 +442,7 @@
 										</div>
 										<div class="col-md-4 d-none" id="account_number_div">
 											<label for="account_number" class="control-label">Account Number</label>
-											<div class="col-md-12">
+											<div class="form-group mb-0">
 												<input id="account_number" type="account_number" class="form-control {{ $errors->has('account_number') ? ' is-invalid' : '' }}" value="{{ !empty($employee->paymentProfile->account_number) ? $employee->paymentProfile->account_number:'' }}" name="account_number" {{$disabled}}>
 
 												@if ($errors->has('account_number'))
@@ -455,17 +455,19 @@
 									</div>
 									<div class="form-row mb-3 d-none" id="account_type_div">
 										<div class="col-md-4">
-											<label for="name" >Account Type</label>
-											<select class="form-control {{ $errors->has('account_type') ? ' is-invalid' : '' }}" id="account_type" name="account_type" @if($disabledDrop) style="pointer-events: none;" @endif>
-												<option value="" disabled>Please Select</option>
-												<option @if(!empty($employee->paymentProfile->account_type) && $employee->paymentProfile->account_type == "checking") selected @endif value="checking">Chequing</option>
-												<option @if(!empty($employee->paymentProfile->account_type) && $employee->paymentProfile->account_type == "saving") selected @endif value="saving">Saving</option>
-											</select>
-											@if ($errors->has('account_type'))
-												<span class="text-danger">
-													{{ $errors->first('account_type') }}
-												</span>
-											@endif
+											<div class="form-group">
+												<label for="name" >Account Type</label>
+												<select class="form-control {{ $errors->has('account_type') ? ' is-invalid' : '' }}" id="account_type" name="account_type" @if($disabledDrop) style="pointer-events: none;" @endif>
+													<option value="" disabled>Please Select</option>
+													<option @if(!empty($employee->paymentProfile->account_type) && $employee->paymentProfile->account_type == "checking") selected @endif value="checking">Chequing</option>
+													<option @if(!empty($employee->paymentProfile->account_type) && $employee->paymentProfile->account_type == "saving") selected @endif value="saving">Saving</option>
+												</select>
+												@if ($errors->has('account_type'))
+													<span class="text-danger">
+														{{ $errors->first('account_type') }}
+													</span>
+												@endif
+											</div>
 										</div>
 									</div>
 									<!-- <div class="form-row mb-3">
@@ -490,9 +492,9 @@
 											@endif
 										</div>										
 									</div> -->
-									<div class="form-group row text-right">
-										<div class="offset-sm-2 col-sm-10">
-											<button type="submit" class="btn btn-danger">Submit</button>
+									<div class="form-group row">
+										<div class="col-12">
+											<button type="submit" class="btn btn-primary">Submit</button>
 										</div>
 									</div>
 								</form>									
