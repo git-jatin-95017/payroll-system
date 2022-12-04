@@ -49,7 +49,7 @@
 			@endif
 			<div class="row">            	
 				<div class="col-sm-6">
-					<div class="card card-primary">
+					<div class="card">
 						<div class="card-header">
 							<h3 class="card-title">Add New</h3>
 						</div>
