@@ -94,3 +94,11 @@ Route::get('/employee/logout', function() {
     // redirect to homepage
     return redirect('/');
 });
+
+Route::get('/logout', function() {
+	//logout user
+    auth()->logout();
+    
+    // redirect to homepage
+    return redirect('/');
+});

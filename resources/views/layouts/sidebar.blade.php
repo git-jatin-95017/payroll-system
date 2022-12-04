@@ -8,7 +8,7 @@
                 <div class="profile-text">
                     <h5>{{ ucwords(Auth::user()->name) }}</h5>
                     <a href="#" class="dropdown-toggle u-dropdown" role="button" aria-haspopup="true" aria-expanded="true"><i class="mdi mdi-settings"></i></a>
-                    <a href="#" class="" data-toggle="tooltip" title="Logout"><i class="mdi mdi-power"></i></a>
+                    <a href="/logout" class="" data-toggle="tooltip" title="Logout"><i class="mdi mdi-power"></i></a>
                 </div>
 		</div>
 

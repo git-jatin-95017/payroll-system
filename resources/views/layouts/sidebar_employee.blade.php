@@ -12,7 +12,7 @@
                     aria-expanded="true">
                     <i class="mdi mdi-settings"></i>
                 </a>
-                <a href="#" class="" data-toggle="tooltip" title="Logout">
+                <a href="/logout" class="" data-toggle="tooltip" title="Logout">
                     <i class="mdi mdi-power"></i>
                 </a>
             </div>
