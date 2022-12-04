@@ -105,7 +105,7 @@
 		$(document).on('click','a.approve',function() {
 			id = $(this).data('href');
 		    employeeId = $(this).attr('data-employeeId');
-	        lid = $(this).attr('data-id');
+	        lid = id;
 	        lvalue = $(this).attr('data-value');
 	        duration = $(this).attr('data-duration');
 	        type = $(this).attr('data-type');
@@ -250,7 +250,7 @@
 			                	var id = row.id;
 			                	var userid = row.user_id;
 			                	var duration = row.leave_duration;
-			                	var typeid = row.typeid;			                	
+			                	var typeid = row.type_id;			                	
 			                
 			                	var action = `<div class="table-actions">`;
 			                	if (row.leave_status == 'pending') {

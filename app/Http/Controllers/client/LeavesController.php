@@ -5,10 +5,13 @@ namespace App\Http\Controllers\client;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Leave;
+use App\Models\AssignLeave;
+use App\Models\EarnedLeave;
 // use DataTables;
 // use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class LeavesController extends Controller
 {
@@ -73,6 +76,8 @@ class LeavesController extends Controller
                 ->orWhere('leaves.end_date', 'like', '%' . $searchValue . '%')
                 ->select(
                     'leaves.id',
+                    'leaves.user_id',
+                    'leaves.type_id',
                     'users.user_code',                   
                     'leaves.start_date',
                     'leaves.end_date',
@@ -106,15 +111,97 @@ class LeavesController extends Controller
         }
     }	
 
+    protected function determineIfNewLeaveAssign($employeeId, $type) {
+        $count = AssignLeave::where('emp_id', $employeeId)->where('type_id', $type)->count();
+        return $count;
+    }
+
+    protected function getLeaveTypeTotal($employeeId, $type) {
+        $result = DB::select("SELECT SUM(`hour`) AS 'totalTaken' FROM `assign_leaves` WHERE `assign_leaves`.`emp_id`='$employeeId' AND `assign_leaves`.`type_id`='$type'");        
+        return $result;
+    }
+
+    protected function updateLeaveAssignedInfo($employeeId, $type, $data) {
+        DB::table('assign_leaves')
+            ->where('type_id', $type)
+            ->where('emp_id', $employeeId)
+            ->update($data);    
+    }
+
+    
+    protected function emEarnselectByLeave($employeeId) {
+        $result = EarnedLeave::where('em_id', $employeeId)->first();
+        
+        return $result; 
+    }
+
+    // protected function updateEarnValue($employeeId) {
+    //     $this->db->where('em_id', $emid);
+    //     $this->db->update('earned_leave', $data); 
+    // }
+    
+
+    protected function insertLeaveAssignedInfo($employeeId) {
+        $this->db->insert('assign_leaves', $data);
+    }
+
 	public function update(Request $request, $id)
 	{
 		if (request()->ajax()) {
-            
+            $data = $request->all();
+
+            $employeeId = $data['employeeId'];
+            $id       = $data['lid'];
+            $value    = $data['lvalue'];
+            $duration = $data['duration'];
+            $type     = $data['type'];
+
             $leave = Leave::find($id);
 
             if ($request->action == 'approve') {
+                //Update leave status
                 $leave->leave_status = 'approved';
                 $leave->save();
+
+                //Leave balance Logic
+                $determineIfNew = $this->determineIfNewLeaveAssign($employeeId, $type);
+
+                //How much taken
+                $totalHour = $this->getLeaveTypeTotal($employeeId, $type);
+
+                //If already taken some
+                if($determineIfNew  > 0) {
+                    $total    = $totalHour[0]->totalTaken + $duration;
+                    $data     = array();
+                    $data     = array(
+                        'hour' => $total
+                    );
+                    $success  = $this->updateLeaveAssignedInfo($employeeId, $type, $data);
+                    
+                    $earnval = $this->emEarnselectByLeave($employeeId); 
+
+                    if ($earnval) {
+                        $data = array();
+                        $data = array(
+                            'present_date' => $earnval->present_date - ($duration/8),
+                            'hour' => $earnval->hour - $duration
+                        );
+                        $earnval->update($data);                        
+                    }
+                
+                } else {
+                    //If not taken yet
+                    $dataal = array();
+                    $dataal = array(
+                        'emp_id' => $employeeId,
+                        'type_id' => $type,
+                        'hour' => $duration,
+                        'dateyear' => date('Y')
+                    );
+                   
+                   AssignLeave::create($dataal);
+                }
+
                 return response()->json(['status'=>true, 'message'=>"Leave approved successfully."]);
             }
 
