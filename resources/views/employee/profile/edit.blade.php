@@ -558,7 +558,6 @@
 			</div>
 		</div>
 	</section>
-
 @endsection
 
 @push('page_scripts')

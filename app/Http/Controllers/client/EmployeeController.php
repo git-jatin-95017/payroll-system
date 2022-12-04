@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\EmployeeProfile;
+use App\Models\PaymentDetail;
 use Illuminate\Support\Facades\DB;
 // use DataTables;
 // use Yajra\DataTables\Html\Builder;
@@ -153,10 +154,15 @@ class EmployeeController extends Controller
 			// 'department' => ['required'],
 			'password' => ['required', 'string', 'min:8', 'confirmed'],
 			'password_confirmation' => 'required_with:password',
-			'file' => 'mimes:png,jpg,jpeg|max:2048'
+			'file' => 'mimes:png,jpg,jpeg|max:2048',
+			'payment_method' =>['required'],
+			'routing_number' => ['required_if:payment_method,==,deposit'],
+			'account_number' => ['required_if:payment_method,==,deposit'],
+			'account_type' => ['required_if:payment_method,==,deposit']
 		],[],[
 			'emp_code' => 'Employee ID number',
 			'doj' => 'Start Date',
+			'pay_rate' => 'amount'
 		]);
 
 		$user = User::create([
@@ -216,7 +222,19 @@ class EmployeeController extends Controller
 	   	unset($data['status']);
 
 		EmployeeProfile::create($data);
-	
+		
+		$paymentdata = [
+			'routing_number' => $request->routing_number ?? '',
+			'account_number' => $request->account_number ?? '',
+			'account_type' => $request->account_type ?? '',
+			'payment_method' => $request->payment_method ?? ''
+		];
+
+		PaymentDetail::updateOrCreate(
+		    ['user_id' => $user->id],
+		    $paymentdata
+		);
+
 		// Mail::to($employee->email)->send(new StaffCreated($data));	
 
 		return redirect()->route('employee.index')->with('message', 'Employee created successfully.');	
@@ -234,7 +252,7 @@ class EmployeeController extends Controller
 			$disabled = 'readonly="readonly"';$disabledDrop = (int) true;
 		}
 
-	   return view('client.employee.edit', compact('employee', 'disabled', 'disabledDrop'));
+	   	return view('client.employee.edit', compact('employee', 'disabled', 'disabledDrop'));
 	}
 
 	public function update(Request $request, User $employee)
@@ -268,6 +286,7 @@ class EmployeeController extends Controller
 		],[],[
 			'emp_code' => 'Employee ID number',
 			'doj' => 'Start Date',
+			'pay_rate' => 'amount'
 		]);
 
 		$employee->update([
@@ -326,7 +345,19 @@ class EmployeeController extends Controller
 	   	}
 
 		$employee->employeeProfile->update($data);
-	
+		
+		$paymentdata = [
+			'routing_number' => $request->routing_number ?? '',
+			'account_number' => $request->account_number ?? '',
+			'account_type' => $request->account_type ?? '',
+			'payment_method' => $request->payment_method ?? ''
+		];
+
+		PaymentDetail::updateOrCreate(
+		    ['user_id' => $employee->id],
+		    $paymentdata
+		);
+
 		return redirect()->route('employee.index')->with('message', 'Employee updated successfully.');	
 	}   
 
