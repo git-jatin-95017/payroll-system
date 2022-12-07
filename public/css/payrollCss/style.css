@@ -9968,7 +9968,7 @@ ul.collapse.in:after {
 .sidebar-nav > ul > li.active > a {
   background-color: #373e44!important;
 
-/* 
+/*
 .card-outline-info .card-header {
     border-radius: 0px!important;
 }
@@ -10243,4 +10243,68 @@ body.mini-sidebar footer.main-footer{
 .topbar .top-navbar {
     max-height: 39px;
     padding: 0px 15px 0 0;
+}
+
+
+/* new css */
+.ts-img{
+    width: 40px;
+    height: 40px;
+    border-radius: 100em;
+    background-color: #ddd;
+    font-weight: 600;
+}
+
+.ts-custom-table tr td, .ts-custom-table tr th {
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    color: #607d8b;
+}
+
+tr.ts-date-row,
+tr.ts-day-row {
+    background-color: #eef5f9;
+}
+
+.ts-custom-table tr td {
+    border: none;
+}
+.payroll_date_cell {
+    border: none;
+    text-align: center;
+}
+.table.ts-custom-table .ts-date-row th {
+    padding-bottom: 0;
+}
+
+.table.ts-custom-table .ts-day-row th{
+    padding-top: 0;
+}
+tr.ts-day-row {
+    border-bottom: 1px solid #d8d8d8;
+}
+.ts-designation {
+    color: #607d8b;
+    font-size: 13px;
+    font-weight: 400;
+}
+.ts-user-name {
+    font-weight: 500;
+    color: #252525;
+}
+
+tr.ts-data-row {
+    box-shadow: 0 0 4px -2px #afafaf;
+    border-bottom: 7px solid #eef5f9;
+}
+.ts-header-date {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.ts-prev-btn,
+.ts-next-btn{
+ color: #252525;
 }
