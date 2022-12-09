@@ -360,7 +360,7 @@
 			                	destrRoute = destrRoute.replace(':id', row.id);
 			                	var action = `<div class="table-actions">`;
 
-			                	action += "<a href='javascript:void(0);' data-toggle='modal' data-target='#ManageModal' class='btn btn-sm text-info' onclick='updateEmpCode("+row.id+")'><i class='fas fa-eye'></i></a>";
+			                	action += "<a href='javascript:void(0);' data-toggle='modal' data-target='#ManageModal' class='btn btn-sm text-info' onclick='updateEmpCode("+row.id+")'><i class='fas fa-copy'></i></a>";
 
 			                	action += " <a href=" + editRoute + " class='btn btn-sm text-info'><i class='fas fa-pen'></i></a>";
 
