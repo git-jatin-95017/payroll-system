@@ -2,12 +2,12 @@
 @push('page_css')
 	<style>
 		thead input.top-filter {
-	        width: 100%;
-	    }
+			width: 100%;
+		}
 
-	    table.dataTable tbody td {
+		table.dataTable tbody td {
 			word-break: break-word;
-		  	vertical-align: top;
+			vertical-align: top;
 		}
 	</style>
 	<link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
@@ -15,138 +15,80 @@
 @endpush
 @section('content')
 <div class="row page-titles">
-    <div class="col-md-5 align-self-center">
-        <h3 class="text-themecolor">
-            <i class="fa fa-braille" style="color:#1976d2"></i>
-            Leave Types
-        </h3>
-    </div>
+	<div class="col-md-5 align-self-center">
+		<h3 class="text-themecolor">
+			<i class="fa fa-braille" style="color:#1976d2"></i>
+			Leave Policies
+		</h3>
+	</div>
 
-    <div class="col-md-7 align-self-center">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a href="javascript:void(0)">Home</a>
-            </li>
-            <li class="breadcrumb-item active">Leave Types</li>
-        </ol>
-    </div>
+	<div class="col-md-7 align-self-center">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item">
+				<a href="javascript:void(0)">Home</a>
+			</li>
+			<li class="breadcrumb-item active">Leave Policies</li>
+		</ol>
+	</div>
 </div>
-
-
-	<section class="content">
-		<div class="container-fluid">
-			@if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="m-0">
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
-			@if (session('message'))
-				<div class="row">
-					<div class="col-md-12">
-						<div class="alert alert-success alert-dismissible">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-							{{ session('message') }}
-						</div>
+<section class="content">
+	<div class="container-fluid">
+		@if ($errors->any())
+		<div class="alert alert-danger">
+			<ul class="m-0">
+				@foreach ($errors->all() as $error)
+				<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
+		@endif
+		@if (session('message'))
+			<div class="row">
+				<div class="col-md-12">
+					<div class="alert alert-success alert-dismissible">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+						{{ session('message') }}
 					</div>
-				</div>
-			@elseif (session('error'))
-				<div class="row">
-					<div class="col-md-12">
-						<div class="alert alert-danger alert-dismissible">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-							{{ session('error') }}
-						</div>
-					</div>
-				</div>
-			@endif
-			<div class="row">            	
-				<div class="col-sm-4">
-					<div class="card">
-						<div class="card-header">
-							<h3 class="card-title">Leave Type</h3>
-						</div>
-						<form class="form-horizontal" method="POST" action="{{ route('leave-type.store') }}">
-							@csrf
-							<div class="card-body">								
-								<div class="form-group">
-									<label for="name" class="col-md-8 control-label">Leave Type</label>
-									<div class="col-md-12">
-										<input id="name" type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name', '') }}">
-
-										@if ($errors->has('name'))
-											<span class="text-danger">
-												{{ $errors->first('name') }}
-											</span>
-										@endif
-									</div>
-								</div>								
-													
-								<div class="form-group">
-									<label for="no_of_day" class="col-md-8 control-label">Number Of Days</label>
-									<div class="col-md-12">
-										<input id="no_of_day" type="number" min="0" class="form-control {{ $errors->has('no_of_day') ? ' is-invalid' : '' }}" name="no_of_day" value="{{ old('no_of_day', '') }}">
-
-										@if ($errors->has('no_of_day'))
-											<span class="text-danger">
-												{{ $errors->first('no_of_day') }}
-											</span>
-										@endif
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="status" class="col-md-8 control-label">Status</label>
-									<div class="col-md-12">
-										<select class="form-control" name="status">
-											<option value="">Please Select</option>
-											<option value="1">Active</option>
-											<option value="0">Inactive</option>
-										</select>
-
-										@if ($errors->has('status'))
-											<span class="text-danger">
-												{{ $errors->first('status') }}
-											</span>
-										@endif
-									</div>
-								</div>									
-							</div>
-							<div class="card-footer">
-								<button type="submit" class="btn btn-primary">Save</button>
-							</div>
-						</form>
-					</div>
-				</div>		
-				<div class="col-8">					
-					<div class="card">
-						<div class="card-header">
-							<h3 class="card-title">Leave Types</h3>
-							<div class="card-tools">
-								<div class="input-group input-group-sm">
-									<!-- <a href="{{ route('leave-type.create' )}}" class="btn btn-primary">Add New</a> -->
-								</div>
-							</div>
-						</div>					
-						<div class="card-body">							
-							<table class="table table-bordered table-hover wrap" id="dataTableBuilder">
-								<thead>
-									<tr>										
-										<th>ID</th>
-										<th>Leave Type</th>										
-										<th>Number Of Days</th>										
-										<th>Action</th>								
-									</tr>
-								</thead>
-							</table>
-						</div>
-					  </div>
 				</div>
 			</div>
-		</div>		
-	</section>    
+		@elseif (session('error'))
+			<div class="row">
+				<div class="col-md-12">
+					<div class="alert alert-danger alert-dismissible">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+						{{ session('error') }}
+					</div>
+				</div>
+			</div>
+		@endif
+		<div class="row">		
+			<div class="col-12">					
+				<div class="card">
+					<div class="card-header  d-flex justify-content-between">
+						<h3 class="card-title">List Of Leave Policies</h3>
+						<div class="card-tools">
+							<div class="input-group input-group-sm">
+								<a href="{{ route('leave-type.create' )}}" class="btn btn-primary">Add New</a>
+							</div>
+						</div>
+					</div>					
+					<div class="card-body">							
+						<table class="table table-bordered table-hover wrap" id="dataTableBuilder">
+							<thead>
+								<tr>										
+									<th>ID</th>
+									<th>LEAVE TYPE</th>										
+									<th>NO. OF DAYS</th>										
+									<th>ACTION</th>								
+								</tr>
+							</thead>
+						</table>
+					</div>
+				  </div>
+			</div>
+		</div>
+	</div>		
+</section>    
 @endsection
 @push('page_css')
 	<link rel="stylesheet" href="{{ asset('js/datepicker/datepicker3.css') }}">
@@ -162,37 +104,37 @@
 	<script type="text/javascript">
 		//single record move to delete
 		$(document).on('click','a.delete',function(){
-		    var trashRecordUrl = $(this).data('href');
-		    console.log(trashRecordUrl);
-		    moveToDelete(trashRecordUrl);
+			var trashRecordUrl = $(this).data('href');
+			console.log(trashRecordUrl);
+			moveToDelete(trashRecordUrl);
 		});
 
 		// move to Delete single record by just pass the url of 
 		function moveToDelete(trashRecordUrl) {
 		  Swal.fire({
-		      text: "You Want to Delete?",
-		      showCancelButton: true,
-		      confirmButtonText: '<i class="ik trash-2 ik-trash-2"></i> Permanent Delete!',
-		      cancelButtonText: 'Not Now!',
-		      reverseButtons: true,
-		      showCloseButton : true,
-		      allowOutsideClick:false,
-		    }).then((result)=>{
-		      var action = 'delete';
-		      if(result.value == true){
-		        $.ajax({
-		          	url: trashRecordUrl,
-		          	type: 'DELETE',
-		          	data: {
-	                	_token: "{{ csrf_token() }}",
-	             	},
-		          	dataType:'JSON',
-		          	success:(result)=>{
-		            	$('#dataTableBuilder').DataTable().draw(true);		           
-		          	}
-		        });
-		      }
-		    });
+			  text: "You Want to Delete?",
+			  showCancelButton: true,
+			  confirmButtonText: '<i class="ik trash-2 ik-trash-2"></i> Permanent Delete!',
+			  cancelButtonText: 'Not Now!',
+			  reverseButtons: true,
+			  showCloseButton : true,
+			  allowOutsideClick:false,
+			}).then((result)=>{
+			  var action = 'delete';
+			  if(result.value == true){
+				$.ajax({
+					url: trashRecordUrl,
+					type: 'DELETE',
+					data: {
+						_token: "{{ csrf_token() }}",
+					},
+					dataType:'JSON',
+					success:(result)=>{
+						$('#dataTableBuilder').DataTable().draw(true);		           
+					}
+				});
+			  }
+			});
 		}
 
 		$(document).ready( function () {
@@ -209,7 +151,7 @@
 			 //        .appendTo('#dataTableBuilder thead');
 			// }, 1000);
 
-		  	var table = $('#dataTableBuilder').DataTable({
+			var table = $('#dataTableBuilder').DataTable({
 					processing: true,
 					serverSide: true,
 					autoWidth: false,
@@ -218,11 +160,11 @@
 					scrollY: "400px",
 					ajax: {
 						url: "{{route('leave-type.getData')}}",
-					  	type: 'GET',
-					  	data: function (d) {
-					  		d.start_date = $('#start_date').val();
-					  		d.end_date = $('#end_date').val();
-					  	}
+						type: 'GET',
+						data: function (d) {
+							d.start_date = $('#start_date').val();
+							d.end_date = $('#end_date').val();
+						}
 					},
 					columns: [
 						{data:'id'},						
@@ -235,25 +177,25 @@
 							// orderable: true
 						},
 						{
-			                data: 'actions',
-			                orderable : false,
-			                searchable : false,
-			                render: function(data, type, row, meta) {
-			                	
-			                	var id = row.id;
-			                
-			                	var action = `<div class="table-actions">`;
-			                		//action += `<a data-href="/client/leave-type/${id}" class="btn btn-sm btn-info approve"><i class='fas fa-pen'></i></a>`;
-			                		action += ` <a data-href="/client/leave-type/${id}" class="btn btn-sm text-danger delete"><i class='fas fa-trash'></i></a>`;			
-			                		action += `</div>`;
-			                	return action;
-			                }
-			            }
-			        ],
-			        orderCellsTop: true,
-        			// fixedHeader: true,
-			       
-			  	});
+							data: 'actions',
+							orderable : false,
+							searchable : false,
+							render: function(data, type, row, meta) {
+								
+								var id = row.id;
+							
+								var action = `<div class="table-actions">`;
+									//action += `<a data-href="/client/leave-type/${id}" class="btn btn-sm btn-info approve"><i class='fas fa-pen'></i></a>`;
+									action += ` <a data-href="/client/leave-type/${id}" class="btn btn-sm text-danger delete"><i class='fas fa-trash'></i></a>`;			
+									action += `</div>`;
+								return action;
+							}
+						}
+					],
+					orderCellsTop: true,
+					// fixedHeader: true,
+				   
+				});
 		   });		  	
 
 	</script>		

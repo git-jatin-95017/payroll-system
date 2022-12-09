@@ -72,7 +72,9 @@ class MyProfileController extends Controller
 				'routing_number' => $request->routing_number ?? '',
 				'account_number' => $request->account_number ?? '',
 				'account_type' => $request->account_type ?? '',
-				'payment_method' => $request->payment_method ?? ''
+				'payment_method' => $request->payment_method ?? '',
+				'bank_name' => $request->bank_name,
+				// 'bank_acc_number' => !empty($request->bank_acc_number) ? $request->bank_acc_number : NULL,
 			];
 
 			unset($data['update_request']);
@@ -161,8 +163,8 @@ class MyProfileController extends Controller
 				// 'designation' => $request->designation,
 				// 'department' => $request->department,
 				//'pan_number' => $request->pan_number,
-				// 'bank_name' => $request->bank_name,
-				// 'bank_acc_number' => $request->bank_acc_number,
+				'bank_name' => $request->bank_name,
+				'bank_acc_number' => !empty($request->bank_acc_number) ? $request->bank_acc_number : NULL,
 				// 'ifsc_code' => $request->ifsc_code,
 				// 'pf_account_number' => $request->pf_account_number,
 			];

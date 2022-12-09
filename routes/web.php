@@ -35,7 +35,7 @@ Route::get('sample-download/{file}', [App\Http\Controllers\admin\DashboardContro
 
 Route::prefix('admin')->group(function () {
 	//Dashboard
-	Route::get('dashboard', [App\Http\Controllers\admin\DashboardController::class, 'index'])->name('dashboard');	
+	Route::get('dashboard', [App\Http\Controllers\admin\DashboardController::class, 'index'])->name('admin.dashboard');	
 	Route::resource('client', ClientController::class);
 
 	Route::get('attendance/getData/', [AttendanceController::class, 'getData'])->name('attendance.getData');
@@ -44,7 +44,7 @@ Route::prefix('admin')->group(function () {
 
 Route::prefix('client')->group(function () {
 	//Dashboard
-	Route::get('dashboard', [App\Http\Controllers\client\DashboardController::class, 'index'])->name('dashboard');	
+	Route::get('dashboard', [App\Http\Controllers\client\DashboardController::class, 'index'])->name('client.dashboard');	
 
 	Route::get('employee/getData/', [EmployeeController::class, 'getData'])->name('employee.getData');
 	Route::resource('employee', EmployeeController::class);	
@@ -65,6 +65,8 @@ Route::prefix('client')->group(function () {
 	Route::resource('leave-type', LeaveTypeController::class);
 
 	Route::get('pay-head/getData/', [PayheadController::class, 'getData'])->name('pay-head.getData');
+	Route::post('pay-head-assign', [PayheadController::class, 'assign'])->name('assign.payhead');
+	Route::get('get-pay-head-assigned', [PayheadController::class, 'assignedPayhead'])->name('assigned.payhead');
 	Route::resource('pay-head', PayheadController::class);
 });
 

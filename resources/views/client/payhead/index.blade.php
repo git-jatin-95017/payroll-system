@@ -20,7 +20,7 @@
     <div class="col-md-5 align-self-center">
         <h3 class="text-themecolor">
             <i class="fa fa-braille" style="color:#1976d2"></i>
-            Pay Head
+            Pay Heads
         </h3>
     </div>
 
@@ -29,7 +29,7 @@
             <li class="breadcrumb-item">
                 <a href="javascript:void(0)">Home</a>
             </li>
-            <li class="breadcrumb-item active">Pay Head</li>
+            <li class="breadcrumb-item active">Pay Heads</li>
         </ol>
     </div>
 </div>
@@ -65,67 +65,14 @@
 					</div>
 				</div>
 			@endif
-			<div class="row">            	
-				<div class="col-sm-4">
+			<div class="row">            				
+				<div class="col-12">					
 					<div class="card">
-						<div class="card-header">
-							<h3 class="card-title">Pay Head</h3>
-						</div>
-						<form class="form-horizontal" method="POST" action="{{ route('pay-head.store') }}">
-							@csrf
-							<div class="card-body">								
-								<div class="form-group">
-									<label for="name" class="col-md-8 control-label">Pay Head Name</label>
-									<div class="col-md-12">
-										<input id="name" type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name', '') }}">
-
-										@if ($errors->has('name'))
-											<span class="text-danger">
-												{{ $errors->first('name') }}
-											</span>
-										@endif
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="description" class="col-md-8 control-label">Pay Head Descrition</label>
-									<div class="col-md-12">
-										<input id="description" type="text" class="form-control {{ $errors->has('description') ? ' is-invalid' : '' }}" name="description" value="{{ old('description', '') }}">
-
-										@if ($errors->has('description'))
-											<span class="text-danger">
-												{{ $errors->first('description') }}
-											</span>
-										@endif
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="pay_type" class="col-md-8 control-label">Pay Head Descrition</label>
-									<div class="col-md-12">
-										<select class="form-control" id="pay_type" name="pay_type">
-											<option @if(old('pay_type', '') == "earnings") selected @endif value="earnings">Earnings</option>
-											<option @if(old('pay_type', '') == "deductions") selected @endif value="deductions">Deductions</option>
-										</select>
-										@if ($errors->has('pay_type'))
-											<span class="text-danger">
-												{{ $errors->first('pay_type') }}
-											</span>
-										@endif
-									</div>
-								</div>								
-							</div>
-							<div class="card-footer">
-								<button type="submit" class="btn btn-primary">Save</button>
-							</div>
-						</form>
-					</div>
-				</div>		
-				<div class="col-8">					
-					<div class="card">
-						<div class="card-header">
-							<h3 class="card-title">Pay Head</h3>
+						<div class="card-header d-flex justify-content-between">
+							<h3 class="card-title">List Of Pay Heads</h3>
 							<div class="card-tools">
 								<div class="input-group input-group-sm">
-									<!-- <a href="{{ route('pay-head.create' )}}" class="btn btn-primary">Add New</a> -->
+									<a href="{{ route('pay-head.create' )}}" class="btn btn-primary">Add New</a>
 								</div>
 							</div>
 						</div>					
@@ -134,10 +81,10 @@
 								<thead>
 									<tr>										
 										<th>ID</th>
-										<th>Head Name</th>										
-										<th>Head Description</th>										
-										<th>Head Type</th>										
-										<th>Action</th>								
+										<th>HEAD NAME</th>										
+										<th>HEAD DESCRIPTION</th>										
+										<th>HEAD TYPE</th>										
+										<th>ACTION</th>								
 									</tr>
 								</thead>
 							</table>
@@ -241,7 +188,7 @@
 			                
 			                	var action = `<div class="table-actions">`;
 			                		//action += `<a data-href="/client/pay-head/${id}" class="btn btn-sm btn-info approve"><i class='fas fa-pen'></i></a>`;
-			                		action += ` <a data-href="/client/pay-head/${id}" class="btn btn-sm btn-primary delete"><i class='fas fa-trash'></i></a>`;			
+			                		action += ` <a data-href="/client/pay-head/${id}" class="btn btn-sm text-danger delete"><i class='fas fa-trash'></i></a>`;			
 			                		action += `</div>`;
 			                	return action;
 			                }

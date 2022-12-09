@@ -428,7 +428,7 @@
 												</span>
 											@endif
 										</div>
-										<div class="col-md-4 d-none" id="routing_number_div">
+										<div class="col-md-4 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="routing_number_div">
 											<label for="routing_number" class="control-label">Routing Number</label>
 											<div class="form-group mb-0">
 												<input id="routing_number" type="routing_number" class="form-control {{ $errors->has('routing_number') ? ' is-invalid' : '' }}" name="routing_number" value="{{ !empty($employee->paymentProfile->routing_number) ? $employee->paymentProfile->routing_number : '' }}" {{$disabled}}>
@@ -439,8 +439,8 @@
 													</span>
 												@endif
 											</div>
-										</div>
-										<div class="col-md-4 d-none" id="account_number_div">
+										</div>									
+										<div class="col-md-4 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="account_number_div">
 											<label for="account_number" class="control-label">Account Number</label>
 											<div class="form-group mb-0">
 												<input id="account_number" type="account_number" class="form-control {{ $errors->has('account_number') ? ' is-invalid' : '' }}" value="{{ !empty($employee->paymentProfile->account_number) ? $employee->paymentProfile->account_number:'' }}" name="account_number" {{$disabled}}>
@@ -453,7 +453,19 @@
 											</div>
 										</div>
 									</div>
-									<div class="form-row mb-3 d-none" id="account_type_div">
+									<div class="form-row mb-3 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="account_type_div">
+										<div class="col-md-4 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="bank_div">
+											<label for="bank_name" class="control-label">Bank Name</label>
+											<div class="form-group mb-0">
+												<input id="bank_name" type="bank_name" class="form-control {{ $errors->has('bank_name') ? ' is-invalid' : '' }}" value="{{ !empty($employee->paymentProfile->bank_name) ? $employee->paymentProfile->bank_name:'' }}" name="bank_name" {{$disabled}}>
+
+												@if ($errors->has('bank_name'))
+													<span class="text-danger">
+														{{ $errors->first('bank_name') }}
+													</span>
+												@endif
+											</div>
+										</div>
 										<div class="col-md-4">
 											<div class="form-group">
 												<label for="name" >Account Type</label>
@@ -569,12 +581,14 @@
 			$('#routing_number_div').addClass('d-none');
 			$('#account_number_div').addClass('d-none');
 			$('#account_type_div').addClass('d-none');
+			$('#bank_div').addClass('d-none');
 		}
 
 		if ($(obj).val() == 'deposit') {
 			$('#routing_number_div').removeClass('d-none');
 			$('#account_number_div').removeClass('d-none');
 			$('#account_type_div').removeClass('d-none');
+			$('#bank_div').removeClass('d-none');
 		}
 	}
 </script>

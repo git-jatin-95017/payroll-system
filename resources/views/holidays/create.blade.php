@@ -1,4 +1,12 @@
-@extends('layouts.app')
+@php
+   if(auth()->user()->role_id == 3) {
+      $layoutDirectory = 'layouts.employee';
+   } else {
+      $layoutDirectory = 'layouts.app';
+   }
+@endphp
+
+@extends($layoutDirectory)
 
 @section('content')
 <div class="row page-titles">

@@ -29,20 +29,17 @@
 			</div>
 		</div>
 	</div> -->
-
 	<div class="row page-titles">
-                <div class="col-md-5 align-self-center">
-                    <h3 class="text-themecolor"><i class="mdi mdi-rocket" style="color:#1976d2"></i> Leaves	</h3>
-                </div>
-				
-                <div class="col-md-7 align-self-center">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
-                        <li class="breadcrumb-item active">Leaves</li>
-                    </ol>
-                </div>
-            </div>
-
+        <div class="col-md-5 align-self-center">
+            <h3 class="text-themecolor"><i class="mdi mdi-rocket" style="color:#1976d2"></i> My Leaves</h3>
+        </div>
+        <div class="col-md-7 align-self-center">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                <li class="breadcrumb-item active">My Leaves</li>
+            </ol>
+        </div>
+    </div>
 	<section class="content">
 		<div class="container-fluid">
 			@if ($errors->any())
@@ -73,125 +70,14 @@
 					</div>
 				</div>
 			@endif
-			<div class="row">            	
-				<div class="col-lg-5">
+			<div class="row">					
+				<div class="col-lg-12">					
 					<div class="card">
-						<div class="card-header">
-							<h3 class="card-title">Apply for Leave</h3>
-						</div>
-						<form class="form-horizontal" id="leaveapply" method="POST" action="{{ route('my-leaves.store') }}">
-							@csrf
-							<div class="card-body">								
-								<div class="form-group">
-									<label for="leave_subject" class="col-md-8 control-label">Subject</label>
-									<div class="col-md-12">
-										<input id="leave_subject" type="text" class="form-control {{ $errors->has('leave_subject') ? ' is-invalid' : '' }}" name="leave_subject" value="{{ old('leave_subject', '') }}">
-
-										@if ($errors->has('leave_subject'))
-											<span class="text-danger">
-												{{ $errors->first('leave_subject') }}
-											</span>
-										@endif
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="col-md-12">
-	                                	<label>Leave Type</label>
-		                                <select class="form-control custom-select assignleave" name="typeid" id="leavetype">
-		                                    <option value="">Select Here..</option>
-		                                    <?php foreach($leavetypes as $value): ?>
-
-		                                    <option value="<?php echo $value->id ?>"><?php echo $value->name ?></option>
-
-		                                    <?php endforeach; ?>
-		                                </select>
-									</div>
-	                            </div>
-	                            <div class="form-group">
-	                            	<div class="col-md-12">
-		                                <span style="color:red" id="total"></span>
-		                                <div class="span pull-right">
-		                                    <button class="btn btn-info fetchLeaveTotal">Fetch Total Leave</button>
-		                                </div>
-	                                	<br>
-	                                </div>
-	                            </div>
-	                            <div class="form-group">
-	                            	<div class="col-md-12">
-		                                <label class="control-label d-block w-100">Leave Duration</label>
-		                                <div class="d-flex">
-											<div class="mr-2">
-												<input name="type" type="radio" id="radio_1" data-value="Half" class="duration" value="Half Day" checked="">
-												<label for="radio_1">Hourly</label>
-											</div>
-											<div class="mr-2">
-												<input name="type" type="radio" id="radio_2" data-value="Full" class="type" value="Full Day">
-												<label for="radio_2">Full Day</label>
-											</div>
-											<div>
-												<input name="type" type="radio" class="with-gap duration" id="radio_3" data-value="More" value="More than One day">
-												<label for="radio_3">Above a Day</label>
-											</div>
-										</div>
-		                            </div>
-	                            </div>
-	                            <div class="form-group">
-	                            	<div class="col-md-12">
-	                                	<label class="control-label" id="hourlyFix">Date</label>
-	                                	<input type="date" name="startdate" class="form-control" id="recipient-name1" >
-	                                </div>
-	                            </div>
-	                            <div class="form-group" id="enddate" style="display:none">
-	                            	<div class="col-md-12">
-	                                <label class="control-label">End Date</label>
-	                                <input type="date" name="enddate" class="form-control" id="recipient-name1">
-	                               	</div>
-	                            </div>
-
-	                            <div class="form-group" id="hourAmount">
-	                            	<div class="col-md-12">
-	                                <label>Length</label>
-	                                <select id="hourAmountVal" class=" form-control custom-select" name="hourAmount" >
-	                                    <option value="">Select Hour</option>
-	                                    <option value="1">One hour</option>
-	                                    <option value="2">Two hour</option>
-	                                    <option value="3">Three hour</option>
-	                                    <option value="4">Four hour</option>
-	                                    <option value="5">Five hour</option>
-	                                    <option value="6">Six hour</option>
-	                                    <option value="7">Seven hour</option>
-	                                    <option value="8">Eight hour</option>
-	                                </select>
-	                            	</div>
-	                            </div>						
-
-								<div class="form-group">
-									<label for="leave_message" class="col-md-8 control-label">Reason</label>
-									<div class="col-md-12">
-										<textarea name="leave_message" id="leave_message" class="form-control {{ $errors->has('leave_message') ? ' is-invalid' : '' }}" rows="4">{{ old('leave_message', '') }}</textarea>
-
-										@if ($errors->has('leave_message'))
-											<span class="text-danger">
-												{{ $errors->first('leave_message') }}
-											</span>
-										@endif
-									</div>
-								</div>					
-
-							</div>
-							<div class="card-footer">
-								<button type="submit" class="btn btn-primary">Apply for Leave</button>
-							</div>
-						</form>
-					</div>
-				</div>		
-				<div class="col-lg-7">					
-					<div class="card">
-						<div class="card-header">
+						<div class="card-header d-flex justify-content-between">
 							<h3 class="card-title">My Leaves</h3>
 							<div class="card-tools">
 								<div class="input-group input-group-sm">
-									<!-- <a href="{{ route('my-leaves.create' )}}" class="btn btn-primary">Add New</a> -->
+									<a href="{{ route('my-leaves.create' )}}" class="btn btn-primary">Apply For Leave</a>
 								</div>
 							</div>
 						</div>					

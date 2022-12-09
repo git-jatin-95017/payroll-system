@@ -199,9 +199,10 @@
 		  	var table = $('#dataTableBuilder').DataTable({
 					processing: true,
 					serverSide: true,
+					autoWidth: false,
 					// autoWidth: true,
 					// scrollX: true,
-					scrollY: "300px",
+					scrollY: "400px",
 					ajax: {
 						url: "{{route('leaves.getData')}}",
 					  	type: 'GET',

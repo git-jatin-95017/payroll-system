@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\EmployeeProfile;
 use App\Models\PaymentDetail;
+use App\Models\Payhead;
 use Illuminate\Support\Facades\DB;
 // use DataTables;
 // use Yajra\DataTables\Html\Builder;
@@ -37,7 +38,8 @@ class EmployeeController extends Controller
 	 */
 	public function index(Request $request)
 	{		
-		return view('client.employee.index');
+		$payheadList = Payhead::get();
+		return view('client.employee.index', compact('payheadList'));
 	}
 
 	public function getData(Request $request)
@@ -131,7 +133,7 @@ class EmployeeController extends Controller
 		$data = $request->all();
 
 		$request->validate([
-			'emp_code' => 'required|max:255',		
+			// 'emp_code' => 'required|max:255',		
 			'first_name' => ['required'],
 			'last_name' => ['required'],
 			'marital_status' => ['required'],
@@ -160,7 +162,7 @@ class EmployeeController extends Controller
 			'account_number' => ['required_if:payment_method,==,deposit'],
 			'account_type' => ['required_if:payment_method,==,deposit']
 		],[],[
-			'emp_code' => 'Employee ID number',
+			// 'emp_code' => 'Employee ID number',
 			'doj' => 'Start Date',
 			'pay_rate' => 'amount'
 		]);
@@ -171,7 +173,7 @@ class EmployeeController extends Controller
 			'phone_number' => $data['phone_number'],
 			'password' => Hash::make($data['password']),
 			'role_id' => 3,
-			'user_code' => $request->emp_code,
+			'user_code' => strtoupper(uniqid()), //$request->emp_code,
 			'is_proifle_edit_access' => $request->is_proifle_edit_access,
 		]);		
 
@@ -260,7 +262,7 @@ class EmployeeController extends Controller
 		$data = $request->all();
 
 		$request->validate([
-			'emp_code' => 'required|max:255',		
+			// 'emp_code' => 'required|max:255',		
 			'first_name' => ['required'],
 			'last_name' => ['required'],
 			'marital_status' => ['required'],

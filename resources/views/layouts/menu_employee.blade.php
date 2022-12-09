@@ -10,18 +10,12 @@
 			<a href="{{ route('my-leaves.index') }}">
 				<i class="mdi mdi-rocket"></i>
 				<span class="hide-menu">
-					Leaves
+					My Leaves
 				</span>
 			</a>		
 		</li>
 		<li> 
-        	<a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
-             	<i class="mdi mdi-account-off"></i>
-            	<span class="hide-menu">Holidays </span>
-             </a>
-            <ul aria-expanded="false" class="collapse ">
-            	<li><a href="{{ route('holidays.index') }}"> List Of Holidays </a></li>
-            </ul>
+        	<a href="{{ route('holidays.index') }}"><i class="mdi mdi-account-off"></i> Holidays </a>            
     	</li>
 
 	@endif

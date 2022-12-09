@@ -33,92 +33,63 @@
         </ol>
     </div>
 </div>
-
-
-	<section class="content">
-		<div class="container-fluid">
-			@if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="m-0">
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
-			@if (session('message'))
-				<div class="row">
-					<div class="col-md-12">
-						<div class="alert alert-success alert-dismissible">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-							{{ session('message') }}
-						</div>
+<section class="content">
+	<div class="container-fluid">
+		@if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="m-0">
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+		@if (session('message'))
+			<div class="row">
+				<div class="col-md-12">
+					<div class="alert alert-success alert-dismissible">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+						{{ session('message') }}
 					</div>
-				</div>
-			@elseif (session('error'))
-				<div class="row">
-					<div class="col-md-12">
-						<div class="alert alert-danger alert-dismissible">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-							{{ session('error') }}
-						</div>
-					</div>
-				</div>
-			@endif
-			<div class="row">            	
-				<div class="col-sm-4">
-					<div class="card">
-						<div class="card-header">
-							<h3 class="card-title">Location</h3>
-						</div>
-						<form class="form-horizontal" method="POST" action="{{ route('department.store') }}">
-							@csrf
-							<div class="card-body">								
-								<div class="form-group">
-									<label for="dep_name" class="col-md-8 control-label">Name</label>
-									<div class="col-md-12">
-										<input id="dep_name" type="text" class="form-control {{ $errors->has('dep_name') ? ' is-invalid' : '' }}" name="dep_name" value="{{ old('dep_name', '') }}">
-
-										@if ($errors->has('dep_name'))
-											<span class="text-danger">
-												{{ $errors->first('dep_name') }}
-											</span>
-										@endif
-									</div>
-								</div>								
-							</div>
-							<div class="card-footer">
-								<button type="submit" class="btn btn-primary">Save</button>
-							</div>
-						</form>
-					</div>
-				</div>		
-				<div class="col-8">					
-					<div class="card">
-						<div class="card-header">
-							<h3 class="card-title">Locations</h3>
-							<div class="card-tools">
-								<div class="input-group input-group-sm">
-									<!-- <a href="{{ route('department.create' )}}" class="btn btn-primary">Add New</a> -->
-								</div>
-							</div>
-						</div>					
-						<div class="card-body">							
-							<table class="table table-bordered table-hover wrap" id="dataTableBuilder">
-								<thead>
-									<tr>										
-										<th>ID</th>
-										<th>Name</th>										
-										<th>Action</th>								
-									</tr>
-								</thead>
-							</table>
-						</div>
-					  </div>
 				</div>
 			</div>
-		</div>		
-	</section>    
+		@elseif (session('error'))
+			<div class="row">
+				<div class="col-md-12">
+					<div class="alert alert-danger alert-dismissible">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+						{{ session('error') }}
+					</div>
+				</div>
+			</div>
+		@endif
+		<div class="row">            					
+			<div class="col-12">					
+				<div class="card">
+					<div class="card-header d-flex justify-content-between">
+						<h3 class="card-title">List of Locations</h3>
+						<div class="card-tools">
+							<div class="input-group input-group-sm">
+								<a href="{{ route('department.create' )}}" class="btn btn-primary">Add New</a>
+							</div>
+						</div>
+					</div>					
+					<div class="card-body">							
+						<table class="table table-bordered table-hover wrap" id="dataTableBuilder">
+							<thead>
+								<tr>										
+									<th>ID</th>
+									<th>LOCATION NAME</th>										
+									<th>ACTION</th>								
+								</tr>
+							</thead>
+						</table>
+					</div>
+				  </div>
+			</div>
+		</div>
+	</div>		
+</section>    
 @endsection
 @push('page_css')
 	<link rel="stylesheet" href="{{ asset('js/datepicker/datepicker3.css') }}">

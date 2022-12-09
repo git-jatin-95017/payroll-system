@@ -13,7 +13,7 @@
     <div class="col-md-5 align-self-center">
         <h3 class="text-themecolor">
             <i class="fa fa-braille" style="color:#1976d2"></i>
-            List Of Employees
+            Employees
         </h3>
     </div>
 
@@ -97,7 +97,48 @@
 				</div>
 			</div>
 		</div>
-	</section>    
+	</section>
+	<div class="modal fade" id="ManageModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-lg modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title text-center">Add Payheads to Employee</h4>
+					</div>
+					<form method="post" role="form" data-toggle="validator" id="assign-payhead-form">
+						@csrf
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-sm-6">
+									<label for="all_payheads">List of Pay Heads</label>
+									<button type="button" id="selectHeads" class="btn btn-success btn-xs pull-right"><i class="fa fa-arrow-circle-right"></i></button>
+									<select class="form-control" id="all_payheads" name="all_payheads[]" multiple size="10">
+										@foreach($payheadList as $k => $v)
+											<option value="{{$v->id}}" class="{{$v->pay_type=='earnings'?'text-success':'text-danger'}}">{{$v->name}}</option>
+										@endforeach
+									</select>
+								</div>
+								<div class="col-sm-6">
+									<label for="selected_payheads">Selected Pay Heads</label>
+									<button type="button" id="removeHeads" class="btn btn-danger btn-xs pull-right"><i class="fa fa-arrow-circle-left"></i></button>
+									<select class="form-control" id="selected_payheads" name="selected_payheads[]" data-error="Pay Heads is required" multiple size="10" required></select>
+								</div>
+								<!-- <div class="col-sm-4">
+									<label for="selected_payamount">Enter Payhead Amount</label>
+									<div id="selected_payamount"></div>
+								</div> -->
+							</div>
+						</div>
+						<div class="modal-footer">
+							<input type="hidden" name="empcode" id="empcode" />
+							<button type="submit" name="submit" class="btn btn-primary">Add Pay Heads to Employee</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>    
 @endsection
 
 @push('page_scripts')
@@ -107,6 +148,91 @@
 	<script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
 	<script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
 	<script>
+	/* Assign Payhead to Employee Form Submit Script Start */
+    if ( $('#assign-payhead-form').length > 0 ) {
+        $('#assign-payhead-form').on('submit', function(e) {
+            e.preventDefault();
+
+            var form = $(this);
+            $.ajax({
+                type     : "POST",
+                dataType : "json",
+                async    : true,
+                cache    : false,
+                url      : "{{ route('assign.payhead') }}",
+                data     : form.serialize(),
+                success  : function(result) {
+                    if ( result.code == 0 ) {
+                    	$('#ManageModal').modal('hide');
+                        $.notify({
+                            icon: 'glyphicon glyphicon-ok-circle',
+                            message: result.result,
+                        },{
+                            allow_dismiss: false,
+                            type: "success",
+                            placement: {
+                                from: "top",
+                                align: "right"
+                            },
+                            z_index: 9999,
+                        });                        
+                    } else {
+                        $.notify({
+                            icon: 'glyphicon glyphicon-remove-circle',
+                            message: result.result,
+                        },{
+                            allow_dismiss: false,
+                            type: "danger",
+                            placement: {
+                                from: "top",
+                                align: "right"
+                            },
+                            z_index: 9999,
+                        });
+                    }
+                }
+            });
+        });
+    }
+    /* End of Script */
+
+		function moveItems(origin, dest) {
+		    $(origin).find(':selected').appendTo(dest);
+		}
+		 /* Add Payhead To Employee Script Start */
+        $(document).on('click', '#selectHeads', function() {
+            $('#all_payheads').find(':selected').each(function() {
+                var val = $(this).val();
+                var name = $(this).text();
+                $('#selected_payamount').append($("<input />")
+                    .attr({
+                        "type": "text",
+                        "name": "pay_amounts[" + val + "]",
+                        "id": "pay_amounts_" + val,
+                        "placeholder": name
+                    })
+                    .addClass('form-control')
+                );
+            });
+            moveItems('#all_payheads', '#selected_payheads');
+        });
+
+        /* Manage Modal Close Script Start */
+		    if ( $('#ManageModal').length > 0 ) {
+		        $('#ManageModal').on('hidden.bs.modal', function () {
+		            $("#empcode").val('');
+		            $('#selected_payheads').html('');
+		        });
+		    }
+		/* End of Script */
+        $(document).on('click', '#removeHeads', function() {
+            $('#selected_payheads').find(':selected').each(function() {
+                var val = $(this).val();
+                $('#pay_amounts_' + val).remove();
+            });
+            moveItems('#selected_payheads', '#all_payheads');
+        });
+        /* End of Script */
 		$('#delete-all').on('click', function (e) { 
 			e.preventDefault();		     
 			// Confirm alert
@@ -234,7 +360,7 @@
 			                	destrRoute = destrRoute.replace(':id', row.id);
 			                	var action = `<div class="table-actions">`;
 
-			                	action += "<a href=" + viewRoute + " class='btn btn-sm text-info'><i class='fas fa-eye'></i></a>";
+			                	action += "<a href='javascript:void(0);' data-toggle='modal' data-target='#ManageModal' class='btn btn-sm text-info' onclick='updateEmpCode("+row.id+")'><i class='fas fa-eye'></i></a>";
 
 			                	action += " <a href=" + editRoute + " class='btn btn-sm text-info'><i class='fas fa-pen'></i></a>";
 
@@ -250,8 +376,54 @@
         			// fixedHeader: true,
 			       
 			  	});
-		   });
-		 
+		   	});
+		 	
+		 	function jsUcfirst(string) {
+			    return string.charAt(0).toUpperCase() + string.slice(1);
+			}
+
+		 	function updateEmpCode(empId) {
+		 		$(document).find('#empcode').val(empId);
+		 		$.ajax({
+	                type     : "GET",
+	                dataType : "json",
+	                async    : true,
+	                cache    : false,
+	                url      : "{{ route('assigned.payhead') }}",
+	                data     : 'emp_code=' + empId,
+	                success  : function(result) {
+	                    $('#selected_payheads').html('');
+	                    console.log(result.result,result.code);
+	                    if ( result.code == 0 ) {
+	                        for ( var i in result.result ) {
+	                            $('#selected_payheads').append($("<option></option>")
+	                                .attr({
+	                                    "value": result.result[i].payhead_id,
+	                                    "selected": "selected"
+	                                })
+	                                .text(
+	                                    result.result[i].name + ' (' + jsUcfirst(result.result[i].pay_type) + ')'
+	                                )
+	                                .addClass((result.result[i].pay_type=='earnings'?'text-success':'text-danger'))
+	                            );
+	                            /*s
+	                            $('#selected_payamount').append($("<input />")
+	                                .attr({
+	                                    "type": "text",
+	                                    "name": "pay_amounts[" + result.result[i].payhead_id + "]",
+	                                    "id": "pay_amounts_" + result.result[i].payhead_id,
+	                                    "placeholder": result.result[i].name,
+	                                    "value": result.result[i].default_salary
+	                                })
+	                                .addClass('form-control')
+	                            );
+	                            */
+	                        }
+	                    }
+	                }
+	            });
+		 	}
+
 		  	$('#btnFiterSubmitSearch').click(function(){
 				$('#dataTableBuilder').DataTable().draw(true);
 		  	});

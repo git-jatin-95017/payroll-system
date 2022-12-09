@@ -5,6 +5,7 @@ namespace App\Http\Controllers\client;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Payhead;
+use App\Models\Paystructure;
 // use DataTables;
 // use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\Hash;
@@ -148,6 +149,73 @@ class PayheadController extends Controller
 			 $trash = $this->permanentDelete($id);
 
 			return response()->json(['status'=>true, 'message'=>"Payhead deleted successfully."]);
+		}
+	}
+
+	public function assign(Request $request) {
+		if (request()->ajax()) {
+			$result = array();
+			$requestData =$request->all();
+
+			$payheads = $requestData['selected_payheads'];
+			// $default_salary = $requestData['pay_amounts'];
+			$emp_code = $requestData['empcode'];
+			
+			$checkSQL = Paystructure::where('user_id', $emp_code);
+			// if ( $checkSQL->count()  > 0) {
+				if ( !empty($payheads) && !empty($emp_code) ) {
+					if ( $checkSQL->count() == 0 ) {
+						foreach ( $payheads as $payhead ) {
+							Paystructure::create([
+								'user_id' => $emp_code,
+								'payhead_id' => $payhead,
+								'default_salary' => 0
+							]);
+						}
+						$result['result'] = 'Payheads are successfully assigned to employee.';
+						$result['code'] = 0;
+					} else {
+						Paystructure::where('user_id', $emp_code)->delete();						
+						foreach ( $payheads as $payhead ) {
+							Paystructure::create([
+								'user_id' => $emp_code,
+								'payhead_id' => $payhead,
+								'default_salary' => 0
+							]);
+						}
+						$result['result'] = 'Payheads are successfully re-assigned to employee.';
+						$result['code'] = 0;
+					}
+				} else {
+					$result['result'] = 'Please select payheads and employee to assign.';
+					$result['code'] = 2;
+				}
+			// } else {
+				// $result['result'] = 'Something went wrong, please try again.';
+				// $result['code'] = 1;
+			// }
+
+			return response()->json($result);
+		}
+	}
+
+	public function assignedPayhead(Request $request) {
+		if (request()->ajax()) {
+			$result = array();
+			$requestData =$request->all();
+
+			$emp_code = $requestData['emp_code'];
+			
+			$result = Paystructure::
+				join('payheads', function($join) {
+	            	$join->on('payheads.id', '=', 'paystructures.payhead_id');
+	           	})
+	           	->where('user_id', $emp_code)->get();
+
+			return response()->json([
+				'result' => $result,
+				'code' => 0
+			]);
 		}
 	}
 }

@@ -82,7 +82,7 @@
 											</div>
 										</div>
 										<div class="form-row mb-3">
-											<div class="col-md-4">
+											<!-- <div class="col-md-4">
 												<label for="name">Employee ID number</label>
 												<input id="emp_code" type="text" class="form-control {{ $errors->has('emp_code') ? ' is-invalid' : '' }}" name="emp_code" value="{{ old('emp_code', '') }}">
 
@@ -91,7 +91,7 @@
 														{{ $errors->first('emp_code') }}
 													</span>
 												@endif
-											</div>
+											</div> -->
 											<div class="col-md-4">
 												<label for="name">First Name</label>
 												<input id="first_name" type="text" class="form-control {{ $errors->has('first_name') ? ' is-invalid' : '' }}" name="first_name" value="{{ old('first_name', '') }}">
@@ -111,7 +111,17 @@
 														{{ $errors->first('last_name') }}
 													</span>
 												@endif
-											</div>							
+											</div>	
+											<div class="col-md-4">
+												<label for="name" >Phone Number</label>
+												<input id="phone_number" type="text" class="form-control {{ $errors->has('phone_number') ? ' is-invalid' : '' }}" name="phone_number" value="{{ old('phone_number', '') }}">
+
+												@if ($errors->has('phone_number'))
+													<span class="text-danger">
+														{{ $errors->first('phone_number') }}
+													</span>
+												@endif
+											</div>						
 										</div>
 										<div class="form-row mb-3">
 											<div class="col-md-4">
@@ -195,19 +205,7 @@
 													</span>
 												@endif
 											</div>
-										</div>
-										<div class="form-row mb-3">
-											<div class="col-md-4">
-												<label for="name" >Phone Number</label>
-												<input id="phone_number" type="text" class="form-control {{ $errors->has('phone_number') ? ' is-invalid' : '' }}" name="phone_number" value="{{ old('phone_number', '') }}">
-
-												@if ($errors->has('phone_number'))
-													<span class="text-danger">
-														{{ $errors->first('phone_number') }}
-													</span>
-												@endif
-											</div>								
-										</div>
+										</div>										
 										<div class="form-row mb-3">
 											<div class="col-md-12">
 												<label for="name" >Address</label>
@@ -259,7 +257,7 @@
 												@endif
 											</div>										
 										</div>
-										<div class="form-row mb-3">
+										<!-- <div class="form-row mb-3">
 												<div class="col-md-4">
 													<label for="name" >Bank Name</label>
 													<input id="bank_name" type="text" class="form-control {{ $errors->has('bank_name') ? ' is-invalid' : '' }}" name="bank_name" value="{{ old('bank_name', '') }}">
@@ -289,7 +287,7 @@
 														</span>
 													@endif
 												</div>									
-											</div>
+											</div> -->
 											<div class="form-row mb-3">
 												<div class="col-md-4">
 													<label for="name">Employee Status</label>
@@ -499,6 +497,7 @@
 					</div>
 					<div class="card-footer">
 						<button type="submit" class="btn btn-primary">Submit</button>
+						<a href="{{ route('employee.index' )}}" class="btn btn-info">Back</a>
 					</div>
 					</form>
 				</div>
