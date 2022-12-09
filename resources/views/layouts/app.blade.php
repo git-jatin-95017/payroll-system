@@ -12,7 +12,7 @@
 			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 			<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;1,200;1,300;1,400;1,600&display=swap" rel="stylesheet">
 
-	
+
 			<link href="{{ asset('css/payrollCss/bootstrap.min.css') }}" rel="stylesheet">
     <!-- morris CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/2.0.46/css/materialdesignicons.min.css" rel="stylesheet">
@@ -21,7 +21,7 @@
 	<link href=" {{ asset('css/payrollCss/bootstrap-material-datetimepicker.css') }}" rel="stylesheet">
     <link href=" {{ asset('css/payrollCss/style.css') }}" rel="stylesheet">
 	<link href=" {{ asset('css/payrollCss/print.css') }}" rel="stylesheet">
-    
+
     <!-- You can change the theme colors from here -->
     <!-- <link href="css/colors/blue.css" id="theme" rel="stylesheet"> -->
 	<link href=" {{ asset('css/payrollCss/select2.min.css') }}" rel="stylesheet">
@@ -49,13 +49,13 @@
                     <ul class="navbar-nav mr-auto mt-md-0">
                         <!-- This is  -->
                         <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="mdi mdi-menu"></i></a> </li>
-                        <li class="nav-item m-l-10"> 
+                        <li class="nav-item m-l-10">
                             <a class="nav-link sidebartoggler hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="ti-menu"></i></a> </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-muted text-muted waves-effect waves-dark" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-bell"></i>
-                                <div class="notify"> 
+                                <div class="notify">
 								<span class="heartbit">
-								</span> <span class="point"></span> 
+								</span> <span class="point"></span>
 							</div>
                             </a>
                             <div class="dropdown-menu mailbox scale-up-left">
@@ -74,9 +74,9 @@
                                         </div>
                                     </li>
                                     <li>
-                                        <a class="nav-link text-center" href="javascript:void(0);"> 
-											<strong>Check all notifications</strong> 
-											<i class="fa fa-angle-right"></i> 
+                                        <a class="nav-link text-center" href="javascript:void(0);">
+											<strong>Check all notifications</strong>
+											<i class="fa fa-angle-right"></i>
 										</a>
                                     </li>
                                 </ul>
