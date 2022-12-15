@@ -21,4 +21,8 @@ class Leave extends Model
 	 */
 	protected $guarded = [];
 	
+	public function leaveType() {
+        return $this->belongsTo(LeaveType::class, 'type_id');
+    }
+
 }

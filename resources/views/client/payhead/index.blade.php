@@ -80,11 +80,11 @@
 							<table class="table table-bordered table-hover wrap" id="dataTableBuilder">
 								<thead>
 									<tr>										
-										<th>ID</th>
-										<th>HEAD NAME</th>										
-										<th>HEAD DESCRIPTION</th>										
-										<th>HEAD TYPE</th>										
-										<th>ACTION</th>								
+										<th>Id</th>
+										<th>Head Name</th>										
+										<th>Head Description</th>										
+										<th>Head Type</th>										
+										<th>Action</th>								
 									</tr>
 								</thead>
 							</table>

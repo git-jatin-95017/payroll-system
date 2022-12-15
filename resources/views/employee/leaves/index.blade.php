@@ -85,19 +85,20 @@
 							<table class="table table-bordered table-hover wrap" id="dataTableBuilder">
 								<thead>
 									<tr>										
-										<th>ID</th>
-										<th>LEAVE</th>
-										<th>SUBJECT</th>
-										<th>START DATE</th>
-										<th>END DATE</th>
-										<th>MESSAGE</th>										
-										<th>TYPE</th>										
-										<th>STATUS</th>								
+										<th>Id</th>
+										<th>Leave</th>
+										<th>Subject</th>
+										<th>Start Date</th>
+										<th>End Date</th>
+										<th>Message</th>										
+										<th>Type</th>										
+										<th>Status</th>								
+										<th>Action</th>								
 									</tr>
 								</thead>
 							</table>
 						</div>
-					  </div>
+					 </div>
 				</div>
 			</div>
 		</div>		
@@ -308,6 +309,19 @@
 			                	}	
 
 			                	return html;
+			                }
+			            },
+			            {
+			                data: 'actions',
+			                orderable : false,
+			                searchable : false,
+			                render: function(data, type, row, meta) {
+			                	
+			                	var id = row.id;
+			                
+			                	var action = ``;
+			                		action += `<a href="/employee/my-leaves/${id}/edit" class="btn btn-sm btn-info" style="color:#fff;">Edit</a>`;
+			                	return action;
 			                }
 			            }
 			        ],

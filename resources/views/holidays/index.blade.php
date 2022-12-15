@@ -100,13 +100,13 @@
 										<!-- <th><input type="checkbox" class='checkall' id='checkall'>
 											<input type="button" class="btn btn-sm btn-danger" id='delete_record' value='Delete' >
 										</th> -->
-										<th>HOLIDAY ID</th>
-										<th>HOLIDAY TITLE</th>
-										<th>HOLIDAY DESCRIPTION</th>
-										<th>HOLIDAY DATE</th>										
-										<th>HOLIDAY TYPE</th>	
+										<th>Holiday Id</th>
+										<th>Holiday Title</th>
+										<th>Holiday Description</th>
+										<th>Holiday Date</th>										
+										<th>Holiday Type</th>	
 										@if(auth()->user()->role_id == 1)
-										<th>ACTION</th>			
+										<th>Action</th>			
 										@endif							
 									</tr>
 								</thead>

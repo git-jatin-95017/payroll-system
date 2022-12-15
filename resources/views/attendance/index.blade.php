@@ -56,14 +56,14 @@
 							<table class="table table-bordered table-hover nowrap" id="dataTableBuilder">
 								<thead>
 									<tr>
-										<th>DATE</th>
-										<th>EMP CODE</th>
-										<th>NAME</th>
-										<th>PUNCH-IN</th>
-										<th>PUNCH-IN MESSAGE</th>
-										<th>PUNCH-OUT</th>
-										<th>PUNCH-OUT MESSAGE</th>
-										<th>WORK HOURS</th>
+										<th>Date</th>
+										<th>Emp Code</th>
+										<th>Name</th>
+										<th>Punch-In</th>
+										<th>Punch-In Message</th>
+										<th>Punch-Out</th>
+										<th>Punch-Out Message</th>
+										<th>Work Hours</th>
 									</tr>
 								</thead>
 							</table>

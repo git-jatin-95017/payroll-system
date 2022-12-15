@@ -76,10 +76,10 @@
 						<table class="table table-bordered table-hover wrap" id="dataTableBuilder">
 							<thead>
 								<tr>										
-									<th>ID</th>
-									<th>LEAVE TYPE</th>										
-									<th>NO. OF DAYS</th>										
-									<th>ACTION</th>								
+									<th>Id</th>
+									<th>Leave Type</th>										
+									<th>No. of days</th>										
+									<th>Action</th>								
 								</tr>
 							</thead>
 						</table>

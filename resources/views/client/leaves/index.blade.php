@@ -76,15 +76,15 @@
 							<table class="table table-bordered table-hover wrap" id="dataTableBuilder">
 								<thead>
 									<tr>										
-										<th>ID</th>
-										<th>EMP CODE</th>
-										<th>SUBJECT</th>
-										<th>START DATE</th>
-										<th>END DATE</th>
-										<th>MESSAGE</th>										
-										<th>TYPE</th>										
-										<th>STATUS</th>								
-										<th>ACTION</th>								
+										<th>Id</th>
+										<th>Emp Code</th>
+										<th>Subject</th>
+										<th>Start Date</th>
+										<th>End Date</th>
+										<th>Message</th>										
+										<th>Type</th>										
+										<th>Status</th>								
+										<th>Action</th>								
 									</tr>
 								</thead>
 							</table>

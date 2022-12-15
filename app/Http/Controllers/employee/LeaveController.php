@@ -55,8 +55,8 @@ class LeaveController extends Controller
             $folder = date('Y-m-d', strtotime($request->filter_date));
 
             // Total records
-            $totalRecords = Leave::select('count(*) as allcount')->count();
-            $totalRecordswithFilter = Leave::select('count(*) as allcount')->count();
+            $totalRecords = Leave::select('count(*) as allcount')->where('leaves.user_id', auth()->user()->id)->count();
+            $totalRecordswithFilter = Leave::select('count(*) as allcount')->where('leaves.user_id', auth()->user()->id)->count();
 
             // Get records, also we have included search filter as well
             $records = Leave::orderBy($columnName, $columnSortOrder)                
@@ -68,16 +68,21 @@ class LeaveController extends Controller
 	            })
 	            ->join('leave_types', function($join) {
 	                $join->on('leave_types.id', '=', 'leaves.type_id');
-	            })                  
-                ->orWhere('users.user_code', 'like', '%' . $searchValue . '%')
-                ->orWhere('leaves.leave_subject', 'like', '%' . $searchValue . '%')
-                ->orWhere('leaves.leave_message', 'like', '%' . $searchValue . '%')
-                ->orWhere('leaves.leave_type', 'like', '%' . $searchValue . '%')
-                ->orWhere('leaves.leave_status', 'like', '%' . $searchValue . '%')
-                ->orWhere('leaves.apply_date', 'like', '%' . $searchValue . '%')
-                ->orWhere('leave_types.name', 'like', '%' . $searchValue . '%')
-                ->orWhere('leaves.start_date', 'like', '%' . $searchValue . '%')
-                ->orWhere('leaves.end_date', 'like', '%' . $searchValue . '%')
+	            })
+	            ->where(function ($query) use($searchValue) {
+				    $query->where('users.user_code', 'like', '%' . $searchValue . '%')
+			                ->orWhere('leaves.leave_subject', 'like', '%' . $searchValue . '%')
+			                ->orWhere('leaves.leave_message', 'like', '%' . $searchValue . '%')
+			                ->orWhere('leaves.leave_type', 'like', '%' . $searchValue . '%')
+			                ->orWhere('leaves.leave_status', 'like', '%' . $searchValue . '%')
+			                ->orWhere('leaves.apply_date', 'like', '%' . $searchValue . '%')
+			                ->orWhere('leave_types.name', 'like', '%' . $searchValue . '%')
+			                ->orWhere('leaves.start_date', 'like', '%' . $searchValue . '%')
+			                ->orWhere('leaves.end_date', 'like', '%' . $searchValue . '%');
+				})
+				->where(function ($query) {
+				    $query->where('leaves.user_id', auth()->user()->id);
+				})                  
                 ->select(
                     'leaves.id',
                     'users.user_code',                   
@@ -226,30 +231,73 @@ class LeaveController extends Controller
 		return view('employee.leaves.show', compact('leave'));
 	}
 
-	public function edit(Leave $leave)
+	public function edit($id)
 	{
-	   return view('holidays.edit', compact('leave'));
+		$leave = Leave::where('user_id', auth()->user()->id)->find($id);
+
+		$leavetypes = LeaveType::where('status', 1)->get();
+
+	   	return view('employee.leaves.edit', compact('leave', 'leavetypes'));
 	}
 
-	public function update(Request $request, Leave $leave)
+	public function update(Request $request, $id)
 	{
 		$data = $request->all();
 
+		$leave = Leave::where('user_id', auth()->user()->id)->find($id);
+		
 		$request->validate([
-			'title' => 'required|max:255',		
-			'description' => ['required', 'max:500'],
-			'holiday_date' => ['required', 'date'],
-			'type' => ['required']
+			'leave_subject' => 'required|max:255',		
+			'typeid' => ['required'],
+			'type' => ['required'],
+			'startdate' => ['required', 'date'],
+			'leave_message' => ['required'],
+			// 'leave_type' => ['required'],
+			// 'hourAmount' => ['required'],
+		],[],[
+			'typeid' => 'leave type',
+			'type' => 'leave duration',
+			'leave_message' => 'reason'
 		]);
+		
+        $typeid       = $data['typeid'];
+        $applydate    = date('Y-m-d');
+        $appstartdate = $data['startdate'];
+        $appenddate   = $data['enddate'];
+        $hourAmount   = $data['hourAmount'];
+        // $reason       = $data['reason'];
+        $type         = $data['type'];
+        // $duration     = $this->input->post('duration');
 
-		$holiday->update([
-			'title' => $data['title'],
-			'description' => $data['description'],
-			'holiday_date' => $data['holiday_date'],
-			'type' => $data['type']
-		]);		
-	
-		return redirect()->route('holidays.index')->with('message', 'Holiday updated successfully.');	
+        if($type == 'Half Day') {
+            $duration = $hourAmount;
+        } else if($type == 'Full Day') { 
+            $duration = 8;
+        } else { 
+            $formattedStart = new \DateTime($appstartdate);
+            $formattedEnd = new \DateTime($appenddate);
+
+            $duration = $formattedStart->diff($formattedEnd)->format("%d");
+            $duration = $duration * 8;
+        }
+
+        $postData = [
+        	'user_id' => auth()->user()->id,
+        	'leave_subject' => $data['leave_subject'],
+        	'leave_message' => $data['leave_message'],
+            'type_id' => $typeid,
+            'apply_date' => $applydate,
+            'start_date' => $appstartdate,
+            'end_date' => $appenddate,
+            // 'reason' => $reason,
+            'leave_type' => $type,
+            'leave_duration' => $duration,
+            'leave_status' => 'pending',
+        ];
+		
+		$leave->update($postData);	
+
+		return redirect()->route('my-leaves.index')->with('message', 'Leave updated successfully.');	
 	}   
 
 	protected function permanentDelete($id){

@@ -79,16 +79,16 @@
 										<!-- <th><input type="checkbox" class='checkall' id='checkall'>
 											<input type="button" class="btn btn-sm btn-danger" id='delete_record' value='Delete' >
 										</th> -->
-										<th>ID</th>
-										<th>IMAGE</th>
-										<th>NAME</th>
-										<th>CONTACT</th>										
-										<th>SOCIAL SECURITY</th>										
-										<th>MEDICAL BENEFITS</th>										
-										<th>START DATE</th>										
-										<th>POSITION</th>										
-										<th>PAY RATE</th>										
-										<th>ACTION</th>										
+										<th>Id</th>
+										<th>Image</th>
+										<th>Name</th>
+										<th>Contact</th>										
+										<th>Social Security</th>										
+										<th>Medical Benefit</th>										
+										<th>Start Date</th>										
+										<th>Position</th>										
+										<th>Pay Rate</th>										
+										<th>Action</th>										
 									</tr>
 								</thead>
 							</table>

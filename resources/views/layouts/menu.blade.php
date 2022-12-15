@@ -103,15 +103,15 @@
 			</a>
 			<ul aria-expanded="false" class="collapse ">
 				<li>
-					<a href="#">
-						<span class="hide-menu">List</span>
-					</a>
-				</li>
-				<li>
 					<a href="{{ route('payroll.create') }}">
 						<span class="hide-menu">
 							Time Card
 						 </span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<span class="hide-menu">List</span>
 					</a>
 				</li>
 			</ul>

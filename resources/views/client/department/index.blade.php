@@ -78,9 +78,9 @@
 						<table class="table table-bordered table-hover wrap" id="dataTableBuilder">
 							<thead>
 								<tr>										
-									<th>ID</th>
-									<th>LOCATION NAME</th>										
-									<th>ACTION</th>								
+									<th>Id</th>
+									<th>Location Name</th>										
+									<th>Action</th>								
 								</tr>
 							</thead>
 						</table>
