@@ -10262,6 +10262,8 @@ body.mini-sidebar footer.main-footer{
     font-size: 14px;
     font-weight: 400;
     color: #607d8b;
+    padding-top:20px;
+    padding-bottom:20px;
 }
 
 tr.ts-date-row,
@@ -10308,4 +10310,52 @@ tr.ts-data-row {
 .ts-prev-btn,
 .ts-next-btn{
  color: #252525;
+}
+
+.custom-ts-tabs {
+    border-bottom: none !important;
+}
+.custom-ts-tabs button.nav-link {
+    border-bottom: 2px solid transparent;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+    border: none;
+    cursor:pointer;
+}
+.custom-ts-tabs button.nav-link.active {
+    border-bottom: 2px solid #00a4ff;
+    color: #00a4ff;
+    font-weight: 500;
+}
+
+.custom-ts-tabs button.nav-link:focus{
+    outline:none !important;
+}
+select.form-control.custom-ts-select {
+    background-color: transparent;
+    border: none;
+    color: #252525;
+    font-size: 14px;
+    font-weight: 600;
+}
+p.custom-search-ts {
+    background: transparent;
+    padding: 0 12px;
+}
+p.custom-search-ts svg {
+    position: relative;
+    top: 5px;
+}
+p.custom-search-ts input {
+    background-color: transparent;
+    border: none;
+    padding-left: 3px;
+    font-size: 14px;
+    text-transform: capitalize;
+    font-weight: 500;
+}
+
+p.custom-search-ts input:focus {
+    background-color: transparent;
+    border-bottom: 1px solid #d8d8d8;
 }
