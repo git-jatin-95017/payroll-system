@@ -96,10 +96,13 @@ class AttendanceController extends Controller
                 $nestedData['punchout'] = isset($times[1]) ? date('h:i:s A', strtotime($times[1])) : '';
                 $nestedData['punchout_message'] = isset($descs[1]) ? $descs[1] : '';
 
-                $datetime1 = new \DateTime($times[0]);
-                $datetime2 = new \DateTime($times[1]);
-                $interval = $datetime1->diff($datetime2);
+                if (!empty($times[0]) && !empty($times[1])) {            
+                    $datetime1 = new \DateTime($times[0]);
+                    $datetime2 = new \DateTime($times[1]);
+                    $interval = $datetime1->diff($datetime2);
                 $nestedData['work_hrs'] = (isset($times[0]) && isset($times[1])) ? $interval->format('%h') . " Hrs  | " . $interval->format('%i') . " Min" : 0 . "H";
+                }
+
                 $data[] = $nestedData;
             }
             

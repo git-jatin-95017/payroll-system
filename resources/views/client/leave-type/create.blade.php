@@ -97,7 +97,33 @@
 							</div>
 
 							<div class="form-group">
-								<label for="date_after" class="col-md-8 control-label">Applicable After</label>
+								<label for="start_days" class="col-md-8 control-label">Start (after hire date)</label>
+								<div class="col-md-12">
+									<input id="start_days" type="number" min="0" class="form-control {{ $errors->has('start_days') ? ' is-invalid' : '' }}" name="start_days" value="{{ old('start_days', '') }}">
+
+									@if ($errors->has('start_days'))
+										<span class="text-danger">
+											{{ $errors->first('start_days') }}
+										</span>
+									@endif
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="carry_over_amount" class="col-md-8 control-label">Carryover Amount</label>
+								<div class="col-md-12">
+									<input id="carry_over_amount" type="number" min="0" class="form-control {{ $errors->has('carry_over_amount') ? ' is-invalid' : '' }}" name="carry_over_amount" value="{{ old('carry_over_amount', '') }}">
+
+									@if ($errors->has('carry_over_amount'))
+										<span class="text-danger">
+											{{ $errors->first('carry_over_amount') }}
+										</span>
+									@endif
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="date_after" class="col-md-8 control-label">Carryover Date</label>
 								<div class="col-md-12">
 									<input id="date_after" type="date" min="0" class="form-control {{ $errors->has('date_after') ? ' is-invalid' : '' }}" name="date_after" value="{{ old('date_after', '') }}">
 
@@ -108,6 +134,7 @@
 									@endif
 								</div>
 							</div>
+
 
 							<div class="form-group">
 								<label for="status" class="col-md-8 control-label">Status</label>

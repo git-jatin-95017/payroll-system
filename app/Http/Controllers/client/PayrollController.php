@@ -41,14 +41,38 @@ class PayrollController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function create(Request $request)
-	{
+	{		
 		$week = $request->week ?? date('W');
 
 		$year = $request->year ?? date('Y');
 
 		$month = date('F', strtotime($year.'-W'.$week));
 
-		$employees = User::where('role_id', 3)->get();
+		$query = User::select(
+			'users.id',
+			'users.role_id',
+			'users.name',
+			'users.email',
+			'users.user_code',
+			'users.phone_number',
+			'users.status',
+			'employee_profile.first_name',
+			'employee_profile.last_name',
+			'employee_profile.dob',
+			'employee_profile.file',
+			'employee_profile.logo',
+			'employee_profile.user_id',
+		)->leftJoin('employee_profile', function($join) {
+                $join->on('users.id', '=', 'employee_profile.user_id');
+        });
+
+		if(!empty($request->search)) {
+			$searchValue = $request->search;
+			$query->where('employee_profile.first_name', 'like', '%' . $searchValue . '%');
+			$query->orWhere('employee_profile.last_name', 'like', '%' . $searchValue . '%');
+		}
+
+		$employees = $query->where('role_id', 3)->get();
 
 		$tempDatesArr = [];
 
@@ -60,7 +84,7 @@ class PayrollController extends Controller
 			}
 		}
 
-	   	return view('client.payroll.create', compact('employees', 'tempDatesArr', 'week', 'year', 'month'));
+	   	return view('client.payroll.create', compact('employees', 'tempDatesArr', 'week', 'year', 'month', 'request'));
 	}
 
 	public function store(Request $request)

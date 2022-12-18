@@ -82,10 +82,18 @@
 							<div class="card-header">
 								<div class="row">
 									<div class="col-auto">
-										<select class="form-control custom-ts-select">
-											<option>Weekly Timesheet</option>
+										<select name="week_search" class="form-control custom-ts-select" id="myFancyDropdown">
+											<option value="1" @if($request->week ==1) selected @endif>Weekly Timesheet</option>
+											<option value="2" @if($request->week ==2) selected @endif>Bi-Weekly Timesheet</option>
 										</select>
 									</div>
+									<?php
+										if($request->has('week_search') && $request->week_search == 1) {
+											$weekday = 7;
+										} else {
+											$weekday = 13;
+										}
+									?>
 									<div class="col-auto">
 										<div class="d-flex align-items-center">
 											<a class= "d-block mt-2 ts-prev-btn" href="{{ route('payroll.create', ['week' => $week-1]) }}">
@@ -109,8 +117,7 @@
 									</div>
 								</div>
 								</div>
-							<form class="form-horizontal" method="POST" action="{{ route('employee.store') }}" enctype="multipart/form-data">
-								@csrf
+							<form class="form-horizontal" method="GET" action="{{ route('payroll.create') }}" id="fom-timesheet">							
 								<?php
 									// $default_week = date('W');
 									// $week = $default_week; // get week
@@ -122,9 +129,9 @@
 									<table class="table table-bordered ts-custom-table border-0">
 									<thead>
 										<tr class="ts-date-row">
-											<th scope="col" colspan="3"></th>
+											<th scope="col" colspan=""></th>
 												<?php
-												for ($i=1;$i<=13;$i++) {
+												for ($i=1;$i<=$weekday;$i++) {
 												?>
 														<th scope="col">{{ strtoupper(date("D", strtotime("+$i day", strtotime($first_date)))) }}</th>
 												<?php
@@ -133,12 +140,16 @@
 													?>
 										</tr>
 										<tr class="ts-day-row">
-										<th scope="col" colspan="3">
+										<th scope="col" colspan="">
 											<p class="custom-search-ts">
 												<svg class="w-64 h-64" width="20px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
 													<path fill-rule="evenodd" d="M14.53 15.59a8.25 8.25 0 111.06-1.06l5.69 5.69a.75.75 0 11-1.06 1.06l-5.69-5.69zM2.5 9.25a6.75 6.75 0 1111.74 4.547.746.746 0 00-.443.442A6.75 6.75 0 012.5 9.25z"></path>
 												</svg>
-												<input type="text" name="search" class="form-control" placeholder="search">
+												<!-- <form action="#" onsubmit="handle"> -->
+												    <!-- <input type="text" name="txt" /> -->
+													<input type="text" name="search"  onkeypress="handle(event)" value="{{$request->search}}" placeholder="search">
+													<input type="hidden" name="week_search" value="{{$request->week_search ??1}}">
+												<!-- </form> -->
 											</p>
 										</th>
 										<!-- <th scope="col">Start Date</th>
@@ -146,7 +157,7 @@
 										<th scope="col">Pay/h</th> -->
 										<?php
 
-										for ($i=1;$i<=13;$i++) {
+										for ($i=1;$i<=$weekday;$i++) {
 										?>
 											<th scope="col">{{ date("d", strtotime("+$i day", strtotime($first_date))) }}</th>
 									<?php
@@ -172,10 +183,10 @@
 
 											</td>
 
-											<td>{{ !empty($v->employeeProfile) ? $v->employeeProfile->doj : ''}}</td>
-											<td>{{ !empty($v->employeeProfile) ? $v->employeeProfile->pay_rate : 0}}</td>
+											<!-- <td>{{ !empty($v->employeeProfile) ? $v->employeeProfile->doj : ''}}</td> -->
+											<!-- <td>{{ !empty($v->employeeProfile) ? $v->employeeProfile->pay_rate : 0}}</td> -->
 											<?php
-											for ($i=1;$i<=13;$i++) {
+											for ($i=1;$i<=$weekday;$i++) {
 												$dateToday = date("Y-m-d", strtotime("+$i day", strtotime($first_date)));
 												$xcellData = NULL;
 												$result = $tempDatesArr[$v->id];
@@ -210,7 +221,7 @@
 				</div>
 				</div>
 				<div class="tab-pane fade" id="profile" role="tabpanel"aria-labelledby="profile-tab">
-					data here
+					<h3 align="center">This Section is coming soon.</h3>
 				</div>
 			</div>
 			</div>
@@ -218,6 +229,28 @@
 @endsection
 @push('page_scripts')
 <script>
+	function handle(e){
+        if(e.keyCode == 13) {
+            e.preventDefault(); // Ensure it is only this code that runs
+            $('#fom-timesheet').submit();
+            // alert("Enter was pressed was presses");
+        }
+    }
+
+	let elmSelect = document.getElementById('myFancyDropdown');
+
+	if (!!elmSelect) {
+	    elmSelect.addEventListener('change', e => {
+	        let choice = e.target.value;
+	        if (!choice) return;
+
+	        let url = new URL(window.location.href);
+	        url.searchParams.set('week_search', choice);
+	        // console.log(url);
+	        window.location.href = url; // reloads the page
+	    });
+	}
+
     $(document).ready(function() {
         $(".payroll_date_cell").blur(function() {
         	if ($(this).val() != '' || $(this).val() != null) {

@@ -94,6 +94,9 @@ class LeaveTypeController extends Controller
 			'name' => $data['name'],
 			'leave_day' => $data['no_of_day'],
 			'status' => $data['status'],
+			'date_after' => $data['date_after'],
+			'carry_over_amount' => $data['carry_over_amount'],
+			'start_days' => $data['start_days']
 		]);
 		
 		return redirect()->route('leave-type.index')->with('message', 'Leave type added successfully.');	
@@ -120,6 +123,9 @@ class LeaveTypeController extends Controller
 			'name' => $data['name'],
 			'leave_day' => $data['no_of_day'],
 			'status' => $data['status'],
+			'date_after' => $data['date_after'],
+			'carry_over_amount' => $data['carry_over_amount'],
+			'start_days' => $data['start_days']
 		]);
 	
 		return redirect()->route('leave-type.index')->with('message', 'Leave type updated successfully.');	
