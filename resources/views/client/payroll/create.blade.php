@@ -83,8 +83,8 @@
 								<div class="row">
 									<div class="col-auto">
 										<select name="week_search" class="form-control custom-ts-select" id="myFancyDropdown">
-											<option value="1" @if($request->week ==1) selected @endif>Weekly Timesheet</option>
-											<option value="2" @if($request->week ==2) selected @endif>Bi-Weekly Timesheet</option>
+											<option value="1" @if($request->week_search ==1) selected @endif>Weekly Timesheet</option>
+											<option value="2" @if($request->week_search ==2) selected @endif>Bi-Weekly Timesheet</option>
 										</select>
 									</div>
 									<?php

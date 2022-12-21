@@ -103,7 +103,7 @@
 			</a>
 			<ul aria-expanded="false" class="collapse ">
 				<li>
-					<a href="{{ route('payroll.create') }}">
+					<a href="{{ route('payroll.create', ['week_search' => 2]) }}">
 						<span class="hide-menu">
 							Time Card
 						 </span>
