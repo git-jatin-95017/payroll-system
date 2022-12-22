@@ -257,9 +257,10 @@
 			                
 			                	var action = `<div class="table-actions">`;
 			                	if (row.leave_status == 'pending') {
-			                		action += `<a data-href="${id}" data-employeeId="${userid}" data-value="Approve" data-duration="${duration}" data-type="${typeid}" class="btn btn-sm btn-info approve">Approve</a>`;
-			                		action += ` <a data-href="${id}" class="btn btn-sm btn-primary reject">Reject</a>`;
+			                		action += `<a data-href="${id}" data-employeeId="${userid}" data-value="Approve" data-duration="${duration}" data-type="${typeid}" class="btn btn-sm btn-info approve" style="color:#fff;">Approve</a>`;
+			                		action += ` <a data-href="${id}" class="btn btn-sm btn-primary reject" style="color:#fff;">Reject</a>`;
 			                	}
+			                	action += `&nbsp;<a href="/client/edit-leave/${id}" class="btn btn-sm btn-info" style="color:#fff;">Edit</a>`;
 			                	action += `</div>`;
 			                	return action;
 			                }

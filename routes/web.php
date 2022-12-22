@@ -49,6 +49,8 @@ Route::prefix('client')->group(function () {
 	Route::get('employee/getData/', [EmployeeController::class, 'getData'])->name('employee.getData');
 	Route::resource('employee', EmployeeController::class);	
 	Route::get('leaves/getData/', [LeavesController::class, 'getData'])->name('leaves.getData');
+	Route::get('edit-leave/{id}', [LeavesController::class, 'edit']);
+	Route::put('edit-leave/{id}', [LeavesController::class, 'updateLeave'])->name('edit-leave.save');
 	Route::resource('leaves', LeavesController::class);	
 
 	Route::resource('holidays', HolidayController::class);	

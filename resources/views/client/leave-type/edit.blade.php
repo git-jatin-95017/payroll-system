@@ -67,13 +67,14 @@
 					<div class="card-header">
 						<h3 class="card-title">Leave Policies</h3>
 					</div>
-					<form class="form-horizontal" method="POST" action="{{ route('leave-type.store') }}">
+					<form class="form-horizontal" method="POST" action="{{ route('leave-type.update', $leaveType->id) }}">
 						@csrf
+						{{ method_field('PUT') }}
 						<div class="card-body">								
 							<div class="form-group">
 								<label for="name" class="col-md-8 control-label">Leave Type</label>
 								<div class="col-md-12">
-									<input id="name" type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name', '') }}">
+									<input id="name" type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ $leaveType->name }}">
 
 									@if ($errors->has('name'))
 										<span class="text-danger">
@@ -86,7 +87,7 @@
 							<div class="form-group">
 								<label for="no_of_day" class="col-md-8 control-label">Number Of Days</label>
 								<div class="col-md-12">
-									<input id="no_of_day" type="number" min="0" class="form-control {{ $errors->has('no_of_day') ? ' is-invalid' : '' }}" name="no_of_day" value="{{ old('no_of_day', '') }}">
+									<input id="no_of_day" type="number" min="0" class="form-control {{ $errors->has('no_of_day') ? ' is-invalid' : '' }}" name="no_of_day" value="{{ $leaveType->leave_day }}">
 
 									@if ($errors->has('no_of_day'))
 										<span class="text-danger">
@@ -99,7 +100,7 @@
 							<div class="form-group">
 								<label for="start_days" class="col-md-8 control-label">Start (after hire date)</label>
 								<div class="col-md-12">
-									<input id="start_days" type="number" min="0" class="form-control {{ $errors->has('start_days') ? ' is-invalid' : '' }}" name="start_days" value="{{ old('start_days', '') }}">
+									<input id="start_days" type="number" min="0" class="form-control {{ $errors->has('start_days') ? ' is-invalid' : '' }}" name="start_days" value="{{ $leaveType->start_days }}">
 
 									@if ($errors->has('start_days'))
 										<span class="text-danger">
@@ -112,7 +113,7 @@
 							<div class="form-group">
 								<label for="carry_over_amount" class="col-md-8 control-label">Carryover Amount</label>
 								<div class="col-md-12">
-									<input id="carry_over_amount" type="number" min="0" class="form-control {{ $errors->has('carry_over_amount') ? ' is-invalid' : '' }}" name="carry_over_amount" value="{{ old('carry_over_amount', '') }}">
+									<input id="carry_over_amount" type="number" min="0" class="form-control {{ $errors->has('carry_over_amount') ? ' is-invalid' : '' }}" name="carry_over_amount" value="{{ $leaveType->carry_over_amount }}">
 
 									@if ($errors->has('carry_over_amount'))
 										<span class="text-danger">
@@ -128,7 +129,7 @@
 									<?php $year = date('Y')+1; ?>
 									<select class="form-control" name="date_after">
 										<option value="">Please Select</option>
-										<option value="{{ date('Y-12-31') }}">{{ date('31/12/Y') }}</option>
+										<option value="{{ date('Y-12-31') }}" @if($leaveType->date_after == '2022-12-31') selected @endif>{{ date('31/12/Y') }}</option>
 										<option value="{{$year}}-{{ date('-01-01') }}">{{ date('01/01/') }}{{$year}}</option>
 									</select>
 									<!-- <input id="date_after" type="text" readonly class="form-control {{ $errors->has('date_after') ? ' is-invalid' : '' }}" name="date_after" value="{{ date('Y-m-31') }}"> -->
@@ -147,8 +148,8 @@
 								<div class="col-md-12">
 									<select class="form-control" name="status">
 										<option value="">Please Select</option>
-										<option value="1">Active</option>
-										<option value="0">Inactive</option>
+										<option value="1" @if($leaveType->status == 1) selected @endif>Active</option>
+										<option value="0" @if($leaveType->status == 0) selected @endif>Inactive</option>
 									</select>
 
 									@if ($errors->has('status'))

@@ -101,15 +101,18 @@ class DepartmentController extends Controller
 		return view('client.department.show', compact('leave'));
 	}
 
-	public function edit(Department $department)
+	public function edit($id)
 	{
-	   return view('client.department.edit', compact('leave'));
+		$department = Department::findOrFail($id);
+	  	return view('client.department.edit', compact('department'));
 	}
 
-	public function update(Request $request, Department $department)
+	public function update(Request $request, $id)
 	{
 		$data = $request->all();
 
+		$department = Department::findOrFail($id);
+		
 		$request->validate([
 			'dep_name' => 'required|max:255'
 		]);

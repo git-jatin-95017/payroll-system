@@ -103,18 +103,22 @@ class PayheadController extends Controller
 	}
 
 	public function show(Payhead $payhead) {   
-		return view('client.payhead.show', compact('leave'));
+		return view('client.payhead.show', compact('payhead'));
 	}
 
-	public function edit(Payhead $payhead)
+	public function edit($id)
 	{
-	   return view('client.payhead.edit', compact('leave'));
+		$payhead = Payhead::find($id);
+	   	
+	   	return view('client.payhead.edit', compact('payhead'));
 	}
 
-	public function update(Request $request, Payhead $payhead)
+	public function update(Request $request, $id)
 	{
 		$data = $request->all();
 
+		$payhead = Payhead::find($id);
+		
 		$request->validate([
 			'name' => 'required|max:255',
 			'description' => 'required|max:500'

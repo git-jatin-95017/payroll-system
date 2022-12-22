@@ -189,6 +189,7 @@
 			                	var action = `<div class="table-actions">`;
 			                		//action += `<a data-href="/client/pay-head/${id}" class="btn btn-sm btn-info approve"><i class='fas fa-pen'></i></a>`;
 			                		action += ` <a data-href="/client/pay-head/${id}" class="btn btn-sm text-danger delete"><i class='fas fa-trash'></i></a>`;			
+			                		action += ` <a href="/client/pay-head/${id}/edit" class="btn btn-sm btn-info">Edit</a>`;
 			                		action += `</div>`;
 			                	return action;
 			                }

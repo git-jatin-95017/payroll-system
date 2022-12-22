@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Leave;
 use App\Models\AssignLeave;
 use App\Models\EarnedLeave;
+use App\Models\LeaveType;
 // use DataTables;
 // use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\Hash;
@@ -212,4 +213,75 @@ class LeavesController extends Controller
             }        
         }			
 	}
+
+    public function edit($id)
+    {
+        $leave = Leave::find($id);
+
+        $leavetypes = LeaveType::where('status', 1)->get();
+
+        return view('client.leaves.edit', compact('leave', 'leavetypes'));
+    }
+
+    public function updateLeave(Request $request, $id)
+    {
+        $data = $request->all();
+
+        $leave = Leave::find($id);
+
+        // $leave = Leave::where('user_id', $leave)->find($id);
+        
+        $request->validate([
+            'leave_subject' => 'required|max:255',      
+            'typeid' => ['required'],
+            'type' => ['required'],
+            'startdate' => ['required', 'date'],
+            'leave_message' => ['required'],
+            // 'leave_type' => ['required'],
+            // 'hourAmount' => ['required'],
+        ],[],[
+            'typeid' => 'leave type',
+            'type' => 'leave duration',
+            'leave_message' => 'reason'
+        ]);
+        
+        $typeid       = $data['typeid'];
+        $applydate    = date('Y-m-d');
+        $appstartdate = $data['startdate'];
+        $appenddate   = $data['enddate'];
+        $hourAmount   = $data['hourAmount'];
+        // $reason       = $data['reason'];
+        $type         = $data['type'];
+        // $duration     = $this->input->post('duration');
+
+        if($type == 'Half Day') {
+            $duration = $hourAmount;
+        } else if($type == 'Full Day') { 
+            $duration = 8;
+        } else { 
+            $formattedStart = new \DateTime($appstartdate);
+            $formattedEnd = new \DateTime($appenddate);
+
+            $duration = $formattedStart->diff($formattedEnd)->format("%d");
+            $duration = $duration * 8;
+        }
+
+        $postData = [
+            // 'user_id' => auth()->user()->id,
+            'leave_subject' => $data['leave_subject'],
+            'leave_message' => $data['leave_message'],
+            'type_id' => $typeid,
+            'apply_date' => $applydate,
+            'start_date' => $appstartdate,
+            'end_date' => $appenddate,
+            // 'reason' => $reason,
+            'leave_type' => $type,
+            'leave_duration' => $duration,
+            'leave_status' => 'pending',
+        ];
+        
+        $leave->update($postData);  
+
+        return redirect()->route('leaves.index')->with('message', 'Leave updated successfully.');    
+    }   
 }

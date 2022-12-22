@@ -106,20 +106,23 @@ class LeaveTypeController extends Controller
 		return view('client.leave-type.show', compact('leave'));
 	}
 
-	public function edit(LeaveType $department)
+	public function edit($id)
 	{
-	   return view('client.leave-type.edit', compact('leave'));
+		$leaveType = LeaveType::find($id);
+	   	return view('client.leave-type.edit', compact('leaveType'));
 	}
 
-	public function update(Request $request, LeaveType $department)
+	public function update(Request $request, $id)
 	{
 		$data = $request->all();
+
+		$leaveType = LeaveType::find($id);
 
 		$request->validate([
 			'name' => 'required|max:255'
 		]);
 
-		$department->update([
+		$leaveType->update([
 			'name' => $data['name'],
 			'leave_day' => $data['no_of_day'],
 			'status' => $data['status'],

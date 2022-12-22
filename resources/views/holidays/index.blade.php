@@ -105,7 +105,7 @@
 										<th>Holiday Description</th>
 										<th>Holiday Date</th>										
 										<th>Holiday Type</th>	
-										@if(auth()->user()->role_id == 1)
+										@if(auth()->user()->role_id == 2)
 										<th>Action</th>			
 										@endif							
 									</tr>
@@ -189,7 +189,7 @@
 						{data:'description'},						
 						{data:'holiday_date'},						
 						{data:'holiday_type'},
-						@if(auth()->user()->role_id == 1)
+						@if(auth()->user()->role_id == 2)
 						{data:'action_button', name: 'ACTION', orderable: false, searchable: false}
 						@endif
 			        ],
