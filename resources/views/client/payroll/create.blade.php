@@ -96,7 +96,7 @@
 									?>
 									<div class="col-auto">
 										<div class="d-flex align-items-center">
-											<a class= "d-block mt-2 ts-prev-btn" href="{{ route('payroll.create', ['week' => $week-1]) }}">
+											<a class= "d-block mt-2 ts-prev-btn" href="{{ route('payroll.create', ['week' => $week-1, 'week_search'=> $request->week_search]) }}">
 												<svg width="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
 													<g>
 														<path fill="none" d="M0 0h24v24H0z"></path>
@@ -105,7 +105,7 @@
 												</svg>
 											</a>
 											<h3 class="card-title mb-0 px-3 ts-header-date"> {{ $year }} - {{ $month }}</h3>
-											<a class="d-block mt-2 ts-next-btn" href="{{ route('payroll.create', ['week' => $week+1]) }}">
+											<a class="d-block mt-2 ts-next-btn" href="{{ route('payroll.create', ['week' => $week+1, 'week_search'=> $request->week_search]) }}">
 												<svg width="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
 													<g>
 														<path fill="none" d="M0 0h24v24H0z"></path>
