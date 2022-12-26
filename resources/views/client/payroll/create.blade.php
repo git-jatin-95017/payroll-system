@@ -21,7 +21,7 @@
 			<li class="breadcrumb-item active">Create</li>
         </ol>
     </div>
-	
+
 </div>
 	<section class="content">
 		<div class="container-fluid">
@@ -117,7 +117,7 @@
 									</div>
 								</div>
 								</div>
-							<form class="form-horizontal" method="GET" action="{{ route('payroll.create') }}" id="fom-timesheet">							
+							<form class="form-horizontal" method="GET" action="{{ route('payroll.create') }}" id="fom-timesheet">
 								<?php
 									// $default_week = date('W');
 									// $week = $default_week; // get week
@@ -129,6 +129,7 @@
 									<table class="table table-bordered ts-custom-table border-0">
 									<thead>
 										<tr class="ts-date-row">
+											<th></th>
 											<th scope="col" colspan=""></th>
 												<?php
 												for ($i=1;$i<=$weekday;$i++) {
@@ -140,18 +141,19 @@
 													?>
 										</tr>
 										<tr class="ts-day-row">
-										<th scope="col" colspan="">
-											<p class="custom-search-ts">
-												<svg class="w-64 h-64" width="20px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-													<path fill-rule="evenodd" d="M14.53 15.59a8.25 8.25 0 111.06-1.06l5.69 5.69a.75.75 0 11-1.06 1.06l-5.69-5.69zM2.5 9.25a6.75 6.75 0 1111.74 4.547.746.746 0 00-.443.442A6.75 6.75 0 012.5 9.25z"></path>
-												</svg>
-												<!-- <form action="#" onsubmit="handle"> -->
-												    <!-- <input type="text" name="txt" /> -->
-													<input type="text" name="search"  onkeypress="handle(event)" value="{{$request->search}}" placeholder="search">
-													<input type="hidden" name="week_search" value="{{$request->week_search ??1}}">
-												<!-- </form> -->
-											</p>
-										</th>
+											<th></th>
+											<th scope="col" colspan="">
+												<p class="custom-search-ts">
+													<svg class="w-64 h-64" width="20px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+														<path fill-rule="evenodd" d="M14.53 15.59a8.25 8.25 0 111.06-1.06l5.69 5.69a.75.75 0 11-1.06 1.06l-5.69-5.69zM2.5 9.25a6.75 6.75 0 1111.74 4.547.746.746 0 00-.443.442A6.75 6.75 0 012.5 9.25z"></path>
+													</svg>
+													<!-- <form action="#" onsubmit="handle"> -->
+														<!-- <input type="text" name="txt" /> -->
+														<input type="text" name="search"  onkeypress="handle(event)" value="{{$request->search}}" placeholder="search">
+														<input type="hidden" name="week_search" value="{{$request->week_search ??1}}">
+													<!-- </form> -->
+												</p>
+											</th>
 										<!-- <th scope="col">Start Date</th>
 										<th scope="col">Address</th>
 										<th scope="col">Pay/h</th> -->
@@ -170,6 +172,13 @@
 										@foreach($employees as $k => $v)
 											<tr class="ts-data-row">
 											{{-- <th scope="row">{{ $k+1 }}</th> --}}
+											<th>
+												<div class="form-check mb-0">
+													<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+													<label class="form-check-label" for="flexCheckDefault"></label>
+												</div>
+												<button class="approval_btn">Approval</button>
+											</th>
 											<td>
 												<div class="d-flex">
 													<div class="ts-img d-flex justify-content-center align-items-center">
