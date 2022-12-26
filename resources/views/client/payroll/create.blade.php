@@ -33,12 +33,12 @@
 							TimeSheet
 						</button>
 					</li>
-					<li class="nav-item" role="presentation">
+					<!-- <li class="nav-item" role="presentation">
 						<button class="nav-link" id="profile-tab" data-toggle="tab" data-target="#profile" type="button"
 							role="tab" aria-controls="profile" aria-selected="false">
 							Approvals
 						</button>
-					</li>
+					</li> -->
 				</ul>
 			</div>
 			<div class="tab-content" id="myTabContent">
@@ -118,6 +118,7 @@
 								</div>
 								</div>
 							<form class="form-horizontal" method="GET" action="{{ route('payroll.create') }}" id="fom-timesheet">
+								@csrf
 								<?php
 									// $default_week = date('W');
 									// $week = $default_week; // get week
@@ -138,7 +139,8 @@
 												<?php
 														// $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
 													}
-													?>
+												?>
+											<th>Total</th>
 										</tr>
 										<tr class="ts-day-row">
 											<th></th>
@@ -166,6 +168,7 @@
 											// $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
 										}
 										?>
+										<th>-</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -174,10 +177,10 @@
 											{{-- <th scope="row">{{ $k+1 }}</th> --}}
 											<th>
 												<div class="form-check mb-0">
-													<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-													<label class="form-check-label" for="flexCheckDefault"></label>
+													<input class="form-check-input" name="check[{{$v->id}}]" type="checkbox" value="1" id="flexCheckDefault{{$k}}">
+													<label class="form-check-label" for="flexCheckDefault{{$k}}"></label>
 												</div>
-												<button class="approval_btn">Approval</button>
+												<!-- <button class="approval_btn">Approval</button> -->
 											</th>
 											<td>
 												<div class="d-flex">
@@ -195,17 +198,25 @@
 											<!-- <td>{{ !empty($v->employeeProfile) ? $v->employeeProfile->doj : ''}}</td> -->
 											<!-- <td>{{ !empty($v->employeeProfile) ? $v->employeeProfile->pay_rate : 0}}</td> -->
 											<?php
+											$sum = 0;
 											for ($i=1;$i<=$weekday;$i++) {
 												$dateToday = date("Y-m-d", strtotime("+$i day", strtotime($first_date)));
 												$xcellData = NULL;
 												$result = $tempDatesArr[$v->id];
+												$class = NULL;
 												if (array_key_exists($dateToday, $result)) {
 
-													$xcellData = $result[$dateToday];
+													$xcellData = $result[$dateToday]['hrs'];
+
+													if (is_numeric($result[$dateToday]['hrs'])) {
+														$sum += $result[$dateToday]['hrs'];
+													}
+
+													$class = $result[$dateToday]['approval_status'] == 1 ? 'bg-success' : null;
 												}
 											?>
 														<th scope="col">
-															<input type="text" name="" class="form-control payroll_date_cell" placeholder="-"
+															<input type="text" name="dates[{{$v->id}}][{{ $dateToday }}]" class="form-control payroll_date_cell {{$class}}" placeholder="-"
 															data-date="{{ $dateToday }}"
 															data-empid="{{ $v->id }}"
 															value="{{ $xcellData }}"
@@ -215,14 +226,15 @@
 														// $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
 													}
 												?>
+												<td>{{ $sum }}</td>
 											</tr>
 										@endforeach
 									</tbody>
 									</table>
 								</div>
-								{{-- <div class="card-footer">
-									<!-- <button type="submit" class="btn btn-primary">Submit</button> -->
-								</div> --}}
+								<div class="card-footer">
+									<button type="submit" data-url="{{ route('payroll.store') }}" id="approve-button" class="btn btn-primary">Approve</button>
+								</div>
 							</form>
 						</div>
 					</div>
@@ -237,6 +249,18 @@
 	</section>
 @endsection
 @push('page_scripts')
+<script>
+  $("#approve-button").click(function(e) {
+    e.preventDefault();
+
+    var form = $("#fom-timesheet");
+
+    form.prop("method", 'POST');
+    form.prop("action", $(this).data("url"));
+    form.submit();
+  });
+</script>
+
 <script>
 	function handle(e){
         if(e.keyCode == 13) {

@@ -79,10 +79,14 @@ class PayrollController extends Controller
 		foreach ($employees as $k => $v) {
 			if (!empty($v->payrollSheet)) {
 				foreach ($v->payrollSheet as $key => $value) {	
-					$tempDatesArr[$v->id][$value->payroll_date] = $value->daily_hrs;
+					$tempDatesArr[$v->id][$value->payroll_date] = [
+						'hrs' => $value->daily_hrs,
+						'approval_status' => $value->approval_status
+					];
 				}
 			}
 		}
+		// dd($tempDatesArr);
 
 	   	return view('client.payroll.create', compact('employees', 'tempDatesArr', 'week', 'year', 'month', 'request'));
 	}
@@ -109,6 +113,31 @@ class PayrollController extends Controller
 			}	
 
 			return response()->json(['status'=>true, 'message'=>"Record saved successfully."]);
+		} else {
+			//Approve
+			$data = $request->all();
+
+			$arrDates = $data['dates'];
+
+			if (!empty($data['check'])) {
+				foreach($data['check'] as $k => $v) {
+					if($v == 1) {
+						if (array_key_exists($k, $arrDates)) {
+							$arr = $arrDates[$k];
+
+							foreach($arr as $dateKey => $value) {
+								if (!is_null($value)) {
+									$isExist = PayrollSheet::where('emp_id', $k)->where('payroll_date', $dateKey)->first();
+									$isExist->approval_status = 1;
+									$isExist->save();
+								}
+							}
+						}
+					}
+				}
+			}
+
+			return redirect()->route('payroll.create', ['week_search' => 2])->with('message', 'Payroll entered data approved successfully.');	
 		}	
 	}
 
