@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\EmployeeProfile;
 use App\Models\PaymentDetail;
 use App\Models\Payhead;
+use App\Models\Department;
+use App\Models\LeaveType;
 use Illuminate\Support\Facades\DB;
 // use DataTables;
 // use Yajra\DataTables\Html\Builder;
@@ -39,7 +41,9 @@ class EmployeeController extends Controller
 	public function index(Request $request)
 	{		
 		$payheadList = Payhead::get();
-		return view('client.employee.index', compact('payheadList'));
+		$locations = Department::get();
+		$leavePolicies = LeaveType::get();
+		return view('client.employee.index', compact('payheadList', 'leavePolicies', 'locations'));
 	}
 
 	public function getData(Request $request)

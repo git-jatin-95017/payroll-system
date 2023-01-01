@@ -5,6 +5,7 @@ namespace App\Http\Controllers\client;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Department;
+use App\Models\EmpDepartment;
 // use DataTables;
 // use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\Hash;
@@ -144,6 +145,71 @@ class DepartmentController extends Controller
 			 $trash = $this->permanentDelete($id);
 
 			return response()->json(['status'=>true, 'message'=>"Department deleted successfully."]);
+		}
+	}
+
+	public function assign(Request $request) {
+		if (request()->ajax()) {
+			$result = array();
+			$requestData =$request->all();
+
+			$payheads = $requestData['selected_locations'];
+			// $default_salary = $requestData['pay_amounts'];
+			$emp_code = $requestData['empcodelocation'];
+			
+			$checkSQL = EmpDepartment::where('user_id', $emp_code);
+			// if ( $checkSQL->count()  > 0) {
+				if ( !empty($payheads) && !empty($emp_code) ) {
+					if ( $checkSQL->count() == 0 ) {
+						foreach ( $payheads as $payhead ) {
+							EmpDepartment::create([
+								'user_id' => $emp_code,
+								'department_id' => $payhead,
+							]);
+						}
+						$result['result'] = 'Locations are successfully assigned to employee.';
+						$result['code'] = 0;
+					} else {
+						EmpDepartment::where('user_id', $emp_code)->delete();						
+						foreach ( $payheads as $payhead ) {
+							EmpDepartment::create([
+								'user_id' => $emp_code,
+								'department_id' => $payhead,
+							]);
+						}
+						$result['result'] = 'Locations are successfully re-assigned to employee.';
+						$result['code'] = 0;
+					}
+				} else {
+					$result['result'] = 'Please select Locations and employee to assign.';
+					$result['code'] = 2;
+				}
+			// } else {
+				// $result['result'] = 'Something went wrong, please try again.';
+				// $result['code'] = 1;
+			// }
+
+			return response()->json($result);
+		}
+	}
+
+	public function assignedPayhead(Request $request) {
+		if (request()->ajax()) {
+			$result = array();
+			$requestData =$request->all();
+
+			$emp_code = $requestData['emp_code'];
+			
+			$result = EmpDepartment::
+				join('departments', function($join) {
+	            	$join->on('departments.id', '=', 'emp_departments.department_id');
+	           	})
+	           	->where('user_id', $emp_code)->get();
+
+			return response()->json([
+				'result' => $result,
+				'code' => 0
+			]);
 		}
 	}
 }

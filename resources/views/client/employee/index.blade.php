@@ -139,6 +139,90 @@
 				</div>
 			</div>
 		</div>    
+
+		<div class="modal fade" id="LeavePolicyModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-lg modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title text-center">Add Leave Policy to Employee</h4>
+					</div>
+					<form method="post" role="form" data-toggle="validator" id="assign-leave-policy-form">
+						@csrf
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-sm-6">
+									<label for="all_leave_policies">List of Leave Policies</label>
+									<button type="button" id="selectHeadsLeavePolicy" class="btn btn-success btn-xs pull-right"><i class="fa fa-arrow-circle-right"></i></button>
+									<select class="form-control" id="all_leave_policies" name="all_leave_policies[]" multiple size="10">
+										@foreach($leavePolicies as $k => $v)
+											<option value="{{$v->id}}" class="">{{$v->name}}</option>
+										@endforeach
+									</select>
+								</div>
+								<div class="col-sm-6">
+									<label for="selected_leave_policies">Selected Leave Policy</label>
+									<button type="button" id="removeHeadsLeavePolicy" class="btn btn-danger btn-xs pull-right"><i class="fa fa-arrow-circle-left"></i></button>
+									<select class="form-control" id="selected_leave_policies" name="selected_leave_policies[]" data-error="Leave Policy is required" multiple size="10" required></select>
+								</div>
+								<!-- <div class="col-sm-4">
+									<label for="selected_payamount">Enter Payhead Amount</label>
+									<div id="selected_payamount"></div>
+								</div> -->
+							</div>
+						</div>
+						<div class="modal-footer">
+							<input type="hidden" name="empcodepolicy" id="empcodepolicy" />
+							<button type="submit" name="submit" class="btn btn-primary">Add Leave Policy to Employee</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="LocationModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-lg modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title text-center">Add Location to Employee</h4>
+					</div>
+					<form method="post" role="form" data-toggle="validator" id="assign-location-form">
+						@csrf
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-sm-6">
+									<label for="all_locations">List of Locations</label>
+									<button type="button" id="selectHeadsLocation" class="btn btn-success btn-xs pull-right"><i class="fa fa-arrow-circle-right"></i></button>
+									<select class="form-control" id="all_locations" name="all_locations[]" multiple size="10">
+										@foreach($locations as $k => $v)
+											<option value="{{$v->id}}" class="">{{$v->dep_name}}</option>
+										@endforeach
+									</select>
+								</div>
+								<div class="col-sm-6">
+									<label for="selected_locations">Selected Locations</label>
+									<button type="button" id="removeHeadsLocation" class="btn btn-danger btn-xs pull-right"><i class="fa fa-arrow-circle-left"></i></button>
+									<select class="form-control" id="selected_locations" name="selected_locations[]" data-error="Location is required" multiple size="10" required></select>
+								</div>
+								<!-- <div class="col-sm-4">
+									<label for="selected_payamount">Enter Payhead Amount</label>
+									<div id="selected_payamount"></div>
+								</div> -->
+							</div>
+						</div>
+						<div class="modal-footer">
+							<input type="hidden" name="empcodelocation" id="empcodelocation" />
+							<button type="submit" name="submit" class="btn btn-primary">Add Location to Employee</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>    
 @endsection
 
 @push('page_scripts')
@@ -147,6 +231,261 @@
 	<script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
 	<script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
 	<script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
+	<script>
+	function updateLocationAssign(empId) {
+        $(document).find('#empcodelocation').val(empId);
+        $.ajax({
+            type     : "GET",
+            dataType : "json",
+            async    : true,
+            cache    : false,
+            url      : "{{ route('assigned.locations') }}",
+            data     : 'emp_code=' + empId,
+            success  : function(result) {
+                $('#selected_locations').html('');
+                console.log(result.result,result.code);
+                if ( result.code == 0 ) {
+                    for ( var i in result.result ) {
+                        $('#selected_locations').append($("<option></option>")
+                            .attr({
+                                "value": result.result[i].department_id,
+                                "selected": "selected"
+                            })
+                            .text(
+                                result.result[i].dep_name
+                            )
+                        );
+                        /*s
+                        $('#selected_payamount').append($("<input />")
+                            .attr({
+                                "type": "text",
+                                "name": "pay_amounts[" + result.result[i].payhead_id + "]",
+                                "id": "pay_amounts_" + result.result[i].payhead_id,
+                                "placeholder": result.result[i].name,
+                                "value": result.result[i].default_salary
+                            })
+                            .addClass('form-control')
+                        );
+                        */
+                    }
+                }
+            }
+        });
+    }
+    /* Assign Payhead to Employee Form Submit Script Start */
+    if ( $('#assign-location-form').length > 0 ) {
+        $('#assign-location-form').on('submit', function(e) {
+            e.preventDefault();
+
+            var form = $(this);
+            $.ajax({
+                type     : "POST",
+                dataType : "json",
+                async    : true,
+                cache    : false,
+                url      : "{{ route('assign.locations') }}",
+                data     : form.serialize(),
+                success  : function(result) {
+                    if ( result.code == 0 ) {
+                        $('#LocationModal').modal('hide');
+                        $.notify({
+                            icon: 'glyphicon glyphicon-ok-circle',
+                            message: result.result,
+                        },{
+                            allow_dismiss: false,
+                            type: "success",
+                            placement: {
+                                from: "top",
+                                align: "right"
+                            },
+                            z_index: 9999,
+                        });                        
+                    } else {
+                        $.notify({
+                            icon: 'glyphicon glyphicon-remove-circle',
+                            message: result.result,
+                        },{
+                            allow_dismiss: false,
+                            type: "danger",
+                            placement: {
+                                from: "top",
+                                align: "right"
+                            },
+                            z_index: 9999,
+                        });
+                    }
+                }
+            });
+        });
+    }
+    /* End of Script */
+
+        function moveItemsLocations(origin, dest) {
+            $(origin).find(':selected').appendTo(dest);
+        }
+         /* Add Payhead To Employee Script Start */
+        $(document).on('click', '#selectHeadsLocation', function() {
+            $('#all_locations').find(':selected').each(function() {
+                var val = $(this).val();
+                var name = $(this).text();
+                $('#selected_locations').append($("<input />")
+                    .attr({
+                        "type": "text",
+                        "name": "pay_amounts[" + val + "]",
+                        "id": "pay_amounts_" + val,
+                        "placeholder": name
+                    })
+                    .addClass('form-control')
+                );
+            });
+            moveItemsLocations('#all_locations', '#selected_locations');
+        });
+
+        /* Manage Modal Close Script Start */
+            if ( $('#LocationModal').length > 0 ) {
+                $('#LocationModal').on('hidden.bs.modal', function () {
+                    $("#empcodelocation").val('');
+                    $('#selected_locations').html('');
+                });
+            }
+        /* End of Script */
+        $(document).on('click', '#removeHeadsLocation', function() {
+            $('#selected_locations').find(':selected').each(function() {
+                var val = $(this).val();
+                $('#pay_amounts_' + val).remove();
+            });
+            moveItemsLocations('#selected_locations', '#all_locations');
+        });
+        /* End of Script */     
+</script>
+	<script>
+	function updateLeaveAssign(empId) {
+	    $(document).find('#empcodepolicy').val(empId);
+	    $.ajax({
+	        type     : "GET",
+	        dataType : "json",
+	        async    : true,
+	        cache    : false,
+	        url      : "{{ route('assigned.leave.policies') }}",
+	        data     : 'emp_code=' + empId,
+	        success  : function(result) {
+	            $('#selected_leave_policies').html('');
+	            console.log(result.result,result.code);
+	            if ( result.code == 0 ) {
+	                for ( var i in result.result ) {
+	                    $('#selected_leave_policies').append($("<option></option>")
+	                        .attr({
+	                            "value": result.result[i].leave_type_id,
+	                            "selected": "selected"
+	                        })
+	                        .text(
+	                            result.result[i].name
+	                        )
+	                    );
+	                    /*s
+	                    $('#selected_payamount').append($("<input />")
+	                        .attr({
+	                            "type": "text",
+	                            "name": "pay_amounts[" + result.result[i].payhead_id + "]",
+	                            "id": "pay_amounts_" + result.result[i].payhead_id,
+	                            "placeholder": result.result[i].name,
+	                            "value": result.result[i].default_salary
+	                        })
+	                        .addClass('form-control')
+	                    );
+	                    */
+	                }
+	            }
+	        }
+	    });
+	}
+	/* Assign Payhead to Employee Form Submit Script Start */
+    if ( $('#assign-leave-policy-form').length > 0 ) {
+        $('#assign-leave-policy-form').on('submit', function(e) {
+            e.preventDefault();
+
+            var form = $(this);
+            $.ajax({
+                type     : "POST",
+                dataType : "json",
+                async    : true,
+                cache    : false,
+                url      : "{{ route('assign.leave.policies') }}",
+                data     : form.serialize(),
+                success  : function(result) {
+                    if ( result.code == 0 ) {
+                    	$('#LeavePolicyModal').modal('hide');
+                        $.notify({
+                            icon: 'glyphicon glyphicon-ok-circle',
+                            message: result.result,
+                        },{
+                            allow_dismiss: false,
+                            type: "success",
+                            placement: {
+                                from: "top",
+                                align: "right"
+                            },
+                            z_index: 9999,
+                        });                        
+                    } else {
+                        $.notify({
+                            icon: 'glyphicon glyphicon-remove-circle',
+                            message: result.result,
+                        },{
+                            allow_dismiss: false,
+                            type: "danger",
+                            placement: {
+                                from: "top",
+                                align: "right"
+                            },
+                            z_index: 9999,
+                        });
+                    }
+                }
+            });
+        });
+    }
+    /* End of Script */
+
+		function moveItemsLeavePolicy(origin, dest) {
+		    $(origin).find(':selected').appendTo(dest);
+		}
+		 /* Add Payhead To Employee Script Start */
+        $(document).on('click', '#selectHeadsLeavePolicy', function() {
+            $('#all_leave_policies').find(':selected').each(function() {
+                var val = $(this).val();
+                var name = $(this).text();
+                $('#selected_payamount').append($("<input />")
+                    .attr({
+                        "type": "text",
+                        "name": "pay_amounts[" + val + "]",
+                        "id": "pay_amounts_" + val,
+                        "placeholder": name
+                    })
+                    .addClass('form-control')
+                );
+            });
+            moveItemsLeavePolicy('#all_leave_policies', '#selected_leave_policies');
+        });
+
+        /* Manage Modal Close Script Start */
+		    if ( $('#LeavePolicyModal').length > 0 ) {
+		        $('#LeavePolicyModal').on('hidden.bs.modal', function () {
+		            $("#empcodepolicy").val('');
+		            $('#selected_leave_policies').html('');
+		        });
+		    }
+		/* End of Script */
+        $(document).on('click', '#removeHeadsLeavePolicy', function() {
+            $('#selected_leave_policies').find(':selected').each(function() {
+                var val = $(this).val();
+                $('#pay_amounts_' + val).remove();
+            });
+            moveItemsLeavePolicy('#selected_leave_policies', '#all_leave_policies');
+        });
+        /* End of Script */		
+</script>
+
 	<script>
 	/* Assign Payhead to Employee Form Submit Script Start */
     if ( $('#assign-payhead-form').length > 0 ) {
@@ -360,7 +699,11 @@
 			                	destrRoute = destrRoute.replace(':id', row.id);
 			                	var action = `<div class="table-actions">`;
 
-			                	action += "<a href='javascript:void(0);' data-toggle='modal' data-target='#ManageModal' class='btn btn-sm text-info' onclick='updateEmpCode("+row.id+")'><i class='fas fa-copy'></i></a>";
+			                	action += "<a href='javascript:void(0);' data-toggle='modal' data-target='#ManageModal' title='Assign Pay Head' class='btn btn-sm text-info' onclick='updateEmpCode("+row.id+")'><i class='fas fa-copy'></i></a>";
+
+			                	action += "<a href='javascript:void(0);' data-toggle='modal' data-target='#LeavePolicyModal' title='Assign Leave Policy' class='btn btn-sm text-info' onclick='updateLeaveAssign("+row.id+")'><i class='fas fa-copy'></i></a>";
+
+			                	action += "<a href='javascript:void(0);' data-toggle='modal' data-target='#LocationModal' title='Assign Location' class='btn btn-sm text-info' onclick='updateLocationAssign("+row.id+")'><i class='fas fa-copy'></i></a>";
 
 			                	action += " <a href=" + editRoute + " class='btn btn-sm text-info'><i class='fas fa-pen'></i></a>";
 

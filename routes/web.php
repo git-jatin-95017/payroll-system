@@ -61,9 +61,13 @@ Route::prefix('client')->group(function () {
 	Route::resource('payroll', PayrollController::class);
 
 	Route::get('department/getData/', [DepartmentController::class, 'getData'])->name('department.getData');
+	Route::post('location-assign', [DepartmentController::class, 'assign'])->name('assign.locations');
+	Route::get('get-locations-assigned', [DepartmentController::class, 'assignedPayhead'])->name('assigned.locations');
 	Route::resource('department', DepartmentController::class);		
 
 	Route::get('leave-type/getData/', [LeaveTypeController::class, 'getData'])->name('leave-type.getData');
+	Route::post('leave-type-assign', [LeaveTypeController::class, 'assign'])->name('assign.leave.policies');
+	Route::get('get-leave-type-assigned', [LeaveTypeController::class, 'assignedPayhead'])->name('assigned.leave.policies');
 	Route::resource('leave-type', LeaveTypeController::class);
 
 	Route::get('pay-head/getData/', [PayheadController::class, 'getData'])->name('pay-head.getData');
