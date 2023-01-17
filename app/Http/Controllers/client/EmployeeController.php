@@ -224,6 +224,21 @@ class EmployeeController extends Controller
 
 	        $data['file'] = $filename;
 	   	}
+
+	   	//Logo
+	   	if ($request->file('logo')) {
+
+	        $file2 = $request->file('logo');
+	        $filename2 = time().'_'.$file2->getClientOriginalName();
+
+	        // File upload location
+	        $location2 = 'files';
+
+	        // Upload file
+	        $file2->move($location2, $filename2);
+
+	        $data['logo'] = $filename2;
+	   	}
 	   	
 	   	unset($data['status']);
 
@@ -348,6 +363,25 @@ class EmployeeController extends Controller
 	        $file->move($location, $filename);
 
 	        $data['file'] = $filename;
+	   	}
+
+	   	//Logo
+	   	if ($request->file('logo')) {
+			$oldLogo = $employee->employeeProfile->logo;
+			if (\File::exists(public_path('files/'.$oldLogo))) {
+				\File::delete(public_path('files/'.$oldLogo));
+			}
+
+	        $file2 = $request->file('logo');
+	        $filename2 = time().'_'.$file2->getClientOriginalName();
+
+	        // File upload location
+	        $location2 = 'files';
+
+	        // Upload file
+	        $file2->move($location2, $filename2);
+
+	        $data['logo'] = $filename2;
 	   	}
 
 		$employee->employeeProfile->update($data);

@@ -68,4 +68,8 @@ class User extends Authenticatable
     public function payrollSheet() {
         return $this->hasMany(PayrollSheet::class, 'emp_id');
     }
+
+    public function departments() {
+        return $this->hasMany(EmpDepartment::class, 'user_id');
+    }
 }

@@ -68,8 +68,16 @@ class PayrollController extends Controller
 
 		if(!empty($request->search)) {
 			$searchValue = $request->search;
+			
+			$query->leftJoin('emp_departments', function($join) use($searchValue) {
+                $join->on('users.id', '=', 'emp_departments.user_id');
+        	})->leftJoin('departments', function($join) use($searchValue) {
+                $join->on('departments.id', '=', 'emp_departments.department_id');
+        	});
+
 			$query->where('employee_profile.first_name', 'like', '%' . $searchValue . '%');
 			$query->orWhere('employee_profile.last_name', 'like', '%' . $searchValue . '%');
+			$query->orWhere('departments.dep_name', 'like', '%' . $searchValue . '%');
 		}
 
 		$employees = $query->where('role_id', 3)->get();

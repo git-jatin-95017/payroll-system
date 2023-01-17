@@ -134,12 +134,18 @@
                     <ul class="navbar-nav my-lg-0">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src="https://placeimg.com/640/480/any" alt="Genit" class="profile-pic" style="height:40px;width:40px;border-radius:50px" /></a>
+                            	@if(!empty(Auth::user()->employeeProfile->file))
+									<img src="/files/{{Auth::user()->employeeProfile->file}}" alt="Genit" class="profile-pic" style="height:40px;width:40px;border-radius:50px" />
+								@endif
                             <div class="dropdown-menu dropdown-menu-right scale-up">
                                 <ul class="dropdown-user">
                                     <li>
                                         <div class="dw-user-box">
-                                            <div class="u-img"><img src="https://placeimg.com/640/480/any" alt="user"></div>
+                                            <div class="u-img">
+                                            	@if(!empty(Auth::user()->employeeProfile->file))
+												<img src="/files/{{Auth::user()->employeeProfile->file}}" class="img-thumbnail" />
+												@endif
+                                            </div>
                                             <div class="u-text">
                                                 <h4>Welcome {{ ucwords(Auth::user()->name) }}</h4>
                                                 <p class="text-muted">{{ ucwords(Auth::user()->name) }}</p>

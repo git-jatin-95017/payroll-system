@@ -82,6 +82,19 @@
 											</div>
 										</div>
 										<div class="form-row mb-3">
+											<div class="col-md-4">
+												<label for="name" >Upload Logo</label>
+												<input id="file2" type="file" class="form-control {{ $errors->has('logo') ? ' is-invalid' : '' }}" name="logo" value="{{ old('logo', '') }}">
+
+												@if ($errors->has('logo'))
+													<span class="text-danger">
+														{{ $errors->first('logo') }}
+													</span>
+												@endif
+
+											</div>													
+										</div>
+										<div class="form-row mb-3">
 											<!-- <div class="col-md-4">
 												<label for="name">Employee ID number</label>
 												<input id="emp_code" type="text" class="form-control {{ $errors->has('emp_code') ? ' is-invalid' : '' }}" name="emp_code" value="{{ old('emp_code', '') }}">
