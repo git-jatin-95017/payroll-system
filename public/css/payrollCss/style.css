@@ -10374,3 +10374,7 @@ p.custom-search-ts input:focus {
     border-radius: 4px;
     cursor: pointer;
 }
+
+.mini-sidebar .sidebar-nav>ul>li>a i {
+    width: 36px;
+}

@@ -2,7 +2,7 @@
 <aside class="left-sidebar">
 	<div class="scroll-sidebar">
 	<div class="user-profile my-4">
-                <div class="profile-img"> 
+                <div class="profile-img">
 					<img src="{{asset('img/user-new.svg') }}">
                 </div>
                 <div class="profile-text">

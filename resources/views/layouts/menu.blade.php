@@ -27,7 +27,7 @@
 		</li>
 		<li class="<?php //echo $page_name == "attendance" ? 'active' : ''; ?>">
 			<a href="{{ route('attendance.index') }}">
-				<i class="fa fa-calendar nav-icon"></i> 
+				<i class="fa fa-calendar nav-icon"></i>
 				<span class="hide-menu">Attendance</span>
 			</a>
 		</li>
@@ -40,9 +40,9 @@
 				<span class="hide-menu">Dashboard</span>
 			</a>
 		</li>
-		<li>			
+		<li>
 			<a href="{{ route('department.index') }}">
-				<i class="fa fa-building-o"></i>
+				<i class="mdi mdi-map-marker"></i>
 				<span class="hide-menu">Locations</span>
 			</a>
 		</li>
@@ -54,7 +54,7 @@
 		</li>
 		<li>
 			<a href="{{ route('pay-head.index') }}">
-				<i class="fa fa-building-o"></i>
+				<i class="mdi mdi-credit-card"></i>
 				<span class="hide-menu">Pay Heads</span>
 			</a>
 		</li>
@@ -63,14 +63,14 @@
 				<i class="mdi mdi-account-multiple"></i>
 				<span class="hide-menu">Employees</span>
 			</a>
-		</li>		
+		</li>
 		<li>
 			<a href="{{ route('holidays.index') }}">
 				<i class="mdi mdi-rocket"></i>
 				<span class="hide-menu">Holidays</span>
 			</a>
 		</li>
-		
+
 		<!-- <li class="nav-item">
 			<a href="#">
 				<i class="nav-icon fas fa-home"></i>
@@ -78,7 +78,7 @@
 					Overtime
 					<i class="right fas fa-angle-left"></i>
 				</p>
-			</a>		
+			</a>
 		</li> -->
 		<li>
 			<a href="{{ route('leaves.index') }}">
@@ -86,7 +86,7 @@
 				<span class="hide-menu">
 					Leaves
 				</span>
-			</a>		
+			</a>
 		</li>
 		<li class="<?php //echo $page_name == "attendance" ? 'active' : ''; ?>">
 			<a href="{{ route('attendance.index') }}">
@@ -115,7 +115,7 @@
 					</a>
 				</li>
 			</ul>
-		</li>	
+		</li>
 	@endif
 
 	@if(auth()->user()->role_id == 3)
@@ -125,7 +125,7 @@
 				<span class="hide-menu">
 					Leaves
 				</span>
-			</a>		
+			</a>
 		</li>
 		<li>
 			<a href="#" class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
@@ -156,7 +156,7 @@
 				<span class="hide-menu">
 					Profile
 				</span>
-			</a>		
+			</a>
 		</li>
 	@else
 		<li>
@@ -165,7 +165,7 @@
 				<span class="hide-menu">
 					Profile
 				</span>
-			</a>		
+			</a>
 		</li>
 	@endif
 	<li>
@@ -178,5 +178,5 @@
 		</a>
 		<form id="logout-form-1" action="{{ route('logout') }}" method="POST" class="d-none">
 			@csrf
-		</form>		
+		</form>
 	</li>

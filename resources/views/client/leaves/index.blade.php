@@ -61,8 +61,8 @@
 					</div>
 				</div>
 			@endif
-			<div class="row">		
-				<div class="col-12">					
+			<div class="row">
+				<div class="col-12">
 					<div class="card">
 						<div class="card-header">
 							<h3 class="card-title">Leaves</h3>
@@ -71,20 +71,20 @@
 									<!-- <a href="{{ route('my-leaves.create' )}}" class="btn btn-primary">Add New</a> -->
 								</div>
 							</div>
-						</div>					
-						<div class="card-body">							
+						</div>
+						<div class="card-body">
 							<table class="table table-bordered table-hover wrap" id="dataTableBuilder">
 								<thead>
-									<tr>										
+									<tr>
 										<th>Id</th>
 										<th>Emp Code</th>
 										<th>Subject</th>
 										<th>Start Date</th>
 										<th>End Date</th>
-										<th>Message</th>										
-										<th>Type</th>										
-										<th>Status</th>								
-										<th>Action</th>								
+										<th>Message</th>
+										<th>Type</th>
+										<th>Status</th>
+										<th>Action</th>
 									</tr>
 								</thead>
 							</table>
@@ -92,8 +92,8 @@
 					  </div>
 				</div>
 			</div>
-		</div>		
-	</section>    
+		</div>
+	</section>
 @endsection
 
 @push('page_scripts')
@@ -101,7 +101,7 @@
 	<script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
 	<script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
 	<script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
-	<script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>	
+	<script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
 	<script type="text/javascript">
 		//single record move to delete
 		$(document).on('click','a.approve',function() {
@@ -120,7 +120,7 @@
 		    rejectLeave(rejectUrl);
 		});
 
-		// move to Delete single record by just pass the url of 
+		// move to Delete single record by just pass the url of
 		function approveLeave(approveUrl,employeeId, lid,lvalue,duration,type,id) {
 		  Swal.fire({
 		      text: "You Want to Approve?",
@@ -147,7 +147,7 @@
 	             	},
 		          	dataType:'JSON',
 		          	success:(result)=>{
-		            	$('#dataTableBuilder').DataTable().draw(true);		           
+		            	$('#dataTableBuilder').DataTable().draw(true);
 		          	}
 		        });
 		      }
@@ -175,7 +175,7 @@
 	             	},
 		          	dataType:'JSON',
 		          	success:(result)=>{
-		            	$('#dataTableBuilder').DataTable().draw(true);		           
+		            	$('#dataTableBuilder').DataTable().draw(true);
 		          	}
 		        });
 		      }
@@ -213,34 +213,34 @@
 					},
 					columns: [
 			           	// {data: 'action', name: 'Action', orderable: false, searchable: false},
-						{data:'id'},						
-						{data:'user_code'},						
+						{data:'id'},
+						{data:'user_code'},
 						{
-							data:'leave_subject', 
+							data:'leave_subject',
 							// orderable: true
 						},
-						{data:'start_date'},						
-						{data:'end_date'},						
-						{data:'leave_message'},						
+						{data:'start_date'},
+						{data:'end_date'},
+						{data:'leave_message'},
 						{data:'leave_type'},
 						{
 			                data: 'leave_status',
 			                // orderable : false,
 			                // searchable : false,
-			                render: function(data, type, row, meta) {	
+			                render: function(data, type, row, meta) {
 			                	var html = `<span class="badge badge-warning">Pending</span>`;
 
 			                	if (row.leave_status == 'pending') {
 			                		html = `<span class="badge badge-warning">Pending</span>`;
-			                	}	
+			                	}
 
 			                	if (row.leave_status == 'approved') {
-			                		html = `<span class="badge badge-success text-white">Approved</span>`;
-			                	}	
+			                		html = `<span class="badge btn-success text-white">Approved</span>`;
+			                	}
 
 			                	if (row.leave_status == 'rejected') {
-			                		html = `<span class="badge badge-danger text-white">Rejected</span>`;
-			                	}	
+			                		html = `<span class="badge btn-danger text-white">Rejected</span>`;
+			                	}
 
 			                	return html;
 			                }
@@ -249,18 +249,18 @@
 			                data: 'actions',
 			                orderable : false,
 			                searchable : false,
-			                render: function(data, type, row, meta) {			                
+			                render: function(data, type, row, meta) {
 			                	var id = row.id;
 			                	var userid = row.user_id;
 			                	var duration = row.leave_duration;
-			                	var typeid = row.type_id;			                	
-			                
+			                	var typeid = row.type_id;
+
 			                	var action = `<div class="table-actions">`;
 			                	if (row.leave_status == 'pending') {
 			                		action += `<a data-href="${id}" data-employeeId="${userid}" data-value="Approve" data-duration="${duration}" data-type="${typeid}" class="btn btn-sm btn-info approve" style="color:#fff;">Approve</a>`;
 			                		action += ` <a data-href="${id}" class="btn btn-sm btn-primary reject" style="color:#fff;">Reject</a>`;
 			                	}
-			                	action += `&nbsp;<a href="/client/edit-leave/${id}" class="btn btn-sm btn-info" style="color:#fff;">Edit</a>`;
+			                	action += `&nbsp;<a href="/client/edit-leave/${id}" class="badge btn-info" >Edit</a>`;
 			                	action += `</div>`;
 			                	return action;
 			                }
@@ -268,15 +268,15 @@
 			        ],
 			        orderCellsTop: true,
         			// fixedHeader: true,
-			       
+
 			  	});
 		   });
-		 
+
 		  	$('#btnFiterSubmitSearch').click(function(){
 				$('#dataTableBuilder').DataTable().draw(true);
 		  	});
 
-		  	// Check all 
+		  	// Check all
 		   $('#checkall').click(function(){
 		      if($(this).is(':checked')){
 		         $('.delete_check').prop('checked', true);
@@ -307,5 +307,5 @@
 			   }
 			}
 
-	</script>		
+	</script>
 @endpush
