@@ -138,7 +138,12 @@
 										<th>Total</th>
 									</tr>
 									<tr class="ts-day-row">
-										<th><input type="checkbox" id="select_all" style="opacity:99999999 !important;position: unset;left:0;" /></th>
+										<th>
+											<div class="form-check mb-0">									
+												<input type="checkbox" id="select_all" class="form-check-input" />
+												<label class="form-check-label" for="select_all"></label>
+											</div>
+										</th>
 										<th scope="col" colspan="">
 											<p class="custom-search-ts">
 												<svg class="w-64 h-64" width="20px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
@@ -221,7 +226,7 @@
 													// $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
 												}
 											?>
-											<td>{{ $sum }}</td>
+											<td class="total bg-warning">{{ $sum }}</td>
 										</tr>
 									@endforeach
 								</tbody>
@@ -317,5 +322,31 @@ $(document).ready(function(){
         }
     });
 });
+</script>
+<script>
+	$(document).ready(function() {
+		$(".payroll_date_cell").on('change', function(){
+		  	var that = $(this);
+
+		  	calc_total(that);
+		});
+
+		function calc_total(obj) {
+			var focusedRow = obj.closest('tr');
+			
+			console.log(focusedRow);
+		  	
+		  	var sum = 0;
+		  	$(".payroll_date_cell").each(function(){
+		  		if ($.isNumeric(this.value)) {
+		  			sum += parseFloat(this.value);
+		  		}
+		  	});
+		  	
+		  	console.log(sum);
+
+		  	focusedRow.find('td.total').html(sum);	 
+		}
+	});
 </script>
 @endpush

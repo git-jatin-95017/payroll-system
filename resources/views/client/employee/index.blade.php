@@ -79,7 +79,7 @@
 										<!-- <th><input type="checkbox" class='checkall' id='checkall'>
 											<input type="button" class="btn btn-sm btn-danger" id='delete_record' value='Delete' >
 										</th> -->
-										<th>Id</th>
+										<!-- <th>Id</th> -->
 										<th>Image</th>
 										<th>Name</th>
 										<th>Contact</th>										
@@ -662,7 +662,7 @@
 					},
 					columns: [
 			           	// {data: 'action', name: 'Action', orderable: false, searchable: false},
-						{data:'user_code'},
+						// {data:'user_code'},
 						{
 							data:'file', 
 							orderable: false, 
@@ -699,15 +699,15 @@
 			                	destrRoute = destrRoute.replace(':id', row.id);
 			                	var action = `<div class="table-actions">`;
 
-			                	action += "<a href='javascript:void(0);' data-toggle='modal' data-target='#ManageModal' title='Assign Pay Head' class='btn btn-sm text-info' onclick='updateEmpCode("+row.id+")'><i class='fas fa-copy'></i></a>";
+			                	action += "<a href='javascript:void(0);' data-toggle='modal' data-target='#ManageModal' title='Assign Pay Head' class='btn btn-sm btn-info' onclick='updateEmpCode("+row.id+")'><i class='mdi mdi-credit-card'></i></a>";
 
-			                	action += "<a href='javascript:void(0);' data-toggle='modal' data-target='#LeavePolicyModal' title='Assign Leave Policy' class='btn btn-sm text-info' onclick='updateLeaveAssign("+row.id+")'><i class='fas fa-copy'></i></a>";
+			                	action += " <a href='javascript:void(0);' data-toggle='modal' data-target='#LeavePolicyModal' title='Assign Leave Policy' class='btn btn-sm btn-success' onclick='updateLeaveAssign("+row.id+")'><i class='mdi mdi-file-outline'></i></a>";
 
-			                	action += "<a href='javascript:void(0);' data-toggle='modal' data-target='#LocationModal' title='Assign Location' class='btn btn-sm text-info' onclick='updateLocationAssign("+row.id+")'><i class='fas fa-copy'></i></a>";
+			                	action += " <a href='javascript:void(0);' data-toggle='modal' data-target='#LocationModal' title='Assign Location' class='btn btn-sm btn-warning' onclick='updateLocationAssign("+row.id+")'><i class='mdi mdi-map-marker'></i></a>";
 
-			                	action += " <a href=" + editRoute + " class='btn btn-sm text-info'><i class='fas fa-pen'></i></a>";
+			                	action += " <a href=" + editRoute + " class='btn btn-sm btn-primary' title='Edit'><i class='fas fa-pen'></i></a>";
 
-			                	action += " <a data-href=" + destrRoute + " class='btn btn-sm text-danger delete'><i class='fas fa-trash'></i></a>";
+			                	action += " <a data-href=" + destrRoute + " class='btn btn-sm btn-danger delete' style='color:#fff;'  title='Delete'><i class='fas fa-trash'></i></a>";
 
 			                	action += `</div>`;
 

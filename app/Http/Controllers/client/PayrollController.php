@@ -80,7 +80,7 @@ class PayrollController extends Controller
 			$query->orWhere('departments.dep_name', 'like', '%' . $searchValue . '%');
 		}
 
-		$employees = $query->where('role_id', 3)->get();
+		$employees = $query->where('role_id', 3)->groupBy('users.id')->get();
 
 		$tempDatesArr = [];
 

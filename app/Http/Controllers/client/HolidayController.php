@@ -55,7 +55,7 @@ class HolidayController extends Controller
 					->addColumn('action_button', function($data){
 							$btn = "<div class='table-actions'>                           
 							<a href='".route("holidays.edit",$data->id)."' class='btn btn-sm btn-primary'><i class='fas fa-pen'></i></a>
-							<a data-href='".route("holidays.destroy",$data->id)."' class='btn btn-sm btn-danger delete'><i class='fas fa-trash'></i></a>
+							<a data-href='".route("holidays.destroy",$data->id)."' class='btn btn-sm btn-danger delete' style='color:#fff;'><i class='fas fa-trash'></i></a>
 							</div>";
 							return $btn;
 					})

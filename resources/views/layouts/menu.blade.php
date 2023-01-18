@@ -96,7 +96,7 @@
 		</li>
 		<li>
 			<a href="#" class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
-				<i class="mdi mdi-credit-card"></i>
+				<i class="mdi mdi-cash"></i>
 				<span class="hide-menu">
 					Salaries
 				</span>

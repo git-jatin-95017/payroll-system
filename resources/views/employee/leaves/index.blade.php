@@ -320,7 +320,7 @@
 			                	var id = row.id;
 			                
 			                	var action = ``;
-			                		action += `<a href="/employee/my-leaves/${id}/edit" class="btn btn-sm btn-info" style="color:#fff;">Edit</a>`;
+			                		action += `<a href="/employee/my-leaves/${id}/edit" class="btn btn-sm btn-primary" title="Edit" style="color:#fff;"><i class='fas fa-pen'></i></a>`;
 			                	return action;
 			                }
 			            }
