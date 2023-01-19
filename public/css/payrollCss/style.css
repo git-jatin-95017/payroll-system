@@ -10378,3 +10378,11 @@ p.custom-search-ts input:focus {
 .mini-sidebar .sidebar-nav>ul>li>a i {
     width: 36px;
 }
+
+.mini-sidebar .employee.sidebar-form {
+    display: none;
+}
+
+/* .mini-sidebar .sidebar-nav #sidebarnav>li:hover>a{
+    width: auto;
+} */
