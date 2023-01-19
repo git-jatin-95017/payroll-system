@@ -90,7 +90,11 @@
             <nav class="navbar top-navbar navbar-expand-md navbar-light">
                 <div class="navbar-header pt-4">
                     <a class="navbar-brand" href="#">
-						<img src="{{URL::asset('/img/logo-color.svg')}}" alt="">
+                    	@if(!empty(Auth::user()->employeeProfile->logo))
+							<img src="/files/{{Auth::user()->employeeProfile->logo}}"/>
+						@else
+							<img src="{{URL::asset('/img/logo-color.svg')}}" alt="">
+						@endif
                     </a>
                 </div>
                 <div class="navbar-collapse bg-dark-blue">

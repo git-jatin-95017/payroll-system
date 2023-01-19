@@ -42,7 +42,15 @@
             <nav class="navbar top-navbar navbar-expand-md navbar-light">
                 <div class="navbar-header pt-4">
                     <a class="navbar-brand" href="#">
-						<img src="{{URL::asset('/img/logo-color.svg')}}" alt="">
+                    	@if(auth()->user()->role_id == 2)
+                			@if(!empty(auth()->user()->logo))
+								<img src="/files/{{auth()->user()->logo}}" />
+							@else
+								<img src="{{URL::asset('/img/logo-color.svg')}}" alt="">
+							@endif
+                    	@else
+							<img src="{{URL::asset('/img/logo-color.svg')}}" alt="">
+						@endif
                     </a>
                 </div>
                 <div class="navbar-collapse bg-dark-blue">

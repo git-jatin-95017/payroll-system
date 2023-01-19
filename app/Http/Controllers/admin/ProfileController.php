@@ -61,6 +61,21 @@ class ProfileController extends Controller
 			unset($request['password']);
 		}
 
+		//Logo
+	   	if ($request->file('logo_c')) {
+
+	        $file2 = $request->file('logo_c');
+	        $filename2 = time().'_'.$file2->getClientOriginalName();
+
+	        // File upload location
+	        $location2 = 'files';
+
+	        // Upload file
+	        $file2->move($location2, $filename2);
+
+	        $request['logo'] = $filename2;
+	   	}
+	   	
 		$admin->update($request->all());
 
 		return back()->with('message','Profile updated successfully.');

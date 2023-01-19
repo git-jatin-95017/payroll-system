@@ -220,6 +220,8 @@
 														data-date="{{ $dateToday }}"
 														data-empid="{{ $v->id }}"
 														value="{{ $xcellData }}"
+														data-inputid="payroll_input_{{$v->id}}"
+														data-id="{{$v->id}}"
 														>
 													</th>
 											<?php
@@ -337,7 +339,7 @@ $(document).ready(function(){
 			console.log(focusedRow);
 		  	
 		  	var sum = 0;
-		  	$(".payroll_date_cell").each(function(){
+		  	focusedRow.find(".payroll_date_cell").each(function(){
 		  		if ($.isNumeric(this.value)) {
 		  			sum += parseFloat(this.value);
 		  		}

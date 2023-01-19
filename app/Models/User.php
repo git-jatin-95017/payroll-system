@@ -24,7 +24,8 @@ class User extends Authenticatable
         'role_id',
         'phone_number',
         'user_code',
-        'is_proifle_edit_access'
+        'is_proifle_edit_access',
+        'logo'
     ];
 
     /**

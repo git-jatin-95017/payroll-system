@@ -1,7 +1,11 @@
 <aside class = "left-sidebar" > <div class="scroll-sidebar">
     <div class="user-profile my-4">
         <div class="profile-img">
-            <img src="{{asset('img/user-new.svg') }}"></div>
+        	@if(!empty(Auth::user()->employeeProfile->file))
+				<img src="/files/{{Auth::user()->employeeProfile->file}}" width="60px" height="60px" />
+            @else
+            	<img src="{{asset('img/user-new.svg') }}"></div>
+			@endif
             <div class="profile-text">
                 <h5>{{ ucwords(Auth::user()->name) }}</h5>
                 <a

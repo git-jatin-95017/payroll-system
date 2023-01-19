@@ -70,7 +70,7 @@
 										<div class="form-row mb-3">
 											<div class="col-md-4">
 												<label for="name" >Upload Image</label>
-												<input id="file" type="file" class="form-control {{ $errors->has('file') ? ' is-invalid' : '' }}" name="file" value="{{ old('file', '') }}" @if($employee->is_proifle_edit_access == "1") disabled="disabled" @endif>
+												<input id="imgInp" type="file" class="form-control {{ $errors->has('file') ? ' is-invalid' : '' }}" name="file" value="{{ old('file', '') }}" @if($employee->is_proifle_edit_access == "1") disabled="disabled" @endif>
 
 												@if ($errors->has('file'))
 													<span class="text-danger">
@@ -79,10 +79,12 @@
 												@endif
 
 											</div>
-											<div class="col-md-4">
+											<div class="col-md-4">											
 												@if(!empty($employee->employeeProfile->file))
-												<img src="/files/{{$employee->employeeProfile->file}}" class="img-thumbnail"
+												<img id="blah" src="/files/{{$employee->employeeProfile->file}}" class="img-thumbnail"
 												style="object-fit: contain;width: 150px; height: 80px;" />
+												@else
+													<img id="blah" src="#" alt="image" class="img-thumbnail d-none" style="object-fit: contain;width: 150px; height: 80px;" />
 												@endif								
 											</div>													
 										</div>
@@ -590,6 +592,13 @@
 			$('#account_type_div').removeClass('d-none');
 			$('#bank_div').removeClass('d-none');
 		}
+	}
+
+	imgInp.onchange = evt => {
+	  const [file] = imgInp.files
+	  if (file) {
+	    blah.src = URL.createObjectURL(file)
+	  }
 	}
 </script>
 @endpush

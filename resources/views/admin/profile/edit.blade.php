@@ -58,7 +58,7 @@
 			@endif
 			<div class="row">            	
 				<div class="col-sm-6">
-					<form class="form-horizontal" method="POST" action="{{ route('edit-my-profile.update', auth()->user()->id) }}">
+					<form class="form-horizontal" method="POST" action="{{ route('edit-my-profile.update', auth()->user()->id) }}" enctype="multipart/form-data">
 					@csrf
 					{{ method_field('PUT') }}
 					<div class="card">
@@ -102,6 +102,25 @@
 									@endif
 								</div>
 							</div>
+							@if(auth()->user()->role_id == 2)
+							<div class="form-group">
+								<div class="col-md-6">
+									<label for="name" class="control-label">Upload Logo</label>
+									<input id="file2" type="file" class="form-control {{ $errors->has('logo') ? ' is-invalid' : '' }}" name="logo_c" value="{{ old('logo', '') }}">
+									@if ($errors->has('logo'))
+										<span class="text-danger">
+											{{ $errors->first('logo') }}
+										</span>
+									@endif
+								</div>													
+							</div>
+							<div class="col-md-4">
+								@if(!empty(auth()->user()->logo))
+								<img src="/files/{{auth()->user()->logo}}" class="img-thumbnail"
+								style="object-fit: contain;width: 150px; height: 80px;" />
+								@endif
+							</div>	
+							@endif
 						</div>
 						<div class="card-footer">
 							<button type="submit" class="btn btn-primary">Submit</button>
