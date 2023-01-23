@@ -1,6 +1,54 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+	.tt-query, /* UPDATE: newer versions use tt-input instead of tt-query */
+.tt-hint {
+/*    width: 396px;*/
+    height: 30px;
+    padding: 8px 12px;
+    font-size: 24px;
+    line-height: 30px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+}
+
+.tt-query { /* UPDATE: newer versions use tt-input instead of tt-query */
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+    color: #999;
+}
+
+.tt-menu { /* UPDATE: newer versions use tt-menu instead of tt-dropdown-menu */
+    width: 350px;
+    margin-top: 12px;
+    padding: 8px 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+    padding: 3px 20px;
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.tt-suggestion.tt-is-under-cursor { /* UPDATE: newer versions use .tt-suggestion.tt-cursor */
+    color: #fff;
+    background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+    margin: 0;
+}
+</style>
 <div class="row page-titles">
     <div class="col-md-5 align-self-center">
         <h3 class="text-themecolor">
@@ -216,13 +264,14 @@
 											}
 										?>
 													<th scope="col">
-														<input type="text" name="dates[{{$v->id}}][{{ $dateToday }}]" class="form-control payroll_date_cell {{$class}}" placeholder="-"
+														<div id="the-basics">
+														<input type="text" name="dates[{{$v->id}}][{{ $dateToday }}]" class="form-control typeahead  payroll_date_cell {{$class}}" placeholder="-"
 														data-date="{{ $dateToday }}"
 														data-empid="{{ $v->id }}"
 														value="{{ $xcellData }}"
 														data-inputid="payroll_input_{{$v->id}}"
 														data-id="{{$v->id}}"
-														>
+														></div>
 													</th>
 											<?php
 													// $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
@@ -251,6 +300,8 @@
 </section>
 @endsection
 @push('page_scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/bloodhound.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.min.js"></script>
 <script>
   $("#approve-button").click(function(e) {
     e.preventDefault();
@@ -351,4 +402,83 @@ $(document).ready(function(){
 		}
 	});
 </script>
+<script type="text/javascript">
+	var route = "{{ route('search.autocomplete') }}";
+
+	var states = new Bloodhound({
+		datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+		queryTokenizer: Bloodhound.tokenizers.whitespace,
+		// sufficient: 5,
+		prefetch: {
+	        url:route,
+	        transform: function (data) {          // we modify the prefetch response
+	            var newData = [];                 // here to match the response format
+	            data.forEach(function (item) {    // of the remote endpoint
+	                newData.push({
+	                	'name': item
+	                });
+	            });
+	            return newData;
+	        }
+	    },
+		remote: {
+			url: route + '?codes=%QUERY',
+			wildcard: '%QUERY' // %QUERY will be replace by users input in
+		},
+	});
+
+	states.initialize();
+
+	$('#the-basics .typeahead').typeahead({
+		hint: true,
+		highlight: true,
+		minLength: 1,
+		source: function (term, process) {
+
+			return $.get(route, {
+				term: term
+			}, function (data) {
+				console.log(process(data),2222);
+				return process(data);
+			});
+		},
+	}, {
+		name: 'states',
+		display: 'short_name',
+		source: states.ttAdapter(),
+		// limit: 5,
+		templates: {
+			// pending: function (query) {
+			// 	return '<div>Loading...</div>';
+			// },
+			// empty: [
+			// 	''
+			// ].join('\n'),
+			header: '<h3 class="league-name">Select Leaves</h3>',
+			suggestion: function (data) {
+				return `<div class="man-section">
+					<p>${data.full_name}</p>						
+				</div>`;
+			}
+		}
+
+	}).on('typeahead:selected', function(event, selection) {
+	  	// the second argument has the info you want
+	  	console.log(selection.short_name);
+	  	let res = selection.short_name;
+	  	// clearing the selection requires a typeahead method
+	  	// $(this).typeahead('setQuery', '');
+
+        $.ajax({
+            url: "{{ route('payroll.store') }}",
+            type: 'POST',
+            data: {_token: "{{ csrf_token() }}", emp_id: $(this).data('empid'), payroll_date: $(this).data('date'), daily_hrs: res },
+            dataType: 'JSON',
+            success: function (data) {
+                // alert('Record Saved Successfully.');
+            }
+        });    
+	});
+</script>
+
 @endpush

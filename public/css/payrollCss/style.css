@@ -10275,7 +10275,7 @@ tr.ts-day-row {
     border: none;
 }
 .payroll_date_cell {
-    border: none;
+/*    border: none;*/
     text-align: center;
 }
 .table.ts-custom-table .ts-date-row th {

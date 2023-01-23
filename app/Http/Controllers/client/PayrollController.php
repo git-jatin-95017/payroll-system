@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\PayrollSheet;
 use App\Models\User;
 use App\Models\Attendance;
+use App\Models\LeaveType;
 use DataTables;
 use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\Hash;
@@ -147,6 +148,27 @@ class PayrollController extends Controller
 
 			return redirect()->route('payroll.create', ['week_search' => 2])->with('message', 'Payroll entered data approved successfully.');	
 		}	
+	}
+
+	public function search(Request $request)
+	{
+		$search = $request->get('codes');
+		
+		$result = LeaveType::where('name', 'LIKE', '%'. $search. '%')->take(5)->get();
+		
+		if (count($result) > 0) {
+			$data = array();
+
+			foreach ($result as $k => $v)
+			{
+				$data[$k] = [					
+					'full_name' => $v->name. ' ('.ucwords($v->short_name).')',
+					'short_name' => $v->short_name					
+				];
+			}
+
+			return response()->json($data);
+		}
 	}
 
 	protected function differenceInHours($startdate,$enddate){
