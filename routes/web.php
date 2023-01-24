@@ -15,6 +15,8 @@ use App\Http\Controllers\PunchController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\client\PayrollController;
 use App\Http\Controllers\client\PayheadController;
+use App\Http\Middleware\CheckPunchin;
+use App\Models\Attendance;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,22 +83,44 @@ Route::prefix('employee')->group(function () {
 	//Dashboard
 	Route::get('dashboard', [App\Http\Controllers\employee\DashboardController::class, 'index'])->name('dashboard');	
 
-	Route::get('my-leaves/getData/', [LeaveController::class, 'getData'])->name('my.leaves.getData');
-	Route::resource('my-leaves', LeaveController::class);	
+	Route::get('my-leaves/getData/', [LeaveController::class, 'getData'])->name('my.leaves.getData')->middleware([CheckPunchin::class]);
+	Route::resource('my-leaves', LeaveController::class)->middleware([CheckPunchin::class]);	
 	
-	Route::resource('holidays', HolidayController::class);	
+	Route::resource('holidays', HolidayController::class)->middleware([CheckPunchin::class]);	
 
-	Route::resource('emp-my-profile', MyProfileController::class);
+	Route::resource('emp-my-profile', MyProfileController::class)->middleware([CheckPunchin::class]);
 });
 
 Route::resource('edit-my-profile', ProfileController::class);
 
 Route::resource('punch', PunchController::class);
 
-Auth::routes();
+Auth::routes(['logout' => false]);
 
 //Logout
 Route::get('/employee/logout', function() {
+	if (auth()->user()->role_id == 3) {
+		$attendanceDate = date('Y-m-d');
+
+        $isPunchInCount = Attendance::where('user_id', auth()->user()->id)
+            ->whereDate('attendance_date', $attendanceDate)
+            ->where('action_name', 'punchin')
+            ->count();
+
+        if ($isPunchInCount == 0) {        
+     	   return redirect()->route('dashboard')->with('error','Please punch in/out first!');   
+        }
+
+        $isPunchOutCount = Attendance::where('user_id', auth()->user()->id)
+            ->whereDate('attendance_date', $attendanceDate)
+            ->where('action_name', 'punchout')
+            ->count();
+
+        if ($isPunchOutCount == 0) {        
+     	   return redirect()->route('dashboard')->with('error','Please punch out first!');   
+        }
+	}
+
 	//logout user
     auth()->logout();
     
@@ -105,9 +129,31 @@ Route::get('/employee/logout', function() {
 });
 
 Route::get('/logout', function() {
+	if (auth()->user()->role_id == 3) {
+		$attendanceDate = date('Y-m-d');
+
+        $isPunchInCount = Attendance::where('user_id', auth()->user()->id)
+            ->whereDate('attendance_date', $attendanceDate)
+            ->where('action_name', 'punchin')
+            ->count();
+
+        if ($isPunchInCount == 0) {        
+     	   return redirect()->route('dashboard')->with('error','Please punch in/out first!');   
+        }
+
+        $isPunchOutCount = Attendance::where('user_id', auth()->user()->id)
+            ->whereDate('attendance_date', $attendanceDate)
+            ->where('action_name', 'punchout')
+            ->count();
+
+        if ($isPunchOutCount == 0) {        
+     	   return redirect()->route('dashboard')->with('error','Please punch out first!');   
+        }
+	}
+
 	//logout user
     auth()->logout();
     
     // redirect to homepage
     return redirect('/');
-});
+})->name('logout');

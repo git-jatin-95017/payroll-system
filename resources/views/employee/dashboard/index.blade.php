@@ -18,6 +18,25 @@
 </div>
 <section class="content">
     <div class="container-fluid">
+        @if (session('message'))
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        {{ session('message') }}
+                    </div>
+                </div>
+            </div>
+        @elseif (session('error'))
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-danger alert-dismissible text-center" style="font-weight: 600 !important;">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        {{ session('error') }}
+                    </div>
+                </div>
+            </div>
+        @endif
         <div class="row">
             <div class="col-lg-3 col-md-6">
                 <div class="card">
