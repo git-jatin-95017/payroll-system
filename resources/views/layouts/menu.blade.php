@@ -1,7 +1,7 @@
 @if(auth()->user()->role_id == 1)
 		<li>
 			<a href="{{ route('admin.dashboard') }}" class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}">
-				<i class="mdi mdi-gauge"></i>
+				<i class="mdi mdi-speedometer"></i>
 				<span class="hide-menu">Dashboard</span>
 			</a>
 		</li>
@@ -36,7 +36,7 @@
 	@if(auth()->user()->role_id == 2)
 		<li>
 			<a href="{{ route('client.dashboard') }}" class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}">
-				<i class="mdi mdi-gauge"></i>
+				<i class="mdi mdi-speedometer"></i>
 				<span class="hide-menu">Dashboard</span>
 			</a>
 		</li>
@@ -54,7 +54,7 @@
 		</li>
 		<li>
 			<a href="{{ route('pay-head.index') }}">
-				<i class="mdi mdi-credit-card"></i>
+				<i class="mdi mdi-cash-usd"></i>
 				<span class="hide-menu">Pay Heads</span>
 			</a>
 		</li>
@@ -66,7 +66,7 @@
 		</li>
 		<li>
 			<a href="{{ route('holidays.index') }}">
-				<i class="mdi mdi-rocket"></i>
+				<i class="mdi mdi-airplane-takeoff"></i>
 				<span class="hide-menu">Holidays</span>
 			</a>
 		</li>
@@ -82,7 +82,7 @@
 		</li> -->
 		<li>
 			<a href="{{ route('leaves.index') }}">
-				<i class="mdi mdi-account-off"></i>
+				<i class="mdi mdi-calendar"></i>
 				<span class="hide-menu">
 					Leaves
 				</span>
@@ -90,7 +90,7 @@
 		</li>
 		<li class="<?php //echo $page_name == "attendance" ? 'active' : ''; ?>">
 			<a href="{{ route('attendance.index') }}">
-				<i class="mdi mdi-calendar"></i>
+				<i class="mdi mdi-fingerprint"></i>
 				<span class="hide-menu">Attendance</span>
 			</a>
 		</li>
@@ -121,7 +121,7 @@
 	@if(auth()->user()->role_id == 3)
 		<li>
 			<a href="{{ route('my-leaves.index') }}">
-				<i class="nav-icon fas fa-book"></i>
+				<i class="mdi mdi-calendar"></i>
 				<span class="hide-menu">
 					Leaves
 				</span>
@@ -129,7 +129,7 @@
 		</li>
 		<li>
 			<a href="#" class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
-				<i class="nav-icon fas fa-table"></i>
+				<i class="mdi mdi-airplane-takeoff"></i>
 				<span class="hide-menu">
 					Holidays
 				</span>
@@ -152,7 +152,7 @@
 	@if(auth()->user()->role_id == 3)
 		<li>
 			<a href="{{ route('emp-my-profile.edit', auth()->user()->id) }}">
-				<i class="mdi mdi-account-outline"></i>
+				<i class="mdi mdi-account"></i>
 				<span class="hide-menu">
 					Profile
 				</span>
@@ -161,7 +161,7 @@
 	@else
 		<li>
 			<a href="{{ route('edit-my-profile.edit', auth()->user()->id) }}">
-				<i class="mdi mdi-account-outline"></i>
+				<i class="mdi mdi-account"></i>
 				<span class="hide-menu">
 					Profile
 				</span>
@@ -171,7 +171,7 @@
 	<li>
 		<a href="#"
 		   onclick="event.preventDefault(); document.getElementById('logout-form-1').submit();">
-			<i class="mdi mdi-lock-outline"></i>
+			<i class="mdi mdi-power"></i>
 			<span class="hide-menu">
 				Logout
 			</span>
