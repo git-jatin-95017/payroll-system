@@ -276,7 +276,7 @@
 														data-empid="{{ $v->id }}"
 														value="{{ $xcellData }}"
 														data-inputid="payroll_input_{{$v->id}}"
-														data-id="{{$v->id}}"
+														data-id="{{$v->id}}" style="font-size: 12px !important;"
 														></div>
 													</th>
 											<?php
