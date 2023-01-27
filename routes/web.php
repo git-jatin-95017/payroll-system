@@ -86,7 +86,7 @@ Route::prefix('employee')->group(function () {
 	Route::get('my-leaves/getData/', [LeaveController::class, 'getData'])->name('my.leaves.getData')->middleware([CheckPunchin::class]);
 	Route::resource('my-leaves', LeaveController::class)->middleware([CheckPunchin::class]);	
 	
-	Route::resource('holidays', HolidayController::class)->middleware([CheckPunchin::class]);	
+	Route::resource('holidays', HolidayController::class);//->middleware([CheckPunchin::class]);	
 
 	Route::resource('emp-my-profile', MyProfileController::class)->middleware([CheckPunchin::class]);
 });
