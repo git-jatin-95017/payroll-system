@@ -10252,7 +10252,7 @@ body.mini-sidebar footer.main-footer{
     width: 40px;
     height: 40px;
     border-radius: 100em;
-    background-color: #ddd;
+/*    background-color: #ddd;*/
     font-weight: 600;
 }
 
@@ -10275,7 +10275,7 @@ tr.ts-day-row {
     border: none;
 }
 .payroll_date_cell {
-/*    border: none;*/
+    border: none;
     text-align: center;
 }
 .table.ts-custom-table .ts-date-row th {

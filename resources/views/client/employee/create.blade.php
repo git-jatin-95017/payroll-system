@@ -81,7 +81,7 @@
 											@endif
 											</div>
 										</div>
-										<div class="form-row mb-3">
+										<!-- <div class="form-row mb-3">
 											<div class="col-md-4">
 												<label for="name" >Upload Logo</label>
 												<input id="file2" type="file" class="form-control {{ $errors->has('logo') ? ' is-invalid' : '' }}" name="logo" value="{{ old('logo', '') }}">
@@ -93,7 +93,7 @@
 												@endif
 
 											</div>													
-										</div>
+										</div> -->
 										<div class="form-row mb-3">
 											<!-- <div class="col-md-4">
 												<label for="name">Employee ID number</label>
