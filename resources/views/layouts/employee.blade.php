@@ -27,7 +27,7 @@
 	<link href=" {{ asset('css/payrollCss/bootstrap-material-datetimepicker.css') }}" rel="stylesheet">
     <link href=" {{ asset('css/payrollCss/style.css') }}" rel="stylesheet">
 	<link href=" {{ asset('css/payrollCss/print.css') }}" rel="stylesheet">
-    
+
     <!-- You can change the theme colors from here -->
     <!-- <link href="css/colors/blue.css" id="theme" rel="stylesheet"> -->
 	<link href=" {{ asset('css/payrollCss/select2.min.css') }}" rel="stylesheet">
@@ -101,13 +101,13 @@
                     <ul class="navbar-nav mr-auto mt-md-0">
                         <!-- This is  -->
                         <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="mdi mdi-menu"></i></a> </li>
-                        <li class="nav-item m-l-10"> 
+                        <li class="nav-item m-l-10">
                             <a class="nav-link sidebartoggler hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="ti-menu"></i></a> </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-muted text-muted waves-effect waves-dark" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-bell"></i>
-                                <div class="notify"> 
+                                <div class="notify">
 								<span class="heartbit">
-								</span> <span class="point"></span> 
+								</span> <span class="point"></span>
 							</div>
                             </a>
                             <div class="dropdown-menu mailbox scale-up-left">
@@ -126,9 +126,9 @@
                                         </div>
                                     </li>
                                     <li>
-                                        <a class="nav-link text-center" href="javascript:void(0);"> 
-											<strong>Check all notifications</strong> 
-											<i class="fa fa-angle-right"></i> 
+                                        <a class="nav-link text-center" href="javascript:void(0);">
+											<strong>Check all notifications</strong>
+											<i class="fa fa-angle-right"></i>
 										</a>
                                     </li>
                                 </ul>
@@ -156,7 +156,7 @@
                                         </div>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li><a href="{{ route('emp-my-profile.edit', auth()->user()->id) }}"><i class="ti-user"></i> My Profile</a></li>
+                                    <li><a href="{{ route('emp-my-profile.edit', auth()->user()->id) }}"><i class="mdi mdi-account"></i> My Profile</a></li>
                                     <!-- <li><a href="#"><i class="ti-settings"></i> Account Setting</a></li> -->
                                     <li>
 									@if(Auth::user()->role_id == 1)
@@ -164,7 +164,7 @@
 										@endif
 										<a href="#"
 										onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-										<i class="fa fa-power-off"></i> Logout
+										<i class="mdi mdi-power"></i> Logout
 										</a>
 										<form id="logout-form" action="{{ route('logout') }}" method="GET" class="d-none">
 											@csrf

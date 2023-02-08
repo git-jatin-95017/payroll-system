@@ -106,7 +106,8 @@
                                         </div>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li><a href="{{ route('edit-my-profile.edit', Auth::user()->id) }}"><i class="ti-user"></i> My Profile</a></li>
+										<i class="mdi mdi-power"></i> Logout
+                                    <li><a href="{{ route('edit-my-profile.edit', Auth::user()->id) }}"><i class="mdi mdi-account"></i> My Profile</a></li>
                                     <!-- <li><a href="#"><i class="ti-settings"></i> Account Setting</a></li> -->
                                     <li>
 									@if(Auth::user()->role_id == 1)
@@ -114,7 +115,7 @@
 										@endif
 										<a href="#"
 										onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-										<i class="fa fa-power-off"></i> Logout
+										<i class="mdi mdi-power"></i> Logout
 										</a>
 										<form id="logout-form" action="{{ route('logout') }}" method="GET" class="d-none">
 											@csrf
