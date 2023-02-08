@@ -10387,6 +10387,13 @@ svg.db-icon {
     height: 30px;
     vertical-align: middle;
 }
+.bg-success.tt-input,
+.bg-success.tt-hint {
+    padding: 0 !important;
+    color: #28a745 !important;
+    background-color: transparent !important;
+    font-weight: 600 !important;
+}
 
 /* .mini-sidebar .sidebar-nav #sidebarnav>li:hover>a{
     width: auto;

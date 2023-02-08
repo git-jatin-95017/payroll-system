@@ -170,6 +170,7 @@
 								$two_week_days = [$first_date];
 							?>
 							<div class="card-body p-0">
+							<div class="table-responsive">
 								<table class="table table-bordered ts-custom-table border-0">
 								<thead>
 									<tr class="ts-date-row">
@@ -187,11 +188,10 @@
 									</tr>
 									<tr class="ts-day-row">
 										<th>
-											<div class="form-check mb-0">									
+											<div class="form- mb-0">									
 												<input type="checkbox" id="select_all" class="form-check-input" />
-												<label class="form-check-label" for="select_all"></label>
+												<label class="form-check-label d-block" style="font-size:12px;" for="select_all">Select All</label>
 											</div>
-											<small>Select All</small>
 										</th>
 										<th scope="col" colspan="">
 											<p class="custom-search-ts">
@@ -288,6 +288,7 @@
 									@endforeach
 								</tbody>
 								</table>
+							</div>
 							</div>
 							<div class="card-footer">
 								<button type="submit" data-url="{{ route('payroll.store') }}" id="approve-button" class="btn btn-primary">Approve</button>
