@@ -86,7 +86,7 @@
 											</div>
 											
 										</div>
-										<div class="form-row mb-3">
+										<!-- <div class="form-row mb-3">
 											<div class="col-md-4">
 												<label for="name" >Upload Logo</label>
 												<input id="file2" type="file" class="form-control {{ $errors->has('logo') ? ' is-invalid' : '' }}" name="logo" value="{{ old('logo', '') }}" @if($employee->is_proifle_edit_access == "1") disabled="disabled" @endif>
@@ -104,7 +104,7 @@
 												style="object-fit: contain;width: 150px; height: 80px;" />
 												@endif
 											</div>													
-										</div>
+										</div> -->
 										<div class="form-row mb-3">
 											<!-- <div class="col-md-4">
 												<label for="name">Employee ID number</label>

@@ -191,6 +191,7 @@
 												<input type="checkbox" id="select_all" class="form-check-input" />
 												<label class="form-check-label" for="select_all"></label>
 											</div>
+											<small>Select All</small>
 										</th>
 										<th scope="col" colspan="">
 											<p class="custom-search-ts">
@@ -233,7 +234,12 @@
 										<td>
 											<div class="d-flex">
 												<div class="ts-img d-flex justify-content-center align-items-center">
-													D
+													@if(!empty($v->employeeProfile->file))
+														<img src="/files/{{$v->employeeProfile->file}}"
+														style="width: 40px; height: 40px; border-radius: 100em;" />
+													@else
+														<img src='/img/user2-160x160.jpg' style="width: 40px; height: 40px; border-radius: 100em;">
+													@endif		
 												</div>
 												<div class="col-auto">
 													<p class="ts-user-name mb-0">{{ $v->name }}</p>
@@ -270,14 +276,14 @@
 														data-empid="{{ $v->id }}"
 														value="{{ $xcellData }}"
 														data-inputid="payroll_input_{{$v->id}}"
-														data-id="{{$v->id}}"
+														data-id="{{$v->id}}" style="font-size: 12px !important;"
 														></div>
 													</th>
 											<?php
 													// $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
 												}
 											?>
-											<td class="total bg-warning">{{ $sum }}</td>
+											<td class="total">{{ $sum }}</td>
 										</tr>
 									@endforeach
 								</tbody>
@@ -378,7 +384,7 @@ $(document).ready(function(){
 </script>
 <script>
 	$(document).ready(function() {
-		$(".payroll_date_cell").on('change', function(){
+		$(".payroll_date_cell").on('blur', function(){
 		  	var that = $(this);
 
 		  	calc_total(that);

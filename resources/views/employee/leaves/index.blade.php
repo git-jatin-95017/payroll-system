@@ -294,18 +294,18 @@
 			                // orderable : false,
 			                // searchable : false,
 			                render: function(data, type, row, meta) {	
-			                	var html = `<span class="badge badge-warning">Pending</span>`;
+			                	var html = `<span class="badge badge-warning text-white">Pending</span>`;
 
 			                	if (row.leave_status == 'pending') {
-			                		html = `<span class="badge badge-warning">Pending</span>`;
+			                		html = `<span class="badge badge-warning text-white">Pending</span>`;
 			                	}	
 
 			                	if (row.leave_status == 'approved') {
-			                		html = `<span class="badge badge-success text-white">Approved</span>`;
+			                		html = `<span class="badge btn-success text-white">Approved</span>`;
 			                	}	
 
 			                	if (row.leave_status == 'rejected') {
-			                		html = `<span class="badge badge-danger text-white">Rejected</span>`;
+			                		html = `<span class="badge btn-danger text-white">Rejected</span>`;
 			                	}	
 
 			                	return html;
