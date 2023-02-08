@@ -47,7 +47,7 @@
 				Logout
 			</span>
 		</a>
-		<form id="logout-form-1" action="{{ route('logout') }}" method="GET" class="d-none">
+		<form id="logout-form-1" action="{{ route('logout') }}" method="POST" class="d-none">
 			@csrf
 		</form>		
 	</li>
