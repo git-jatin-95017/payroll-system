@@ -121,3 +121,9 @@ body{
 .main-sidebar {
     background: linear-gradient(to top right, #0e0c0c 0%, #221f1f 100%) !important;
 }
+
+svg.db-icon {
+    width: 28px;
+    height: 28px;
+    display: block;
+}
