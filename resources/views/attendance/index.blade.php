@@ -57,7 +57,7 @@
 								<thead>
 									<tr>
 										<th>Date</th>
-										<th>Emp Code</th>
+										<!-- <th>Emp Code</th> -->
 										<th>Name</th>
 										<th>Punch-In</th>
 										<th>Punch-In Message</th>
@@ -108,7 +108,7 @@
 					columns: [
 			           	// {data: 'action', name: 'Action', orderable: false, searchable: false},
 						{data:'attendance_date'},						
-						{data:'user_code'},
+						// {data:'user_code'},
 						{data:'name'},						
 						{data:'punchin'},						
 						{data:'punchin_message'},						

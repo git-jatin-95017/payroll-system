@@ -243,8 +243,21 @@
             data     : 'emp_code=' + empId,
             success  : function(result) {
                 $('#selected_locations').html('');
+                $('#all_locations').html('');
                 console.log(result.result,result.code);
                 if ( result.code == 0 ) {
+                	for ( var j in result.alllocations ) {
+	                    $('#all_locations').append($("<option></option>")
+	                        .attr({
+	                            "value": result.alllocations[j].id,
+	                            // "selected": "selected"
+	                        })
+	                        .text(
+	                            result.alllocations[j].dep_name
+	                        )
+	                    );
+	                }
+
                     for ( var i in result.result ) {
                         $('#selected_locations').append($("<option></option>")
                             .attr({
@@ -370,8 +383,22 @@
 	        data     : 'emp_code=' + empId,
 	        success  : function(result) {
 	            $('#selected_leave_policies').html('');
-	            console.log(result.result,result.code);
+	            $('#all_leave_policies').html('');
+	            
+	            console.log(result.result,result.code, result.leavePolicies);
+	            
 	            if ( result.code == 0 ) {
+	            	for ( var j in result.leavePolicies ) {
+	                    $('#all_leave_policies').append($("<option></option>")
+	                        .attr({
+	                            "value": result.leavePolicies[j].id,
+	                            // "selected": "selected"
+	                        })
+	                        .text(
+	                            result.leavePolicies[j].name
+	                        )
+	                    );
+	                }
 	                for ( var i in result.result ) {
 	                    $('#selected_leave_policies').append($("<option></option>")
 	                        .attr({
@@ -450,7 +477,8 @@
 		function moveItemsLeavePolicy(origin, dest) {
 		    $(origin).find(':selected').appendTo(dest);
 		}
-		 /* Add Payhead To Employee Script Start */
+
+		/* Add Payhead To Employee Script Start */
         $(document).on('click', '#selectHeadsLeavePolicy', function() {
             $('#all_leave_policies').find(':selected').each(function() {
                 var val = $(this).val();
@@ -736,8 +764,20 @@
 	                data     : 'emp_code=' + empId,
 	                success  : function(result) {
 	                    $('#selected_payheads').html('');
+	                    $('#all_payheads').html('');
 	                    console.log(result.result,result.code);
 	                    if ( result.code == 0 ) {
+	                    	for ( var j in result.payheads ) {
+			                    $('#all_payheads').append($("<option></option>")
+			                        .attr({
+			                            "value": result.payheads[j].id,
+			                            // "selected": "selected"
+			                        })
+			                        .text(
+			                            result.payheads[j].name
+			                        )
+			                    );
+			                }
 	                        for ( var i in result.result ) {
 	                            $('#selected_payheads').append($("<option></option>")
 	                                .attr({

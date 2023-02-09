@@ -165,7 +165,7 @@
 							<?php
 								// $default_week = date('W');
 								// $week = $default_week; // get week
-								$y = 2022; // get year
+								$y = date('Y'); // get year
 								$first_date =  date('d-m-Y', strtotime($y."W".$week));
 								$two_week_days = [$first_date];
 							?>

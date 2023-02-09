@@ -210,15 +210,29 @@ class PayheadController extends Controller
 
 			$emp_code = $requestData['emp_code'];
 			
+			$assignPayheadsids = Paystructure::select('payhead_id')->
+				join('payheads', function($join) {
+	            	$join->on('payheads.id', '=', 'paystructures.payhead_id');
+	           	})
+	           	->where('user_id', $emp_code)->pluck('payhead_id');
+
 			$result = Paystructure::
 				join('payheads', function($join) {
 	            	$join->on('payheads.id', '=', 'paystructures.payhead_id');
 	           	})
 	           	->where('user_id', $emp_code)->get();
 
+	        $query = Payhead::select('*');
+	        if (count($assignPayheadsids) > 0) {
+	        	$query->whereNotIn('payheads.id', $assignPayheadsids);
+	        }
+
+	        $payheads = $query->get();
+
 			return response()->json([
 				'result' => $result,
-				'code' => 0
+				'code' => 0,
+				'payheads' => $payheads
 			]);
 		}
 	}

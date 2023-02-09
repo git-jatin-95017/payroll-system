@@ -95,7 +95,7 @@ class DepartmentController extends Controller
 		]);		
 
 		
-		return redirect()->route('department.index')->with('message', 'Department added successfully.');	
+		return redirect()->route('department.index')->with('message', 'Location added successfully.');	
 	}
 
 	public function show(Department $department) {   
@@ -122,7 +122,7 @@ class DepartmentController extends Controller
 			'dep_name' => $data['dep_name']
 		]);		
 	
-		return redirect()->route('department.index')->with('message', 'Department updated successfully.');	
+		return redirect()->route('department.index')->with('message', 'Location updated successfully.');	
 	}   
 
 	protected function permanentDelete($id){
@@ -144,7 +144,7 @@ class DepartmentController extends Controller
 		if (request()->ajax()) {
 			 $trash = $this->permanentDelete($id);
 
-			return response()->json(['status'=>true, 'message'=>"Department deleted successfully."]);
+			return response()->json(['status'=>true, 'message'=>"Location deleted successfully."]);
 		}
 	}
 
@@ -200,15 +200,28 @@ class DepartmentController extends Controller
 
 			$emp_code = $requestData['emp_code'];
 			
-			$result = EmpDepartment::
+			$assignLocationsids = EmpDepartment::select('department_id')->
+				join('departments', function($join) {
+	            	$join->on('departments.id', '=', 'emp_departments.department_id');
+	           	})
+	           	->where('user_id', $emp_code)->pluck('department_id');
+	        $result = EmpDepartment::
 				join('departments', function($join) {
 	            	$join->on('departments.id', '=', 'emp_departments.department_id');
 	           	})
 	           	->where('user_id', $emp_code)->get();
 
+	        $query = Department::select('*');
+	        if (count($assignLocationsids) > 0) {
+	        	$query->whereNotIn('departments.id', $assignLocationsids);
+	        }
+
+	        $alllocations = $query->get();
+
 			return response()->json([
 				'result' => $result,
-				'code' => 0
+				'code' => 0,
+				'alllocations' => $alllocations,
 			]);
 		}
 	}

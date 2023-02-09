@@ -20,6 +20,8 @@ class Paystructure extends Model
 	 * @var array<int, string>
 	 */
 	protected $guarded = [];
-	
-	
+
+	public function payhead() {
+        return $this->belongsTo(Payhead::class, 'payhead_id');
+    }
 }

@@ -15,6 +15,7 @@ use App\Http\Controllers\PunchController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\client\PayrollController;
 use App\Http\Controllers\client\PayheadController;
+use App\Http\Controllers\client\RunPayrollController;
 use App\Http\Middleware\CheckPunchin;
 use App\Models\Attendance;
 
@@ -77,6 +78,14 @@ Route::prefix('client')->group(function () {
 	Route::post('pay-head-assign', [PayheadController::class, 'assign'])->name('assign.payhead');
 	Route::get('get-pay-head-assigned', [PayheadController::class, 'assignedPayhead'])->name('assigned.payhead');
 	Route::resource('pay-head', PayheadController::class);
+	
+	Route::get('run-payroll/step-1', [RunPayrollController::class, 'stepOne'])->name('list.step1');
+	Route::post('run-payroll/step-1', [RunPayrollController::class, 'storeStepOne'])->name('store.Step1');
+
+	Route::get('run-payroll/step-2', [RunPayrollController::class, 'stepTwo'])->name('list.step2');
+	Route::post('run-payroll/step-2', [RunPayrollController::class, 'storeStepTwo'])->name('store.Step2');
+
+	// Route::resource('run-payroll', RunPayrollController::class);
 });
 
 Route::prefix('employee')->group(function () {

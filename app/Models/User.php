@@ -73,4 +73,8 @@ class User extends Authenticatable
     public function departments() {
         return $this->hasMany(EmpDepartment::class, 'user_id');
     }
+
+    public function payheads() {
+        return $this->hasMany(Paystructure::class, 'user_id');
+    }
 }

@@ -100,7 +100,7 @@ class LeaveTypeController extends Controller
 			'start_days' => $data['start_days']
 		]);
 		
-		return redirect()->route('leave-type.index')->with('message', 'Leave type added successfully.');	
+		return redirect()->route('leave-type.index')->with('message', 'Leave policy added successfully.');	
 	}
 
 	public function show(LeaveType $department) {   
@@ -132,7 +132,7 @@ class LeaveTypeController extends Controller
 			'start_days' => $data['start_days']
 		]);
 	
-		return redirect()->route('leave-type.index')->with('message', 'Leave type updated successfully.');	
+		return redirect()->route('leave-type.index')->with('message', 'Leave policy updated successfully.');	
 	}   
 
 	protected function permanentDelete($id){
@@ -154,7 +154,7 @@ class LeaveTypeController extends Controller
 		if (request()->ajax()) {
 			 $trash = $this->permanentDelete($id);
 
-			return response()->json(['status'=>true, 'message'=>"Department deleted successfully."]);
+			return response()->json(['status'=>true, 'message'=>"Leave policy deleted successfully."]);
 		}
 	}
 
@@ -212,15 +212,29 @@ class LeaveTypeController extends Controller
 
 			$emp_code = $requestData['emp_code'];
 			
+			$assignleaveids = EmpLeavePolicy::select('leave_type_id')->
+				join('leave_types', function($join) {
+	            	$join->on('leave_types.id', '=', 'emp_leave_policies.leave_type_id');
+	           	})
+	           	->where('user_id', $emp_code)->pluck('leave_type_id');
+
 			$result = EmpLeavePolicy::
 				join('leave_types', function($join) {
 	            	$join->on('leave_types.id', '=', 'emp_leave_policies.leave_type_id');
 	           	})
 	           	->where('user_id', $emp_code)->get();
 
+	        $query = LeaveType::select('*');
+	        if (count($assignleaveids) > 0) {
+	        	$query->whereNotIn('leave_types.id', $assignleaveids);
+	        }
+
+	        $leavePolicies = $query->get();
+
 			return response()->json([
 				'result' => $result,
-				'code' => 0
+				'code' => 0,
+				'leavePolicies' => $leavePolicies
 			]);
 		}
 	}

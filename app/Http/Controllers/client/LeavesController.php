@@ -66,7 +66,10 @@ class LeavesController extends Controller
 	            })         
 	            ->join('employee_profile', function($join) {
 	                $join->on('users.id', '=', 'employee_profile.user_id');
-	            })                 
+	            })   
+                ->join('leave_types', function($join) {
+                    $join->on('leave_types.id', '=', 'leaves.type_id');
+                })                 
                 ->orWhere('users.user_code', 'like', '%' . $searchValue . '%')
                 ->orWhere('leaves.leave_subject', 'like', '%' . $searchValue . '%')
                 ->orWhere('leaves.leave_message', 'like', '%' . $searchValue . '%')
@@ -79,9 +82,10 @@ class LeavesController extends Controller
                     'leaves.id',
                     'leaves.user_id',
                     'leaves.type_id',
-                    'users.user_code',                   
+                    'users.name',                   
                     'leaves.start_date',
                     'leaves.end_date',
+                    'leave_types.name as leave_name',
                     'leaves.leave_subject',
                     'leaves.leave_message',
                     'leaves.leave_type',

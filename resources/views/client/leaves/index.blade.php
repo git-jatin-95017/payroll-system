@@ -77,11 +77,12 @@
 								<thead>
 									<tr>
 										<th>Id</th>
-										<th>Emp Code</th>
+										<th>Employee</th>
 										<th>Subject</th>
 										<th>Start Date</th>
 										<th>End Date</th>
 										<th>Message</th>
+										<th>Leave</th>
 										<th>Type</th>
 										<th>Status</th>
 										<th>Action</th>
@@ -214,7 +215,7 @@
 					columns: [
 			           	// {data: 'action', name: 'Action', orderable: false, searchable: false},
 						{data:'id'},
-						{data:'user_code'},
+						{data:'name'},
 						{
 							data:'leave_subject',
 							// orderable: true
@@ -222,6 +223,7 @@
 						{data:'start_date'},
 						{data:'end_date'},
 						{data:'leave_message'},
+						{data:'leave_name'},
 						{data:'leave_type'},
 						{
 			                data: 'leave_status',
