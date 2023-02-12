@@ -47,13 +47,12 @@
 						<form class="form-horizontal" method="POST" action="{{ route('store.Step2') }}" id="fom-timesheet">
 							@csrf
 							<div class="card-body">
-								<table class="table table-bordered table-hover">
+								<table class="table custom-table-run">
 									<thead>
 									    <tr>
-									      <!-- <th scope="col">#</th> -->
-									      <th scope="col"><b>Employees ({{$employees->count()}})</b></th>
-									      <th scope="col"><b>Vacation Hours(V) For This Pay Period</b></th>
-									      <th scope="col"><b>Sick Hours(V) For This Pay Period</b></th>									      								
+									      <th class="col-4" scope="col">Employees ({{$employees->count()}})</th>
+									      <th class="col-4" scope="col">Vacation Hours(V) For This Pay Period</th>
+									      <th class="col-4" scope="col">Sick Hours(V) For This Pay Period</th>									      								
 									    </tr>
 									</thead>
 									<tbody>
@@ -72,31 +71,54 @@
 											
 										?>
 									    <tr>									      
-									      	<td class="col-sm-2">
-									      		<span class="font-bold"><b>{{ $employee->name }}</b></span><br><br>
-									      		<span>${{ $employee->employeeProfile->pay_rate }}</span><br><br>
-									      		<!-- <span>/ Add Personal Note</span> -->
+									      	<td class="col-sm-4">
+												<table>
+													<tr >
+														<td class="employee-name">{{ $employee->name }}</td>
+													</tr>
+													<tr>
+														<td>${{ $employee->employeeProfile->pay_rate }}</td>
+													</tr>
+												</table>
 									      	</td>
-									     	<td class="col-sm-5">
-									     		<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][id]">
-									      		<input type="hidden" value="{{$from}}" name="input[{{$employee->id}}][start_date]">
-									      		<input type="hidden" value="{{$to}}" name="input[{{$employee->id}}][end_date]">							      	
-									      		<div class="input-group mb-3">
-									      			<div class="input-group-prepend">
-													    <span class="input-group-text">V</span>
-													  </div>
-												  	<input type="number" name="input[{{$employee->id}}][vacation_hrs]" min="0" value="{{ $vacation_hrs }}" class="form-control">
-												</div>
-												<small><span>36.45</span> hrs remaining</small>
+									     	<td class="col-sm-4">
+												<table>
+													<tr>
+														<td>
+															<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][id]">
+									      					<input type="hidden" value="{{$from}}" name="input[{{$employee->id}}][start_date]">
+									      					<input type="hidden" value="{{$to}}" name="input[{{$employee->id}}][end_date]">							      	
+															<div class="input-group group-left">
+																<div class="input-group-prepend">
+																	<span class="input-group-text">V</span>
+																</div>
+																<input type="number" name="input[{{$employee->id}}][vacation_hrs]" min="0" value="{{ $vacation_hrs }}" class="form-control fixed-input">
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td>36.45 hrs remaining</td>
+													</tr>
+												</table>
 									      	</td>									      
-									      	<td class="col-sm-2">	
-									      		<div class="input-group mb-3">
-									      			<div class="input-group-prepend">
-													    <span class="input-group-text">S</span>
-													  </div>
-												  	<input type="number" name="input[{{$employee->id}}][sick_hrs]" min="0" value="{{ $sick_hrs }}" class="form-control">
-												</div>
-												<small><span>36.45</span> hrs remaining</small>
+									      	<td class="col-sm-4">
+												<table>
+													<tr>
+														<td>
+														<div class="input-group group-left">
+															<div class="input-group-prepend">
+																<span class="input-group-text">S</span>
+															</div>
+												  			<input type="number" name="input[{{$employee->id}}][sick_hrs]" min="0" value="{{ $sick_hrs }}" class="form-control fixed-input	">
+														</div>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															36.45 hrs remaining
+														</td>
+													</tr>
+												</table>	
 									      	</td>
 									    </tr>								
 									    @endforeach	    
@@ -104,8 +126,10 @@
 								</table>
 							</div>
 							<div class="card-footer">
-								<button type="submit" id="save-button" class="btn btn-primary">Submit</button>
-								<a href="{{ route('store.Step1') }}" class="btn btn-info">Back</a>
+								<div class="d-flex justify-content-center">
+									<button type="submit" id="save-button" class="btn btn-primary text-uppercase save_continue">Submit</button>
+									<a href="{{ route('store.Step1') }}" class="btn btn-info text-uppercase ml-2 reset_btn">Back</a>
+								</div>
 							</div>
 						</form>
 					</div>
