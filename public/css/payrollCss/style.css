@@ -10387,12 +10387,13 @@ svg.db-icon {
     height: 30px;
     vertical-align: middle;
 }
-.bg-success.tt-input,
-.bg-success.tt-hint {
+.bg-successs.tt-input,
+.bg-successs.tt-hint {
     padding: 0 !important;
     color: #454277 !important;
-    background-color: transparent !important;
+    background: none !important;
     font-weight: 600 !important;
+    background-color:none !important;
 }
 
 .custom-table-run tr:nth-child(odd){
