@@ -88,7 +88,7 @@
 									      	<td class="col-sm-3">
 												<table>
 													<tr>
-														<td>{{ $employee->name }}</td>
+														<td class="employee-name">{{ $employee->name }}</td>
 													</tr>
 													<tr>
 														<td>
