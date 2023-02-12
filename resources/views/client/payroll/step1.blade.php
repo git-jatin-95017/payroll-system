@@ -123,8 +123,8 @@
 													<tr>
 														<td>
 															<?php
-														if (!empty($isDataExist->additionalEarnings)) {
 															$addon = 0;
+														if (!empty($isDataExist->additionalEarnings)) {
 															foreach($isDataExist->additionalEarnings as $k=> $v) {
 																$addon += $v->amount;
 													?>									      				
