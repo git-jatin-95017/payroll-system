@@ -86,6 +86,10 @@ Route::prefix('client')->group(function () {
 	Route::post('run-payroll/step-2', [RunPayrollController::class, 'storeStepTwo'])->name('store.Step2');
 
 	// Route::resource('run-payroll', RunPayrollController::class);
+
+	Route::get('calculating-payroll', function () {
+		return view('client.payroll.thanks');
+	})->name('calculating-payroll');
 });
 
 Route::prefix('employee')->group(function () {

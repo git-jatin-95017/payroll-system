@@ -94,7 +94,7 @@ class RunPayrollController extends Controller
 			}
 		}
 
-		return redirect()->route('list.step2')->with('message', 'Amount save succesfully.');	
+		return redirect()->route('list.step2')->with('message', 'Pyaroll saved succesfully.');	
 		
 	}
 
@@ -132,7 +132,7 @@ class RunPayrollController extends Controller
 			}
 		}
 
-		return redirect()->route('list.step2')->with('message', 'Please wait.');	
+		return redirect()->route('calculating-payroll')->with('message', 'Payroll Computed succesfully!!!');	
 		
 	}
 

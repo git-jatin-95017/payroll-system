@@ -63,13 +63,13 @@
 									</thead>
 									<tbody>
 										<?php
-											$total = 0;
+											$alltotal = 0;
 										?>
 										@foreach($employees as $k =>$employee)
 										<?php
 											// $from = date('Y-m-01'); //date('m-01-Y');
 											// $to = date('Y-m-t'); //date('m-t-Y');
-
+											$rowTotal = 0;
 											$timeCardData = \App\Models\PayrollSheet::whereBetween('payroll_date', [$from, $to])->where('approval_status', 1)->where('emp_id', $employee->id)->get();										
 
 											$isDataExist = \App\Models\PayrollAmount::where('start_date', '>=', $from)->where('end_date', '<=', $to)->where('user_id', $employee->id)->first();
@@ -82,7 +82,7 @@
 												$id = NULL;
 												$totalHours = collect($timeCardData)->sum('daily_hrs');
 												$reimbursement = 0;
-											}
+											}									
 										?>
 									    <tr class="tr-main">									      
 									      	<td class="col-sm-3">
@@ -100,7 +100,6 @@
 													</tr>
 												</table>
 									      	</td>
-									      	<?php $total += $totalHours; ?>
 									      	<td class="col-sm-3">
 									      		<table>
 													<tr>
@@ -127,7 +126,7 @@
 														if (!empty($isDataExist->additionalEarnings)) {
 															$addon = 0;
 															foreach($isDataExist->additionalEarnings as $k=> $v) {
-																$total += $v->amount;
+																$addon += $v->amount;
 													?>									      				
 															<p>
 																<label>{{$v->payhead->name}}</label>									      	
@@ -164,15 +163,13 @@
 									      <td class="col-sm-3">
 											<table>
 												<tr>
-													<td class="total">${{$total}}</td>
+													<td>$<span class="total">{{$totalHours + $reimbursement + $addon}}</span></td>
 												</tr>
 												<tr>
 													
 													<td>
 														<label>Reimbursement</label>
-														<input type="number" name="input[{{$employee->id}}][reimbursement]" value="{{$reimbursement}}" min="0" class="form-control fixed-input payroll_date_cell">
-
-														<?php $total += $reimbursement; ?>
+														<input type="number" name="input[{{$employee->id}}][reimbursement]" value="{{$reimbursement}}" min="0" class="form-control fixed-input payroll_date_cell">													
 													</td>
 												</tr>
 												<tr>
@@ -180,6 +177,7 @@
 												</tr>
 											</table>
 									      </td>
+									      <?php $alltotal += ($totalHours + $reimbursement + $addon); ?>
 									    </tr>								
 									    @endforeach	    
 									</tbody>
@@ -191,7 +189,7 @@
 										</svg>
 										<h3>Confirm your amounts</h3>
 										<p class="text-center">To ensure accuracy, please review your payroll numbers above and make sure they’re 100% correct</p>
-										<span id="all-sum-span">${{$total}}</span>
+										$<span id="all-sum-span">{{$alltotal}}</span>
 									</div>
 								</div>
 							</div>
@@ -223,11 +221,16 @@
 		$(".payroll_date_cell").on('blur', function(){
 		  	var that = $(this);
 
-		  	sum = calc_total(that);
+		  	calc_total(that);
 
-		  	total_all += sum;
+		  	// total_all += sum;
+		  	$('.total').each(function() {
+		  		if ($.isNumeric($(this).html())) {
+		  			total_all += parseFloat($(this).html());
+		  		}
+		  	});
 
-		  	$('#all-sum-span').html(`$`+total_all);	
+		  	$('#all-sum-span').html(total_all);	
 
 		});
 		  	
@@ -238,7 +241,7 @@
 			console.log(focusedRow);
 		  	
 		  	var sum = 0;
-		  	focusedRow.find(".payroll_date_cell").each(function(){
+		  	focusedRow.find(".payroll_date_cell").each(function() {
 		  		console.log(this.value, 11111);
 		  		if ($.isNumeric(this.value)) {
 		  			sum += parseFloat(this.value);
@@ -247,9 +250,9 @@
 		  	
 		  	// console.log(sum);
 
-		  	focusedRow.find('table td.total').html(`$`+sum);
+		  	focusedRow.find('table td span.total').html(sum);
 
-		  	return sum;
+		  	// return sum;
 		}
 	});
 </script>

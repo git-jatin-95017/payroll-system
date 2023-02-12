@@ -266,7 +266,7 @@
 													$sum += $result[$dateToday]['hrs'];
 												}
 
-												$class = $result[$dateToday]['approval_status'] == 1 ? 'bg-successs' : null;
+												$class = $result[$dateToday]['approval_status'] == 1 ? 'db-text-success' : null;
 											}
 										?>
 													<th scope="col">
