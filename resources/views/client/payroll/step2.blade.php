@@ -85,14 +85,21 @@
 												<table>
 													<tr>
 														<td>
-															<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][id]">
-									      					<input type="hidden" value="{{$from}}" name="input[{{$employee->id}}][start_date]">
-									      					<input type="hidden" value="{{$to}}" name="input[{{$employee->id}}][end_date]">							      	
-															<div class="input-group group-left">
-																<div class="input-group-prepend">
-																	<span class="input-group-text">V</span>
+															<button class="btn-none"  data-toggle="collapse" href="#eraning" role="button" aria-expanded="false" aria-controls="eraning">
+																<svg width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ccc" aria-hidden="true">
+																	<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
+																</svg>
+															</button>
+															<div class="collapse" id="eraning">
+																<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][id]">
+																  <input type="hidden" value="{{$from}}" name="input[{{$employee->id}}][start_date]">
+																  <input type="hidden" value="{{$to}}" name="input[{{$employee->id}}][end_date]">							      	
+																<div class="input-group group-left">
+																	<div class="input-group-prepend">
+																		<span class="input-group-text">V</span>
+																	</div>
+																	<input type="number" name="input[{{$employee->id}}][vacation_hrs]" min="0" value="{{ $vacation_hrs }}" class="form-control fixed-input">
 																</div>
-																<input type="number" name="input[{{$employee->id}}][vacation_hrs]" min="0" value="{{ $vacation_hrs }}" class="form-control fixed-input">
 															</div>
 														</td>
 													</tr>
@@ -105,12 +112,19 @@
 												<table>
 													<tr>
 														<td>
-														<div class="input-group group-left">
-															<div class="input-group-prepend">
-																<span class="input-group-text">S</span>
+															<button class="btn-none"  data-toggle="collapse" href="#emp" role="button" aria-expanded="false" aria-controls="emp">
+																<svg width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ccc" aria-hidden="true">
+																	<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
+																</svg>
+															</button>
+															<div class="collapse" id="emp">
+																<div class="input-group group-left">
+																	<div class="input-group-prepend">
+																		<span class="input-group-text">S</span>
+																	</div>
+																	<input type="number" name="input[{{$employee->id}}][sick_hrs]" min="0" value="{{ $sick_hrs }}" class="form-control fixed-input	">
+																</div>
 															</div>
-												  			<input type="number" name="input[{{$employee->id}}][sick_hrs]" min="0" value="{{ $sick_hrs }}" class="form-control fixed-input	">
-														</div>
 														</td>
 													</tr>
 													<tr>

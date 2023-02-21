@@ -45,9 +45,9 @@
 				<div class="col-sm-12">	
 					<div class="card">	
 						<div class="payroll-top pt-4 text-center">
-							<p>if you run payroll by <span>2.30(PST)</span> on <span>{{ date('d/m/Y',strtotime($from))}}</span></p>
+							<p>if you run payroll by <span>2.30(PST)</span> on <span>01/02/2023</span></p>
 							<p>Your employees will paid on</p>
-							<h3>{{ date('d/m/Y',strtotime($to))}}</h3>
+							<h3>05/02/2023</h3>
 						</div>					
 						<form class="form-horizontal" method="POST" action="{{ route('store.Step1') }}" id="fom-timesheet">
 							@csrf
@@ -62,14 +62,11 @@
 									    </tr>
 									</thead>
 									<tbody>
-										<?php
-											$alltotal = 0;
-										?>
 										@foreach($employees as $k =>$employee)
 										<?php
 											// $from = date('Y-m-01'); //date('m-01-Y');
 											// $to = date('Y-m-t'); //date('m-t-Y');
-											$rowTotal = 0;
+
 											$timeCardData = \App\Models\PayrollSheet::whereBetween('payroll_date', [$from, $to])->where('approval_status', 1)->where('emp_id', $employee->id)->get();										
 
 											$isDataExist = \App\Models\PayrollAmount::where('start_date', '>=', $from)->where('end_date', '<=', $to)->where('user_id', $employee->id)->first();
@@ -82,9 +79,9 @@
 												$id = NULL;
 												$totalHours = collect($timeCardData)->sum('daily_hrs');
 												$reimbursement = 0;
-											}									
+											}
 										?>
-									    <tr class="tr-main">									      
+									    <tr>									      
 									      	<td class="col-sm-3">
 												<table>
 													<tr>
@@ -104,10 +101,17 @@
 									      		<table>
 													<tr>
 														<td>
-															<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][id]">
-									      					<input type="hidden" value="{{$from}}" name="input[{{$employee->id}}][start_date]">
-									      					<input type="hidden" value="{{$to}}" name="input[{{$employee->id}}][end_date]">
-									      					<input type="number" name="input[{{$employee->id}}][working_hrs]" min="0" value="{{ $totalHours }}" class="form-control fixed-input payroll_date_cell">
+															<button class="btn-none"  data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+																<svg width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ccc" aria-hidden="true">
+																	<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
+																</svg>
+															</button>
+															<p class="collapse" id="collapseExample">
+																<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][id]">
+																  <input type="hidden" value="{{$from}}" name="input[{{$employee->id}}][start_date]">
+																  <input type="hidden" value="{{$to}}" name="input[{{$employee->id}}][end_date]">
+																  <input type="number" name="input[{{$employee->id}}][working_hrs]" min="0" value="{{ $totalHours }}" class="form-control fixed-input ">
+															</p>
 														</td>
 													</tr>
 													<tr>
@@ -123,27 +127,39 @@
 													<tr>
 														<td>
 															<?php
-															$addon = 0;
 														if (!empty($isDataExist->additionalEarnings)) {
 															foreach($isDataExist->additionalEarnings as $k=> $v) {
-																$addon += $v->amount;
 													?>									      				
 															<p>
-																<label>{{$v->payhead->name}}</label>									      	
-																<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][earnings][{{$k }}][id]">
-																<input type="hidden" value="{{$v->payhead->id}}" name="input[{{$employee->id}}][earnings][{{$k }}][payhead_id]">
-																<input type="number" value="{{$v->amount}}" name="input[{{$employee->id}}][earnings][{{$k }}][amount]" min="0" class="form-control fixed-input payroll_date_cell">
+																<label class="cursor-pointer" data-toggle="collapse" href="#bonus" role="button" aria-expanded="false" aria-controls="bonus">
+																	<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ccc" aria-hidden="true">
+																		<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
+																	</svg>
+																	{{$v->payhead->name}}
+																</label>									      	
+																<p class="collapse" id="bonus">
+																	<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][earnings][{{$k }}][id]">
+																	<input type="hidden" value="{{$v->payhead->id}}" name="input[{{$employee->id}}][earnings][{{$k }}][payhead_id]">
+																	<input type="number" value="{{$v->amount}}" name="input[{{$employee->id}}][earnings][{{$k }}][amount]" min="0" class="form-control fixed-input">
+																</p>
 															</p>
 													<?php
 															}
 														} else {
-													?>													
-															@foreach($employee->payheads as $key =>$value)																
+													?>
+															@foreach($employee->payheads as $key =>$value)
 																<p>
-																	<label>{{$value->payhead->name}} </label>										      	
-																	<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][earnings][{{$key }}][id]">
-																	<input type="hidden" value="{{$value->payhead_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][payhead_id]">
-																	<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input payroll_date_cell">
+																	<label class="cursor-pointer" data-toggle="collapse" href="#bonus" role="button" aria-expanded="false" aria-controls="bonus">
+																		{{$value->payhead->name}} 
+																		<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ccc" aria-hidden="true">
+																			<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
+																		</svg>
+																	</label>
+																	<p class="collapse" id="bonus">
+																		<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][earnings][{{$key }}][id]">
+																		<input type="hidden" value="{{$value->payhead_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][payhead_id]">
+																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input">
+																	</p>										      	
 																</p>
 															@endforeach
 													<?php
@@ -163,13 +179,19 @@
 									      <td class="col-sm-3">
 											<table>
 												<tr>
-													<td>$<span class="total">{{$totalHours + $reimbursement + $addon}}</span></td>
+													<td>$3680.589</td>
 												</tr>
 												<tr>
-													
 													<td>
-														<label>Reimbursement</label>
-														<input type="number" name="input[{{$employee->id}}][reimbursement]" value="{{$reimbursement}}" min="0" class="form-control fixed-input payroll_date_cell">													
+														<label class="cursor-pointer" data-toggle="collapse" href="#g-pay" role="button" aria-expanded="false" aria-controls="g-pay">
+															<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ccc" aria-hidden="true">
+																<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
+															</svg>	
+															Reimbursement
+														</label>
+														<p class="collapse" id="g-pay">
+															<input type="number" name="input[{{$employee->id}}][reimbursement]" value="{{$reimbursement}}" min="0" class="form-control fixed-input">
+														</p>
 													</td>
 												</tr>
 												<tr>
@@ -177,7 +199,6 @@
 												</tr>
 											</table>
 									      </td>
-									      <?php $alltotal += ($totalHours + $reimbursement + $addon); ?>
 									    </tr>								
 									    @endforeach	    
 									</tbody>
@@ -189,14 +210,14 @@
 										</svg>
 										<h3>Confirm your amounts</h3>
 										<p class="text-center">To ensure accuracy, please review your payroll numbers above and make sure they’re 100% correct</p>
-										$<span id="all-sum-span">{{$alltotal}}</span>
+										<span>29,525.65</span>
 									</div>
 								</div>
 							</div>
 							<div class="card-footer">
 								<div class="d-flex justify-content-center">
 									<button type="submit" id="save-button" class="btn btn-primary text-uppercase save_continue">Save & continue</button>
-									<!-- <button type="reset" id="reset" class="btn btn-default text-uppercase ml-2 reset_btn">Reset</button> -->
+									<button type="reset" id="reset" class="btn btn-default text-uppercase ml-2 reset_btn">Reset</button>
 								</div>
 								<p>Save date & continue payroll latter</p>
 							</div>
@@ -214,46 +235,182 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/bloodhound.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.min.js"></script>
 <script>
+  $("#approve-button").click(function(e) {
+    e.preventDefault();
+
+    var form = $("#fom-timesheet");
+
+    form.prop("method", 'POST');
+    form.prop("action", $(this).data("url"));
+    form.submit();
+  });
+</script>
+
+<script>
+	function handle(e){
+        if(e.keyCode == 13) {
+            e.preventDefault(); // Ensure it is only this code that runs
+            $('#fom-timesheet').submit();
+            // alert("Enter was pressed was presses");
+        }
+    }
+
+	let elmSelect = document.getElementById('myFancyDropdown');
+
+	if (!!elmSelect) {
+	    elmSelect.addEventListener('change', e => {
+	        let choice = e.target.value;
+	        if (!choice) return;
+
+	        let url = new URL(window.location.href);
+	        url.searchParams.set('week_search', choice);
+	        // console.log(url);
+	        window.location.href = url; // reloads the page
+	    });
+	}
+
+    $(document).ready(function() {
+        $(".payroll_date_cell").blur(function() {
+        	if ($(this).val() != '' || $(this).val() != null) {
+	            $.ajax({
+	                url: "{{ route('payroll.store') }}",
+	                type: 'POST',
+	                data: {_token: "{{ csrf_token() }}", emp_id: $(this).data('empid'), payroll_date: $(this).data('date'), daily_hrs: $(this).val() },
+	                dataType: 'JSON',
+	                success: function (data) {
+	                    // alert('Record Saved Successfully.');
+	                }
+	            });
+        	}
+        });
+   });
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#select_all').on('click',function(){
+        if(this.checked){
+            $('.checkbox').each(function(){
+                this.checked = true;
+            });
+        }else{
+             $('.checkbox').each(function(){
+                this.checked = false;
+            });
+        }
+    });
+    
+    $('.checkbox').on('click',function(){
+        if($('.checkbox:checked').length == $('.checkbox').length){
+            $('#select_all').prop('checked',true);
+        }else{
+            $('#select_all').prop('checked',false);
+        }
+    });
+});
+</script>
+<script>
 	$(document).ready(function() {
-
-		var total_all = 0;
-
 		$(".payroll_date_cell").on('blur', function(){
 		  	var that = $(this);
 
 		  	calc_total(that);
-
-		  	// total_all += sum;
-		  	$('.total').each(function() {
-		  		if ($.isNumeric($(this).html())) {
-		  			total_all += parseFloat($(this).html());
-		  		}
-		  	});
-
-		  	$('#all-sum-span').html(total_all);	
-
 		});
-		  	
 
 		function calc_total(obj) {
-			var focusedRow = obj.closest('tr.tr-main');
+			var focusedRow = obj.closest('tr');
 			
 			console.log(focusedRow);
 		  	
 		  	var sum = 0;
-		  	focusedRow.find(".payroll_date_cell").each(function() {
-		  		console.log(this.value, 11111);
+		  	focusedRow.find(".payroll_date_cell").each(function(){
 		  		if ($.isNumeric(this.value)) {
 		  			sum += parseFloat(this.value);
 		  		}
 		  	});
 		  	
-		  	// console.log(sum);
+		  	console.log(sum);
 
-		  	focusedRow.find('table td span.total').html(sum);
-
-		  	// return sum;
+		  	focusedRow.find('td.total').html(sum);	 
 		}
 	});
 </script>
+<script type="text/javascript">
+	var route = "{{ route('search.autocomplete') }}";
+
+	var states = new Bloodhound({
+		datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+		queryTokenizer: Bloodhound.tokenizers.whitespace,
+		// sufficient: 5,
+		prefetch: {
+	        url:route,
+	        transform: function (data) {          // we modify the prefetch response
+	            var newData = [];                 // here to match the response format
+	            data.forEach(function (item) {    // of the remote endpoint
+	                newData.push({
+	                	'name': item
+	                });
+	            });
+	            return newData;
+	        }
+	    },
+		remote: {
+			url: route + '?codes=%QUERY',
+			wildcard: '%QUERY' // %QUERY will be replace by users input in
+		},
+	});
+
+	states.initialize();
+
+	$('#the-basics .typeahead').typeahead({
+		hint: true,
+		highlight: true,
+		minLength: 1,
+		source: function (term, process) {
+
+			return $.get(route, {
+				term: term
+			}, function (data) {
+				console.log(process(data),2222);
+				return process(data);
+			});
+		},
+	}, {
+		name: 'states',
+		display: 'short_name',
+		source: states.ttAdapter(),
+		// limit: 5,
+		templates: {
+			// pending: function (query) {
+			// 	return '<div>Loading...</div>';
+			// },
+			// empty: [
+			// 	''
+			// ].join('\n'),
+			header: '<h3 class="league-name">Select Leaves</h3>',
+			suggestion: function (data) {
+				return `<div class="man-section">
+					<p>${data.full_name}</p>						
+				</div>`;
+			}
+		}
+
+	}).on('typeahead:selected', function(event, selection) {
+	  	// the second argument has the info you want
+	  	console.log(selection.short_name);
+	  	let res = selection.short_name;
+	  	// clearing the selection requires a typeahead method
+	  	// $(this).typeahead('setQuery', '');
+
+        $.ajax({
+            url: "{{ route('payroll.store') }}",
+            type: 'POST',
+            data: {_token: "{{ csrf_token() }}", emp_id: $(this).data('empid'), payroll_date: $(this).data('date'), daily_hrs: res },
+            dataType: 'JSON',
+            success: function (data) {
+                // alert('Record Saved Successfully.');
+            }
+        });    
+	});
+</script>
+
 @endpush

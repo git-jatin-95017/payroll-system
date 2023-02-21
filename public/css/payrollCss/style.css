@@ -10520,8 +10520,20 @@ td.employee-name {
 /* .mini-sidebar .sidebar-nav #sidebarnav>li:hover>a{
     width: auto;
 } */
+button.btn-none {
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer;
+}
 
+button.btn-none:focus{
+    outline:none !important;
+}
 
  .db-text-success{
     color: #33ba5d !important;
+ }
+
+ .cursor-pointer{
+    cursor:pointer;
  }
