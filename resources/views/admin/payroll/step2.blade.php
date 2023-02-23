@@ -44,7 +44,7 @@
 			<div class="row">
 				<div class="col-sm-12">
 					<div class="card">						
-						<form class="form-horizontal" method="POST" action="{{ route('store.Step2') }}" id="fom-timesheet">
+						<form class="form-horizontal" method="POST" action="{{ route('admin.store.Step2') }}" id="fom-timesheet">
 							@csrf
 							<div class="card-body">
 								<table class="table custom-table-run">

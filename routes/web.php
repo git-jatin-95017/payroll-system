@@ -15,6 +15,7 @@ use App\Http\Controllers\PunchController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\client\PayrollController;
 use App\Http\Controllers\client\PayheadController;
+use App\Http\Controllers\admin\RunPayrollController as RPC;
 use App\Http\Controllers\client\RunPayrollController;
 use App\Http\Middleware\CheckPunchin;
 use App\Models\Attendance;
@@ -42,7 +43,19 @@ Route::prefix('admin')->group(function () {
 	Route::resource('client', ClientController::class);
 
 	Route::get('attendance/getData/', [AttendanceController::class, 'getData'])->name('attendance.getData');
-	Route::resource('attendance', AttendanceController::class);	
+	Route::resource('attendance', AttendanceController::class);
+
+	Route::get('run-payroll/step-1', [RPC::class, 'stepOne'])->name('admin.list.step1');
+	Route::post('run-payroll/step-1', [RPC::class, 'storeStepOne'])->name('admin.store.Step1');
+
+	Route::get('run-payroll/step-2', [RPC::class, 'stepTwo'])->name('admin.list.step2');
+	Route::post('run-payroll/step-2', [RPC::class, 'storeStepTwo'])->name('admin.store.Step2');
+
+	// Route::resource('run-payroll', RPC::class);
+
+	Route::get('calculating-payroll', function () {
+		return view('admin.payroll.thanks');
+	})->name('admin.calculating-payroll');	
 });
 
 Route::prefix('client')->group(function () {

@@ -271,7 +271,7 @@
 										?>
 													<th scope="col">
 														<div id="the-basics">
-														<input type="text" name="dates[{{$v->id}}][{{ $dateToday }}]" class="form-control typeahead  payroll_date_cell {{$class}}" placeholder="-"
+														<input type="text" name="dates[{{$v->id}}][{{ $dateToday }}]" class="form-control typeahead payroll_date_cell {{$class}}" placeholder="-"
 														data-date="{{ $dateToday }}"
 														data-empid="{{ $v->id }}"
 														value="{{ $xcellData }}"
@@ -283,7 +283,7 @@
 													// $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
 												}
 											?>
-											<td class="total">{{ $sum }}</td>
+											<td class="total" @if($sum > 0) style="color:#33ba5d !important;" @endif>{{ $sum }}</td>
 										</tr>
 									@endforeach
 								</tbody>

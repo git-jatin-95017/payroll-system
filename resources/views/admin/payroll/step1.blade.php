@@ -49,7 +49,7 @@
 							<p>Your employees will paid on</p>
 							<h3>05/02/2023</h3>
 						</div>					
-						<form class="form-horizontal" method="POST" action="{{ route('store.Step1') }}" id="fom-timesheet">
+						<form class="form-horizontal" method="POST" action="{{ route('admin.store.Step1') }}" id="fom-timesheet">
 							@csrf
 							<div class="card-body">
 								<table class="table custom-table-run">
