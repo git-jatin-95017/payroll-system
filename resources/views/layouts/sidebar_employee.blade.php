@@ -1,4 +1,4 @@
-<aside class = "left-sidebar" > <div class="scroll-sidebar">
+<aside class = "left-sidebar sidebar-emp" > <div class="scroll-sidebar">
     <div class="user-profile my-4">
         <div class="profile-img">
         	@if(!empty(Auth::user()->employeeProfile->file))

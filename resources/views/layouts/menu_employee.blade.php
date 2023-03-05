@@ -15,7 +15,12 @@
 			</a>
 		</li>
 		<li>
-        	<a href="{{ route('holidays.index') }}"><i class="mdi mdi-airplane-takeoff"></i> Holidays </a>
+        	<a href="{{ route('holidays.index') }}">
+				<i class="mdi mdi-airplane-takeoff"></i> 
+				<span class="hide-menu">
+					Holidays 
+				</span>
+			</a>
     	</li>
 
 	@endif

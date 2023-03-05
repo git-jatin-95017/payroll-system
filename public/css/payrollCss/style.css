@@ -6773,8 +6773,15 @@ a.mytooltip {
     .mini-sidebar .scroll-sidebar {
         padding-bottom: 0px;
         position: absolute;
-        overflow-x: hidden!important
+        overflow: visible!important
     }
+
+    /* .mini-sidebar .sidebar-nav #sidebarnav>li>a
+
+    .sidebar-emp .mini-sidebar .scroll-sidebar{
+        overflow: visible !important;
+    } */
+
     .mini-sidebar .hide-menu,
     .mini-sidebar .nav-small-cap,
     .mini-sidebar .sidebar-footer,
@@ -6790,7 +6797,7 @@ a.mytooltip {
     }
     .mini-sidebar .sidebar-nav #sidebarnav>li>a {
         padding: 9px 18px;
-        width: 50px
+        width: 60px
     }
     .mini-sidebar .sidebar-nav #sidebarnav>li:hover>a {
         width: 260px;
@@ -10537,3 +10544,4 @@ button.btn-none:focus{
  .cursor-pointer{
     cursor:pointer;
  }
+
