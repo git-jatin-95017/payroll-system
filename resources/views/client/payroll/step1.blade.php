@@ -67,13 +67,14 @@
 											// $from = date('Y-m-01'); //date('m-01-Y');
 											// $to = date('Y-m-t'); //date('m-t-Y');
 
-											$timeCardData = \App\Models\PayrollSheet::whereBetween('payroll_date', [$from, $to])->where('approval_status', 1)->where('emp_id', $employee->id)->get();										
+											$timeCardData = \App\Models\PayrollSheet::whereBetween('payroll_date', [$from, $to])->where('approval_status', 1)->whereNotNull('payroll_date')->where('emp_id', $employee->id)->get();										
 
 											$isDataExist = \App\Models\PayrollAmount::where('start_date', '>=', $from)->where('end_date', '<=', $to)->where('user_id', $employee->id)->first();
 
 											if(!empty($isDataExist)) {
 												$id = $isDataExist->id;
 												$totalHours = $isDataExist->total_hours;
+												$totalDays = collect($timeCardData)->count('daily_hrs');;
 												$reimbursement = $isDataExist->reimbursement;
 												$overtimeHours = $isDataExist->overtime_hrs;
 												$dovertimeHours = $isDataExist->doubl_overtime_hrs;
@@ -87,6 +88,7 @@
 											} else {
 												$id = NULL;
 												$totalHours = collect($timeCardData)->sum('daily_hrs');
+												$totalDays = collect($timeCardData)->count('daily_hrs');
 												$reimbursement = 0;
 												$overtimeHours = 0;
 												$dovertimeHours = 0;
@@ -130,7 +132,7 @@
 																	<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][id]">
 																	  <input type="hidden" value="{{$from}}" name="input[{{$employee->id}}][start_date]">
 																	  <input type="hidden" value="{{$to}}" name="input[{{$employee->id}}][end_date]">
-																	 <input type="number" name="input[{{$employee->id}}][working_hrs]" min="0" value="{{ $totalHours }}" class="form-control fixed-input working_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'working_hrs', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>')">
+																	 <input type="number" name="input[{{$employee->id}}][working_hrs]" min="0" value="{{ $totalHours }}" class="form-control fixed-input working_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'working_hrs', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>')">
 																</p>
 															</p>
 
@@ -141,7 +143,7 @@
 																	</svg> OverTime
 																</button>
 																<p class="collapse" id="overtime{{$k}}">
-																	<input type="number" name="input[{{$employee->id}}][overtime_hrs]" min="0" value="{{ $overtimeHours }}" class="form-control fixed-input overtime_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'overtime_hrs', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>')">
+																	<input type="number" name="input[{{$employee->id}}][overtime_hrs]" min="0" value="{{ $overtimeHours }}" class="form-control fixed-input overtime_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'overtime_hrs', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>')">
 																</p>
 															</p>
 															<p>
@@ -151,7 +153,7 @@
 																	</svg> Double OverTime
 																</button>
 																<p class="collapse" id="doubleovertime{{$k}}">
-																	 <input type="number" name="input[{{$employee->id}}][double_overtime_hrs]" min="0" value="{{ $dovertimeHours }}" class="form-control fixed-input double_overtime_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'double_overtime_hrs', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>')">
+																	 <input type="number" name="input[{{$employee->id}}][double_overtime_hrs]" min="0" value="{{ $dovertimeHours }}" class="form-control fixed-input double_overtime_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'double_overtime_hrs', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>')">
 																</p>
 															</p>
 														</td>
@@ -182,7 +184,7 @@
 																<p class="collapse" id="bonus{{$employee->id}}{{$key}}">
 																	<input type="hidden" value="{{$v['id']}}" name="input[{{$employee->id}}][earnings][{{$key }}][id]">
 																	<input type="hidden" value="{{$v->payhead->id}}" name="input[{{$employee->id}}][earnings][{{$key }}][payhead_id]">
-																	<input type="number" value="{{$v->amount}}" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input additional-hrs"  onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'additional', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>')">
+																	<input type="number" value="{{$v->amount}}" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input additional-hrs"  onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'additional', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>')">
 																</p>
 															</p>
 													<?php
@@ -199,7 +201,7 @@
 																	</label>
 																	<p class="collapse" id="bonus{{$employee->id}}{{$key}}">
 																		<input type="hidden" value="{{$value->payhead_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][payhead_id]">
-																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input additional-hrs"  onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'additional', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>')">
+																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input additional-hrs"  onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'additional', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>')">
 																	</p>										      	
 																</p>
 															@endforeach
@@ -248,7 +250,7 @@
 															Reimbursement
 														</label>
 														<p class="collapse" id="g-pay{{$employee->id}}{{$k}}">
-															<input type="number" name="input[{{$employee->id}}][reimbursement]" value="{{$reimbursement}}" min="0" class="form-control fixed-input reimbursement_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'reimbursement', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>')">
+															<input type="number" name="input[{{$employee->id}}][reimbursement]" value="{{$reimbursement}}" min="0" class="form-control fixed-input reimbursement_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'reimbursement', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>')">
 														</p>
 													</td>
 												</tr>
@@ -298,15 +300,17 @@
 		$('.working_hrs').each(function() { $(this).trigger('change');})
 	});
 
-	function calculateGross(obj, emp_id, pay_type, field_name, row_key, pay_rate) {
+	function calculateGross(obj, emp_id, pay_type, field_name, row_key, rate_per_hour, days) {
 		var regular_hrs = 0;
 		var overtime_hrs = 0;
 		var double_overtime_hrs = 0;
 		var reimbursement_hrs = 0;
 		var gross = medical_benefits = amount = social_security = 0;
 		var focusedRow = $(obj).closest('.row-tr-js');
+		var total_deductions = 0;
+		var net_pay = 0;
 
-		var pay_rate = parseFloat(pay_rate);
+		var rate_per_hour = parseFloat(rate_per_hour);
 		regular_hrs = parseFloat(focusedRow.find(".working_hrs").val());
 		overtime_hrs_val = parseFloat(focusedRow.find(".overtime_hrs").val());
 		double_overtime_hrs_val = parseFloat(focusedRow.find(".double_overtime_hrs").val());
@@ -320,22 +324,41 @@
 	  		}
 	  	});
 
+	  	gross = amount = rate_per_hour * regular_hrs; //Gross
 
-	  	gross = amount = pay_rate * regular_hrs; //Gross
+	  	overtime_hrs = rate_per_hour * overtime_hrs_val;
 
-	  	overtime_hrs = (regular_hrs * 1.5) * overtime_hrs_val;
+	  	double_overtime_hrs = rate_per_hour * double_overtime_hrs_val;
 
-	  	double_overtime_hrs = (regular_hrs * 2) * double_overtime_hrs_val;
-
-	  	medical_benefits = (gross * 3.5) / 100;
-
-	  	social_security = ( gross>1500 ? ((1500*6.5) / 100) : (gross*6.5) / 100 ); //social_security = ( gross>1500 ? ((1500*6.5)%) : gross*6.5% );
-
-	  	education_lvey = (gross<=125?0:(gross>1154?( ((1154-125)*2.5) / 100)+( ((gross-1154)*5) / 100 ):( ((gross-125)*2.5) /100))); // (gross<=125?0:(gross>1154?((1154-125)*2.5%)+((gross-1154)*5%):((gross-125)*2.5%)));
-
-	  	var total_deductions = medical_benefits + social_security + education_lvey;
-
-	  	var net_pay = gross - total_deductions;
+	  	if (pay_type == 'hourly' || pay_type == 'weekly') {
+	  		medical_benefits = (gross * 3.5) / 100;
+	  		social_security = ( gross>1500 ? ((1500*6.5) / 100) : (gross*6.5) / 100 );  
+	  		education_lvey = (gross<=125?0:(gross>1154?( ((1154-125)*2.5) / 100)+( ((gross-1154)*5) / 100 ):( ((gross-125)*2.5) /100)));
+	  		total_deductions = medical_benefits + social_security + education_lvey;
+	  		net_pay = gross - total_deductions;
+	  	} else if (pay_type == 'biweekly') {
+	  		medical_benefits = (gross * 3.5) / 100;
+	  		social_security = ( gross>1500 ? ((1500*6.5) / 100) : (gross*6.5) / 100 ); 
+	  		education_lvey = (gross<=125?0:(gross>1154?(((1154-125)*2.5)/100)+(((gross-1154)*5)/100):(((gross-125)*2.5)/100)));
+	  		total_deductions = medical_benefits + social_security + education_lvey;
+	  		net_pay = gross - total_deductions;
+	  		if (days <= 7) {
+	  		} else {
+	  			net_pay = 2 * net_pay;	  			
+	  		}
+	  	} else if (pay_type == 'semi-monthly') {
+	  		medical_benefits = (gross * 3.5) / 100;
+	  		social_security = ( gross>3000 ? ((3000*6.5) / 100) : (gross*6.5) / 100 ); 
+	  		education_lvey = (gross<=125?0:(gross>2500?(((2500-270.84)*2.5)/100)+(((gross-2500)*5)/100):(((gross-270.84)*2.5)/100)));
+	  		total_deductions = medical_benefits + social_security + education_lvey;
+	  		net_pay = gross - total_deductions;
+	  	} else if (pay_type == 'monthly') {
+	  		medical_benefits = (gross * 3.5) / 100;
+	  		social_security = ( gross>6500 ? ((6500*6.5) / 100) : (gross*6.5) / 100 ); 
+	  		education_lvey = (gross<=125?0:(gross>5000?(((5000-541.67)*2.5)/100)+(((gross-5000)*5)/100):(((gross-541.67)*2.5)/100)));
+	  		total_deductions = medical_benefits + social_security + education_lvey;
+	  		net_pay = gross - total_deductions;
+	  	}
 
 	  	focusedRow.find('.total').html(gross);	
 	  	focusedRow.find('.overtime').html(overtime_hrs);	
@@ -353,7 +376,7 @@
 	  	focusedRow.find('.net-pay-hidden').val(net_pay);	
 	  	focusedRow.find('.edu-levy-hidden').val(education_lvey.toFixed(2));	
 
-	  	console.log(pay_rate, pay_type, regular_hrs, overtime_hrs, double_overtime_hrs, additionalHrs, reimbursement_hrs);
+	  	console.log(rate_per_hour, pay_type, regular_hrs, overtime_hrs, double_overtime_hrs, additionalHrs, reimbursement_hrs);
 
 	  	var total_confimr_amt =0;
 	  	$(document).find(".total").each(function(index, value){
