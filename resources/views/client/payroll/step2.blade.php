@@ -51,8 +51,8 @@
 									<thead>
 									    <tr>
 									      <th class="col-4" scope="col">Employees ({{$employees->count()}})</th>
-									      <th class="col-4" scope="col">Vacation Hours(V) For This Pay Period</th>
-									      <th class="col-4" scope="col">Sick Hours(V) For This Pay Period</th>									      								
+									      <th class="col-4" scope="col">Paid time off</th>
+									      <th class="col-4" scope="col">Unpaid time off</th>									      								
 									    </tr>
 									</thead>
 									<tbody>
@@ -69,12 +69,17 @@
 											$sick_hrs = $isDataExist->sick_hrs;
 											$vacation_hrs = $isDataExist->vacation_hrs;
 											
+
+											$salary = 0;
+											if (!empty($isDataExist)) {
+												$salary = $isDataExist->gross;
+											}
 										?>
 									    <tr>									      
 									      	<td class="col-sm-4">
 												<table>
 													<tr >
-														<td class="employee-name">{{ $employee->name }}</td>
+														<td class="employee-name">{{ $employee->name }} <span class="badge badge-primary">{{ strtoupper($employee->employeeProfile->pay_type) }}</td>
 													</tr>
 													<tr>
 														<td>${{ $employee->employeeProfile->pay_rate }}</td>
@@ -86,7 +91,7 @@
 													<tr>
 														<td>
 															<button class="btn-none"  data-toggle="collapse" href="#eraning{{$k}}" role="button" aria-expanded="false" aria-controls="eraning{{$k}}">
-																<svg width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ccc" aria-hidden="true">
+																<svg width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007bff" aria-hidden="true">
 																	<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
 																</svg>
 															</button>
@@ -94,18 +99,24 @@
 																<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][id]">
 																  <input type="hidden" value="{{$from}}" name="input[{{$employee->id}}][start_date]">
 																  <input type="hidden" value="{{$to}}" name="input[{{$employee->id}}][end_date]">							      	
+																Vacation Hours
 																<div class="input-group group-left">
-																	<div class="input-group-prepend">
-																		<span class="input-group-text">V</span>
-																	</div>
-																	<input type="number" name="input[{{$employee->id}}][vacation_hrs]" min="0" value="{{ $vacation_hrs }}" class="form-control fixed-input">
+																	<input type="number" name="input[{{$employee->id}}][vacation_hrs]" min="0" value="{{ $vacation_hrs }}" class="form-control fixed-input" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>')">
 																</div>
+																<hr>
+																Paid sick day:<input type="number" name="input[{{$employee->id}}][paid_sick_days]" min="0" class="form-control input-sm" value="0" readonly>
+																Hourly Vacation:<input type="number" name="input[{{$employee->id}}][hourly_vacation]" min="0" class="form-control input-sm" value="0" readonly>
+																Salaried Vacation Monthly:
+																<input type="number" name="input[{{$employee->id}}][vac_monthly]" min="0" class="form-control input-sm" value="0" readonly>
+																Salaried Vacation Semi-Monthly:
+																<input type="number" name="input[{{$employee->id}}][vac_semi_monthly]" min="0" class="form-control input-sm" value="0" readonly>
+																Salaried Vacation Bi-weekly:
+																<input type="number" name="input[{{$employee->id}}][vac_biweekly]" min="0" class="form-control input-sm" value="0" readonly>
+																Weekly vacation:
+																<input type="number" name="input[{{$employee->id}}][vac_weekly]" min="0" class="form-control input-sm" value="0" readonly>
 															</div>
 														</td>
-													</tr>
-													<tr>
-														<td>36.45 hrs remaining</td>
-													</tr>
+													</tr>											
 												</table>
 									      	</td>									      
 									      	<td class="col-sm-4">
@@ -113,24 +124,22 @@
 													<tr>
 														<td>
 															<button class="btn-none"  data-toggle="collapse" href="#emp{{$k}}" role="button" aria-expanded="false" aria-controls="emp{{$k}}">
-																<svg width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ccc" aria-hidden="true">
+																<svg width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007bff" aria-hidden="true">
 																	<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
 																</svg>
 															</button>
 															<div class="collapse" id="emp{{$k}}">
-																<div class="input-group group-left">
-																	<div class="input-group-prepend">
-																		<span class="input-group-text">S</span>
-																	</div>
+																	Unpaid Sick day:
+																<div class="input-group group-left">																	
 																	<input type="number" name="input[{{$employee->id}}][sick_hrs]" min="0" value="{{ $sick_hrs }}" class="form-control fixed-input	">
+																</div><br>
+																	Unpaid Vacation:
+																<div class="input-group group-left">																	
+																	<input type="number" name="input[{{$employee->id}}][sick_hrs]" min="0" value="{{ $sick_hrs }}" class="form-control fixed-input">
 																</div>
-															</div>
+															</div>															
 														</td>
 													</tr>
-													<tr>
-														<td>
-															36.45 hrs remaining
-														</td>
 													</tr>
 												</table>	
 									      	</td>
@@ -158,6 +167,58 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/bloodhound.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.min.js"></script>
 <script>
+
+	function calculateOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary) {
+		console.log(obj.value, emp_id, pay_type, row_key, rate_per_hour, salary);
+		let pack_sick_days  = rate_per_hour *  obj.value;
+		let hourly_vacation  = 0;
+		let vac_monthly = 0;
+		let vac_semi_monthly  = 0;
+		let vac_biweekly = 0;
+		let vac_weekly = 0;
+
+		$(`[name="input[${emp_id}][paid_sick_days]"]`).val(pack_sick_days);
+
+		if (pay_type == 'hourly') {
+			hourly_vacation  = rate_per_hour *  obj.value
+			vac_monthly = salary * 40 *  obj.value;			
+			vac_semi_monthly = salary * 40 *  obj.value;	
+			vac_biweekly = salary * 40 *  obj.value;
+			vac_weekly = 0;
+			
+		}  else if (pay_type == 'weekly') {
+			hourly_vacation = 0;
+			vac_monthly = salary * 52 *  obj.value;
+			vac_semi_monthly = salary * 52 *  obj.value;	
+			vac_biweekly = salary * 52 *  obj.value;;
+			vac_weekly = salary * 40 *  obj.value;
+		}  else if (pay_type == 'biweekly') {
+			hourly_vacation = 0;
+			vac_monthly  = salary * 52 *  obj.value;
+			vac_semi_monthly  = 0;
+			vac_biweekly = 0;
+			vac_weekly = 0;
+		}  else if (pay_type == 'semi-monthly') {
+			hourly_vacation = 0;
+			vac_monthly  = salary * 40 *  obj.value;
+			vac_semi_monthly = salary * 52 *  obj.value;
+			vac_biweekly = 0;
+			vac_weekly = 0;
+		}  else if (pay_type == 'monthly') {
+			hourly_vacation = 0;
+			vac_monthly  = salary * 12 *  obj.value;
+			vac_semi_monthly  =  salary * 24 *  obj.value;
+			vac_biweekly = salary * 26 *  obj.value;;
+			vac_weekly = 0;
+		}
+
+		$(`[name="input[${emp_id}][hourly_vacation]"]`).val(hourly_vacation);
+		$(`[name="input[${emp_id}][vac_monthly]"]`).val(vac_monthly);
+		$(`[name="input[${emp_id}][vac_semi_monthly]"]`).val(vac_semi_monthly);
+		$(`[name="input[${emp_id}][vac_biweekly]"]`).val(vac_biweekly);
+		$(`[name="input[${emp_id}][vac_weekly]"]`).val(vac_weekly);
+	}
+
   $("#approve-button").click(function(e) {
     e.preventDefault();
 
