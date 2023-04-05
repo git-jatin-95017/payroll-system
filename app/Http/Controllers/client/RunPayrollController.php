@@ -112,7 +112,7 @@ class RunPayrollController extends Controller
 			}
 		}
 
-		return redirect()->route('list.step2')->with('message', 'Pyaroll saved succesfully.');	
+		return redirect()->route('list.step2')->with('message', 'Payroll saved succesfully.');	
 		
 	}
 

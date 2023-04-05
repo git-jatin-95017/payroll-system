@@ -51,8 +51,8 @@
 									<thead>
 									    <tr>
 									      <th class="col-4" scope="col">Employees ({{$employees->count()}})</th>
-									      <th class="col-4" scope="col">Paid time off</th>
-									      <th class="col-4" scope="col">Unpaid time off</th>									      								
+									      <th class="col-4" scope="col">Paid Time Off</th>
+									      <th class="col-4" scope="col">Unpaid Time Off</th>									      								
 									    </tr>
 									</thead>
 									<tbody>

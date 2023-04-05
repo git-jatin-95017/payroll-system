@@ -43,11 +43,20 @@ class PayrollController extends Controller
 	 */
 	public function create(Request $request)
 	{		
-		$week = $request->week ?? date('W');
+		
+		$input = $request->all();
 
-		$year = $request->year ?? date('Y');
+		if (array_key_exists('daterange', $input)) {
+			$arr = explode(' - ', $input['daterange']);
 
-		$month = date('F', strtotime($year.'-W'.$week));
+			$request['start_date'] = date('Y-m-d', strtotime($arr[0]));
+
+			$request['end_date'] = date('Y-m-d', strtotime($arr[1]));
+		} else{
+			$request['start_date'] = date('Y-m-d');
+
+			$request['end_date'] = date('Y-m-d', strtotime('+1 week'));
+		}
 
 		$query = User::select(
 			'users.id',
@@ -97,7 +106,7 @@ class PayrollController extends Controller
 		}
 		// dd($tempDatesArr);
 
-	   	return view('client.payroll.create', compact('employees', 'tempDatesArr', 'week', 'year', 'month', 'request'));
+	   	return view('client.payroll.create', compact('employees', 'tempDatesArr', 'request'));
 	}
 
 	public function store(Request $request)
@@ -130,7 +139,7 @@ class PayrollController extends Controller
 
 			if (!empty($data['check'])) {
 				foreach($data['check'] as $k => $v) {
-					if($v == 1) {
+					if($v == 0) {
 						if (array_key_exists($k, $arrDates)) {
 							$arr = $arrDates[$k];
 
