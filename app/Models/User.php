@@ -77,4 +77,8 @@ class User extends Authenticatable
     public function payheads() {
         return $this->hasMany(Paystructure::class, 'user_id');
     }
+
+    public function leavePolicies() {
+        return $this->hasMany(EmpLeavePolicy::class, 'user_id');
+    }
 }

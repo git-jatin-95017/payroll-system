@@ -75,7 +75,7 @@
 												$salary = $isDataExist->gross;
 											}
 										?>
-									    <tr>									      
+									    <tr class="row-tr-js">									      
 									      	<td class="col-sm-4">
 												<table>
 													<tr >
@@ -90,31 +90,55 @@
 												<table>
 													<tr>
 														<td>
-															<button class="btn-none"  data-toggle="collapse" href="#eraning{{$k}}" role="button" aria-expanded="false" aria-controls="eraning{{$k}}">
-																<svg width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007bff" aria-hidden="true">
-																	<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
-																</svg>
-															</button>
-															<div class="collapse" id="eraning{{$k}}">
-																<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][id]">
-																  <input type="hidden" value="{{$from}}" name="input[{{$employee->id}}][start_date]">
-																  <input type="hidden" value="{{$to}}" name="input[{{$employee->id}}][end_date]">							      	
-																Vacation Hours
-																<div class="input-group group-left">
-																	<input type="number" name="input[{{$employee->id}}][vacation_hrs]" min="0" value="{{ $vacation_hrs }}" class="form-control fixed-input" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>')">
-																</div>
-																<hr>
-																Paid sick day:<input type="number" name="input[{{$employee->id}}][paid_sick_days]" min="0" class="form-control input-sm" value="0" readonly>
-																Hourly Vacation:<input type="number" name="input[{{$employee->id}}][hourly_vacation]" min="0" class="form-control input-sm" value="0" readonly>
-																Salaried Vacation Monthly:
-																<input type="number" name="input[{{$employee->id}}][vac_monthly]" min="0" class="form-control input-sm" value="0" readonly>
-																Salaried Vacation Semi-Monthly:
-																<input type="number" name="input[{{$employee->id}}][vac_semi_monthly]" min="0" class="form-control input-sm" value="0" readonly>
-																Salaried Vacation Bi-weekly:
-																<input type="number" name="input[{{$employee->id}}][vac_biweekly]" min="0" class="form-control input-sm" value="0" readonly>
-																Weekly vacation:
-																<input type="number" name="input[{{$employee->id}}][vac_weekly]" min="0" class="form-control input-sm" value="0" readonly>
-															</div>
+															@foreach($employee->leavePolicies as $key =>$value)
+																<?php
+																	$employeeID = $employee->id;
+
+														            $leaveID = $value->leave->id;
+
+														            $typeId = $value->leave;
+
+														            $year = date('Y');
+														            
+														            $daysTaken = \App\Models\AssignLeave::where('emp_id', $employeeID)->where('type_id', $leaveID)->where('dateyear', $year)->first();
+
+														            // $daysTaken = $this->getEmpAssignLeaveType($employeeID, $leaveID, $year);
+														            
+														            $leavetypes = \App\Models\LeaveType::findOrFail($leaveID);
+
+														            if (empty($daysTaken->hour)) {
+														                $daysTakenval = '0';
+														            } else {
+														                $daysTakenval = $daysTaken->hour / 8;
+														            }
+
+														            if ($leaveID =='5') {
+														            	// $earnTaken = $this->leave_model->emEarnselectByLeave($employeeID);
+														                $totalday = 0;//'Earned Balance: '.($earnTaken->hour / 8).' Days';
+														            } else {
+														                //$totalday   = $leavetypes->leave_day . '/' . ($daysTaken/8);
+														                $totalday = ($leavetypes->leave_day - $daysTakenval);
+														            }
+																?>
+																<p>
+																	<label class="cursor-pointer" data-toggle="collapse" href="#bonus{{$employee->id}}{{$key}}" role="button" aria-expanded="false" aria-controls="bonus{{$employee->id}}{{$key}}">
+																		{{$value->leave->name}} 
+																		<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007bff" aria-hidden="true">
+																			<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
+																		</svg>
+																	</label>
+																	<p class="collapse" id="bonus{{$employee->id}}{{$key}}">
+																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_type_id]">
+																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totalday; ?>')">
+																		<br>
+																		Number Of Terms | <b>{{$value->leave->leave_day??0}}</b><br>
+																		Leave Balance | <b class="leave-balance-all" id="balance-{{$employee->id}}-{{$value->leave->id}}">{{$totalday}}</b><br><br>
+																	</p>
+																</p>
+															@endforeach
+															<br>
+															<small class="badge badge-info">Paid Time Off:</small>
+															$<small id="payoff-{{$employee->id}}">0</small>														
 														</td>
 													</tr>											
 												</table>
@@ -123,21 +147,14 @@
 												<table>
 													<tr>
 														<td>
-															<button class="btn-none"  data-toggle="collapse" href="#emp{{$k}}" role="button" aria-expanded="false" aria-controls="emp{{$k}}">
-																<svg width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007bff" aria-hidden="true">
-																	<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
-																</svg>
-															</button>
-															<div class="collapse" id="emp{{$k}}">
-																	Unpaid Sick day:
-																<div class="input-group group-left">																	
-																	<input type="number" name="input[{{$employee->id}}][sick_hrs]" min="0" value="{{ $sick_hrs }}" class="form-control fixed-input	">
-																</div><br>
-																	Unpaid Vacation:
-																<div class="input-group group-left">																	
-																	<input type="number" name="input[{{$employee->id}}][sick_hrs]" min="0" value="{{ $sick_hrs }}" class="form-control fixed-input">
-																</div>
-															</div>															
+															<p>
+																<label class="cursor-pointer">
+																	Total Leave Balance
+																</label>
+																<p>
+																	<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input hrs" id="last-row-{{$employee->id}}">
+																</p>										      	
+															</p>
 														</td>
 													</tr>
 													</tr>
@@ -168,55 +185,52 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.min.js"></script>
 <script>
 
-	function calculateOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary) {
-		console.log(obj.value, emp_id, pay_type, row_key, rate_per_hour, salary);
-		let pack_sick_days  = rate_per_hour *  obj.value;
-		let hourly_vacation  = 0;
-		let vac_monthly = 0;
-		let vac_semi_monthly  = 0;
-		let vac_biweekly = 0;
-		let vac_weekly = 0;
+	function calculateOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary, leave_day_terms, leave_id, leave_balance) {
+		// console.log(obj.value, emp_id, pay_type, row_key, rate_per_hour, salary);
+		
+		let initial_enter_val = obj.value;
 
-		$(`[name="input[${emp_id}][paid_sick_days]"]`).val(pack_sick_days);
+		let final_balance = leave_balance - initial_enter_val;
+
+		var focusedRow = $(obj).closest('.row-tr-js');
+
+		let entered_leave_hrs = 0;
+
+		focusedRow.find(".leave-hrs").each(function() {	  		
+	  		if ($.isNumeric(this.value)) {
+	  			entered_leave_hrs += parseFloat(this.value);
+	  		}
+	  	});
+
+		let hrs_inputted = entered_leave_hrs;
+
+		let paid_time_off = 0;
 
 		if (pay_type == 'hourly') {
-			hourly_vacation  = rate_per_hour *  obj.value
-			vac_monthly = salary * 40 *  obj.value;			
-			vac_semi_monthly = salary * 40 *  obj.value;	
-			vac_biweekly = salary * 40 *  obj.value;
-			vac_weekly = 0;
-			
+			paid_time_off = rate_per_hour *  hrs_inputted;
 		}  else if (pay_type == 'weekly') {
-			hourly_vacation = 0;
-			vac_monthly = salary * 52 *  obj.value;
-			vac_semi_monthly = salary * 52 *  obj.value;	
-			vac_biweekly = salary * 52 *  obj.value;;
-			vac_weekly = salary * 40 *  obj.value;
+			paid_time_off = rate_per_hour *  hrs_inputted;
 		}  else if (pay_type == 'biweekly') {
-			hourly_vacation = 0;
-			vac_monthly  = salary * 52 *  obj.value;
-			vac_semi_monthly  = 0;
-			vac_biweekly = 0;
-			vac_weekly = 0;
+			paid_time_off = (((salary * leave_day_terms)/52)/40)*hrs_inputted;			
 		}  else if (pay_type == 'semi-monthly') {
-			hourly_vacation = 0;
-			vac_monthly  = salary * 40 *  obj.value;
-			vac_semi_monthly = salary * 52 *  obj.value;
-			vac_biweekly = 0;
-			vac_weekly = 0;
+			paid_time_off = (((salary * leave_day_terms)/52)/40)*hrs_inputted;
 		}  else if (pay_type == 'monthly') {
-			hourly_vacation = 0;
-			vac_monthly  = salary * 12 *  obj.value;
-			vac_semi_monthly  =  salary * 24 *  obj.value;
-			vac_biweekly = salary * 26 *  obj.value;;
-			vac_weekly = 0;
+			paid_time_off = (((salary * 12)/52)/40)*hrs_inputted;
+			paid_time_off = leave_balance - paid_time_off;
 		}
 
-		$(`[name="input[${emp_id}][hourly_vacation]"]`).val(hourly_vacation);
-		$(`[name="input[${emp_id}][vac_monthly]"]`).val(vac_monthly);
-		$(`[name="input[${emp_id}][vac_semi_monthly]"]`).val(vac_semi_monthly);
-		$(`[name="input[${emp_id}][vac_biweekly]"]`).val(vac_biweekly);
-		$(`[name="input[${emp_id}][vac_weekly]"]`).val(vac_weekly);
+		focusedRow.find(`[id="payoff-${emp_id}"]`).html(paid_time_off.toFixed(2));
+		focusedRow.find(`[id="balance-${emp_id}-${leave_id}"]`).html(final_balance);
+
+		total_balance = 0;
+		focusedRow.find(".leave-balance-all").each(function() {	 
+		console.log($(this).html()); 		
+	  		if ($.isNumeric($(this).html())) {
+	  			total_balance += parseFloat($(this).html());
+	  		}
+	  	});
+
+		focusedRow.find(`[id ="last-row-${emp_id}"]`).val(total_balance);
 	}
 
   $("#approve-button").click(function(e) {

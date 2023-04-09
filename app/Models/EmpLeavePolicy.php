@@ -21,5 +21,8 @@ class EmpLeavePolicy extends Model
 	 */
 	protected $guarded = [];
 	
+	public function leave() {
+        return $this->belongsTo(LeaveType::class, 'leave_type_id');
+    }
 	
 }

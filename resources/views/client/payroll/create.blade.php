@@ -309,7 +309,7 @@
 	
 	$('#daterange').daterangepicker({
 
-             minDate:today1
+             maxDate:today1
     });
 	$("#approve-button").click(function(e) {
 	    e.preventDefault();

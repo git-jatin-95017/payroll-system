@@ -70,7 +70,7 @@ class RunPayrollController extends Controller
 						'status' => 0,
 					]);
 				} else {
-					$run = PayrollAmount::create([
+					$payroll = PayrollAmount::create([
 						'user_id' => $k,
 						'start_date' => $v['start_date'],
 						'end_date' => $v['end_date'],
@@ -102,8 +102,8 @@ class RunPayrollController extends Controller
 						]);					
 					} else {
 						AdditionalEarning::create([
-							'payroll_amount_id' => $run->id,
-							'user_id' => $run->user_id,
+							'payroll_amount_id' => $payroll->id,
+							'user_id' => $payroll->user_id,
 							'payhead_id' => $value['payhead_id'],
 							'amount' => (float) $value['amount']
 						]);					

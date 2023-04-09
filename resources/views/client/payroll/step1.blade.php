@@ -233,7 +233,7 @@
 																	</label>
 																	<p class="collapse" id="bonus{{$employee->id}}{{$key}}">
 																		<input type="hidden" value="{{$value->payhead_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][payhead_id]">
-																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" value="{{$amountPayhead}}"  data-payheadtype="{{$value->payhead->pay_type}}" class="form-control fixed-input additional-hrs"  onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'additional', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>', '<?php echo $dob; ?>')">
+																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" value="{{$amountPayhead}}"  data-payheadtype="{{$value->payhead->pay_type}}" class="form-control fixed-input additional-hrs" data-payhead="{{ $value->payhead->id}}-{{$employee->id}}" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'additional', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>', '<?php echo $dob; ?>')">
 																	</p>										      	
 																</p>
 															@endforeach
@@ -259,7 +259,14 @@
 														<div data-maindiv="overtime-div"><small class="badge badge-info">OT</small>: $<span class="overtime">0.00</span><br></div>
 														<div data-maindiv="double-overtime-div"><small class="badge badge-info">DT</small>: $<span class="double-overtime">0.00</span><br></div>
 														<div data-maindiv="holiday-pay-span-div"><small class="badge badge-info">Holiday Pay</small>: $<span class="holiday-pay-span">0.00</span><br></div>
-														<div data-maindiv="additonal-earn-span-div"><small class="badge badge-info">Additional Earnings</small>: $<span class="additonal-earn-span">0.00</span><br></div>
+														<div data-maindiv="additonal-earn-span-div">
+															@foreach($employee->payheads as $key =>$value)
+																<div id="{{ $value->payhead->id}}-{{$employee->id}}" class="d-none">
+																	<small class="badge badge-info">{{ $value->payhead->name}}</small>: $<span data-payheadlast="{{ $value->payhead->id}}-{{$employee->id}}">0.00</span><br>
+																</div>
+															@endforeach													
+																<small class="badge badge-info">Total Additional Earnings</small>: $<span class="additonal-earn-span">0.00</span><br>
+														</div>
 														<div data-maindiv="medical-div" class="d-none"><small class="badge badge-info">Medical</small>: $<span class="medical">0.00</span><br></div>
 														<div data-maindiv="social-security-div" class="d-none"><small class="badge badge-info">Security</small>: $<span class="social-security">0.00</span><br></div>
 														<div data-maindiv="edu-levy-div" class="d-none"><small class="badge badge-info">Education Levy</small>: $<span class="edu-levy">0.00</span><br></div>
@@ -360,14 +367,41 @@
 	  	focusedRow.find(".additional-hrs").each(function() {	  		
 	  		if ($.isNumeric(this.value) && $(this).attr('data-payheadtype') == 'earnings') {
 	  			additionalHrsEarnings += parseFloat(this.value);
+
+	  			if (this.hasAttribute('data-payhead')) {
+			  		let temp_attr = $(this).attr('data-payhead');
+
+			  		// console.log(focusedRow.find(`[data-payheadlast="${temp_attr}"]`), 77777);
+			  		if ($.isNumeric(this.value) && this.value > 0) {
+				  		focusedRow.find(`[id="${temp_attr}"]`).removeClass('d-none');
+				  		focusedRow.find(`[data-payheadlast="${temp_attr}"]`).html(this.value);
+				  	}  else {
+				  		focusedRow.find(`[id="${temp_attr}"]`).addClass('d-none');	
+				  	}
+
+			  	}
 	  		}
 	  	});
 
 	  	focusedRow.find(".additional-hrs").each(function(){
 	  		if ($.isNumeric(this.value) && $(this).attr('data-payheadtype') == 'deductions') {
 	  			additionalHrsDeductions += parseFloat(this.value);
+			  	if (this.hasAttribute('data-payhead')) {
+			  		let temp_attr = $(this).attr('data-payhead');
+
+			  		// console.log(focusedRow.find(`[data-payheadlast="${temp_attr}"]`), 77777);
+			  		if ($.isNumeric(this.value) && this.value > 0) {
+				  		focusedRow.find(`[id="${temp_attr}"]`).removeClass('d-none');
+				  		focusedRow.find(`[data-payheadlast="${temp_attr}"]`).html(this.value);
+				  	}  else {
+				  		focusedRow.find(`[id="${temp_attr}"]`).addClass('d-none');	
+				  	}
+			  	}
 	  		}
 	  	});
+
+
+	  	// console.log($(obj).attr('payhead'), obj.hasAttribute('data-payhead'), 22222222);
 
 	  	gross = amount = rate_per_hour * regular_hrs; //Gross
 
