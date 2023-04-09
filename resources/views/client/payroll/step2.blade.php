@@ -96,8 +96,6 @@
 
 														            $leaveID = $value->leave->id;
 
-														            $typeId = $value->leave;
-
 														            $year = date('Y');
 														            
 														            $daysTaken = \App\Models\AssignLeave::where('emp_id', $employeeID)->where('type_id', $leaveID)->where('dateyear', $year)->first();
