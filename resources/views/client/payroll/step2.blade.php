@@ -117,7 +117,7 @@
 														                $totalday = 0;//'Earned Balance: '.($earnTaken->hour / 8).' Days';
 														            } else {
 														                //$totalday   = $leavetypes->leave_day . '/' . ($daysTaken/8);
-														                $totalday = ($leavetypes->leave_day - $daysTakenval);
+														                $totalday = (float)$leavetypes->leave_day - (float)$daysTakenval;
 														            }
 																?>
 																<p>
