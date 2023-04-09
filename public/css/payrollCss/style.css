@@ -15,7 +15,7 @@
     width:100%
 }
 
-.bg-dark-blue{
+.bg-dark-blue{ table-layout: fixed;
     background: #3D505B;
 }
 
@@ -10263,6 +10263,10 @@ body.mini-sidebar footer.main-footer{
     font-weight: 600;
 }
 
+.ts-custom-table{
+    table-layout: fixed;
+}
+
 .ts-custom-table tr td, .ts-custom-table tr th {
     white-space: nowrap;
     text-align: center;
@@ -10271,6 +10275,7 @@ body.mini-sidebar footer.main-footer{
     color: #607d8b;
     padding-top:20px;
     padding-bottom:20px;
+    width: 150px;
 }
 
 tr.ts-date-row,
