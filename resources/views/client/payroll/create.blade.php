@@ -122,52 +122,37 @@
 			<div class="row">
 				<div class="col-sm-12">
 					<div class="card" style="min-height: 400px">
-						<div class="card-header">
-							<div class="row">
-								<div class="col-auto">
-									<select name="week_search" class="form-control custom-ts-select" id="myFancyDropdown">
-										<option value="1" @if($request->week_search ==1) selected @endif>Weekly Timesheet</option>
-										<option value="2" @if($request->week_search ==2) selected @endif>Bi-Weekly Timesheet</option>
-									</select>
-								</div>
-								<?php
-									if($request->has('week_search') && $request->week_search == 1) {
-										$weekday = 7;
-									} else {
-										$weekday = 13;
-									}
-								?>
-								<div class="col-auto">
-									<div class="d-flex align-items-center">
-										<a class= "d-block mt-2 ts-prev-btn" href="{{ route('payroll.create', ['week' => $week-1, 'week_search'=> $request->week_search]) }}">
-											<svg width="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-												<g>
-													<path fill="none" d="M0 0h24v24H0z"></path>
-													<path d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"></path>
-												</g>
-											</svg>
-										</a>
-										<h3 class="card-title mb-0 px-3 ts-header-date"> {{ $year }} - {{ $month }}</h3>
-										<a class="d-block mt-2 ts-next-btn" href="{{ route('payroll.create', ['week' => $week+1, 'week_search'=> $request->week_search]) }}">
-											<svg width="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-												<g>
-													<path fill="none" d="M0 0h24v24H0z"></path>
-													<path d="M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"></path>
-												</g>
-											</svg>
-										</a>
+						<div class="card-header">							
+							<form class="" method="GET" action="{{ route('payroll.create') }}" id="filter-timesheet">
+								<div class="row">
+									<div class="col-sm-2">
+										<div class="form-group">
+											<input type="text" name="daterange" id="daterange" class="form-control" value="{{date('m/d/Y', strtotime($request->start_date)).' - '.date('m/d/Y', strtotime($request->end_date))}}">
+										</div>
 									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<button type="submit" id="submit-button" class="btn btn-primary">Go</button>
+										</div>
+									</div>
+									<?php									
+										$fdate = $request->start_date;
+										$tdate = $request->end_date;
+										$startDate = new \DateTime($fdate);
+										$endDate = new \DateTime($tdate);
+
+										$diff = $endDate->diff($startDate);
+										$weekday = $diff->format('%a');										
+										$week = floor($diff->days / 7);
+									?>
 								</div>
-							</div>
-							</div>
+							</form>
+						</div>
 						<form class="form-horizontal" method="GET" action="{{ route('payroll.create') }}" id="fom-timesheet">
 							@csrf
-							<?php
-								// $default_week = date('W');
-								// $week = $default_week; // get week
-								$y = date('Y'); // get year
-								$first_date =  date('d-m-Y', strtotime($y."W".$week));
-								$two_week_days = [$first_date];
+							<?php								
+								$y = date('Y', strtotime($request->start_date));
+								$first_date = $request->start_date;								
 							?>
 							<div class="card-body p-0">
 							<div class="table-responsive">
@@ -179,9 +164,8 @@
 											<?php
 											for ($i=1;$i<=$weekday;$i++) {
 											?>
-													<th scope="col">{{ strtoupper(date("D", strtotime("+$i day", strtotime($first_date)))) }}</th>
-											<?php
-													// $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
+												<th scope="col">{{ strtoupper(date("D", strtotime("+$i day", strtotime($first_date)))) }}</th>
+											<?php								
 												}
 											?>
 										<th>Total</th>
@@ -306,19 +290,36 @@
 		</div>
 </section>
 @endsection
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 @push('page_scripts')
+<!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script> -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/bloodhound.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.min.js"></script>
 <script>
-  $("#approve-button").click(function(e) {
-    e.preventDefault();
+	var today = new Date(); 
+    var dd = today.getDate(); 
+    var mm = today.getMonth()+1; //January is 0! 
+    var yyyy = today.getFullYear(); 
+    if(dd<10){ dd='0'+dd } 
+    if(mm<10){ mm='0'+mm } 
+    var today1 = mm+'/'+dd+'/'+yyyy;
+	
+	$('#daterange').daterangepicker({
 
-    var form = $("#fom-timesheet");
+             minDate:today1
+    });
+	$("#approve-button").click(function(e) {
+	    e.preventDefault();
 
-    form.prop("method", 'POST');
-    form.prop("action", $(this).data("url"));
-    form.submit();
-  });
+	    var form = $("#fom-timesheet");
+
+	    form.prop("method", 'POST');
+	    form.prop("action", $(this).data("url"));
+	    form.submit();
+	});
 </script>
 
 <script>

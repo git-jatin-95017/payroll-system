@@ -148,8 +148,8 @@
 								<div class="col-md-12">
 									<select class="form-control" name="status">
 										<option value="">Please Select</option>
-										<option value="1" @if($leaveType->status == 1) selected @endif>Active</option>
-										<option value="0" @if($leaveType->status == 0) selected @endif>Inactive</option>
+										<option value="1" @if($leaveType->status == 1) selected @endif>Paid</option>
+										<option value="0" @if($leaveType->status == 0) selected @endif>Unpaid</option>
 									</select>
 
 									@if ($errors->has('status'))

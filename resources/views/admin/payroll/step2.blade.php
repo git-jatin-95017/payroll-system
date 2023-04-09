@@ -5,7 +5,7 @@
     <div class="col-md-5 align-self-center">
         <h3 class="text-themecolor">
             <i class="fa fa-braille" style="color:#1976d2"></i>
-            Run Payroll
+            Approve Payroll
         </h3>
     </div>
     <div class="col-md-7 align-self-center">
@@ -13,7 +13,7 @@
             <li class="breadcrumb-item">
                 <a href="javascript:void(0)">Home</a>
             </li>
-            <li class="breadcrumb-item active">Run Payroll</li>
+            <li class="breadcrumb-item active">Approve Payroll</li>
 			<li class="breadcrumb-item active">/</li>
         </ol>
     </div>
@@ -129,7 +129,7 @@
 													</tr>
 													<tr>
 														<td>
-															36.45 hrs remaining
+															00 hrs remaining
 														</td>
 													</tr>
 												</table>	
@@ -141,7 +141,7 @@
 							</div>
 							<div class="card-footer">
 								<div class="d-flex justify-content-center">
-									<button type="submit" id="save-button" class="btn btn-primary text-uppercase save_continue">Submit</button>
+									<button type="submit" id="save-button" class="btn btn-primary text-uppercase save_continue">Approve</button>
 									<a href="{{ route('store.Step1') }}" class="btn btn-info text-uppercase ml-2 reset_btn">Back</a>
 								</div>
 							</div>

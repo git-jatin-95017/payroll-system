@@ -51,13 +51,22 @@ class RunPayrollController extends Controller
 					$payroll =  PayrollAmount::findOrFail($v['id']);
 
 					$payroll->update([
-						'user_id' => $k,
-						'start_date' => $v['start_date'],
-						'end_date' => $v['end_date'],
+						// 'user_id' => $k,
+						// 'start_date' => $v['start_date'],
+						// 'end_date' => $v['end_date'],
 						'total_hours' => (float) $v['working_hrs'],
 						'notes' => $v['notes']??null,
-						'gross' => (float) $v['working_hrs'],
+						'gross' => (float) $v['gross'],
 						'reimbursement' => (float) $v['reimbursement'] ?? 0,
+						'overtime_hrs' => (float) $v['overtime_hrs'] ?? 0,
+						'doubl_overtime_hrs' => (float) $v['double_overtime_hrs'] ?? 0,
+						'overtime_calc' => (float) $v['overtime_calc'] ?? 0,
+						'doubl_overtime_calc' => (float) $v['doubl_overtime_calc'] ?? 0,						
+						'gross' => (float) $v['gross'] ?? 0,
+						'medical' => (float) $v['medical'] ?? 0,
+						'security' => (float) $v['security'] ?? 0,
+						'net_pay' => (float) $v['net_pay'] ?? 0,
+						'edu_levy' => (float) $v['edu_levy'] ?? 0,
 						'status' => 1,
 					]);
 				} else {
@@ -69,6 +78,15 @@ class RunPayrollController extends Controller
 						'notes' => $v['notes']??null,
 						'gross' => (float) $v['working_hrs'],
 						'reimbursement' => (float) $v['reimbursement'] ?? 0,
+						'overtime_hrs' => (float) $v['overtime_hrs'] ?? 0,
+						'doubl_overtime_hrs' => (float) $v['double_overtime_hrs'] ?? 0,
+						'overtime_calc' => (float) $v['overtime_calc'] ?? 0,
+						'doubl_overtime_calc' => (float) $v['doubl_overtime_calc'] ?? 0,	
+						'gross' => (float) $v['gross'] ?? 0,
+						'medical' => (float) $v['medical'] ?? 0,
+						'security' => (float) $v['security'] ?? 0,
+						'net_pay' => (float) $v['net_pay'] ?? 0,
+						'edu_levy' => (float) $v['edu_levy'] ?? 0,
 						'status' => 1,
 					]);
 				}

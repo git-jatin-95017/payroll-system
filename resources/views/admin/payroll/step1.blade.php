@@ -5,7 +5,7 @@
     <div class="col-md-5 align-self-center">
         <h3 class="text-themecolor">
             <i class="fa fa-braille" style="color:#1976d2"></i>
-            Run Payroll
+            Approve Payroll
         </h3>
     </div>
     <div class="col-md-7 align-self-center">
@@ -13,7 +13,7 @@
             <li class="breadcrumb-item">
                 <a href="javascript:void(0)">Home</a>
             </li>
-            <li class="breadcrumb-item active">Run Payroll</li>
+            <li class="breadcrumb-item active">Approve Payroll</li>
 			<li class="breadcrumb-item active">/</li>
         </ol>
     </div>
@@ -45,9 +45,9 @@
 				<div class="col-sm-12">	
 					<div class="card">	
 						<div class="payroll-top pt-4 text-center">
-							<p>if you run payroll by <span>2.30(PST)</span> on <span>01/02/2023</span></p>
+							<p>if you run payroll by <span>2.30(PST)</span> on <span>{{ date('d/m/Y',strtotime($from))}}</span></p>
 							<p>Your employees will paid on</p>
-							<h3>05/02/2023</h3>
+							<h3>{{ date('d/m/Y',strtotime($to))}}</h3>
 						</div>					
 						<form class="form-horizontal" method="POST" action="{{ route('admin.store.Step1') }}" id="fom-timesheet">
 							@csrf
@@ -55,7 +55,7 @@
 								<table class="table custom-table-run">
 									<thead>
 									    <tr>
-									      <th scope="col">Employees (3)</th>
+									      <th scope="col">Employees ({{count($employees)}})</th>
 									      <th scope="col">Hours Worked (hrs.)</th>
 									      <th scope="col">Additional Earnings</th>
 									      <th scope="col">Gross Pay</th>
@@ -75,17 +75,36 @@
 												$id = $isDataExist->id;
 												$totalHours = $isDataExist->total_hours;
 												$reimbursement = $isDataExist->reimbursement;
+												$overtimeHours = $isDataExist->overtime_hrs;
+												$dovertimeHours = $isDataExist->doubl_overtime_hrs;
+												$gross = $isDataExist->gross;
+												$medical = $isDataExist->medical;
+												$security = $isDataExist->security;
+												$net_pay = $isDataExist->net_pay;
+												$otCalc = $isDataExist->overtime_calc;
+												$dotCalc = $isDataExist->doubl_overtime_calc;
+												$edu_levy = $isDataExist->edu_levy;
 											} else {
 												$id = NULL;
 												$totalHours = collect($timeCardData)->sum('daily_hrs');
 												$reimbursement = 0;
+												$overtimeHours = 0;
+												$dovertimeHours = 0;
+												$otCalc = 0;
+												$dotCalc = 0;
+												$gross = 0;
+												$medical = 0;
+												$security = 0;
+												$net_pay = 0;
+												$edu_levy = 0;
 											}
 										?>
-									    <tr>									      
+									    <tr class="row-tr-js">									      
 									      	<td class="col-sm-3">
 												<table>
 													<tr>
-														<td class="employee-name">{{ $employee->name }}</td>
+														<td class="employee-name">{{ $employee->name }} <span class="badge badge-primary">{{ strtoupper($employee->employeeProfile->pay_type) }}</span></td>
+
 													</tr>
 													<tr>
 														<td>
@@ -101,16 +120,39 @@
 									      		<table>
 													<tr>
 														<td>
-															<button class="btn-none"  data-toggle="collapse" href="#collapseExample{{$k}}" role="button" aria-expanded="false" aria-controls="collapseExample{{$k}}">
-																<svg width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ccc" aria-hidden="true">
-																	<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
-																</svg>
-															</button>
-															<p class="collapse" id="collapseExample{{$k}}">
-																<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][id]">
-																  <input type="hidden" value="{{$from}}" name="input[{{$employee->id}}][start_date]">
-																  <input type="hidden" value="{{$to}}" name="input[{{$employee->id}}][end_date]">
-																  <input type="number" name="input[{{$employee->id}}][working_hrs]" min="0" value="{{ $totalHours }}" class="form-control fixed-input ">
+															<p>
+																<button class="btn-none"  data-toggle="collapse" href="#collapseExample{{$k}}" role="button" aria-expanded="false" aria-controls="collapseExample{{$k}}">
+																	<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007bff" aria-hidden="true">
+																		<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>																	
+																	</svg> Regular Hrs.
+																</button>
+																<p class="collapse" id="collapseExample{{$k}}">
+																	<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][id]">
+																	  <input type="hidden" value="{{$from}}" name="input[{{$employee->id}}][start_date]">
+																	  <input type="hidden" value="{{$to}}" name="input[{{$employee->id}}][end_date]">
+																	 <input type="number" name="input[{{$employee->id}}][working_hrs]" min="0" value="{{ $totalHours }}" class="form-control fixed-input working_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'working_hrs', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>')">
+																</p>
+															</p>
+
+															<p>
+																<button class="btn-none"  data-toggle="collapse" href="#overtime{{$k}}" role="button" aria-expanded="false" aria-controls="overtime{{$k}}">
+																	<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007bff" aria-hidden="true">
+																		<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
+																	</svg> OverTime
+																</button>
+																<p class="collapse" id="overtime{{$k}}">
+																	<input type="number" name="input[{{$employee->id}}][overtime_hrs]" min="0" value="{{ $overtimeHours }}" class="form-control fixed-input overtime_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'overtime_hrs', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>')">
+																</p>
+															</p>
+															<p>
+																<button class="btn-none"  data-toggle="collapse" href="#doubleovertime{{$k}}" role="button" aria-expanded="false" aria-controls="doubleovertime{{$k}}">
+																	<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007bff" aria-hidden="true">
+																		<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
+																	</svg> Double OverTime
+																</button>
+																<p class="collapse" id="doubleovertime{{$k}}">
+																	 <input type="number" name="input[{{$employee->id}}][double_overtime_hrs]" min="0" value="{{ $dovertimeHours }}" class="form-control fixed-input double_overtime_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'double_overtime_hrs', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>')">
+																</p>
 															</p>
 														</td>
 													</tr>
@@ -122,25 +164,25 @@
 													</tr>
 												</table>
 									      	</td>
-									      	<td class="col-sm-3">
+									      	<td class="col-sm-3" data-earn="{{$isDataExist->additionalEarnings ?? null}}">
 												<table>
 													<tr>
 														<td>
 															<?php
 														if (!empty($isDataExist->additionalEarnings)) {
-															foreach($isDataExist->additionalEarnings as $k=> $v) {
+															foreach($isDataExist->additionalEarnings as $key=> $v) {
 													?>									      				
 															<p>
-																<label class="cursor-pointer" data-toggle="collapse" href="#bonus{{$employee->id}}{{$k}}" role="button" aria-expanded="false" aria-controls="bonus{{$employee->id}}{{$k}}">
-																	<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ccc" aria-hidden="true">
+																<label class="cursor-pointer" data-toggle="collapse" href="#bonus{{$employee->id}}{{$key}}" role="button" aria-expanded="false" aria-controls="bonus{{$employee->id}}{{$key}}">
+																	<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007bff" aria-hidden="true">
 																		<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
 																	</svg>
 																	{{$v->payhead->name}}
 																</label>									      	
-																<p class="collapse" id="bonus{{$employee->id}}{{$k}}">
-																	<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][earnings][{{$k }}][id]">
-																	<input type="hidden" value="{{$v->payhead->id}}" name="input[{{$employee->id}}][earnings][{{$k }}][payhead_id]">
-																	<input type="number" value="{{$v->amount}}" name="input[{{$employee->id}}][earnings][{{$k }}][amount]" min="0" class="form-control fixed-input">
+																<p class="collapse" id="bonus{{$employee->id}}{{$key}}">
+																	<input type="hidden" value="{{$v['id']}}" name="input[{{$employee->id}}][earnings][{{$key }}][id]">
+																	<input type="hidden" value="{{$v->payhead->id}}" name="input[{{$employee->id}}][earnings][{{$key }}][payhead_id]">
+																	<input type="number" value="{{$v->amount}}" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input additional-hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'additional', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>')">
 																</p>
 															</p>
 													<?php
@@ -149,16 +191,15 @@
 													?>
 															@foreach($employee->payheads as $key =>$value)
 																<p>
-																	<label class="cursor-pointer" data-toggle="collapse" href="#bonus{{$employee->id}}{{$k}}" role="button" aria-expanded="false" aria-controls="bonus{{$employee->id}}{{$k}}">
+																	<label class="cursor-pointer" data-toggle="collapse" href="#bonus{{$employee->id}}{{$key}}" role="button" aria-expanded="false" aria-controls="bonus{{$employee->id}}{{$key}}">
 																		{{$value->payhead->name}} 
-																		<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ccc" aria-hidden="true">
+																		<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007bff" aria-hidden="true">
 																			<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
 																		</svg>
 																	</label>
-																	<p class="collapse" id="bonus{{$employee->id}}{{$k}}">
-																		<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][earnings][{{$key }}][id]">
+																	<p class="collapse" id="bonus{{$employee->id}}{{$key}}">
 																		<input type="hidden" value="{{$value->payhead_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][payhead_id]">
-																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input">
+																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input additional-hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'additional', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>')">
 																	</p>										      	
 																</p>
 															@endforeach
@@ -179,18 +220,35 @@
 									      <td class="col-sm-3">
 											<table>
 												<tr>
-													<td>$3680.589</td>
+													<td>
+														<small class="badge badge-info">Gross Salary</small>: $<span class="total">0.00</span><br>
+														<small class="badge badge-info">Overtime</small>: $<span class="overtime">0.00</span><br>
+														<small class="badge badge-info">Double OT</small>: $<span class="double-overtime">0.00</span><br>
+														<small class="badge badge-info">Medical</small>: $<span class="medical">0.00</span><br>
+														<small class="badge badge-info">Security</small>: $<span class="social-security">0.00</span><br>
+														<small class="badge badge-info">Education Levy</small>: $<span class="edu-levy">0.00</span><br>
+														<small class="badge badge-info">Net Pay</small>: $<span class="net-pay">0.00</span>
+
+
+														<input type="hidden" class="total-hidden" name="input[{{$employee->id}}][gross]" value="{{ $gross }}">
+														<input type="hidden" class="overtime-hidden" name="input[{{$employee->id}}][overtime_calc]" value="{{ $otCalc }}">
+														<input type="hidden" class="double-overtime-hidden" name="input[{{$employee->id}}][doubl_overtime_calc]" value="{{ $dotCalc }}">
+														<input type="hidden" class="medical-hidden" name="input[{{$employee->id}}][medical]" value="{{ $medical }}">
+														<input type="hidden" class="social-security-hidden" name="input[{{$employee->id}}][security]" value="{{ $security }}">
+														<input type="hidden" class="net-pay-hidden" name="input[{{$employee->id}}][net_pay]" value="{{ $net_pay }}">
+														<input type="hidden" class="edu-levy-hidden" name="input[{{$employee->id}}][edu_levy]" value="{{ $edu_levy }}">
+													</td>
 												</tr>
 												<tr>
 													<td>
 														<label class="cursor-pointer" data-toggle="collapse" href="#g-pay{{$employee->id}}{{$k}}" role="button" aria-expanded="false" aria-controls="g-pay{{$employee->id}}{{$k}}">
-															<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ccc" aria-hidden="true">
+															<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007bff" aria-hidden="true">
 																<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
 															</svg>	
 															Reimbursement
 														</label>
 														<p class="collapse" id="g-pay{{$employee->id}}{{$k}}">
-															<input type="number" name="input[{{$employee->id}}][reimbursement]" value="{{$reimbursement}}" min="0" class="form-control fixed-input">
+															<input type="number" name="input[{{$employee->id}}][reimbursement]" value="{{$reimbursement}}" min="0" class="form-control fixed-input reimbursement_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'reimbursement', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>')">
 														</p>
 													</td>
 												</tr>
@@ -210,14 +268,14 @@
 										</svg>
 										<h3>Confirm your amounts</h3>
 										<p class="text-center">To ensure accuracy, please review your payroll numbers above and make sure they’re 100% correct</p>
-										<span>29,525.65</span>
+										$<span class="total_amount_confirm">0.00</span>
 									</div>
 								</div>
 							</div>
 							<div class="card-footer">
 								<div class="d-flex justify-content-center">
-									<button type="submit" id="save-button" class="btn btn-primary text-uppercase save_continue">Save & continue</button>
-									<button type="reset" id="reset" class="btn btn-default text-uppercase ml-2 reset_btn">Reset</button>
+									<button type="submit" id="save-button" class="btn btn-primary text-uppercase save_continue">Approve</button>
+									<!-- <button type="reset" id="reset" class="btn btn-default text-uppercase ml-2 reset_btn">Reset</button> -->
 								</div>
 								<p>Save date & continue payroll latter</p>
 							</div>
@@ -234,81 +292,80 @@
 @push('page_scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/bloodhound.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.min.js"></script>
-<script>
-  $("#approve-button").click(function(e) {
-    e.preventDefault();
-
-    var form = $("#fom-timesheet");
-
-    form.prop("method", 'POST');
-    form.prop("action", $(this).data("url"));
-    form.submit();
-  });
-</script>
 
 <script>
-	function handle(e){
-        if(e.keyCode == 13) {
-            e.preventDefault(); // Ensure it is only this code that runs
-            $('#fom-timesheet').submit();
-            // alert("Enter was pressed was presses");
-        }
-    }
+	$(document).ready(function() {
+		$('.working_hrs').each(function() { $(this).trigger('change');})
+	});
 
-	let elmSelect = document.getElementById('myFancyDropdown');
+	function calculateGross(obj, emp_id, pay_type, field_name, row_key, pay_rate) {
+		var regular_hrs = 0;
+		var overtime_hrs = 0;
+		var double_overtime_hrs = 0;
+		var reimbursement_hrs = 0;
+		var gross = medical_benefits = amount = social_security = 0;
+		var focusedRow = $(obj).closest('.row-tr-js');
 
-	if (!!elmSelect) {
-	    elmSelect.addEventListener('change', e => {
-	        let choice = e.target.value;
-	        if (!choice) return;
+		var pay_rate = parseFloat(pay_rate);
+		regular_hrs = parseFloat(focusedRow.find(".working_hrs").val());
+		overtime_hrs_val = parseFloat(focusedRow.find(".overtime_hrs").val());
+		double_overtime_hrs_val = parseFloat(focusedRow.find(".double_overtime_hrs").val());
+		reimbursement_hrs = parseFloat(focusedRow.find(".reimbursement_hrs").val());
 
-	        let url = new URL(window.location.href);
-	        url.searchParams.set('week_search', choice);
-	        // console.log(url);
-	        window.location.href = url; // reloads the page
-	    });
+		//Caluclate Additonal Hours
+		var additionalHrs = 0;
+	  	focusedRow.find(".additional-hrs").each(function(){
+	  		if ($.isNumeric(this.value)) {
+	  			additionalHrs += parseFloat(this.value);
+	  		}
+	  	});
+
+
+	  	gross = amount = pay_rate * regular_hrs; //Gross
+
+	  	overtime_hrs = (regular_hrs * 1.5) * overtime_hrs_val;
+
+	  	double_overtime_hrs = (regular_hrs * 2) * double_overtime_hrs_val;
+
+	  	medical_benefits = (gross * 3.5) / 100;
+
+	  	social_security = ( gross>1500 ? ((1500*6.5) / 100) : (gross*6.5) / 100 ); //social_security = ( gross>1500 ? ((1500*6.5)%) : gross*6.5% );
+
+	  	education_lvey = (gross<=125?0:(gross>1154?( ((1154-125)*2.5) / 100)+( ((gross-1154)*5) / 100 ):( ((gross-125)*2.5) /100))); // (gross<=125?0:(gross>1154?((1154-125)*2.5%)+((gross-1154)*5%):((gross-125)*2.5%)));
+
+	  	var total_deductions = medical_benefits + social_security + education_lvey;
+
+	  	var net_pay = gross - total_deductions;
+
+	  	focusedRow.find('.total').html(gross);	
+	  	focusedRow.find('.overtime').html(overtime_hrs);	
+	  	focusedRow.find('.double-overtime').html(double_overtime_hrs);	
+	  	focusedRow.find('.medical').html(medical_benefits);	
+	  	focusedRow.find('.social-security').html(social_security);	
+	  	focusedRow.find('.edu-levy').html(education_lvey.toFixed(2));	
+	  	focusedRow.find('.net-pay').html(net_pay);	
+
+	  	focusedRow.find('.total-hidden').val(gross);	
+	  	focusedRow.find('.overtime-hidden').val(overtime_hrs);	
+	  	focusedRow.find('.double-overtime-hidden').val(double_overtime_hrs);	
+	  	focusedRow.find('.medical-hidden').val(medical_benefits);	
+	  	focusedRow.find('.social-security-hidden').val(social_security);	
+	  	focusedRow.find('.net-pay-hidden').val(net_pay);	
+	  	focusedRow.find('.edu-levy-hidden').val(education_lvey.toFixed(2));	
+
+	  	console.log(pay_rate, pay_type, regular_hrs, overtime_hrs, double_overtime_hrs, additionalHrs, reimbursement_hrs);
+
+	  	var total_confimr_amt =0;
+	  	$(document).find(".total").each(function(index, value){
+	  		console.log($(value).text(), 33333);
+	  		if ($.isNumeric($(value).text())) {
+	  			total_confimr_amt += parseFloat($(value).text());
+	  		}
+	  	});
+
+	  	$(document).find('.total_amount_confirm').html(total_confimr_amt);	  
 	}
 
-    $(document).ready(function() {
-        $(".payroll_date_cell").blur(function() {
-        	if ($(this).val() != '' || $(this).val() != null) {
-	            $.ajax({
-	                url: "{{ route('payroll.store') }}",
-	                type: 'POST',
-	                data: {_token: "{{ csrf_token() }}", emp_id: $(this).data('empid'), payroll_date: $(this).data('date'), daily_hrs: $(this).val() },
-	                dataType: 'JSON',
-	                success: function (data) {
-	                    // alert('Record Saved Successfully.');
-	                }
-	            });
-        	}
-        });
-   });
-</script>
-<script type="text/javascript">
-$(document).ready(function(){
-    $('#select_all').on('click',function(){
-        if(this.checked){
-            $('.checkbox').each(function(){
-                this.checked = true;
-            });
-        }else{
-             $('.checkbox').each(function(){
-                this.checked = false;
-            });
-        }
-    });
-    
-    $('.checkbox').on('click',function(){
-        if($('.checkbox:checked').length == $('.checkbox').length){
-            $('#select_all').prop('checked',true);
-        }else{
-            $('#select_all').prop('checked',false);
-        }
-    });
-});
-</script>
-<script>
 	$(document).ready(function() {
 		$(".payroll_date_cell").on('blur', function(){
 		  	var that = $(this);
@@ -331,85 +388,8 @@ $(document).ready(function(){
 		  	console.log(sum);
 
 		  	focusedRow.find('td.total').html(sum);	 
-		}
-	});
-</script>
-<script type="text/javascript">
-	var route = "{{ route('search.autocomplete') }}";
+		}		
 
-	var states = new Bloodhound({
-		datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-		queryTokenizer: Bloodhound.tokenizers.whitespace,
-		// sufficient: 5,
-		prefetch: {
-	        url:route,
-	        transform: function (data) {          // we modify the prefetch response
-	            var newData = [];                 // here to match the response format
-	            data.forEach(function (item) {    // of the remote endpoint
-	                newData.push({
-	                	'name': item
-	                });
-	            });
-	            return newData;
-	        }
-	    },
-		remote: {
-			url: route + '?codes=%QUERY',
-			wildcard: '%QUERY' // %QUERY will be replace by users input in
-		},
-	});
-
-	states.initialize();
-
-	$('#the-basics .typeahead').typeahead({
-		hint: true,
-		highlight: true,
-		minLength: 1,
-		source: function (term, process) {
-
-			return $.get(route, {
-				term: term
-			}, function (data) {
-				console.log(process(data),2222);
-				return process(data);
-			});
-		},
-	}, {
-		name: 'states',
-		display: 'short_name',
-		source: states.ttAdapter(),
-		// limit: 5,
-		templates: {
-			// pending: function (query) {
-			// 	return '<div>Loading...</div>';
-			// },
-			// empty: [
-			// 	''
-			// ].join('\n'),
-			header: '<h3 class="league-name">Select Leaves</h3>',
-			suggestion: function (data) {
-				return `<div class="man-section">
-					<p>${data.full_name}</p>						
-				</div>`;
-			}
-		}
-
-	}).on('typeahead:selected', function(event, selection) {
-	  	// the second argument has the info you want
-	  	console.log(selection.short_name);
-	  	let res = selection.short_name;
-	  	// clearing the selection requires a typeahead method
-	  	// $(this).typeahead('setQuery', '');
-
-        $.ajax({
-            url: "{{ route('payroll.store') }}",
-            type: 'POST',
-            data: {_token: "{{ csrf_token() }}", emp_id: $(this).data('empid'), payroll_date: $(this).data('date'), daily_hrs: res },
-            dataType: 'JSON',
-            success: function (data) {
-                // alert('Record Saved Successfully.');
-            }
-        });    
 	});
 </script>
 

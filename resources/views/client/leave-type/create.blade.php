@@ -147,8 +147,8 @@
 								<div class="col-md-12">
 									<select class="form-control" name="status">
 										<option value="">Please Select</option>
-										<option value="1">Active</option>
-										<option value="0">Inactive</option>
+										<option value="1">Paid</option>
+										<option value="0">Unpaid</option>
 									</select>
 
 									@if ($errors->has('status'))

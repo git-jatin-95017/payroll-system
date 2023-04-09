@@ -110,7 +110,7 @@
 			</a>
 		</li>
 		<li>
-			<a href="#" class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
+			<a href="{{ route('list.step1') }}" class="has-arrow waves-effect waves-dark" aria-expanded="false">
 				<i class="mdi mdi-cash"></i>
 				<span class="hide-menu">
 					Salaries
