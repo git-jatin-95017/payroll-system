@@ -255,22 +255,22 @@
 											<table>
 												<tr>
 													<td>
-														<div data-maindiv="reg_hrs_div"><small class="badge badge-info">Regular hours</small>: $<span class="reg_hrs">0.00</span><br></div>
+														<div data-maindiv="reg_hrs_div"><small class="badge badge-info">Regular hours</small>: <span class="reg_hrs">0.00</span><br></div>
 														<div data-maindiv="overtime-div"><small class="badge badge-info">OT</small>: $<span class="overtime">0.00</span><br></div>
 														<div data-maindiv="double-overtime-div"><small class="badge badge-info">DT</small>: $<span class="double-overtime">0.00</span><br></div>
 														<div data-maindiv="holiday-pay-span-div"><small class="badge badge-info">Holiday Pay</small>: $<span class="holiday-pay-span">0.00</span><br></div>
 														<div data-maindiv="additonal-earn-span-div">
 															@foreach($employee->payheads as $key =>$value)
 																<div id="{{ $value->payhead->id}}-{{$employee->id}}" class="d-none">
-																	<small class="badge badge-info">{{ $value->payhead->name}}</small>: $<span data-payheadlast="{{ $value->payhead->id}}-{{$employee->id}}">0.00</span><br>
+																	<small class="badge badge-info">{{ $value->payhead->name}}</small>: $<span data-payheadlast="{{ $value->payhead->id}}-{{$employee->id}}">0.00</span>
 																</div>
 															@endforeach													
-																<small class="badge badge-info">Total Additional Earnings</small>: $<span class="additonal-earn-span">0.00</span><br>
+																<small class="badge badge-info d-none">Total Additional Earnings</small><span class="additonal-earn-span d-none">0.00</span>
 														</div>
 														<div data-maindiv="medical-div" class="d-none"><small class="badge badge-info">Medical</small>: $<span class="medical">0.00</span><br></div>
 														<div data-maindiv="social-security-div" class="d-none"><small class="badge badge-info">Security</small>: $<span class="social-security">0.00</span><br></div>
 														<div data-maindiv="edu-levy-div" class="d-none"><small class="badge badge-info">Education Levy</small>: $<span class="edu-levy">0.00</span><br></div>
-														<div data-maindiv="net-pay-div"><small class="badge badge-info">Net Pay</small>: $<span class="net-pay">0.00</span><br></div>
+														<div class="d-none" data-maindiv="net-pay-div"><small class="badge badge-info">Net Pay</small>: $<span class="net-pay">0.00</span><br></div>
 														<div data-maindiv="total-div"><small class="badge badge-info">Gross Pay</small>: $<span class="total">0.00</span></div>
 
 
@@ -344,7 +344,7 @@
 	});
 
 	function calculateGross(obj, emp_id, pay_type, field_name, row_key, rate_per_hour, days, dob) {
-		var regular_hrs = 0;
+		var regular_hrs = 1;
 		var overtime_hrs = 0;
 		var double_overtime_hrs = 0;
 		var reimbursement_hrs = 0;
@@ -531,7 +531,7 @@
 	  	}
 
 	  	if (net_pay) {	  	
-	  		focusedRow.find('[data-maindiv="net-pay-div"]').removeClass('d-none');
+	  		focusedRow.find('[data-maindiv="net-pay-div"]').addClass('d-none'); //Changed removeClasss
 	  	} else {
 	  		focusedRow.find('[data-maindiv="net-pay-div"]').addClass('d-none');	
 	  	}
@@ -544,7 +544,7 @@
 	  		focusedRow.find('[data-maindiv="total-div"]').addClass('d-none');	
 	  	}
 
-	  	focusedRow.find('.reg_hrs').html(regular_hrs);
+	  	focusedRow.find('.reg_hrs').html(regular_hrs * rate_per_hour); // changed
 		focusedRow.find('.holiday-pay-span').html(holiday_pay);	
 		focusedRow.find('.additonal-earn-span').html(additionalHrsEarnings);	
 		focusedRow.find('.overtime').html(overtime_hrs);
@@ -553,7 +553,7 @@
 		focusedRow.find('.social-security').html(social_security);
 		focusedRow.find('.edu-levy').html(education_lvey.toFixed(2));
 		focusedRow.find('.net-pay').html(net_pay);	
-		focusedRow.find('.total').html(gross);
+		focusedRow.find('.total').html((gross - (medical_benefits + additionalHrsDeductions + social_security + education_lvey)) + reimbursement_hrs);
 
 	  	focusedRow.find('.total-hidden').val(gross);	
 	  	focusedRow.find('.overtime-hidden').val(overtime_hrs);	

@@ -53,9 +53,9 @@ class PayrollController extends Controller
 
 			$request['end_date'] = date('Y-m-d', strtotime($arr[1]));
 		} else{
-			$request['start_date'] = date('Y-m-d');
+			$request['start_date'] = date('Y-m-d', strtotime('-1 week'));
 
-			$request['end_date'] = date('Y-m-d', strtotime('+1 week'));
+			$request['end_date'] = date('Y-m-d');
 		}
 
 		$query = User::select(

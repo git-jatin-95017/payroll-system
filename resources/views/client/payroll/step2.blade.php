@@ -65,6 +65,16 @@
 
 											$isDataExist = \App\Models\PayrollAmount::where('start_date', '>=', $from)->where('end_date', '<=', $to)->where('user_id', $employee->id)->first();
 
+											$empLeavesPaid = \App\Models\EmpLeavePolicy::where('emp_leave_policies.user_id', $employee->id)
+											->join('leave_types', function($join) {
+							                    $join->on('leave_types.id', '=', 'emp_leave_policies.leave_type_id');
+							                })->where('status', 1)->get();
+
+							                $empLeavesUnPaid = \App\Models\EmpLeavePolicy::where('emp_leave_policies.user_id', $employee->id)
+											->join('leave_types', function($join) {
+							                    $join->on('leave_types.id', '=', 'emp_leave_policies.leave_type_id');
+							                })->where('status', 0)->get();
+
 											$id = $isDataExist->id;
 											$sick_hrs = $isDataExist->sick_hrs;
 											$vacation_hrs = $isDataExist->vacation_hrs;
@@ -90,7 +100,7 @@
 												<table>
 													<tr>
 														<td>
-															@foreach($employee->leavePolicies as $key =>$value)
+															@foreach($empLeavesPaid as $key =>$value)
 																<?php
 																	$employeeID = $employee->id;
 
@@ -129,7 +139,7 @@
 																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_type_id]">
 																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totalday; ?>')">
 																		<br>
-																		Number Of Terms | <b>{{$value->leave->leave_day??0}}</b><br>
+																		Days Allowed | <b>{{$value->leave->leave_day??0}}</b><br>
 																		Leave Balance | <b class="leave-balance-all" id="balance-{{$employee->id}}-{{$value->leave->id}}">{{$totalday}}</b><br><br>
 																	</p>
 																</p>
@@ -145,14 +155,28 @@
 												<table>
 													<tr>
 														<td>
-															<p>
+															@foreach($empLeavesUnPaid as $key =>$value)
+																<p>
+																	<label class="cursor-pointer" data-toggle="collapse" href="#unpaid{{$employee->id}}{{$key}}" role="button" aria-expanded="false" aria-controls="unpaid{{$employee->id}}{{$key}}">
+																		{{$value->leave->name}} 
+																		<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007bff" aria-hidden="true">
+																			<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
+																		</svg>
+																	</label>
+																	<p class="collapse" id="unpaid{{$employee->id}}{{$key}}">
+																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_type_id_unpaid]">
+																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount_unpaid]" min="0" class="form-control fixed-input">																
+																	</p>
+																</p>
+															@endforeach
+															<!-- <p>
 																<label class="cursor-pointer">
 																	Total Leave Balance
 																</label>
 																<p>
 																	<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input hrs" id="last-row-{{$employee->id}}">
 																</p>										      	
-															</p>
+															</p> -->
 														</td>
 													</tr>
 													</tr>
@@ -209,20 +233,20 @@
 		}  else if (pay_type == 'weekly') {
 			paid_time_off = rate_per_hour *  hrs_inputted;
 		}  else if (pay_type == 'biweekly') {
-			paid_time_off = (((salary * leave_day_terms)/52)/40)*hrs_inputted;			
+			paid_time_off = (((rate_per_hour * 26)/52)/40)*hrs_inputted;			
 		}  else if (pay_type == 'semi-monthly') {
-			paid_time_off = (((salary * leave_day_terms)/52)/40)*hrs_inputted;
+			paid_time_off = (((rate_per_hour * 24)/52)/40)*hrs_inputted;
 		}  else if (pay_type == 'monthly') {
-			paid_time_off = (((salary * 12)/52)/40)*hrs_inputted;
+			paid_time_off = (((rate_per_hour * 12)/52)/40)*hrs_inputted;
 			paid_time_off = leave_balance - paid_time_off;
 		}
 
-		focusedRow.find(`[id="payoff-${emp_id}"]`).html(paid_time_off.toFixed(2));
+		focusedRow.find(`[id="payoff-${emp_id}"]`).html(paid_time_off.toFixed(3));
 		focusedRow.find(`[id="balance-${emp_id}-${leave_id}"]`).html(final_balance);
 
 		total_balance = 0;
 		focusedRow.find(".leave-balance-all").each(function() {	 
-		console.log($(this).html()); 		
+		console.log(paid_time_off); 		
 	  		if ($.isNumeric($(this).html())) {
 	  			total_balance += parseFloat($(this).html());
 	  		}

@@ -162,7 +162,7 @@
 										<th></th>
 										<th scope="col" colspan=""></th>
 											<?php
-											for ($i=1;$i<=$weekday;$i++) {
+											for ($i=0;$i<=$weekday;$i++) {
 											?>
 												<th scope="col">{{ strtoupper(date("D", strtotime("+$i day", strtotime($first_date)))) }}</th>
 											<?php								
@@ -194,7 +194,7 @@
 									<th scope="col">Pay/h</th> -->
 									<?php
 
-									for ($i=1;$i<=$weekday;$i++) {
+									for ($i=0;$i<=$weekday;$i++) {
 									?>
 										<th scope="col">{{ date("d", strtotime("+$i day", strtotime($first_date))) }}</th>
 								<?php
@@ -237,7 +237,7 @@
 										<!-- <td>{{ !empty($v->employeeProfile) ? $v->employeeProfile->pay_rate : 0}}</td> -->
 										<?php
 										$sum = 0;
-										for ($i=1;$i<=$weekday;$i++) {
+										for ($i=0;$i<=$weekday;$i++) {
 											$dateToday = date("Y-m-d", strtotime("+$i day", strtotime($first_date)));
 											$xcellData = NULL;
 											$result = $tempDatesArr[$v->id];
