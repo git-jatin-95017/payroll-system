@@ -238,7 +238,7 @@
 			paid_time_off = (((rate_per_hour * 24)/52)/40)*hrs_inputted;
 		}  else if (pay_type == 'monthly') {
 			paid_time_off = (((rate_per_hour * 12)/52)/40)*hrs_inputted;
-			paid_time_off = leave_balance - paid_time_off;
+			// paid_time_off = leave_balance - paid_time_off;
 		}
 
 		focusedRow.find(`[id="payoff-${emp_id}"]`).html(paid_time_off.toFixed(3));
