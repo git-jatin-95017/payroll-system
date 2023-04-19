@@ -70,7 +70,7 @@
 											<b>{{ $k}}</b>
 								      	</td>
 								      	<td class="col-sm-3">
-								      		Pending
+								      		Approved
 								      	</td>
 								      	<td class="col-sm-3">
 								      		<a href="{{ route('list.step1', ['start_date' => $startDate, 'end_date' => $endDate]) }}">Click here to process</a>
