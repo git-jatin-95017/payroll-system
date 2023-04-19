@@ -318,7 +318,7 @@
 							<div class="card-footer">
 								<div class="d-flex justify-content-center">
 									<button type="submit" id="save-button" class="btn btn-primary text-uppercase save_continue">Save & continue</button>
-									<button type="reset" id="reset" class="btn btn-default text-uppercase ml-2 reset_btn">Reset</button>
+									<!-- <button type="reset" id="reset" class="btn btn-default text-uppercase ml-2 reset_btn">Reset</button> -->
 								</div>
 							</div>
 						</form>
