@@ -92,6 +92,7 @@ Route::prefix('client')->group(function () {
 	Route::get('get-pay-head-assigned', [PayheadController::class, 'assignedPayhead'])->name('assigned.payhead');
 	Route::resource('pay-head', PayheadController::class);
 	
+	Route::get('get-pending-payroll-list', [RunPayrollController::class, 'listPayroll'])->name('list.payroll');
 	Route::get('run-payroll/step-1', [RunPayrollController::class, 'stepOne'])->name('list.step1');
 	Route::post('run-payroll/step-1', [RunPayrollController::class, 'storeStepOne'])->name('store.Step1');
 

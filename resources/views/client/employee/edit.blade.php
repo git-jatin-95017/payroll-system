@@ -410,7 +410,7 @@
 						                            <option selected value disabled>Please make a choice</option>
 						                            <option @if($employee->employeeProfile->pay_type == "hourly") selected @endif value="hourly">Hourly</option>
 						                            <option @if($employee->employeeProfile->pay_type == "weekly") selected @endif value="weekly">Weekly</option>
-						                            <option @if($employee->employeeProfile->pay_type == "biweekly") selected @endif value="biweekly">Biweekly</option>
+						                            <option @if($employee->employeeProfile->pay_type == "bi-weekly") selected @endif value="bi-weekly">Bi-Weekly</option>
 						                            <option @if($employee->employeeProfile->pay_type == "semi-monthly") selected @endif value="semi-monthly">Semi Monthly</option>
 						                           	<option @if($employee->employeeProfile->pay_type == "monthly") selected @endif value="monthly">Monthly</option>
 						                        </select>

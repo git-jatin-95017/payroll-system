@@ -150,6 +150,7 @@
 						</div>
 						<form class="form-horizontal" method="GET" action="{{ route('payroll.create') }}" id="fom-timesheet">
 							@csrf
+							<input type="hidden" name="daterangehidden" id="daterange-hidden" class="form-control" value="{{date('Y-m-d', strtotime($request->start_date)).' - '.date('Y-m-d', strtotime($request->end_date))}}">
 							<?php								
 								$y = date('Y', strtotime($request->start_date));
 								$first_date = $request->start_date;								

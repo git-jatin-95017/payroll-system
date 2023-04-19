@@ -125,7 +125,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="{{ route('list.step1') }}">
+					<a href="{{ route('list.payroll') }}">
 						<span class="hide-menu"> Run Payroll</span>
 					</a>
 				</li>

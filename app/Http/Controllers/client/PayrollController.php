@@ -139,7 +139,7 @@ class PayrollController extends Controller
 
 			if (!empty($data['check'])) {
 				foreach($data['check'] as $k => $v) {
-					if($v == 0) {
+					if($v == 1) {
 						if (array_key_exists($k, $arrDates)) {
 							$arr = $arrDates[$k];
 
@@ -147,6 +147,7 @@ class PayrollController extends Controller
 								if (!is_null($value)) {
 									$isExist = PayrollSheet::where('emp_id', $k)->where('payroll_date', $dateKey)->first();
 									$isExist->approval_status = 1;
+									$isExist->date_range = $data['daterangehidden'];
 									$isExist->save();
 								}
 							}

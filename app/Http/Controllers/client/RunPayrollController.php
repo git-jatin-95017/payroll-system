@@ -26,17 +26,27 @@ class RunPayrollController extends Controller
 		$this->middleware('auth');
 	}
 
+	public function listPayroll(Request $request) {
+		// $results = PayrollSheet::where('approval_status', 1)->get();
+
+		$results = PayrollSheet::where('approval_status', 1)->orderBy('date_range')->whereNotNull('date_range')->get()->groupBy(function($item) {
+		     return $item->date_range;
+		});
+
+		return view('client.payroll.list', compact('results'));
+	}
+
 	/**
 	 * Display a listing of the resource.
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function stepOne()
+	public function stepOne(Request $request)
 	{
 		$employees = User::where('role_id', 3)->get();
 
-		$from = date('Y-m-01'); //date('m-01-Y');
-		$to = date('Y-m-t'); //date('m-t-Y');
+		$from = $request->start_date; //date('Y-m-01'); //date('m-01-Y');
+		$to = $request->end_date; //date('Y-m-t'); //date('m-t-Y');
 
 		return view('client.payroll.step1', compact('employees', 'from', 'to'));
 	}
@@ -112,7 +122,7 @@ class RunPayrollController extends Controller
 			}
 		}
 
-		return redirect()->route('list.step2')->with('message', 'Payroll saved succesfully.');	
+		return redirect()->route('list.step2', ['start_date' => $request->start_date, 'end_date' => $request->end_date])->with('message', 'Payroll saved succesfully.');	
 		
 	}
 
@@ -122,12 +132,12 @@ class RunPayrollController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function stepTwo()
+	public function stepTwo(Request $request)
 	{
 		$employees = User::where('role_id', 3)->get();
 
-		$from = date('Y-m-01'); //date('m-01-Y');
-		$to = date('Y-m-t'); //date('m-t-Y');
+		$from = $request->start_date; //date('Y-m-01'); //date('m-01-Y');
+		$to = $request->end_date; //date('Y-m-t'); //date('m-t-Y');
 
 		return view('client.payroll.step2', compact('employees', 'from', 'to'));
 	}

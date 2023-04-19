@@ -45,11 +45,9 @@
 				<div class="col-sm-12">	
 					<div class="card">	
 						<div class="payroll-top pt-4 text-center">
-							<p>if you run payroll by <span>2.30(PST)</span> on <span>{{ date('d/m/Y',strtotime($from))}}</span></p>
-							<p>Your employees will paid on</p>
-							<h3>{{ date('d/m/Y',strtotime($to))}}</h3>
+							<h3>Payroll is being processed from {{ date('F dS Y', strtotime($from))}} to {{ date('F dS Y', strtotime($to))}}</h3>
 						</div>					
-						<form class="form-horizontal" method="POST" action="{{ route('store.Step1') }}" id="fom-timesheet">
+						<form class="form-horizontal" method="POST" action="{{ route('store.Step1', ['start_date' => $from, 'end_date' => $to]) }}" id="fom-timesheet">
 							@csrf
 							<div class="card-body">
 								<table class="table custom-table-run">
@@ -322,7 +320,6 @@
 									<button type="submit" id="save-button" class="btn btn-primary text-uppercase save_continue">Save & continue</button>
 									<button type="reset" id="reset" class="btn btn-default text-uppercase ml-2 reset_btn">Reset</button>
 								</div>
-								<p>Save date & continue payroll latter</p>
 							</div>
 						</form>
 						
@@ -353,6 +350,7 @@
 		var total_deductions = 0;
 		var net_pay = 0;
 		var holiday_pay = 0;
+		var final_gross= 0;
 
 		var rate_per_hour = parseFloat(rate_per_hour);
 		regular_hrs = parseFloat(focusedRow.find(".working_hrs").val());
@@ -425,7 +423,7 @@
 	  		education_lvey = (gross<=125?0:(gross>1154?( ((1154-125)*2.5) / 100)+( ((gross-1154)*5) / 100 ):( ((gross-125)*2.5) /100)));
 	  		total_deductions = medical_benefits + social_security + education_lvey;
 	  		net_pay = gross - total_deductions;
-	  	} else if (pay_type == 'biweekly') {
+	  	} else if (pay_type == 'bi-weekly') {
 	  		//medical_benefits = (gross * 3.5) / 100;
   			if (dob <= 60) {
 	  			medical_benefits = (gross * 3.5) / 100;
@@ -478,6 +476,8 @@
 	  	net_pay += reimbursement_hrs;
 
 	  	net_pay -= additionalHrsDeductions;
+
+	  	final_gross += (rate_per_hour * regular_hrs) + (overtime_hrs + double_overtime_hrs + additionalHrsEarnings + holiday_pay);
 
 	  	if (additionalHrsEarnings > 0) {
 	  		focusedRow.find('[data-maindiv="additonal-earn-span-div"]').removeClass('d-none');
@@ -553,9 +553,9 @@
 		focusedRow.find('.social-security').html(social_security);
 		focusedRow.find('.edu-levy').html(education_lvey.toFixed(2));
 		focusedRow.find('.net-pay').html(net_pay);	
-		focusedRow.find('.total').html((gross - (medical_benefits + additionalHrsDeductions + social_security + education_lvey)) + reimbursement_hrs);
+		focusedRow.find('.total').html(final_gross);
 
-	  	focusedRow.find('.total-hidden').val(gross);	
+	  	focusedRow.find('.total-hidden').val(final_gross);	 // gross
 	  	focusedRow.find('.overtime-hidden').val(overtime_hrs);	
 	  	focusedRow.find('.double-overtime-hidden').val(double_overtime_hrs);	
 	  	focusedRow.find('.holiday-pay-hidden').val(holiday_pay);	
