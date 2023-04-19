@@ -157,7 +157,7 @@
 																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_type_id]">
 																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totalday; ?>')">
 																		<br>
-																		Hours Allowed | <b>{{($value->leave->leave_day * 8 )??0}}</b><br>
+																		Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) : 0}}</b><br>
 																		Leave Balance | <b class="leave-balance-all" id="balance-{{$employee->id}}-{{$value->leave->id}}">{{$totalday}}</b><br><br>
 																	</p>
 																</p>
@@ -212,7 +212,7 @@
 																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_type_id_unpaid]">
 																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount_unpaid]" min="0" class="form-control fixed-input">
 																		<br>
-																		Hours Allowed | <b>{{($value->leave->leave_day * 8 )??0}}</b><br>
+																		Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) : 0}}</b><br>
 																		Leave Balance | <b>{{$totaldayunpaid}}</b><br><br>																
 																	</p>
 																</p>
