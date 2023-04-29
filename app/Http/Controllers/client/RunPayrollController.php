@@ -29,8 +29,8 @@ class RunPayrollController extends Controller
 	public function listPayroll(Request $request) {
 		// $results = PayrollSheet::where('approval_status', 1)->get();
 
-		$results = PayrollSheet::where('approval_status', 1)->orderBy('date_range')->whereNotNull('date_range')->get()->groupBy(function($item) {
-		     return $item->date_range;
+		$results = PayrollSheet::where('approval_status', 1)->orderBy('appoval_number')->whereNotNull('date_range')->get()->groupBy(function($item) {
+		     return $item->appoval_number;
 		});
 
 		return view('client.payroll.list', compact('results'));
@@ -47,8 +47,9 @@ class RunPayrollController extends Controller
 
 		$from = $request->start_date; //date('Y-m-01'); //date('m-01-Y');
 		$to = $request->end_date; //date('Y-m-t'); //date('m-t-Y');
+		$appoval_number = $request->number; //date('Y-m-t'); //date('m-t-Y');
 
-		return view('client.payroll.step1', compact('employees', 'from', 'to'));
+		return view('client.payroll.step1', compact('employees', 'from', 'to', 'appoval_number'));
 	}
 
 	public function storeStepOne(Request $request)
@@ -122,7 +123,7 @@ class RunPayrollController extends Controller
 			}
 		}
 
-		return redirect()->route('list.step2', ['start_date' => $request->start_date, 'end_date' => $request->end_date])->with('message', 'Payroll saved succesfully.');	
+		return redirect()->route('list.step2', ['start_date' => $request->start_date, 'end_date' => $request->end_date, 'appoval_number' => $request->appoval_number])->with('message', 'Payroll saved succesfully.');	
 		
 	}
 
@@ -138,8 +139,9 @@ class RunPayrollController extends Controller
 
 		$from = $request->start_date; //date('Y-m-01'); //date('m-01-Y');
 		$to = $request->end_date; //date('Y-m-t'); //date('m-t-Y');
+		$appoval_number = $request->appoval_number; //date('Y-m-t'); //date('m-t-Y');
 
-		return view('client.payroll.step2', compact('employees', 'from', 'to'));
+		return view('client.payroll.step2', compact('employees', 'from', 'to', 'appoval_number'));
 	}
 
 	public function storeStepTwo(Request $request)
@@ -164,4 +166,13 @@ class RunPayrollController extends Controller
 		
 	}
 
+	public function saveName(Request $request) {
+		$number = $request->get('key');
+
+		$name = $request->get('name');
+
+		$result = PayrollSheet::where('appoval_number', $number)->update(['payroll_name' => $name]);
+
+		return response()->json($result);
+	}
 }

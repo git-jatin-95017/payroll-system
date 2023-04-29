@@ -45,9 +45,9 @@
 				<div class="col-sm-12">	
 					<div class="card">	
 						<div class="payroll-top pt-4 text-center">
-							<h3>Payroll is being processed from {{ date('F dS Y', strtotime($from))}} to {{ date('F dS Y', strtotime($to))}}</h3>
+							<h4>Payroll is being processed from {{ date('F dS Y', strtotime($from))}} to {{ date('F dS Y', strtotime($to))}}</h4>
 						</div>					
-						<form class="form-horizontal" method="POST" action="{{ route('store.Step1', ['start_date' => $from, 'end_date' => $to]) }}" id="fom-timesheet">
+						<form class="form-horizontal" method="POST" action="{{ route('store.Step1', ['start_date' => $from, 'end_date' => $to, 'appoval_number'=> $appoval_number]) }}" id="fom-timesheet">
 							@csrf
 							<div class="card-body">
 								<table class="table custom-table-run">
@@ -65,8 +65,11 @@
 											// $from = date('Y-m-01'); //date('m-01-Y');
 											// $to = date('Y-m-t'); //date('m-t-Y');
 
-											$timeCardData = \App\Models\PayrollSheet::whereBetween('payroll_date', [$from, $to])->where('approval_status', 1)->whereNotNull('payroll_date')->where('emp_id', $employee->id)->get();
+											$timeCardData = \App\Models\PayrollSheet::whereBetween('payroll_date', [$from, $to])->where('approval_status', 1)->where('appoval_number', $appoval_number)->whereNotNull('payroll_date')->where('emp_id', $employee->id)->get();
 
+											if ($timeCardData->count() == 0) {
+												continue;
+											}
 											// foreach($timeCardData as $k => $v) {
 											// 	$timeCardData[$k]['daily_hrs'] = (float) $v['daily_hrs'];
 											// }
@@ -194,7 +197,7 @@
 																	</svg> Holiday pay
 																</button>
 																<p class="collapse" id="holiday_pay{{$k}}">
-																	 <input type="number" name="input[{{$employee->id}}][holiday_pay]" min="0" value="{{ $holidayPayHrs }}" class="form-control fixed-input holiday_pay" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'holiday_pay', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>', '<?php echo $dob; ?>')">
+																	<input type="number" name="input[{{$employee->id}}][holiday_pay]" min="0" value="{{ $holidayPayHrs }}" class="form-control fixed-input holiday_pay" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'holiday_pay', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>', '<?php echo $dob; ?>')">
 																</p>
 															</p>
 														</td>
@@ -311,7 +314,7 @@
 										</svg>
 										<h3>Confirm your amounts</h3>
 										<p class="text-center">To ensure accuracy, please review your payroll numbers above and make sure they’re 100% correct</p>
-										$<span class="total_amount_confirm">0.00</span>
+										<b class="total_amount_confirm">$0.00</b>
 									</div>
 								</div>
 							</div>
@@ -336,6 +339,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.min.js"></script>
 
 <script>
+	const formatter = new Intl.NumberFormat('en-US', {
+		style: 'currency',
+		currency: 'USD',
+	});
+
 	$(document).ready(function() {
 		$('.working_hrs').each(function() { $(this).trigger('change');})
 	});
@@ -574,10 +582,10 @@
 	  		}
 	  	});
 
-	  	$(document).find('.total_amount_confirm').html(total_confimr_amt);	  
+	  	$(document).find('.total_amount_confirm').html(formatter.format(total_confimr_amt));	  
 	}
 
-	$(document).ready(function() {
+	$(document).ready(function() {	
 		$(".payroll_date_cell").on('blur', function(){
 		  	var that = $(this);
 

@@ -138,17 +138,25 @@ class PayrollController extends Controller
 			$arrDates = $data['dates'];
 
 			if (!empty($data['check'])) {
+				$number = strtoupper(uniqid());
 				foreach($data['check'] as $k => $v) {
 					if($v == 1) {
 						if (array_key_exists($k, $arrDates)) {
 							$arr = $arrDates[$k];
 
+
 							foreach($arr as $dateKey => $value) {
 								if (!is_null($value)) {
-									$isExist = PayrollSheet::where('emp_id', $k)->where('payroll_date', $dateKey)->first();
-									$isExist->approval_status = 1;
-									$isExist->date_range = $data['daterangehidden'];
-									$isExist->save();
+									$isExist = PayrollSheet::where('emp_id', $k)
+										->where('payroll_date', $dateKey)
+											->where('approval_status', 0)
+												->first();
+									if($isExist) {									
+										$isExist->approval_status = 1;
+										$isExist->date_range = $data['daterangehidden'];
+										$isExist->appoval_number = $number;
+										$isExist->save();
+									}
 								}
 							}
 						}

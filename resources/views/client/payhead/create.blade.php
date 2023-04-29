@@ -92,6 +92,7 @@
 										<select class="form-control" id="pay_type" name="pay_type">
 											<option @if(old('pay_type', '') == "earnings") selected @endif value="earnings">Earnings</option>
 											<option @if(old('pay_type', '') == "deductions") selected @endif value="deductions">Deductions</option>
+											<option @if(old('pay_type', '') == "nothing") selected @endif value="nothing">Blank</option>
 										</select>
 										@if ($errors->has('pay_type'))
 											<span class="text-danger">

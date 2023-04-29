@@ -99,6 +99,8 @@ Route::prefix('client')->group(function () {
 	Route::get('run-payroll/step-2', [RunPayrollController::class, 'stepTwo'])->name('list.step2');
 	Route::post('run-payroll/step-2', [RunPayrollController::class, 'storeStepTwo'])->name('store.Step2');
 
+	Route::post('save-name-payroll', [RunPayrollController::class, 'saveName'])->name('save.name.payroll');
+
 	// Route::resource('run-payroll', RunPayrollController::class);
 
 	Route::get('calculating-payroll', function () {

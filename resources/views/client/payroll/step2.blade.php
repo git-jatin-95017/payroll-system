@@ -45,7 +45,7 @@
 				<div class="col-sm-12">
 					<div class="card">
 						<div class="payroll-top pt-4 text-center">
-							<h3>Payroll is being processed from {{ date('F dS Y', strtotime($from))}} to {{ date('F dS Y', strtotime($to))}}</h3>
+							<h4>Payroll is being processed from {{ date('F dS Y', strtotime($from))}} to {{ date('F dS Y', strtotime($to))}}</h4>
 						</div>							
 						<form class="form-horizontal" method="POST" action="{{ route('store.Step2') }}" id="fom-timesheet">
 							@csrf
@@ -64,7 +64,11 @@
 											// $from = date('Y-m-01'); //date('m-01-Y');
 											// $to = date('Y-m-t'); //date('m-t-Y');
 
-											$timeCardData = \App\Models\PayrollSheet::whereBetween('payroll_date', [$from, $to])->where('approval_status', 1)->where('emp_id', $employee->id)->get();										
+											$timeCardData = \App\Models\PayrollSheet::whereBetween('payroll_date', [$from, $to])->where('approval_status', 1)->where('appoval_number', $appoval_number)->where('emp_id', $employee->id)->get();										
+
+											if ($timeCardData->count() == 0) {
+												continue;
+											}
 
 											$isDataExist = \App\Models\PayrollAmount::where('start_date', '>=', $from)->where('end_date', '<=', $to)->where('user_id', $employee->id)->first();
 
@@ -155,16 +159,34 @@
 																	</label>
 																	<p class="collapse" id="bonus{{$employee->id}}{{$key}}">
 																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_type_id]">
-																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totalday; ?>')">
+																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totalday*8; ?>')" min=0>
 																		<br>
 																		Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) : 0}}</b><br>
-																		Leave Balance | <b class="leave-balance-all" id="balance-{{$employee->id}}-{{$value->leave->id}}">{{$totalday}}</b><br><br>
+																		Leave Balance | <b class="leave-balance-all" id="balance-{{$employee->id}}-{{$value->leave->id}}">{{$totalday*8}}</b>hrs<br><br>
+
 																	</p>
 																</p>
 															@endforeach
 															<br>
 															<small class="badge badge-info">Paid Time Off:</small>
-															$<small class="total" id="payoff-{{$employee->id}}">0</small>														
+															$<small class="total" id="payoff-{{$employee->id}}">0</small>
+															<br>
+															<?php
+																if (!empty($employee->employeeProfile->doj)) {
+																	$Date = $employee->doj;
+																	$modifiedDate = date('Y-m-d', strtotime($Date. ' + 90 days'));
+																	$todayDate = date('Y-m-d');
+
+																	if ($modifiedDate > $todayDate) {
+																		$statusTitle = 'Approved';
+																	} else {
+																		$statusTitle = 'Potential';
+																	}
+																} else {
+																	$statusTitle = 'Potential';
+																} 
+															?>
+															<small class="badge badge-info">Status: </small> <small>{{$statusTitle}}</small>
 														</td>
 													</tr>											
 												</table>
@@ -210,10 +232,13 @@
 																	</label>
 																	<p class="collapse" id="unpaid{{$employee->id}}{{$key}}">
 																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_type_id_unpaid]">
-																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount_unpaid]" min="0" class="form-control fixed-input">
+																		<input min=0 type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount_unpaid]" min="0" class="form-control fixed-input leave-hrs-unpaid" 
+																		onchange="calculateUnpaidOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totaldayunpaid*8; ?>')"
+																		>
 																		<br>
 																		Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) : 0}}</b><br>
-																		Leave Balance | <b>{{$totaldayunpaid}}</b><br><br>																
+
+																		Leave Balance | <b class="leave-balance-all-unpaids" id="balanceunpaid-{{$employee->id}}-{{$value->leave->id}}">{{$totaldayunpaid* 8}}</b>hrs<br><br>																
 																	</p>
 																</p>
 															@endforeach
@@ -241,7 +266,7 @@
 										</svg>
 										<h3>Confirm your amounts</h3>
 										<p class="text-center">To ensure accuracy, please review your payroll numbers above and make sure they’re 100% correct</p>
-										$<span class="total_amount_confirm">0.00</span>
+										<b class="total_amount_confirm">$0.00</b>
 									</div>
 								</div>
 							</div>
@@ -264,6 +289,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/bloodhound.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.min.js"></script>
 <script>
+
+	const formatter = new Intl.NumberFormat('en-US', {
+		style: 'currency',
+		currency: 'USD',
+	});
 
 	function calculateOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary, leave_day_terms, leave_id, leave_balance) {
 		// console.log(obj.value, emp_id, pay_type, row_key, rate_per_hour, salary);
@@ -320,18 +350,52 @@
 	  		}
 	  	});
 
-	  	$(document).find('.total_amount_confirm').html(total_confimr_amt);	  
+	  	$(document).find('.total_amount_confirm').html(formatter.format(total_confimr_amt));	  
 	}
 
-  $("#approve-button").click(function(e) {
-    e.preventDefault();
+	$("#approve-button").click(function(e) {
+		e.preventDefault();
 
-    var form = $("#fom-timesheet");
+		var form = $("#fom-timesheet");
 
-    form.prop("method", 'POST');
-    form.prop("action", $(this).data("url"));
-    form.submit();
-  });
+		form.prop("method", 'POST');
+		form.prop("action", $(this).data("url"));
+		form.submit();
+	});
+
+	function calculateUnpaidOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary, leave_day_terms, leave_id, leave_balance) {		
+		let initial_enter_val = obj.value;
+		let final_balance = leave_balance - initial_enter_val;
+
+		var focusedRow = $(obj).closest('.row-tr-js');
+
+		// let entered_leave_hrs = 0;
+
+		// focusedRow.find(".leave-hrs-unpaid").each(function() {	  		
+	  	// 	if ($.isNumeric(this.value)) {
+	  	// 		entered_leave_hrs += parseFloat(this.value);
+	  	// 	}
+	  	// });
+
+		// let hrs_inputted = entered_leave_hrs;
+
+		// let paid_time_off = 0;
+
+		// if (pay_type == 'hourly') {
+		// 	paid_time_off = rate_per_hour *  hrs_inputted;
+		// }  else if (pay_type == 'weekly') {
+		// 	paid_time_off = rate_per_hour *  hrs_inputted;
+		// }  else if (pay_type == 'bi-weekly') {
+		// 	paid_time_off = (((rate_per_hour * 26)/52)/40)*hrs_inputted;			
+		// }  else if (pay_type == 'semi-monthly') {
+		// 	paid_time_off = (((rate_per_hour * 24)/52)/40)*hrs_inputted;
+		// }  else if (pay_type == 'monthly') {
+		// 	paid_time_off = (((rate_per_hour * 12)/52)/40)*hrs_inputted;
+		// 	// paid_time_off = leave_balance - paid_time_off;
+		// }
+
+		focusedRow.find(`[id="balanceunpaid-${emp_id}-${leave_id}"]`).html(final_balance);
+	}
 </script>
 
 <script>
