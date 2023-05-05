@@ -68,7 +68,8 @@
 									<tr class="row-tr-js tr-main">									      
 										<td>{{ $i }}</td>
 										<td>
-											<input type="text" name="payroll_name" data-id="{{$result[0]['appoval_number']}}" class="payroll_name input-sm form-control" value="{{$result[0]['payroll_name']}}">
+											<a href="javascript:void(0);" id="atag-{{$k}}" onblur="toggleInput(this, '{{$k}}');">Edit</a>
+											<input type="text" name="payroll_name" data-id="{{$result[0]['appoval_number']}}" class="payroll_name input-sm form-control" value="{{$result[0]['payroll_name']}}" id="input-{{$k}}" onblur="saveData(this, '<?php echo $k; ?>')" readonly>
 										</td>
 										<td class="col-sm-3">
 											<b>{{ $startDate}} - {{$endDate}}</b>
@@ -98,22 +99,28 @@
 @endsection
 @push('page_scripts')
 	<script>
-		$(".payroll_name").blur(function() {
-			if ($(this).val() != '' || $(this).val() != null) {
+		function toggleInput(obj, index) {
+			console.log(obj);
+			$('#input-'+index).attr('readonly', false);
+		}
+
+		function saveData(obj, index) {
+			if ($(obj).val() != '' || $(obj).val() != null) {
 				$.ajax({
 					url: "{{ route('save.name.payroll') }}",
 					type: 'POST',
 					data: {
 						_token: "{{ csrf_token() }}", 
-						key: $(this).data('id'), 
-						name: $(this).val(), 
+						key: $(obj).data('id'), 
+						name: $(obj).val(), 
 					},
 					dataType: 'JSON',
 					success: function (data) {
 						// alert('Record Saved Successfully.');
+						$('#input-'+index).attr('readonly', true);
 					}
 				});
 			}
-		});
+		}
 	</script>
 @endpush

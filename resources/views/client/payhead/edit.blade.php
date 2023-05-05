@@ -91,9 +91,9 @@
 									<label for="pay_type" class="col-md-8 control-label">Pay Head Type</label>
 									<div class="col-md-12">
 										<select class="form-control" id="pay_type" name="pay_type">
-											<option @if($payhead->pay_type == "earnings") selected @endif value="earnings">Earnings</option>
-											<option @if($payhead->pay_type == "deductions") selected @endif value="deductions">Deductions</option>
-											<option @if($payhead->pay_type == "nothing") selected @endif value="nothing">Blank</option>
+											<option @if($payhead->pay_type == "earnings") selected @endif value="earnings">Addition to Gross Pay</option>
+											<option @if($payhead->pay_type == "deductions") selected @endif value="deductions">Deduction from Net Pay</option>
+											<option @if($payhead->pay_type == "nothing") selected @endif value="nothing">Addition to Net Pay</option>
 										</select>
 										@if ($errors->has('pay_type'))
 											<span class="text-danger">

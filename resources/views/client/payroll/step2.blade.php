@@ -59,6 +59,9 @@
 									    </tr>
 									</thead>
 									<tbody>
+										<?php 
+											$total = 0;
+										?>
 										@foreach($employees as $k =>$employee)
 										<?php
 											// $from = date('Y-m-01'); //date('m-01-Y');
@@ -90,6 +93,7 @@
 											$salary = 0;
 											if (!empty($isDataExist)) {
 												$salary = $isDataExist->gross;
+												$total += $isDataExist->gross;
 											}
 										?>
 									    <tr class="row-tr-js">									      
@@ -174,16 +178,16 @@
 															<?php
 																if (!empty($employee->employeeProfile->doj)) {
 																	$Date = $employee->doj;
-																	$modifiedDate = date('Y-m-d', strtotime($Date. ' + 90 days'));
-																	$todayDate = date('Y-m-d');
+																	$modifiedDate = date('Y-m-d');
+																	$todayDate = date('Y-m-d', strtotime($Date. ' + 90 days'));
 
 																	if ($modifiedDate > $todayDate) {
 																		$statusTitle = 'Approved';
 																	} else {
-																		$statusTitle = 'Potential';
+																		$statusTitle = 'Probation period';
 																	}
 																} else {
-																	$statusTitle = 'Potential';
+																	$statusTitle = 'Probation period';
 																} 
 															?>
 															<small class="badge badge-info">Status: </small> <small>{{$statusTitle}}</small>
@@ -266,14 +270,18 @@
 										</svg>
 										<h3>Confirm your amounts</h3>
 										<p class="text-center">To ensure accuracy, please review your payroll numbers above and make sure they’re 100% correct</p>
-										<b class="total_amount_confirm">$0.00</b>
+										<b class="total_amount_confirm">${{$total}}</b>
 									</div>
 								</div>
 							</div>
 							<div class="card-footer">
 								<div class="d-flex justify-content-center">
 									<button type="submit" id="save-button" class="btn btn-primary text-uppercase save_continue">Submit</button>
-									<a href="{{ route('store.Step1') }}" class="btn btn-info text-uppercase ml-2 reset_btn">Back</a>
+									<a href="{{ route('store.Step1', [
+											'start_date' => Request::query('start_date'),
+											'end_date' => Request::query('end_date'),
+											'number'=> Request::query('appoval_number')
+										]) }}" class="btn btn-info text-uppercase ml-2 reset_btn">Back</a>
 								</div>
 							</div>
 						</form>
@@ -289,6 +297,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/bloodhound.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.min.js"></script>
 <script>
+	var totalConfimrAmtStep1 = @json($total);
 
 	const formatter = new Intl.NumberFormat('en-US', {
 		style: 'currency',
@@ -350,7 +359,7 @@
 	  		}
 	  	});
 
-	  	$(document).find('.total_amount_confirm').html(formatter.format(total_confimr_amt));	  
+	  	$(document).find('.total_amount_confirm').html(formatter.format(total_confimr_amt + Number(totalConfimrAmtStep1)));	  
 	}
 
 	$("#approve-button").click(function(e) {
