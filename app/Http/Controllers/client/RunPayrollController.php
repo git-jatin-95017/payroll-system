@@ -175,4 +175,12 @@ class RunPayrollController extends Controller
 
 		return response()->json($result);
 	}
+
+	public function deletePayroll(Request $request) {
+		$number = $request->query('appoval_number');
+		$result = PayrollSheet::where('appoval_number', $number)->update(['payroll_name' => NULL, 'approval_status' => 0]);
+
+
+		return back()->with('message','Record deleted successfully.');
+	}
 }

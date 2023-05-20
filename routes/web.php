@@ -106,6 +106,9 @@ Route::prefix('client')->group(function () {
 	Route::get('calculating-payroll', function () {
 		return view('client.payroll.thanks');
 	})->name('calculating-payroll');
+
+	Route::get('delete/payroll', [RunPayrollController::class, 'deletePayroll'])->name('delete.payroll');
+
 });
 
 Route::prefix('employee')->group(function () {

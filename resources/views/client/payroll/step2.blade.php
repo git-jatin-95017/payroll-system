@@ -166,7 +166,25 @@
 																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totalday*8; ?>')" min=0>
 																		<br>
 																		Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) : 0}}</b><br>
-																		Leave Balance | <b class="leave-balance-all" id="balance-{{$employee->id}}-{{$value->leave->id}}">{{$totalday*8}}</b>hrs<br><br>
+																		Leave Balance | <b class="leave-balance-all" id="balance-{{$employee->id}}-{{$value->leave->id}}">{{$totalday*8}}</b>hrs<br>
+																		<?php
+																			if (!empty($employee->employeeProfile->doj)) {
+																				$todayDate = date('Y-m-d');
+																				$joiningDate = $employee->employeeProfile->doj;
+																				$startDaysAfter = $value->leave->start_days??0;
+
+																				$modifiedDate = date('Y-m-d', strtotime($joiningDate. " + {$startDaysAfter} days"));
+
+																				if ($todayDate > $modifiedDate) {
+																					$statusTitle = 'Approved';
+																				} else {
+																					$statusTitle = 'Probation';
+																				}
+																			} else {
+																				$statusTitle = 'Probation';
+																			} 
+																		?>
+																		<small class="badge badge-info">Status: </small> <small>{{$statusTitle}}</small><br><br>
 
 																	</p>
 																</p>
@@ -174,23 +192,6 @@
 															<br>
 															<small class="badge badge-info">Paid Time Off:</small>
 															$<small class="total" id="payoff-{{$employee->id}}">0</small>
-															<br>
-															<?php
-																if (!empty($employee->employeeProfile->doj)) {
-																	$Date = $employee->doj;
-																	$modifiedDate = date('Y-m-d');
-																	$todayDate = date('Y-m-d', strtotime($Date. ' + 90 days'));
-
-																	if ($modifiedDate > $todayDate) {
-																		$statusTitle = 'Approved';
-																	} else {
-																		$statusTitle = 'Probation period';
-																	}
-																} else {
-																	$statusTitle = 'Probation period';
-																} 
-															?>
-															<small class="badge badge-info">Status: </small> <small>{{$statusTitle}}</small>
 														</td>
 													</tr>											
 												</table>
@@ -338,7 +339,7 @@
 			// paid_time_off = leave_balance - paid_time_off;
 		}
 
-		focusedRow.find(`[id="payoff-${emp_id}"]`).html(paid_time_off.toFixed(3));
+		focusedRow.find(`[id="payoff-${emp_id}"]`).html(paid_time_off.toFixed(2));
 		focusedRow.find(`[id="balance-${emp_id}-${leave_id}"]`).html(final_balance);
 
 		total_balance = 0;
