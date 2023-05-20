@@ -186,3 +186,8 @@ Route::get('/logout', function() {
     // redirect to homepage
     return redirect('/');
 })->name('logout');
+
+
+Route::get('client/step-4', function () {
+	return view('client.payroll.step4');
+});

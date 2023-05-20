@@ -10550,3 +10550,122 @@ button.btn-none:focus{
     cursor:pointer;
  }
 
+ .off-screen {
+    height: 1px;
+    left: -50000px;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    width: 1px;
+  }
+  
+  #progress-bar {
+    position: relative;
+    padding-top: 5px;
+    margin-bottom: 1.5em;
+    color: #4d483f;
+  }
+  #progress-bar #progress-steps {
+    height: 8px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: block;
+    background-color: #e1e1e1;
+    position: relative;
+    list-style-type: none;
+    counter-reset: item;
+  }
+  #progress-bar .progress-step {
+    width: 16.66%;
+    height: 8px;
+    float: left;
+    margin: 0 0;
+    padding: 0;
+    position: relative;
+}
+#progress-bar .count:before {
+    content: '';
+    counter-increment: item;
+    display: block;
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -o-border-radius: 50%;
+    position: absolute;
+    top: -2px;
+    padding: 2px 0 0 6px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 999;
+    border-radius: 0;
+}
+  /* #progress-bar .highlight-index:before {
+    background-color: #3cb0a5;
+    color: #fff;
+  } */
+  #progress-bar .highlight-index {
+    background-color: #5c4ac7;
+    display: block;
+    height: 100%;
+  }
+  #progress-bar .description {
+    display: block;
+    text-align: center;
+    left    : 0;
+    position: absolute;
+    bottom: -30px;
+    font-size: 0.9em;
+}
+  #progress-bar .bolded-step {
+    font-weight: normal !important;
+  }
+
+.dabit-data p{
+    color: #000;
+    font-weight:700;
+}
+
+.accordion {
+  margin-top: 40px;
+}
+.accordion .card {
+  border: none;
+  margin-bottom: 20px;
+}
+.accordion .card h2 {
+    background: url('https://cdn0.iconfinder.com/data/icons/entypo/91/arrow56-512.png') no-repeat left center;
+    background-size: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    padding-left: 25px;
+    color:#1976d2;
+}
+
+.accordion .card h2.collapsed {
+  background-image: url('https://cdn0.iconfinder.com/data/icons/arrows-android-l-lollipop-icon-pack/24/expand2-256.png');
+}
+.accordion .card-body {
+  padding-left: 0;
+  padding-right: 0;
+}
+.accordion.custom-accordion .card {
+    box-shadow: none;
+    padding-bottom: 12px;
+}
+
+.table.table-pay-data th,.table.table-pay-data td {
+    border-bottom: 1px solid #e9e9e9;
+    font-size: 14px;
+}
+
+.payroll-heading h3,.payroll-heading h4{
+    font-size:24px;
+    font-weight:600;
+}
+
+.payroll-heading h4{
+    font-size:20px;
+}
