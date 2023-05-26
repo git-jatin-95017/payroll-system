@@ -69,7 +69,7 @@
 		window.addEventListener('load', function () {
 			setTimeout(function() {
 		  		document.getElementById("confirm").click();
-		  	}, 3000);
+		  	}, 2000);
 		});
 	</script>
 @endpush
