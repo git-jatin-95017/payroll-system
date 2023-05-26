@@ -61,4 +61,15 @@
 		</div>
 		</div>
 </section>
+<a class="d-none" href="{{route('payroll.confirmation', ['start_date'=>$start_date,'end_date' =>$end_date,'appoval_number'=> $appoval_number])}}" id="confirm">confirm</a>
 @endsection
+
+@push('page_scripts')
+	<script>
+		window.addEventListener('load', function () {
+			setTimeout(function() {
+		  		document.getElementById("confirm").click();
+		  	}, 3000);
+		});
+	</script>
+@endpush

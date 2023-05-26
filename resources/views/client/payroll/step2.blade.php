@@ -47,7 +47,7 @@
 						<div class="payroll-top pt-4 text-center">
 							<h4>Payroll is being processed from {{ date('F dS Y', strtotime($from))}} to {{ date('F dS Y', strtotime($to))}}</h4>
 						</div>							
-						<form class="form-horizontal" method="POST" action="{{ route('store.Step2') }}" id="fom-timesheet">
+						<form class="form-horizontal" method="POST" action="{{ route('store.Step2', ['start_date' => $from, 'end_date' => $to, 'appoval_number'=> $appoval_number]) }}" id="fom-timesheet">
 							@csrf
 							<div class="card-body">
 								<table class="table custom-table-run">

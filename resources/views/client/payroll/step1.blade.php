@@ -89,6 +89,7 @@
 												$gross = $isDataExist->gross;
 												$medical = $isDataExist->medical;
 												$security = $isDataExist->security;
+												$securityEmployer = $isDataExist->security_employer;
 												$net_pay = $isDataExist->net_pay;
 												$otCalc = $isDataExist->overtime_calc;
 												$dotCalc = $isDataExist->doubl_overtime_calc;
@@ -108,6 +109,7 @@
 												$gross = 0;
 												$medical = 0;
 												$security = 0;
+												$securityEmployer = 0;
 												$net_pay = 0;
 												$edu_levy = 0;
 											}
@@ -281,6 +283,7 @@
 														<input type="hidden" class="holiday-pay-hidden" name="input[{{$employee->id}}][holiday_pay]" value="{{ $dotCalc }}">
 														<input type="hidden" class="medical-hidden" name="input[{{$employee->id}}][medical]" value="{{ $medical }}">
 														<input type="hidden" class="social-security-hidden" name="input[{{$employee->id}}][security]" value="{{ $security }}">
+														<input type="hidden" class="social-security-employer-hidden" name="input[{{$employee->id}}][security_employer]" value="{{ $securityEmployer }}">
 														<input type="hidden" class="net-pay-hidden" name="input[{{$employee->id}}][net_pay]" value="{{ $net_pay }}">
 														<input type="hidden" class="edu-levy-hidden" name="input[{{$employee->id}}][edu_levy]" value="{{ $edu_levy }}">
 													</td>
@@ -353,7 +356,7 @@
 		var overtime_hrs = 0;
 		var double_overtime_hrs = 0;
 		var reimbursement_hrs = 0;
-		var gross = medical_benefits = amount = social_security = 0;
+		var gross = medical_benefits = amount = social_security = social_security_employer = 0;
 		var focusedRow = $(obj).closest('.row-tr-js');
 		var total_deductions = 0;
 		var net_pay = 0;
@@ -428,6 +431,7 @@
 	  		}
 
 	  		social_security = ( gross>1500 ? ((1500*6.5) / 100) : (gross*6.5) / 100 );  
+	  		social_security_employer = ( gross>1500 ? ((1500*8.5) / 100) : (gross*8.5) / 100 );  
 	  		education_lvey = (gross<=125?0:(gross>1154?( ((1154-125)*2.5) / 100)+( ((gross-1154)*5) / 100 ):( ((gross-125)*2.5) /100)));
 	  		total_deductions = medical_benefits + social_security + education_lvey;
 	  		net_pay = gross - total_deductions;
@@ -443,8 +447,10 @@
 
 	  		if (days <= 7) {
 	  			social_security = ( gross>3000 ? ((3000*6.5) / 100) : (gross*6.5) / 100 ); 
+	  			social_security_employer = ( gross>3000 ? ((3000*8.5) / 100) : (gross*8.5) / 100 ); 
 	  		} else {
 	  			social_security = ( gross>3000 ? ((3000*6.5) / 100) : (gross*6.5) / 100 ); 
+	  			social_security_employer = ( gross>3000 ? ((3000*8.5) / 100) : (gross*8.5) / 100 ); 
 	  		}
 	  		education_lvey = (gross<=250?0:(gross>2308?(((2308-250)*2.5)/100)+(((gross-2308)*5)/100):(((gross-250)*2.5)/100)));
 	  		total_deductions = medical_benefits + social_security + education_lvey;
@@ -462,6 +468,7 @@
 	  			medical_benefits = 0;
 	  		}
 	  		social_security = ( gross>3000 ? ((3000*6.5) / 100) : (gross*6.5) / 100 ); 
+	  		social_security_employer = ( gross>3000 ? ((3000*8.5) / 100) : (gross*8.5) / 100 ); 
 	  		education_lvey = (gross<=125?0:(gross>2500?(((2500-270.84)*2.5)/100)+(((gross-2500)*5)/100):(((gross-270.84)*2.5)/100)));
 	  		total_deductions = medical_benefits + social_security + education_lvey;
 	  		net_pay = gross - total_deductions;
@@ -474,6 +481,7 @@
 	  			medical_benefits = 0;
 	  		}
 	  		social_security = ( gross>6500 ? ((6500*6.5) / 100) : (gross*6.5) / 100 ); 
+	  		social_security_employer = ( gross>6500 ? ((6500*8.5) / 100) : (gross*8.5) / 100 ); 
 	  		education_lvey = (gross<=125?0:(gross>5000?(((5000-541.67)*2.5)/100)+(((gross-5000)*5)/100):(((gross-541.67)*2.5)/100)));
 	  		total_deductions = medical_benefits + social_security + education_lvey;
 	  		net_pay = gross - total_deductions;
@@ -569,6 +577,7 @@
 	  	focusedRow.find('.holiday-pay-hidden').val(holiday_pay);	
 	  	focusedRow.find('.medical-hidden').val(medical_benefits);	
 	  	focusedRow.find('.social-security-hidden').val(social_security);	
+	  	focusedRow.find('.social-security-employer-hidden').val(social_security_employer);	
 	  	focusedRow.find('.net-pay-hidden').val(net_pay);	
 	  	focusedRow.find('.edu-levy-hidden').val(education_lvey.toFixed(2));	
 

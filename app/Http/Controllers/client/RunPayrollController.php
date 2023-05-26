@@ -13,6 +13,7 @@ use App\Models\AdditionalEarning;
 use DataTables;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Models\PaymentDetail;
 
 class RunPayrollController extends Controller
 {
@@ -76,6 +77,7 @@ class RunPayrollController extends Controller
 						'gross' => (float) $v['gross'] ?? 0,
 						'medical' => (float) $v['medical'] ?? 0,
 						'security' => (float) $v['security'] ?? 0,
+						'security_employer' => (float) $v['security_employer'] ?? 0,
 						'net_pay' => (float) $v['net_pay'] ?? 0,
 						'edu_levy' => (float) $v['edu_levy'] ?? 0,
 						'status' => 0,
@@ -96,6 +98,7 @@ class RunPayrollController extends Controller
 						'gross' => (float) $v['gross'] ?? 0,
 						'medical' => (float) $v['medical'] ?? 0,
 						'security' => (float) $v['security'] ?? 0,
+						'security_employer' => (float) $v['security_employer'] ?? 0,
 						'net_pay' => (float) $v['net_pay'] ?? 0,
 						'edu_levy' => (float) $v['edu_levy'] ?? 0,
 						'status' => 0,
@@ -162,7 +165,7 @@ class RunPayrollController extends Controller
 			}
 		}
 
-		return redirect()->route('calculating-payroll')->with('message', 'Payroll Computed succesfully!!!');	
+		return redirect()->route('calculating-payroll', ['start_date' => $request->start_date,'end_date' => $request->end_date,'appoval_number' => $request->appoval_number])->with('message', 'Payroll Computed succesfully!!!');	
 		
 	}
 
@@ -182,5 +185,85 @@ class RunPayrollController extends Controller
 
 
 		return back()->with('message','Record deleted successfully.');
+	}
+
+	public function showConfirmation (Request $request) {
+
+		$empIds = PayrollSheet::where('approval_status', 1)
+			->where('appoval_number', $request->appoval_number)
+			->whereNotNull('payroll_date')
+			->select('emp_id')
+			->get()
+			->pluck('emp_id');
+
+		$data = PayrollAmount::where('start_date', '>=', $request->start_date)->where('end_date', '<=', $request->end_date)->where('status', 0)->whereIn('user_id', $empIds)->get();
+
+		$totalPayroll = collect($data)->sum(function ($row) { return (float) $row->gross; });
+		
+		
+		$deductions = 0;
+		$earnings = 0;
+
+		if (count($data) > 0){
+			foreach($data as $res) {
+				foreach($res->additionalEarnings as $key => $val) {
+					if($val->payhead->pay_type =='earnings') {
+						$earnings += $val->amount;
+					}
+
+					if($val->payhead->pay_type =='deductions') {
+						$deductions += $val->amount;
+					}
+				}
+			}
+		}
+		
+		$ids = collect($data)->pluck('id');
+
+		$taxes = collect($data)->sum(function ($row) { return (float) ($row->medical + $row->security + $row->edu_levy); });
+
+		$medicalTotal = collect($data)->sum(function ($row) { return (float) $row->medical; });
+		$securityTotal = collect($data)->sum(function ($row) { return (float) $row->security; });
+		$securityEmployerTotal = collect($data)->sum(function ($row) { return (float) $row->security_employer; });
+		$eduLevytotal = collect($data)->sum(function ($row) { return (float) $row->edu_levy; });
+		
+		$userIds = collect($data)->pluck('user_id');
+
+		$paymentDetails = PaymentDetail::whereIn('user_id', $userIds)->get();
+
+		$directDeposits = collect($paymentDetails)->where('payment_method', 'Direct Deposit')->count();
+		$cheques = collect($paymentDetails)->where('payment_method', 'check')->count();
+
+		$dataGraph = [$totalPayroll, $taxes, $deductions];
+
+		return view('client.payroll.confirmation', [
+			'start_date' => $request->start_date, 
+			'end_date' => $request->end_date, 
+			'appoval_number' => $request->appoval_number,
+			'totalPayroll' => $totalPayroll,
+			'taxes' => $taxes,
+			'directDeposits' => $directDeposits,
+			'cheques' => $cheques,
+			'medicalTotal' => $medicalTotal,
+			'securityTotal' => $securityTotal,
+			'eduLevytotal' => $eduLevytotal,
+			'securityEmployerTotal' => $securityEmployerTotal,
+			'data' => $data,
+			'ids' => $ids,
+			'dataGraph' => $dataGraph,
+		]);
+	}
+
+	public function saveConfirmation(Request $request) {
+		$ids = $request->ids;
+
+		if (count($ids) > 0) {
+			foreach($ids as $id) {
+				$payroll = PayrollAmount::findOrFail($id);
+				$payroll->update(['status' => 1]);
+			}
+		}
+
+		return redirect()->route('list.payroll')->with('message', 'Payroll confirmed succesfully.');
 	}
 }

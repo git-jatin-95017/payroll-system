@@ -59,11 +59,16 @@
 									<?php $i = 1; ?>
 									@foreach($results as $k =>$result)
 									<?php
+
 										$arr = explode(' - ', $result[0]['date_range']);
 
 										$startDate = date('Y-m-d', strtotime($arr[0]));
 
 										$endDate = date('Y-m-d', strtotime($arr[1]));
+
+										$empIds = collect($result)->pluck('emp_id');
+
+										$isGreen = \App\Models\PayrollAmount::where('start_date', '>=', $startDate)->where('end_date', '<=', $endDate)->where('status', 1)->whereIn('user_id', $empIds)->count();
 									?>
 									<tr class="row-tr-js tr-main">									      
 										<td>{{ $i }}</td>
@@ -75,13 +80,15 @@
 											<b>{{ $startDate}} - {{$endDate}}</b>
 										</td>
 										<td class="col-sm-3">
-											Timecard Approved
+											@if($isGreen) <span class="badge badge-sm badge-success">Timecard Approved</span> @else Timecard Approved @endif
 										</td>
 										<td class="col-sm-3">
+											@if(!$isGreen)
 											<a href="{{ route('list.step1', [
 											'start_date' => $startDate, 
 											'end_date' => $endDate, 
 											'number' => $result[0]['appoval_number']]) }}">Click here to process</a>
+											@endif
 
 											<a href="{{ route('delete.payroll',  ['appoval_number' => $result[0]['appoval_number'] ]) }}"class="btn btn-sm btn-danger" onclick="return confirm('Are you sure? Once you delete the payroll then you have to approve the timesheet hours again for the same date range and employees.')" style="color:#fff;" title="Delete"><i class='fa fa-trash'></i></a>
 										</td>

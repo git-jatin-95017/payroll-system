@@ -19,6 +19,8 @@ use App\Http\Controllers\admin\RunPayrollController as RPC;
 use App\Http\Controllers\client\RunPayrollController;
 use App\Http\Middleware\CheckPunchin;
 use App\Models\Attendance;
+use Illuminate\Http\Request;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -101,10 +103,13 @@ Route::prefix('client')->group(function () {
 
 	Route::post('save-name-payroll', [RunPayrollController::class, 'saveName'])->name('save.name.payroll');
 
+	Route::get('payroll-confirmation', [RunPayrollController::class, 'showConfirmation'])->name('payroll.confirmation');
+	Route::post('payroll-confirmation', [RunPayrollController::class, 'saveConfirmation'])->name('save.confirmation');
+
 	// Route::resource('run-payroll', RunPayrollController::class);
 
-	Route::get('calculating-payroll', function () {
-		return view('client.payroll.thanks');
+	Route::get('calculating-payroll', function (Request $request) {
+		return view('client.payroll.thanks', ['start_date' => $request->start_date, 'end_date' => $request->end_date, 'appoval_number' => $request->appoval_number]);
 	})->name('calculating-payroll');
 
 	Route::get('delete/payroll', [RunPayrollController::class, 'deletePayroll'])->name('delete.payroll');
