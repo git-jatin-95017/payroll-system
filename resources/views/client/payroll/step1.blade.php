@@ -356,7 +356,7 @@
 		var overtime_hrs = 0;
 		var double_overtime_hrs = 0;
 		var reimbursement_hrs = 0;
-		var gross = medical_benefits = amount = social_security = social_security_employer = 0;
+		var gross = medical_benefits = amount = social_security = education_lvey = social_security_employer = 0;
 		var focusedRow = $(obj).closest('.row-tr-js');
 		var total_deductions = 0;
 		var net_pay = 0;
