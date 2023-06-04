@@ -132,7 +132,7 @@
 										<option value="{{ date('Y-12-31') }}" @if($leaveType->date_after == '2022-12-31') selected @endif>{{ date('31/12/Y') }}</option>
 										<option value="{{$year}}-{{ date('-01-01') }}">{{ date('01/01/') }}{{$year}}</option>
 									</select> -->
-									<input id="date_after" type="text" readonly class="form-control {{ $errors->has('date_after') ? ' is-invalid' : '' }}" name="date_after" value="{{ date('m-31') }}">
+									<input id="date_after" type="text" readonly class="form-control {{ $errors->has('date_after') ? ' is-invalid' : '' }}" name="date_after" value="{{ date('12-31') }}">
 
 									@if ($errors->has('date_after'))
 										<span class="text-danger">
