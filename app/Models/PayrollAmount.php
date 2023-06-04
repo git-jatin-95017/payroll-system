@@ -22,6 +22,10 @@ class PayrollAmount extends Model
         return $this->hasMany(AdditionalEarning::class, 'payroll_amount_id');
     }
 
+    public function additionalPaids() {
+        return $this->hasMany(AdditionalPaid::class, 'payroll_amount_id');
+    }
+
     public function user() {
         return $this->belongsTo(User::class, 'user_id');
     }

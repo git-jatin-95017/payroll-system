@@ -163,16 +163,23 @@
                                             <th scope="col">Medical benefits</th>
                                             <th scope="col">Social Security</th>
                                             <th scope="col">Education levy</th>
-                                            <th scope="col">Net pay</th>
                                             <th scope="col">Additions</th>
                                             <th scope="col">Deductions</th>
+                                            <th scope="col">Paid time off</th>
+                                            <th scope="col">Gross</th>
+                                            <th scope="col">Employee Pay</th>
                                           </tr>
                                         </thead>
                                         <tbody>
+                                            @php  $total =0; @endphp
                                             @foreach($data as $row)
                                                 <?php
+                                                    $gross =0;
+                                                    $employeePay =0;
                                                     $deductions = 0;
                                                     $earnings = 0;
+                                                    $paidTimeOff = 0;
+                                                    $reimbursement = $row->reimbursement;
 
                                                     if (count($row->additionalEarnings) > 0){
                                                         foreach($row->additionalEarnings as $key => $val) {
@@ -185,6 +192,20 @@
                                                             }
                                                         }
                                                     }
+
+                                                    if (count($row->additionalPaids) > 0){
+                                                        foreach($row->additionalPaids as $key => $val) {
+                                                            $paidTimeOff += $val->amount;                                            
+                                                        }
+                                                    }
+
+                                                    $regHrs = $row->user->employeeProfile->pay_rate * $row->total_hours;
+
+                                                    $gross += ($regHrs + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + $earnings +$paidTimeOff);
+
+                                                    $employeePay = $gross - ($row->medical +$row->security + $row->edu_levy) + $earnings - $deductions;
+
+                                                    $total += $employeePay;
                                                 ?>
                                                 <tr>
                                                     <td>{{ucfirst($row->user->employeeProfile->first_name)}} {{ucfirst($row->user->employeeProfile->last_name)}}</td>
@@ -195,11 +216,30 @@
                                                     <td>${{number_format($row->medical, 2)}}</td>
                                                     <td>${{number_format($row->security, 2)}}</td>
                                                     <td>${{number_format($row->edu_levy, 2)}}</td>
-                                                    <td>${{number_format($row->net_pay, 2)}}</td>
                                                     <td>${{number_format($earnings, 2)}}</td>
                                                     <td>${{number_format($deductions, 2)}}</td>
+                                                    <td>${{number_format($paidTimeOff, 2)}}</td>
+                                                    <td>${{number_format($gross, 2)}}</td>
+                                                    <td>${{number_format($employeePay, 2)}}</td>                                                    
                                                 </tr>                   
-                                            @endforeach                      
+                                            @endforeach     
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>                                                    
+                                                    <td>
+                                                        <h4><strong>${{number_format($total, 2)}}</strong></h4>
+                                                    </td>
+                                                </tr>          
                                         </tbody>
                                       </table>
                                 </div>

@@ -96,6 +96,8 @@
 												$total += $isDataExist->gross;
 											}
 										?>
+
+										<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][id]">
 									    <tr class="row-tr-js">									      
 									      	<td class="col-sm-4">
 												<table>
@@ -154,6 +156,17 @@
 														                $totalday = (float)$leavetypes->leave_day - (float)$daysTakenval;
 														            }
 																?>
+
+																<?php
+																	$amountPaidOff = 0;
+																	if (!empty($isDataExist->additionalPaids)) {
+																		// $collection = collect($isDataExist->additionalPaids);
+																		// dd($collection);
+																		$arrTemp = $isDataExist->additionalPaids()->select('amount')->where('user_id', $employeeID)->where('leave_type_id', $value->leave_type_id)->first();
+
+																		$amountPaidOff = !empty($arrTemp->amount) ? $arrTemp->amount: 0;
+																	}
+																?>
 																<p>
 																	<label class="cursor-pointer" data-toggle="collapse" href="#bonus{{$employee->id}}{{$key}}" role="button" aria-expanded="false" aria-controls="bonus{{$employee->id}}{{$key}}">
 																		{{$value->leave->name}} 
@@ -163,7 +176,7 @@
 																	</label>
 																	<p class="collapse" id="bonus{{$employee->id}}{{$key}}">
 																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_type_id]">
-																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totalday*8; ?>')" min=0>
+																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" value="{{$amountPaidOff}}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totalday*8; ?>')" min=0>
 																		<br>
 																		Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) : 0}}</b><br>
 																		Leave Balance | <b class="leave-balance-all" id="balance-{{$employee->id}}-{{$value->leave->id}}">{{$totalday*8}}</b>hrs<br>
@@ -303,6 +316,10 @@
 	const formatter = new Intl.NumberFormat('en-US', {
 		style: 'currency',
 		currency: 'USD',
+	});
+
+	$(document).ready(function() {
+		$('.leave-hrs').each(function() { $(this).trigger('change');})
 	});
 
 	function calculateOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary, leave_day_terms, leave_id, leave_balance) {

@@ -10,6 +10,8 @@ use App\Models\Attendance;
 use App\Models\LeaveType;
 use App\Models\PayrollAmount;
 use App\Models\AdditionalEarning;
+use App\Models\AdditionalPaid;
+use App\Models\AdditionalUnPaid;
 use DataTables;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -106,22 +108,24 @@ class RunPayrollController extends Controller
 				}
 
 				foreach($v['earnings'] as $key => $value) {
-					if (!empty($value['id'])) {
-						$ae =  AdditionalEarning::findOrFail($value['id']);
-						$ae->update([
-							// 'payroll_amount_id' => $run->id,
-							// 'user_id' => $run->user_id,
-								//'payhead_id' => $value['payhead_id'],
-							'amount' => (float) $value['amount']
-						]);					
-					} else {
+
+					AdditionalEarning::where('user_id', $k)->where('payroll_amount_id', $payroll->id)->where('payhead_id', $value['payhead_id'])->delete();
+					// if (!empty($value['id'])) {
+					// 	$ae =  AdditionalEarning::findOrFail($value['id']);
+					// 	$ae->update([
+					// 		// 'payroll_amount_id' => $run->id,
+					// 		// 'user_id' => $run->user_id,
+					// 			//'payhead_id' => $value['payhead_id'],
+					// 		'amount' => (float) $value['amount']
+					// 	]);					
+					// } else {
 						AdditionalEarning::create([
 							'payroll_amount_id' => $payroll->id,
 							'user_id' => $payroll->user_id,
 							'payhead_id' => $value['payhead_id'],
 							'amount' => (float) $value['amount']
 						]);					
-					}
+					// }
 				}
 			}
 		}
@@ -155,13 +159,38 @@ class RunPayrollController extends Controller
 			foreach($data['input'] as $k => $v) {
 				if (!empty($v['id'])) {
 					$payroll =  PayrollAmount::findOrFail($v['id']);
+						
+					$newGross = 0;
+					foreach($v['earnings'] as $key => $value) {
+						AdditionalPaid::where('user_id', $k)->where('payroll_amount_id', $payroll->id)->where('leave_type_id', $value['leave_type_id'])->delete();
+						// if (!empty($value['id'])) {
+						// 	$ae =  AdditionalEarning::findOrFail($value['id']);
+						// 	$ae->update([
+						// 		// 'payroll_amount_id' => $run->id,
+						// 		// 'user_id' => $run->user_id,
+						// 			//'payhead_id' => $value['payhead_id'],
+						// 		'amount' => (float) $value['amount']
+						// 	]);					
+						// } else {
+							AdditionalPaid::create([
+								'payroll_amount_id' => $payroll->id,
+								'user_id' => $payroll->user_id,
+								'leave_type_id' => $value['leave_type_id'],
+								'amount' => (float) $value['amount']
+							]);					
+
+							$newGross += (float) $value['amount'];
+						// }
+					}
 
 					$payroll->update([						
-						'vacation_hrs' => (float) $v['vacation_hrs'],
-						'sick_hrs' => (float) $v['sick_hrs'],					
+						//'vacation_hrs' => (float) $v['vacation_hrs'],
+						//'sick_hrs' => (float) $v['sick_hrs'],					
 						'status' => 0,
+						// 'gross' => $payroll->gross + $newGross,
 					]);
 				}
+
 			}
 		}
 
