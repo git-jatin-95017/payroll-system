@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="row page-titles">
     <div class="col-md-5 align-self-center">
@@ -30,7 +29,7 @@
                 </div>
             </div>		
             <div class="row">
-                <div class="col-9">
+                <div class="col">
                     <div id="progress-bar" class="mb-4">
                         <h2 class="off-screen">Donation progress indicator</h2>
                         <ol id="progress-steps">
@@ -90,12 +89,13 @@
                             'start_date' => Request::query('start_date'),
                             'end_date' => Request::query('end_date'),
                             'appoval_number'=> Request::query('appoval_number')
-                        ]) }}" class="btn btn-info text-uppercase ml-2 reset_btn">Go Back</a>
+                        ]) }}" class="btn btn-info text-uppercase ml-2 reset_btn my-2">Go Back</a>
                     </div>
                     
                 </div>
-                <div class="col-3">
-                    <canvas id="canvas1" width="200" height="200"></canvas>
+             
+                <div class="mychart pl-4f">
+                    <canvas id="myChart" width="600" height="600"></canvas>
                 </div>
             </div>
             <div class="row">
@@ -259,47 +259,84 @@
         </div>
 	</div>
 </section>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+
+<script>
+    // setup 
+    const data = {
+      labels: ['Employee Pay', 'Taxes', 'Deductions'],
+      datasets: [{
+        label: 'Weekly Sales',
+        data: [18, 12, 6],
+        backgroundColor: [
+        "#418f26",
+			"#d7541b",
+			"#f29314",
+        ],
+        borderColor: [
+        "#418f26",
+			"#d7541b",
+			"#f29314",
+        ],
+        borderWidth: 0
+      }]
+    };
+
+    const centerTextDoughnut ={
+   id: 'centerTextDoughnut',
+      afterDatasetsDraw(chart, args, pluginOptions){
+      const{ctx} = chart;
+      ctx.font = 'bold 12px sans-serif'
+      const text= 'Total Gross Pay: 20';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'Middle';
+      const textWidth = ctx.measureText(text).width;
+      const x = chart.getDatasetMeta(0).data[0].x
+      const y = chart.getDatasetMeta(0).data[0].y
+      ctx.fillText(text, x, y);
+   }
+  }
+    // config 
+    const config = {
+      type: 'doughnut',
+      data,
+      options: {
+               responsive: true,
+               cutout: '85%',
+               plugins: {
+                  legend: {
+                     display: true,
+                     position: 'left',
+                     align: 'center',
+                     labels: {
+                        color: 'black',
+                        font: {
+                           weight: 'normal'
+                        },
+                     }
+                  }
+               }
+            },
+            plugins: [centerTextDoughnut],
+    };
+
+    // render init block
+    const myChart = new Chart(
+      document.getElementById('myChart'),
+      config
+    );
+
+    // Instantly assign Chart.js version
+    const chartVersion = document.getElementById('chartVersion');
+    chartVersion.innerText = Chart.version;
+    </script>
+<style>
+    .mychart {
+    width: 350px;
+}
+</style>
 @endsection
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js"></script>
-<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script>
-var dataFinal = @json($dataGraph);
-// Doughnut Chart 
-$(document).ready(function(){
-	var options = {
-		// legend: false,
-		responsive: false
-	};
-	new Chart($("#canvas1"), {
-        cutout : 20,
-		type: 'doughnut',
-		tooltipFillColor: "rgba(51, 51, 51, 0.55)",
-		data: {
-		labels: [
-			"Employee Pay",
-			"Taxes",
-			"Deductions",
-		],
-		datasets: [{
-		data: dataFinal,
-		backgroundColor: [
-			"#3498DB",
-			"#9B59B6",
-			"#E74C3C",
-		],
-		hoverBackgroundColor: [
-			"#49A9EA",
-			"#B370CF",
-			"#E95E4F",
-		]
-		}]
-	},
-		options: { 
-            cutoutPercentage:70,
-            responsive: true 
-        }
-	});           
-});
-// Doughnut Chart 
-</script>

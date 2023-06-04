@@ -18,6 +18,11 @@
         </ol>
     </div>
 </div>
+<div class="img-load">
+	<div>
+		<img src="{{asset('img/new-load.gif')}}" alt="logo" >
+	</div>
+</div>
 <section class="content">
 	<div class="container-fluid">		
 		<div class="tab-content" id="myTabContent">
@@ -72,4 +77,29 @@
 		  	}, 2000);
 		});
 	</script>
+
+
+<style>
+
+/* .content{
+	position: relative;
+} */
+
+.img-load {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0, 0.4);
+	z-index: 100;
+}
+
+.img-load div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+</style>
 @endpush
