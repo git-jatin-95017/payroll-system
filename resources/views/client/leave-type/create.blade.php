@@ -131,7 +131,7 @@
 										<option value="{{ date('Y-12-31') }}">{{ date('31/12/Y') }}</option>
 										<option value="{{$year}}-{{ date('-01-01') }}">{{ date('01/01/') }}{{$year}}</option>
 									</select> -->
-									<input id="date_after" type="text" readonly class="form-control {{ $errors->has('date_after') ? ' is-invalid' : '' }}" name="date_after" value="{{ date('m-31') }}" readnly>
+									<input id="date_after" type="text" readonly class="form-control {{ $errors->has('date_after') ? ' is-invalid' : '' }}" name="date_after" value="{{ date('12-31') }}" readnly>
 
 									@if ($errors->has('date_after'))
 										<span class="text-danger">

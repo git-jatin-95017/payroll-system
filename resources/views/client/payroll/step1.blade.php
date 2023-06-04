@@ -403,7 +403,7 @@
 				  		focusedRow.find(`[id="${temp_attr}"]`).removeClass('d-none');
 				  		focusedRow.find(`[data-payheadlast="${temp_attr}"]`).html(this.value);
 				  	}  else {
-				  		focusedRow.find(`[id="${temp_attr}"]`).addClass('d-none');	
+				  		// focusedRow.find(`[id="${temp_attr}"]`).addClass('d-none');	
 				  	}
 			  	}
 	  		}
@@ -498,7 +498,7 @@
 	  	if (additionalHrsEarnings > 0) {
 	  		focusedRow.find('[data-maindiv="additonal-earn-span-div"]').removeClass('d-none');
 	  	}  else {
-	  		focusedRow.find('[data-maindiv="additonal-earn-span-div"]').addClass('d-none');	
+	  		// focusedRow.find('[data-maindiv="additonal-earn-span-div"]').addClass('d-none');	
 	  	}
 
 	  	if (regular_hrs > 0) {

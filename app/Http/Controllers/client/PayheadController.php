@@ -63,6 +63,12 @@ class PayheadController extends Controller
 				->take($rowperpage)
 				->get();
 
+			foreach($records as $key => $val) {
+				if ($val->pay_type == 'nothing') {
+					$records[$key]['pay_type'] = 'Addition to Net Pay';
+				}
+			}
+
 			$response = array(
 				"draw" => intval($draw),
 				"iTotalRecords" => $totalRecords,

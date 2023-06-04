@@ -39,6 +39,9 @@ class HolidayController extends Controller
 					->addColumn('action', function ($row) {
 						return '<input type="checkbox" class="delete_check" id="delcheck_'.$row->id.'" onclick="checkcheckbox();" value="'.$row->id.'">';
 					})
+					->addColumn('holiday_date', function ($row) {
+						return date('m-d', strtotime($row->holiday_date));
+					})
 					->addColumn('holiday_type', function ($row) {
 
 						$type = NULL;

@@ -80,7 +80,7 @@
 											<b>{{ $startDate}} - {{$endDate}}</b>
 										</td>
 										<td class="col-sm-3">
-											@if($isGreen) <span class="badge badge-sm badge-success">Timecard Approved</span> @else Timecard Approved @endif
+											@if($isGreen) <span class="badge badge-sm badge-success" style="color:green !important;">Approved</span> @else Timecard Approved @endif
 										</td>
 										<td class="col-sm-3">
 											@if(!$isGreen)

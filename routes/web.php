@@ -10,6 +10,7 @@ use App\Http\Controllers\client\LeavesController;
 use App\Http\Controllers\client\DepartmentController;
 use App\Http\Controllers\client\LeaveTypeController;
 use App\Http\Controllers\employee\LeaveController;
+use App\Http\Controllers\employee\LeaveController as EMPLEAVE;
 use App\Http\Controllers\employee\MyProfileController;
 use App\Http\Controllers\PunchController;
 use App\Http\Controllers\AttendanceController;
@@ -70,6 +71,8 @@ Route::prefix('client')->group(function () {
 	Route::get('edit-leave/{id}', [LeavesController::class, 'edit']);
 	Route::put('edit-leave/{id}', [LeavesController::class, 'updateLeave'])->name('edit-leave.save');
 	Route::resource('leaves', LeavesController::class);	
+
+	Route::get('fetch/emp-data', [EMPLEAVE::class, 'create'])->name('emp-my-leaves.create');
 
 	Route::resource('holidays', HolidayController::class);	
 

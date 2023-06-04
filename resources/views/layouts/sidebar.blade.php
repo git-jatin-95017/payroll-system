@@ -15,7 +15,7 @@
 	<div class="sidebar custom-sidebar">
 		@if(auth()->user()->role_id == 3)
 		<?php
-			$attendanceData = App\Models\Attendance::where('emp_code', auth()->user()->user_code)->whereDate('attendance_date', date('Y-m-d'))->get();
+			$attendanceData = App\Models\Attendance::where('user_id', auth()->user()->id)->whereDate('attendance_date', date('Y-m-d'))->get();
 
 			if (!$attendanceData->isEmpty()) {
 				$attendanceROW = $attendanceData->count();

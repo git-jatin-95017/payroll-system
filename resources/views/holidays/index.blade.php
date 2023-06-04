@@ -187,7 +187,9 @@
 						{data:'id'},
 						{data:'title'},
 						{data:'description'},						
-						{data:'holiday_date'},						
+						{
+							data:'holiday_date'
+						},						
 						{data:'holiday_type'},
 						@if(auth()->user()->role_id == 2)
 						{data:'action_button', name: 'ACTION', orderable: false, searchable: false}

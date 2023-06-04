@@ -56,7 +56,7 @@
                     <div class="payroll-heading my-5">
                         <h4 class="mb-1 text-themecolor">Review and submit</h4>
                         <p>
-                            “Hooray! Your payroll is finished processing. Time to review your summary and submit it your payroll.”
+                            Hooray! Your payroll is finished processing.
                         </p>
                     </div>
                     <div class="d-flex justify-content-between">
@@ -84,13 +84,13 @@
                                 <input type="hidden" name="ids[]" value="{{$id}}">
                             @endforeach
                             <button class="btn btn-primary mr-2" type="submit">Submit Payroll</button>
+                            <a href="{{ route('store.Step2', [
+                                'start_date' => Request::query('start_date'),
+                                'end_date' => Request::query('end_date'),
+                                'appoval_number'=> Request::query('appoval_number')
+                            ]) }}" class="btn btn-primary mr-2">Go Back</a>
                         </form>
                         <!-- <button class="btn btn-default ml-2">Go back</button> -->
-                        <a href="{{ route('store.Step2', [
-                            'start_date' => Request::query('start_date'),
-                            'end_date' => Request::query('end_date'),
-                            'appoval_number'=> Request::query('appoval_number')
-                        ]) }}" class="btn btn-info text-uppercase ml-2 reset_btn">Go Back</a>
                     </div>
                     
                 </div>
@@ -159,7 +159,7 @@
                                             <th scope="col">Employee</th>
                                             <th scope="col">Regular hours</th>
                                             <th scope="col">OT</th>
-                                            <th scope="col">Double OT</th>
+                                            <th scope="col">Dbl OT</th>
                                             <th scope="col">Holiday pay</th>
                                             <th scope="col">Medical benefits</th>
                                             <th scope="col">Social Security</th>
@@ -233,7 +233,9 @@
                                                 ?>
                                                 <tr>
                                                     <td>{{ucfirst($row->user->employeeProfile->first_name)}} {{ucfirst($row->user->employeeProfile->last_name)}}</td>
-                                                    <td>${{number_format($row->gross, 2)}}</td>
+                                                    <td>
+                                                        ${{number_format($row->medical+$row->security+$row->edu_levy+$row->security_employer, 2)}}
+                                                    </td>
                                                     <td>${{number_format($row->medical+$row->security+$row->edu_levy, 2)}}</td>
                                                     <td>${{number_format($row->security_employer, 2)}}</td>
                                                     <td>${{number_format($subtotal, 2)}}</td>
@@ -245,7 +247,10 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>                                                    
-                                                    <td>Total: ${{number_format($total, 2)}}</td>
+                                                    <td>
+                                                        <h5><b>${{number_format($total, 2)}}</b></h5>
+                                                        <h5><b>Total Payroll</b></h5>
+                                                    </td>
                                                 </tr>               
                                         </tbody>
                                       </table>

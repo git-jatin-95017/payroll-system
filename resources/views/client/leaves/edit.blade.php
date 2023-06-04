@@ -215,7 +215,7 @@
 	            // console.log(selectedEmployeeID, leaveTypeID);
 
 	            $.ajax({
-	                url: "{{ route('my-leaves.create') }}", //'LeaveAssign?leaveID=' + leaveTypeID + '&employeeID=' +selectedEmployeeID,
+	                url: "{{ route('emp-my-leaves.create') }}", //'LeaveAssign?leaveID=' + leaveTypeID + '&employeeID=' +selectedEmployeeID,
 	                method: 'GET',
 	                dataType:'JSON',
 	                data: {
