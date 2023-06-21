@@ -135,9 +135,15 @@
                                                 <td>N/A</td>
                                             </tr>
                                             <tr>
-                                                <th>Total</th>
-                                                <td>${{number_format($medicalTotal+$securityTotal+$eduLevytotal, 2)}}</td>
-                                                <td>${{number_format($medicalTotal+$securityEmployerTotal, 2)}}</td>
+                                                <td></td>
+                                                <td>
+                                                    <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityTotal+$eduLevytotal, 2)}}</span><br>
+                                                    <span style="color: #000 !important;font-weight: 700 !important;">Total Tax By Employees</span>
+                                                </td>
+                                                <td>
+                                                    <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityEmployerTotal, 2)}}</span><br>
+                                                    <span style="color: #000 !important;font-weight: 700 !important;">Total Tax By Employer</span>
+                                                </td>
                                             </tr>
                                         </tbody>
                                       </table>
@@ -171,7 +177,12 @@
                                           </tr>
                                         </thead>
                                         <tbody>
-                                            @php  $total =0; @endphp
+                                            @php  
+                                                $totalEmployeePay =0; 
+                                                $totalTaxes =0; 
+                                                $totalDeductions =0; 
+                                                $grossFinal =0; 
+                                            @endphp
                                             @foreach($data as $row)
                                                 <?php
                                                     $gross =0;
@@ -201,11 +212,15 @@
 
                                                     $regHrs = $row->user->employeeProfile->pay_rate * $row->total_hours;
 
-                                                    $gross += ($regHrs + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + $earnings +$paidTimeOff);
+                                                    $gross += ($regHrs + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + $earnings + $row->paid_time_off);
+
+                                                    $grossFinal += $gross;
 
                                                     $employeePay = $gross - ($row->medical +$row->security + $row->edu_levy) + $earnings - $deductions;
 
-                                                    $total += $employeePay;
+                                                    $totalEmployeePay += $employeePay;
+                                                    $totalTaxes += ($row->medical +$row->security + $row->edu_levy);
+                                                    $totalDeductions += $deductions;
                                                 ?>
                                                 <tr>
                                                     <td>{{ucfirst($row->user->employeeProfile->first_name)}} {{ucfirst($row->user->employeeProfile->last_name)}}</td>
@@ -218,7 +233,7 @@
                                                     <td>${{number_format($row->edu_levy, 2)}}</td>
                                                     <td>${{number_format($earnings, 2)}}</td>
                                                     <td>${{number_format($deductions, 2)}}</td>
-                                                    <td>${{number_format($paidTimeOff, 2)}}</td>
+                                                    <td>${{number_format($row->paid_time_off, 2)}}</td>
                                                     <td>${{number_format($gross, 2)}}</td>
                                                     <td>${{number_format($employeePay, 2)}}</td>                                                    
                                                 </tr>                   
@@ -237,7 +252,8 @@
                                                     <td></td>
                                                     <td></td>                                                    
                                                     <td>
-                                                        <h4><strong>${{number_format($total, 2)}}</strong></h4>
+                                                        <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($totalEmployeePay, 2)}}</span><br>
+                                                        <span style="color: #000 !important;font-weight: 700 !important;">Total Employee Pay</span>
                                                     </td>
                                                 </tr>          
                                         </tbody>
@@ -287,8 +303,8 @@
                                                     <td></td>
                                                     <td></td>                                                    
                                                     <td>
-                                                        <h5><b>${{number_format($total, 2)}}</b></h5>
-                                                        <h5><b>Total Payroll</b></h5>
+                                                        <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($total, 2)}}</span><br>
+                                                        <span style="color: #000 !important;font-weight: 700 !important;">Total Payroll</span>
                                                     </td>
                                                 </tr>               
                                         </tbody>
@@ -309,12 +325,17 @@
 
 
 <script>
+    var dataFinal = @json($dataGraph);
+    var grossFinal = @json(number_format($grossFinal, 2));
+    var totalEmployeePay = @json($totalEmployeePay);
+    var totalTaxes = @json($totalTaxes);
+    var totalDeductions = @json($totalDeductions);
     // setup 
     const data = {
       labels: ['Employee Pay', 'Taxes', 'Deductions'],
       datasets: [{
-        label: 'Weekly Sales',
-        data: [18, 12, 6],
+        // label: 'Weekly Sales',
+        data: [totalEmployeePay, totalTaxes, totalDeductions],
         backgroundColor: [
         "#418f26",
 			"#d7541b",
@@ -330,19 +351,19 @@
     };
 
     const centerTextDoughnut ={
-   id: 'centerTextDoughnut',
-      afterDatasetsDraw(chart, args, pluginOptions){
-      const{ctx} = chart;
-      ctx.font = 'bold 12px sans-serif'
-      const text= 'Total Gross Pay: 20';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'Middle';
-      const textWidth = ctx.measureText(text).width;
-      const x = chart.getDatasetMeta(0).data[0].x
-      const y = chart.getDatasetMeta(0).data[0].y
-      ctx.fillText(text, x, y);
-   }
-  }
+        id: 'centerTextDoughnut',
+          afterDatasetsDraw(chart, args, pluginOptions){
+          const{ctx} = chart;
+          ctx.font = 'bold 12px sans-serif'
+          const text= `Total Gross Pay: $${grossFinal}`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'Middle';
+          const textWidth = ctx.measureText(text).width;
+          const x = chart.getDatasetMeta(0).data[0].x
+          const y = chart.getDatasetMeta(0).data[0].y
+          ctx.fillText(text, x, y);
+        }
+    }
     // config 
     const config = {
       type: 'doughnut',

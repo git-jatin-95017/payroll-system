@@ -176,6 +176,7 @@
 																	</label>
 																	<p class="collapse" id="bonus{{$employee->id}}{{$key}}">
 																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_type_id]">
+																		<input type="hidden" id="paid-time-off-{{$employee->id}}" value="0" name="input[{{$employee->id}}][paid_time_off]">
 																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" value="{{$amountPaidOff}}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totalday*8; ?>')" min=0>
 																		<br>
 																		Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) : 0}}</b><br>
@@ -357,6 +358,7 @@
 		}
 
 		focusedRow.find(`[id="payoff-${emp_id}"]`).html(paid_time_off.toFixed(2));
+		focusedRow.find(`[id="paid-time-off-${emp_id}"]`).val(paid_time_off.toFixed(2));
 		focusedRow.find(`[id="balance-${emp_id}-${leave_id}"]`).html(final_balance);
 
 		total_balance = 0;

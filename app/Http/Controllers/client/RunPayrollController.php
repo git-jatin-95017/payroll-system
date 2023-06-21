@@ -176,7 +176,7 @@ class RunPayrollController extends Controller
 								'payroll_amount_id' => $payroll->id,
 								'user_id' => $payroll->user_id,
 								'leave_type_id' => $value['leave_type_id'],
-								'amount' => (float) $value['amount']
+								'amount' => (float) $value['amount'],							
 							]);					
 
 							$newGross += (float) $value['amount'];
@@ -187,6 +187,7 @@ class RunPayrollController extends Controller
 						//'vacation_hrs' => (float) $v['vacation_hrs'],
 						//'sick_hrs' => (float) $v['sick_hrs'],					
 						'status' => 0,
+						'paid_time_off' => (float) $v['paid_time_off']
 						// 'gross' => $payroll->gross + $newGross,
 					]);
 				}
