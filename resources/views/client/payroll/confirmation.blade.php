@@ -197,6 +197,7 @@
                                                     $earnings = 0;
                                                     $paidTimeOff = 0;
                                                     $reimbursement = $row->reimbursement;
+                                                    $nothingAdditionTonetPay = 0;
 
                                                     if (count($row->additionalEarnings) > 0){
                                                         foreach($row->additionalEarnings as $key => $val) {
@@ -206,6 +207,10 @@
 
                                                             if($val->payhead->pay_type =='deductions') {
                                                                 $deductions += $val->amount;
+                                                            }
+
+                                                            if($val->payhead->pay_type =='nothing') {
+                                                                $nothingAdditionTonetPay += $val->amount;
                                                             }
                                                         }
                                                     }
@@ -218,11 +223,11 @@
 
                                                     $regHrs = $row->user->employeeProfile->pay_rate * $row->total_hours;
 
-                                                    $gross += ($regHrs + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + $earnings + $row->paid_time_off);
+                                                    $gross += ($regHrs + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings + $reimbursement) + $row->paid_time_off);
 
                                                     $grossFinal += $gross;
 
-                                                    $employeePay = $gross - ($row->medical +$row->security + $row->edu_levy) + $earnings - $deductions;
+                                                    $employeePay = $gross - ($row->medical +$row->security + $row->edu_levy) + ($earnings + $reimbursement) - $deductions;
 
                                                     $totalEmployeePay += $employeePay;
                                                     $totalTaxes += ($row->medical +$row->security + $row->edu_levy);
