@@ -26,6 +26,10 @@ class PayrollAmount extends Model
         return $this->hasMany(AdditionalPaid::class, 'payroll_amount_id');
     }
 
+    public function additionalUnpaids() {
+        return $this->hasMany(AdditionalUnPaid::class, 'payroll_amount_id');
+    }
+
     public function user() {
         return $this->belongsTo(User::class, 'user_id');
     }

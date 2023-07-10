@@ -10614,7 +10614,7 @@ button.btn-none:focus{
   #progress-bar .description {
     display: block;
     text-align: center;
-    left    : 7px !important;
+    left    : 11px !important;
     position: absolute;
     bottom: -30px;
     font-size: 0.9em;

@@ -16,6 +16,7 @@ use DataTables;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\PaymentDetail;
+use Barryvdh\Snappy\Facades\SnappyPdf;
 
 class RunPayrollController extends Controller
 {
@@ -159,7 +160,7 @@ class RunPayrollController extends Controller
 			foreach($data['input'] as $k => $v) {
 				if (!empty($v['id'])) {
 					$payroll =  PayrollAmount::findOrFail($v['id']);
-						
+
 					$newGross = 0;
 					foreach($v['earnings'] as $key => $value) {
 						AdditionalPaid::where('user_id', $k)->where('payroll_amount_id', $payroll->id)->where('leave_type_id', $value['leave_type_id'])->delete();
@@ -177,10 +178,24 @@ class RunPayrollController extends Controller
 								'user_id' => $payroll->user_id,
 								'leave_type_id' => $value['leave_type_id'],
 								'amount' => (float) $value['amount'],							
-							]);					
+								'leave_balance' => (float) $value['leave_balance'],							
+							]);				
 
 							$newGross += (float) $value['amount'];
 						// }
+					}
+
+					if(array_key_exists('earnings_unpaid', $v) && count($v['earnings_unpaid']) > 0) {
+						foreach($v['earnings_unpaid'] as $key => $value) {
+							AdditionalUnPaid::where('user_id', $k)->where('payroll_amount_id', $payroll->id)->where('leave_type_id', $value['leave_type_id_unpaid'])->delete();
+							AdditionalUnPaid::create([
+								'payroll_amount_id' => $payroll->id,
+								'user_id' => $payroll->user_id,
+								'leave_type_id' => $value['leave_type_id_unpaid'],
+								'amount' => (float) $value['amount_unpaid'],	//hrs actual field name wrong in db by mistake			
+								'leave_balance' => (float) $value['leave_balance_unpaid'],				
+							]);
+						}
 					}
 
 					$payroll->update([						
@@ -295,5 +310,49 @@ class RunPayrollController extends Controller
 		}
 
 		return redirect()->route('list.payroll')->with('message', 'Payroll confirmed succesfully.');
+	}
+
+	public function downloadPdf(Request $request) {
+		$empIds = PayrollSheet::where('approval_status', 1)
+			->where('appoval_number', $request->appoval_number)
+			->whereNotNull('payroll_date')
+			->select('emp_id')
+			->get()
+			->pluck('emp_id');
+
+	    $zip = new \ZipArchive();
+
+	    $tempFilename = tempnam(sys_get_temp_dir(), 'pdf_zip_');
+    	$zip->open($tempFilename, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+		for ($i = 0; $i < count($empIds); $i++) {
+			$data = PayrollAmount::where('start_date', '>=', $request->start_date)
+				->where('end_date', '<=', $request->end_date)
+				->where('status', 0)
+				->where('user_id', $empIds[$i])
+				->first();
+
+			$parameters = [
+	            'start_date' => $request->start_date,
+	            'end_date' => $request->end_date,
+	            'approval_number' => $request->approval_number,
+	            'data' => $data,
+	        ];
+
+		    $pdf = SnappyPdf::loadView('client.pdf.salary', $parameters);
+		    $pdf->setOption('margin-top', 10);
+		    $pdf->setOption('margin-right', 10);
+		    $pdf->setOption('margin-bottom', 10);
+		    $pdf->setOption('margin-left', 10);
+
+		    $filename = 'Salary_Slip_' . str_replace(' ', '_', ucfirst($data->user->name)) . '.pdf';
+		    $zip->addFromString($filename, $pdf->output());
+
+	    	// return $pdf->download('document_' . $i . '.pdf');
+		}
+    	
+    	$zip->close();
+
+    	return response()->download($tempFilename, 'employees.zip')->deleteFileAfterSend(true);
 	}
 }

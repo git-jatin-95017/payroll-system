@@ -88,6 +88,11 @@
                                 'end_date' => Request::query('end_date'),
                                 'appoval_number'=> Request::query('appoval_number')
                             ]) }}" class="btn btn-primary mr-2">Go Back</a>
+                            <a href="{{ route('download.pdf', [
+                                'start_date' => Request::query('start_date'),
+                                'end_date' => Request::query('end_date'),
+                                'appoval_number'=> Request::query('appoval_number')
+                            ]) }}" class="btn btn-primary mr-2">Download PDF</a>
                         </form>                       
                     </div>
                     
@@ -138,11 +143,11 @@
                                                 <td></td>
                                                 <td>
                                                     <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityTotal+$eduLevytotal, 2)}}</span><br>
-                                                    <span style="color: #000 !important;font-weight: 700 !important;">Total Tax By Employees</span>
+                                                    <small style="color: #000 !important;font-weight: 600 !important;">Total taxes</small>
                                                 </td>
                                                 <td>
                                                     <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityEmployerTotal, 2)}}</span><br>
-                                                    <span style="color: #000 !important;font-weight: 700 !important;">Total Tax By Employer</span>
+                                                    <small style="color: #000 !important;font-weight: 600 !important;">Total taxes</small>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -181,6 +186,7 @@
                                                 $totalEmployeePay =0; 
                                                 $totalTaxes =0; 
                                                 $totalDeductions =0; 
+                                                $totalAdditions =0; 
                                                 $grossFinal =0; 
                                             @endphp
                                             @foreach($data as $row)
@@ -221,6 +227,7 @@
                                                     $totalEmployeePay += $employeePay;
                                                     $totalTaxes += ($row->medical +$row->security + $row->edu_levy);
                                                     $totalDeductions += $deductions;
+                                                    $totalAdditions += $earnings;
                                                 ?>
                                                 <tr>
                                                     <td>{{ucfirst($row->user->employeeProfile->first_name)}} {{ucfirst($row->user->employeeProfile->last_name)}}</td>
@@ -253,7 +260,7 @@
                                                     <td></td>                                                    
                                                     <td>
                                                         <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($totalEmployeePay, 2)}}</span><br>
-                                                        <span style="color: #000 !important;font-weight: 700 !important;">Total Employee Pay</span>
+                                                        <small style="color: #000 !important;font-weight: 600 !important;">Total Employee Pay</small>
                                                     </td>
                                                 </tr>          
                                         </tbody>
@@ -304,7 +311,7 @@
                                                     <td></td>                                                    
                                                     <td>
                                                         <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($total, 2)}}</span><br>
-                                                        <span style="color: #000 !important;font-weight: 700 !important;">Total Payroll</span>
+                                                        <small style="color: #000 !important;font-weight: 600 !important;">Total Payroll</small>
                                                     </td>
                                                 </tr>               
                                         </tbody>
@@ -330,21 +337,24 @@
     var totalEmployeePay = @json($totalEmployeePay);
     var totalTaxes = @json($totalTaxes);
     var totalDeductions = @json($totalDeductions);
+    var totalAdditions = @json($totalAdditions);
     // setup 
     const data = {
-      labels: ['Employee Pay', 'Taxes', 'Deductions'],
+      labels: ['Employee Pay', 'Taxes', 'Deductions', 'Additions'],
       datasets: [{
         // label: 'Weekly Sales',
-        data: [totalEmployeePay, totalTaxes, totalDeductions],
+        data: [totalEmployeePay, totalTaxes, totalDeductions, totalAdditions],
         backgroundColor: [
-        "#418f26",
+            "#418f26",
 			"#d7541b",
 			"#f29314",
+            "#4a2fec",
         ],
         borderColor: [
-        "#418f26",
+            "#418f26",
 			"#d7541b",
 			"#f29314",
+            "#4a2fec",
         ],
         borderWidth: 0
       }]

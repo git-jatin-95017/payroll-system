@@ -9,8 +9,10 @@ class AdditionalUnPaid extends Model
 {
     use  HasFactory;
 
+    protected $table = 'additional_unpaids';
+
     public $timestamps = false;
-    
+        
     /**
      * The attributes that are mass assignable.
      *

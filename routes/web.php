@@ -116,6 +116,7 @@ Route::prefix('client')->group(function () {
 	})->name('calculating-payroll');
 
 	Route::get('delete/payroll', [RunPayrollController::class, 'deletePayroll'])->name('delete.payroll');
+	Route::get('download-pdf', [RunPayrollController::class, 'downloadPdf'])->name('download.pdf');
 
 });
 

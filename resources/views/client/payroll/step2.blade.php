@@ -166,6 +166,7 @@
 
 																		$amountPaidOff = !empty($arrTemp->amount) ? $arrTemp->amount: 0;
 																	}
+														
 																?>
 																<p>
 																	<label class="cursor-pointer" data-toggle="collapse" href="#bonus{{$employee->id}}{{$key}}" role="button" aria-expanded="false" aria-controls="bonus{{$employee->id}}{{$key}}">
@@ -176,6 +177,7 @@
 																	</label>
 																	<p class="collapse" id="bonus{{$employee->id}}{{$key}}">
 																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_type_id]">
+																		<input type="hidden" id="paid-leave-balnce-{{$employee->id}}-{{$value->leave->id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_balance]">
 																		<input type="hidden" id="paid-time-off-{{$employee->id}}" value="0" name="input[{{$employee->id}}][paid_time_off]">
 																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" value="{{$amountPaidOff}}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totalday*8; ?>')" min=0>
 																		<br>
@@ -241,6 +243,15 @@
 														                //$totaldayunpaid   = $leavetypes->leave_day . '/' . ($daysTaken/8);
 														                $totaldayunpaid = (float)$leavetypes->leave_day - (float)$daysTakenval;
 														            }
+
+														            $amountUnPaidOff = 0;
+																	if (!empty($isDataExist->additionalUnpaids)) {
+																		// $collection = collect($isDataExist->additionalUnpaids);
+																		// dd($collection);
+																		$arrTemp = $isDataExist->additionalUnpaids()->select('amount')->where('user_id', $employeeID)->where('leave_type_id', $leaveID)->first();
+
+																		$amountUnPaidOff = !empty($arrTemp->amount) ? $arrTemp->amount: 0;
+																	}
 																?>
 																<p>
 																	<label class="cursor-pointer" data-toggle="collapse" href="#unpaid{{$employee->id}}{{$key}}" role="button" aria-expanded="false" aria-controls="unpaid{{$employee->id}}{{$key}}">
@@ -250,8 +261,10 @@
 																		</svg>
 																	</label>
 																	<p class="collapse" id="unpaid{{$employee->id}}{{$key}}">
-																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_type_id_unpaid]">
-																		<input min=0 type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount_unpaid]" min="0" class="form-control fixed-input leave-hrs-unpaid" 
+																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings_unpaid][{{$key }}][leave_type_id_unpaid]">
+																		<input type="hidden" id="unpaid-leave-balnce-{{$employee->id}}-{{$value->leave->id}}" name="input[{{$employee->id}}][earnings_unpaid][{{$key }}][leave_balance_unpaid]">
+
+																		<input min=0 type="number" name="input[{{$employee->id}}][earnings_unpaid][{{$key }}][amount_unpaid]" min="0" class="form-control fixed-input leave-hrs-unpaid" value="{{$amountUnPaidOff}}"
 																		onchange="calculateUnpaidOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totaldayunpaid*8; ?>')"
 																		>
 																		<br>
@@ -321,6 +334,7 @@
 
 	$(document).ready(function() {
 		$('.leave-hrs').each(function() { $(this).trigger('change');})
+		$('.leave-hrs-unpaid').each(function() { $(this).trigger('change');})
 	});
 
 	function calculateOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary, leave_day_terms, leave_id, leave_balance) {
@@ -360,6 +374,7 @@
 		focusedRow.find(`[id="payoff-${emp_id}"]`).html(paid_time_off.toFixed(2));
 		focusedRow.find(`[id="paid-time-off-${emp_id}"]`).val(paid_time_off.toFixed(2));
 		focusedRow.find(`[id="balance-${emp_id}-${leave_id}"]`).html(final_balance);
+		focusedRow.find(`[id="paid-leave-balnce-${emp_id}-${leave_id}"]`).val(final_balance);
 
 		total_balance = 0;
 		focusedRow.find(".leave-balance-all").each(function() {	 
@@ -424,6 +439,7 @@
 		// }
 
 		focusedRow.find(`[id="balanceunpaid-${emp_id}-${leave_id}"]`).html(final_balance);
+		focusedRow.find(`[id="unpaid-leave-balnce-${emp_id}-${leave_id}"]`).val(final_balance);
 	}
 </script>
 
