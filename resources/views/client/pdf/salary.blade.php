@@ -294,7 +294,7 @@
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($gross, 2)}}</td>
         </tr>
         <tr>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd;">Pre-Tax Deductions/Contr but ons</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd;">Pre-Tax Additions/Contributions</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($earnings, 2)}}</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($earnings, 2)}}</td>
         </tr>
@@ -304,7 +304,7 @@
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($totalTaxes, 2)}}</td>
         </tr>
         <tr>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd;">Post-Tax Deductions/Contr but ons </td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd;">Post-Tax Deductions/Contributions </td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($deductions, 2)}}</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($deductions, 2)}}</td>
         </tr>

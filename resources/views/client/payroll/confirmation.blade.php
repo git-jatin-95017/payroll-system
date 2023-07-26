@@ -35,20 +35,20 @@
                         <ol id="progress-steps">
                             <li class="progress-step" style="width: 25%;">
                                 <span class="count highlight-index"></span>
-                                <span class="description">1 Hours and eraning</span>
+                                <span class="description" style="left: 9px !important;font-weight: bold;">1. Hours and Earnings</span>
                             </li>
                             <li class="progress-step" style="width: 25%;">
                                 <span class="count highlight-index"></span>
-                                <span class="description">2 Time off</span>
+                                <span class="description" style="left: 11px !important;font-weight: bold;">2. Paid Time Off</span>
                             </li>
                             <li class="progress-step" style="width: 25%;">
                                 <span class="count highlight-index"></span>
-                                <span class="description">3 Review and Submit</span>
+                                <span class="description" style="left: 11px !important;font-weight: bold;">3. Review and Submit</span>
                             </li>
                         
                             <li class="progress-step" style="width: 25%;">
                             <span class="count"></span>
-                            <span class="description">4 Confirmation</span>
+                            <span class="description" style="left: 11px !important;font-weight: bold;"> 4. Confirmation</span>
                             </li>
                         </ol>
                     </div>
@@ -140,14 +140,12 @@
                                                 <td>N/A</td>
                                             </tr>
                                             <tr>
-                                                <td></td>
+                                                <td style="font-weight:bold !important;">Total taxes</td>
                                                 <td>
-                                                    <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityTotal+$eduLevytotal, 2)}}</span><br>
-                                                    <small style="color: #000 !important;font-weight: 600 !important;">Total taxes</small>
+                                                    <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityTotal+$eduLevytotal, 2)}}</span>
                                                 </td>
                                                 <td>
-                                                    <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityEmployerTotal, 2)}}</span><br>
-                                                    <small style="color: #000 !important;font-weight: 600 !important;">Total taxes</small>
+                                                    <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityEmployerTotal, 2)}}</span>
                                                 </td>
                                             </tr>
                                         </tbody>
