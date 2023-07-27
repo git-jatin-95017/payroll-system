@@ -140,12 +140,20 @@
                                                 <td>N/A</td>
                                             </tr>
                                             <tr>
-                                                <td style="font-weight:bold !important;">Total taxes</td>
+                                                <td style="font-weight:bold !important;"></td>
                                                 <td>
                                                     <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityTotal+$eduLevytotal, 2)}}</span>
                                                 </td>
                                                 <td>
                                                     <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityEmployerTotal, 2)}}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold !important;"></td>
+                                                <td> </td>
+                                                <td>
+                                                    <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityEmployerTotal+$medicalTotal+$securityTotal+$eduLevytotal, 2)}}</span><br>
+                                                    <small style="color: #000 !important;font-weight: 600 !important;">Total Taxes</small>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -165,17 +173,17 @@
                                         <thead>
                                           <tr>
                                             <th scope="col">Employee</th>
-                                            <th scope="col">Regular hours</th>
-                                            <th scope="col">OT</th>
-                                            <th scope="col">Dbl OT</th>
-                                            <th scope="col">Holiday pay</th>
-                                            <th scope="col">Medical benefits</th>
-                                            <th scope="col">Social Security</th>
-                                            <th scope="col">Education levy</th>
-                                            <th scope="col">Additions</th>
-                                            <th scope="col">Deductions</th>
-                                            <th scope="col">Paid time off</th>
-                                            <th scope="col">Gross</th>
+                                            <!-- <th scope="col">Regular hours</th> -->
+                                            <!-- <th scope="col">OT</th> -->
+                                            <!-- <th scope="col">Dbl OT</th> -->
+                                            <!-- <th scope="col">Holiday pay</th> -->
+                                            <!-- <th scope="col">Medical benefits</th> -->
+                                            <!-- <th scope="col">Social Security</th> -->
+                                            <!-- <th scope="col">Education levy</th> -->
+                                            <!-- <th scope="col">Additions</th> -->
+                                            <!-- <th scope="col">Deductions</th> -->
+                                            <!-- <th scope="col">Paid time off</th> -->
+                                            <th scope="col">Gross Pay</th>
                                             <th scope="col">Employee Pay</th>
                                           </tr>
                                         </thead>
@@ -234,6 +242,8 @@
                                                 ?>
                                                 <tr>
                                                     <td>{{ucfirst($row->user->employeeProfile->first_name)}} {{ucfirst($row->user->employeeProfile->last_name)}}</td>
+                                                    <?php
+                                                    /*
                                                     <td>{{$row->total_hours}}</td>
                                                     <td>{{$row->overtime_hrs}}</td>
                                                     <td>{{$row->doubl_overtime_hrs}}</td>
@@ -244,11 +254,14 @@
                                                     <td>${{number_format($earnings, 2)}}</td>
                                                     <td>${{number_format($deductions, 2)}}</td>
                                                     <td>${{number_format($row->paid_time_off, 2)}}</td>
+                                                    */
+                                                    ?>
                                                     <td>${{number_format($gross, 2)}}</td>
                                                     <td>${{number_format($employeePay, 2)}}</td>                                                    
                                                 </tr>                   
                                             @endforeach     
                                                 <tr>
+                                                    <!-- <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -257,8 +270,7 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td></td> -->
                                                     <td></td>
                                                     <td></td>                                                    
                                                     <td>
