@@ -176,7 +176,7 @@ class LeavesController extends Controller
 
                 //If already taken some
                 if($determineIfNew  > 0) {
-                    $total    = $totalHour[0]->totalTaken + $duration;
+                    $total    = $totalHour[0]->totalTaken + ($leave->leave_type == $type ? $duration : 0);
                     $data     = array();
                     $data     = array(
                         'hour' => $total
