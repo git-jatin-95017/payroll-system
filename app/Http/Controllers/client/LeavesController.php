@@ -218,13 +218,13 @@ class LeavesController extends Controller
         }			
 	}
 
-    public function edit($id)
+    public function edit($id, $empId)
     {
         $leave = Leave::find($id);
 
         $leavetypes = LeaveType::where('status', 1)->get();
 
-        return view('client.leaves.edit', compact('leave', 'leavetypes'));
+        return view('client.leaves.edit', compact('leave', 'leavetypes', 'empId'));
     }
 
     public function updateLeave(Request $request, $id)

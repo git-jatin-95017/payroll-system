@@ -229,11 +229,11 @@
 
                                                     $regHrs = $row->user->employeeProfile->pay_rate * $row->total_hours;
 
-                                                    $gross += ($regHrs + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings + $reimbursement) + $row->paid_time_off);
+                                                    $gross += ($regHrs + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings + $nothingAdditionTonetPay) + $row->paid_time_off);
 
                                                     $grossFinal += $gross;
 
-                                                    $employeePay = $gross - ($row->medical +$row->security + $row->edu_levy) + ($earnings + $reimbursement) - $deductions;
+                                                    $employeePay = $gross - ($row->medical +$row->security + $row->edu_levy) + ($nothingAdditionTonetPay) - $deductions;
 
                                                     $totalEmployeePay += $employeePay;
                                                     $totalTaxes += ($row->medical +$row->security + $row->edu_levy);
@@ -304,14 +304,54 @@
                                         <tbody>
                                             <?php $subtotal = 0; $total = 0;?>
                                             @foreach($data as $row)
+                                                
+                                                 <?php
+                                                    $gross1 =0;
+                                                    $employeePay1 =0;
+                                                    $deductions1 = 0;
+                                                    $earnings1 = 0;
+                                                    $paidTimeOff1 = 0;
+                                                    $reimbursement1 = $row->reimbursement;
+                                                    $nothingAdditionTonetPay1 = 0;
+
+                                                    if (count($row->additionalEarnings) > 0){
+                                                        foreach($row->additionalEarnings as $key => $val) {
+                                                            if($val->payhead->pay_type =='earnings') {
+                                                                $earnings1 += $val->amount;
+                                                            }
+
+                                                            if($val->payhead->pay_type =='deductions') {
+                                                                $deductions1 += $val->amount;
+                                                            }
+
+                                                            if($val->payhead->pay_type =='nothing') {
+                                                                $nothingAdditionTonetPay1 += $val->amount;
+                                                            }
+                                                        }
+                                                    }
+
+                                                    if (count($row->additionalPaids) > 0){
+                                                        foreach($row->additionalPaids as $key => $val) {
+                                                            $paidTimeOff1 += $val->amount;                                            
+                                                        }
+                                                    }
+
+                                                    $regHrs1 = $row->user->employeeProfile->pay_rate * $row->total_hours;
+
+                                                    $gross1 += ($regHrs1 + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings1 + $nothingAdditionTonetPay1) + $row->paid_time_off);
+
+                                                    $employeePay1 = $gross1 - ($row->medical +$row->security + $row->edu_levy) + ($nothingAdditionTonetPay1) - $deductions1;
+                                                ?>
                                                 <?php 
-                                                    $subtotal+= ($row->gross+$row->medical+$row->security+$row->edu_levy+$row->security_employer);
+                                                    $subtotal+= $employeePay1 + $row->medical+$row->security+$row->edu_levy + $row->security_employer;
                                                     $total+= $subtotal;
                                                 ?>
+
                                                 <tr>
                                                     <td>{{ucfirst($row->user->employeeProfile->first_name)}} {{ucfirst($row->user->employeeProfile->last_name)}}</td>
                                                     <td>
-                                                        ${{number_format($row->medical+$row->security+$row->edu_levy+$row->security_employer, 2)}}
+
+                                                        ${{number_format($employeePay1, 2)}}
                                                     </td>
                                                     <td>${{number_format($row->medical+$row->security+$row->edu_levy, 2)}}</td>
                                                     <td>${{number_format($row->security_employer, 2)}}</td>

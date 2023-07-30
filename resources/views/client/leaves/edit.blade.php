@@ -86,7 +86,7 @@
 	                            	<div class="col-md-12">
 		                                <span style="color:red" id="total"></span>
 		                                <div class="span pull-right">
-		                                    <button class="btn btn-info fetchLeaveTotal">Fetch Total Leave</button>
+		                                    <button class="btn btn-info fetchLeaveTotal" data-empid="{{$empId}}">Fetch Total Leave</button>
 		                                </div>
 	                                	<br>
 	                                </div>

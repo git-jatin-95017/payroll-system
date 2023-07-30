@@ -332,11 +332,14 @@ class RunPayrollController extends Controller
 				->where('user_id', $empIds[$i])
 				->first();
 
+			$allApprovedData = PayrollAmount::where('start_date', '>=', date('Y-01-01'))->where('end_date', '<=', date('Y-12-31'))->where('status', 1)->where('user_id', $empIds[$i])->get();
+			
 			$parameters = [
 	            'start_date' => $request->start_date,
 	            'end_date' => $request->end_date,
 	            'approval_number' => $request->approval_number,
 	            'data' => $data,
+	            'allApprovedData' => $allApprovedData,
 	        ];
 
 		    $pdf = SnappyPdf::loadView('client.pdf.salary', $parameters);

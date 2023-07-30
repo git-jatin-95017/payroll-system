@@ -262,7 +262,7 @@
 			                		action += ` <a data-href="${id}" data-employeeId="${userid}" data-value="Approve" data-duration="${duration}" data-type="${typeid}" class="btn btn-sm btn-success approve mt-1" style="color:#fff;" title="Approve"><i class='fas fa-check'></i></a>`;
 			                		action += ` <a data-href="${id}" class="btn btn-sm btn-danger reject mt-1" style="color:#fff;" title="Reject"><i class='fas fa-close'></i></a>`;
 			                	}
-			                	action += `&nbsp;<a href="/client/edit-leave/${id}" class="btn btn-sm btn-primary mt-1" title="Edit" ><i class='fas fa-pen'></i></a>`;
+			                	action += `&nbsp;<a href="/client/edit-leave/${id}/${userid}" class="btn btn-sm btn-primary mt-1" title="Edit" ><i class='fas fa-pen'></i></a>`;
 			                	action += `</div>`;
 			                	return action;
 			                }

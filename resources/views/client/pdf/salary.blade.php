@@ -66,6 +66,60 @@
         </td>
     </tr>
 </table>
+
+<?php
+    $grossYTD = 0;
+    $employeePayYTD = 0;
+    $deductionsYTD = 0;
+    $earningsYTD = 0;
+    $totalTaxesYTD = 0;
+    $paidTimeOffYTD = 0;
+    $paidTimeOffBalaneYTD = 0;
+    $unpaidTimeOffYTD = 0;
+    $unpaidTimeOffBalaneYTD = 0;
+    $reimbursementYTD = 0;//$data->reimbursement;
+    $medicalYTD = 0;
+    $securityYTD = 0;
+    $edu_levyYTD = 0;
+    $employerMedicalBenefitsYTD = 0;
+    $employerssYTD = 0;
+    $netPayYTD = 0;
+
+    foreach($allApprovedData as $allApprovedDataRow) {
+        if (count($allApprovedDataRow->additionalEarnings) > 0){
+            foreach($allApprovedDataRow->additionalEarnings as $key => $val) {
+                if($val->payhead->pay_type =='earnings') {
+                    $earningsYTD += $val->amount;
+                }
+
+                if($val->payhead->pay_type =='deductions') {
+                    $deductionsYTD += $val->amount;
+                }
+
+                if($val->payhead->pay_type =='nothing') {
+                    $reimbursementYTD += $val->amount;
+                }
+            }
+        }
+
+        $regHrsYTD = $allApprovedDataRow->user->employeeProfile->pay_rate * $allApprovedDataRow->total_hours;
+
+        $grossYTD += ($regHrsYTD + $allApprovedDataRow->overtime_hrs + $allApprovedDataRow->doubl_overtime_hrs + $allApprovedDataRow->holiday_pay + $earningsYTD + $allApprovedDataRow->paid_time_off);
+
+        $employeePayYTD += $grossYTD - ($allApprovedDataRow->medical +$allApprovedDataRow->security + $allApprovedDataRow->edu_levy) + $earningsYTD - $deductionsYTD;
+
+        // $totalEmployeePay += $employeePayYTD;
+        $totalTaxesYTD += ($allApprovedDataRow->medical +$allApprovedDataRow->security + $allApprovedDataRow->edu_levy);
+
+        $employerMedicalBenefitsYTD += $allApprovedDataRow->medical+$allApprovedDataRow->security+$allApprovedDataRow->edu_levy+$allApprovedDataRow->security_employer;
+        $employerssYTD += $allApprovedDataRow->security_employer;
+
+        $netPayYTD += $data->net_pay;
+    }
+    // $totalDeductions += $deductions;
+    // $totalAdditions += $earnings;
+?>
+
 <?php
     $gross = 0;
     $employeePay = 0;
@@ -76,7 +130,7 @@
     $paidTimeOffBalane = 0;
     $unpaidTimeOff = 0;
     $unpaidTimeOffBalane = 0;
-    $reimbursement = $data->reimbursement;
+    $reimbursement = 0;//$data->reimbursement;
 
     if (count($data->additionalEarnings) > 0){
         foreach($data->additionalEarnings as $key => $val) {
@@ -86,6 +140,10 @@
 
             if($val->payhead->pay_type =='deductions') {
                 $deductions += $val->amount;
+            }
+
+            if($val->payhead->pay_type =='nothing') {
+                $reimbursement += $val->amount;
             }
         }
     }
@@ -133,14 +191,14 @@
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->user->employeeProfile->pay_rate, 2)}}</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">{{$data->total_hours}}</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($regHrs, 2)}}</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($regHrs, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($regHrs+$regHrsYTD, 2)}}</td>
         </tr>
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Gross Earnings</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;"></td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;"></td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($gross, 2)}}</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($gross, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($gross+$grossYTD, 2)}}</td>
         </tr>
     </tbody>
 </table>
@@ -162,17 +220,17 @@
                     <tr>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; ">Medical benefits </td>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->medical, 2)}}</td>
-                        <td style="padding:3px 5px; text-align: right;">${{number_format($data->medical, 2)}}</td>
+                        <td style="padding:3px 5px; text-align: right;">${{number_format($data->medical +$medicalYTD, 2)}}</td>
                     </tr>
                     <tr>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd;">Social Social Security</td>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->security, 2)}}</td>
-                        <td style="padding:3px 5px; text-align: right;">${{number_format($data->security, 2)}}</td>
+                        <td style="padding:3px 5px; text-align: right;">${{number_format($data->security + $securityYTD, 2)}}</td>
                     </tr>
                     <tr>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd;">Education Levy </td>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->edu_levy, 2)}}</td>
-                        <td style="padding:3px 5px; text-align: right;">${{number_format($data->edu_levy, 2)}}</td>
+                        <td style="padding:3px 5px; text-align: right;">${{number_format($data->edu_levy + $edu_levyYTD, 2)}}</td>
                     </tr>
                 </thead>
             </table>
@@ -181,24 +239,24 @@
             <table style="width: 100%; border-collapse:collapse; table-layout: fixed;">
                 <thead style="border-bottom: 2px solid #58a8a4;">
                     <tr>
-                        <th style="padding:3px 5px; color: #000; font-size: 14px;" colspan="3">Employee Taxes Withheld</th>
+                        <th style="padding:3px 5px; color: #000; font-size: 14px;" colspan="3">Employer Taxes</th>
                     </tr>
                 </thead>
                 <tbody style="border-bottom: 1px solid #ddd;">
                     <tr>
-                        <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Employee Tax </th>
+                        <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Company Tax </th>
                         <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">Current</th>
                         <th style="padding:3px 5px; text-align: right; color: #000;">Year To Date </th>
                     </tr>
                     <tr>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd;">Medical benefits </td>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->medical+$data->security+$data->edu_levy+$data->security_employer, 2)}}</td>
-                        <td style="padding:3px 5px; text-align: right;">${{number_format($data->medical+$data->security+$data->edu_levy+$data->security_employer, 2)}}</td>
+                        <td style="padding:3px 5px; text-align: right;">${{number_format($data->medical+$data->security+$data->edu_levy+$data->security_employer+$employerMedicalBenefitsYTD, 2)}}</td>
                     </tr>
                     <tr>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd;">Social Social Security</td>
-                        <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">$90.78</td>
-                        <td style="padding:3px 5px; text-align: right;">${{number_format($data->security_employer, 2)}}</td>
+                        <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->security_employer, 2)}}</td>
+                        <td style="padding:3px 5px; text-align: right;">${{number_format($data->security_employer+$employerssYTD, 2)}}</td>
                     </tr>
                     <tr>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd;">Education Levy </td>
@@ -213,7 +271,7 @@
 <table style="width: 100%; border-collapse:collapse; table-layout: fixed; text-align: left; margin-bottom: 25px;">
     <thead style="border-bottom: 2px solid #58a8a4;">
         <tr>
-            <th style="padding:3px 5px; color: #000; font-size: 14px;" colspan="3">Employee Pre-Tax Deductions </th>
+            <th style="padding:3px 5px; color: #000; font-size: 14px;" colspan="3">Employee Pre-Tax Additions </th>
         </tr>
     </thead>
     <thead style="border-bottom: 1px solid #ddd;">
@@ -230,10 +288,10 @@
                 if($val->payhead->pay_type =='earnings') {
         @endphp
                 <tr>
-                    <td style="padding:3px 5px; border-right: 1px solid #ddd;">{{ ucfirst($val->payhead->pay_type) }}</td>
+                    <td style="padding:3px 5px; border-right: 1px solid #ddd;">Addition to Gross Pay</td> <?php //$val->payhead->pay_type ?>
                     <td style="padding:3px 5px; border-right: 1px solid #ddd;">{{ $val->payhead->name}}</td>
                     <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($val->amount, 2)}}</td>
-                    <td style="padding:3px 5px; text-align: right;">${{number_format($val->amount, 2)}}</td>
+                    <td style="padding:3px 5px; text-align: right;">${{number_format($val->amount + $earningsYTD, 2)}}</td>
                 </tr>
         @php
                 }
@@ -263,10 +321,10 @@
                 if($val->payhead->pay_type =='deductions') {
         @endphp
                 <tr>
-                    <td style="padding:3px 5px; border-right: 1px solid #ddd;">{{ ucfirst($val->payhead->pay_type)}}</td>
+                    <td style="padding:3px 5px; border-right: 1px solid #ddd;">Deduction from Net Pay</td>
                     <td style="padding:3px 5px; border-right: 1px solid #ddd;">{{ $val->payhead->name}}</td>
                     <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($val->amount, 2)}}</td>
-                    <td style="padding:3px 5px; text-align: right;">${{number_format($val->amount, 2)}}</td>
+                    <td style="padding:3px 5px; text-align: right;">${{number_format($val->amount+$deductionsYTD, 2)}}</td>
                 </tr>
         @php
                 }
@@ -291,32 +349,32 @@
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Gross Earnings</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($gross, 2)}}</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($gross, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($gross + $grossYTD, 2)}}</td>
         </tr>
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Pre-Tax Additions/Contributions</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($earnings, 2)}}</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($earnings, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($earnings + $earningsYTD, 2)}}</td>
         </tr>
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Taxes</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($totalTaxes, 2)}}</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($totalTaxes, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($totalTaxes + $totalTaxesYTD, 2)}}</td>
         </tr>
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Post-Tax Deductions/Contributions </td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($deductions, 2)}}</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($deductions, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($deductions+$deductionsYTD, 2)}}</td>
         </tr>
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Net Pay </td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->net_pay, 2)}}</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->net_pay, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->net_pay +$netPayYTD, 2)}}</td>
         </tr>
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Reimbursements</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->reimbursement, 2)}}</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->reimbursement, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($reimbursement, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($reimbursement+$reimbursementYTD, 2)}}</td>
         </tr>
         <!-- <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Check Amount </td>
