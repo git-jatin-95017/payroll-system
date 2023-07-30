@@ -152,7 +152,7 @@
                                                 <td style="font-weight:bold !important;"></td>
                                                 <td> </td>
                                                 <td>
-                                                    <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityEmployerTotal+$medicalTotal+$securityTotal+$eduLevytotal, 2)}}</span><br>
+                                                    <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityEmployerTotal+$securityTotal+$eduLevytotal, 2)}}</span><br>
                                                     <small style="color: #000 !important;font-weight: 600 !important;">Total Taxes</small>
                                                 </td>
                                             </tr>
