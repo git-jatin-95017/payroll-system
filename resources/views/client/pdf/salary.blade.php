@@ -69,6 +69,7 @@
 
 <?php
     $grossYTD = 0;
+    $regHrsYTD = 0;
     $employeePayYTD = 0;
     $deductionsYTD = 0;
     $earningsYTD = 0;
@@ -102,7 +103,7 @@
             }
         }
 
-        $regHrsYTD = $allApprovedDataRow->user->employeeProfile->pay_rate * $allApprovedDataRow->total_hours;
+        $regHrsYTD += $allApprovedDataRow->user->employeeProfile->pay_rate * $allApprovedDataRow->total_hours;
 
         $grossYTD += ($regHrsYTD + $allApprovedDataRow->overtime_hrs + $allApprovedDataRow->doubl_overtime_hrs + $allApprovedDataRow->holiday_pay + $earningsYTD + $allApprovedDataRow->paid_time_off);
 
@@ -115,6 +116,10 @@
         $employerssYTD += $allApprovedDataRow->security_employer;
 
         $netPayYTD += $data->net_pay;
+
+        $medicalYTD += $allApprovedDataRow->medical;
+        $securityYTD += $allApprovedDataRow->security;
+        $edu_levyYTD += $allApprovedDataRow->edu_levy;
     }
     // $totalDeductions += $deductions;
     // $totalAdditions += $earnings;

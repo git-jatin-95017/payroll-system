@@ -226,8 +226,20 @@ class RunPayrollController extends Controller
 
 	public function deletePayroll(Request $request) {
 		$number = $request->query('appoval_number');
-		$result = PayrollSheet::where('appoval_number', $number)->update(['payroll_name' => NULL, 'approval_status' => 0]);
+		$record = PayrollSheet::where('appoval_number', $number)->first();
 
+		$date = explode(' - ', $record->date_range);
+		$result = PayrollSheet::where('appoval_number', $number)->update([
+			'payroll_name' => NULL, 
+			'approval_status' => 0
+		]);
+
+		$pprecords = PayrollAmount::where('start_date', '>=', $date[0])
+			->where('end_date', '<=', $date[1])->get();
+
+		foreach($pprecords as $k => $v) {
+			$v->delete();
+		}
 
 		return back()->with('message','Record deleted successfully.');
 	}
@@ -313,12 +325,16 @@ class RunPayrollController extends Controller
 	}
 
 	public function downloadPdf(Request $request) {
+		// $empIds = PayrollSheet::select('emp_id')->where('approval_status', 1)->orderBy('appoval_number')->whereNotNull('date_range')->get()->groupBy(function($item) {
+		//      return $item->appoval_number;
+		// })->pluck('emp_id');
+
 		$empIds = PayrollSheet::where('approval_status', 1)
 			->where('appoval_number', $request->appoval_number)
 			->whereNotNull('payroll_date')
 			->select('emp_id')
 			->get()
-			->pluck('emp_id');
+			->pluck('emp_id')->unique()->values()->all();
 
 	    $zip = new \ZipArchive();
 
