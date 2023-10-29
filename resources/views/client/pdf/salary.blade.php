@@ -22,45 +22,59 @@
 </head>
 <body style="font-family: Arial, Helvetica, sans-serif; font-size: 13px;">
 <table style="width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 40px;">
+
     <tr>
-        <td style="padding:3px 5px;" colspan="2">
-            @if(auth()->user()->role_id == 2)
-                @if(!empty(auth()->user()->logo))
-                    <img style="width: 100px;" src="{{ public_path('files/' . auth()->user()->logo) }}" alt="">
-                @else
-                    <img style="width: 100px;" src="{{ public_path('img/logo-new.jpg') }}" alt="">
-                @endif
-            @else
-                <img style="width: 100px;" src="{{ public_path('img/logo-new.jpg') }}" alt="">
-            @endif
+        <td style="padding:3px 5px;">
+            <strong style="font-size: 13px; color: #000;">{{ strtoupper(auth()->user()->name) }} </strong>
         </td>
     </tr>
     <tr>
         <td style="padding:3px 5px;">
-            <h3 style="font-size: 38px; color: #000; font-weight: bold; margin-bottom: 5px; margin-top: 0;">Payslip</h3>
-            <p style="margin-bottom: 0; font-size: 14px;">Pay period: {{ date('F dS Y', strtotime($start_date))}} - {{ date('F dS Y', strtotime($end_date))}}</p>
+            <span style="font-size: 12px; color: #000;">{{ $data->user->name }}</span>
         </td>
+    </tr><br>
+    <tr>
         <td>
             <table style="width: 100%; border-collapse:collapse; table-layout: fixed;">
                 <tr>
                     <td style="padding:3px 5px;">
-                        <strong style="font-size: 14px; color: #000;">Company:</strong>
+                        <strong style="font-size: 10px; color: #000;">ADDRESS:</strong>
                     </td>
                     <td style="padding:3px 5px;">
-                        <strong style="font-size: 14px; color: #000;">Employee:</strong>
+                        <span style="font-size: 10px; color: #000;">{{ $data->user->employeeProfile->address }}</span>
+                    </td>
+                    <td style="padding:3px 5px;">
+                        <strong style="font-size: 10px; color: #000;">SOCIAL SECURITY NUMBER:</strong>
+                    </td>
+                    <td style="padding:3px 5px;">
+                        <span style="font-size: 10px; color: #000;">{{ $data->user->employeeProfile->pan_number ?? 'N/A' }}</span>
+                    </td>
+                </tr>                
+                <tr>
+                    <td style="padding:3px 5px;">
+                        <strong style="font-size: 10px; color: #000;">Payslips for Period of:</strong>
+                    </td>
+                    <td style="padding:3px 5px;">
+                        <span style="font-size: 10px; color: #000;">{{ date('F dS Y', strtotime($start_date))}} - {{ date('F dS Y', strtotime($end_date))}}</span>
+                    </td>
+                    <td style="padding:3px 5px;">
+                        <strong style="font-size: 10px; color: #000;">MEDICAL BENEFITS NUMBER:</strong>
+                    </td>
+                    <td style="padding:3px 5px;">
+                        <span style="font-size: 10px; color: #000;">{{ $data->user->employeeProfile->ifsc_code ?? 'N/A' }}</span>
                     </td>
                 </tr>
-                <tr>
+                <!-- <tr>
                     <td style="padding:3px 5px;">{{ auth()->user()->name }}</td>
                     <td style="padding:3px 5px;">{{ $data->user->name }}</td>
                 </tr>
                 <tr>
                     <td style="padding:3px 5px;">{{ auth()->user()->phone_number }}</td>
                     <td style="padding:3px 5px;">Employee cell: {{ $data->user->employeeProfile->phone_number }}</td>
-                </tr>
+                </tr> -->
                 <tr>
                     <td style="padding:3px 5px;">&nbsp;</td>
-                    <td style="padding:3px 5px;">{{ $data->user->employeeProfile->address }}</td>
+                    <td style="padding:3px 5px;"></td>
                 </tr>
             </table>
         </td>
@@ -179,31 +193,36 @@
     // $totalAdditions += $earnings;
 ?>
 <table style="width: 100%; border-collapse: collapse; table-layout: fixed; text-align: left; vertical-align: middle; margin-bottom: 25px;">
+    <thead style="border-bottom: 2px solid #58a8a4;">
+        <tr>
+            <th style="padding:3px 5px;  color: #000; font-size: 14px;" colspan="2" >Gross Earnings</th>
+        </tr>
+    </thead>
     <tr>
        <thead style="border-top: 2px solid #58a8a4;">
             <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">
-                Description Rate
+                Description
             </th>
             <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;  color: #000;">Rate</th>
-            <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;  color: #000;">Hours</th>
-            <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;  color: #000;">Current</th>
-            <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;  color: #000;">Year To Date </th>
+            <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;  color: #000;">Hours/Period</th>
+            <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;  color: #000;">Amount</th>
+            <!-- <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;  color: #000;">Year To Date </th> -->
        </thead>
     </tr>
     <tbody style="border-bottom: 1px solid #ddd;">
         <tr>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd;">Regular Hours I Hourly </td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd;">Pay Type</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->user->employeeProfile->pay_rate, 2)}}</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">{{$data->total_hours}}</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($regHrs, 2)}}</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($regHrs+$regHrsYTD, 2)}}</td>
+            <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($regHrs+$regHrsYTD, 2)}}</td> -->
         </tr>
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Gross Earnings</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;"></td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;"></td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($gross, 2)}}</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($gross+$grossYTD, 2)}}</td>
+            <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($gross+$grossYTD, 2)}}</td> -->
         </tr>
     </tbody>
 </table>
@@ -213,34 +232,75 @@
             <table style="width: 100%; border-collapse:collapse; table-layout: fixed;">
                 <thead style="border-bottom: 2px solid #58a8a4;">
                     <tr>
-                        <th style="padding:3px 5px;  color: #000; font-size: 14px;" colspan="3" >Employee Taxes Withheld</th>
+                        <th style="padding:3px 5px;  color: #000; font-size: 14px;" colspan="2" >Statutory Deductions</th>
                     </tr>
                 </thead>
                 <thead style="border-bottom: 1px solid #ddd;">
                     <tr>
                         <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Employee Tax </th>
-                        <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">Current</th>
-                        <th style="text-align: right; color: #000;">Year To Date </th>
+                        <th style="padding:3px 5px; text-align: right; color: #000;">Amount</th>
+                        <!-- <th style="text-align: right; color: #000;">Year To Date </th> -->
                     </tr>
                     <tr>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; ">Medical benefits </td>
-                        <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->medical, 2)}}</td>
-                        <td style="padding:3px 5px; text-align: right;">${{number_format($data->medical +$medicalYTD, 2)}}</td>
+                        <td style="padding:3px 5px; text-align: right;">${{number_format($data->medical, 2)}}</td>
+                        <!-- <td style="padding:3px 5px; text-align: right;">${{number_format($data->medical +$medicalYTD, 2)}}</td> -->
                     </tr>
                     <tr>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd;">Social Social Security</td>
-                        <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->security, 2)}}</td>
-                        <td style="padding:3px 5px; text-align: right;">${{number_format($data->security + $securityYTD, 2)}}</td>
+                        <td style="padding:3px 5px; text-align: right;">${{number_format($data->security, 2)}}</td>
+                        <!-- <td style="padding:3px 5px; text-align: right;">${{number_format($data->security + $securityYTD, 2)}}</td> -->
                     </tr>
                     <tr>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd;">Education Levy </td>
-                        <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->edu_levy, 2)}}</td>
-                        <td style="padding:3px 5px; text-align: right;">${{number_format($data->edu_levy + $edu_levyYTD, 2)}}</td>
+                        <td style="padding:3px 5px; text-align: right;">${{number_format($data->edu_levy, 2)}}</td>
+                        <!-- <td style="padding:3px 5px; text-align: right;">${{number_format($data->edu_levy + $edu_levyYTD, 2)}}</td> -->
                     </tr>
                 </thead>
             </table>
         </td>
         <td style="padding-left: 10px;">
+            <table style="width: 100%; border-collapse:collapse; table-layout: fixed;">
+                <thead style="border-bottom: 2px solid #58a8a4;">
+                    <tr>
+                        <th style="padding:3px 5px; color: #000; font-size: 14px;" colspan="2">Employee Additions/Deductions</th>
+                    </tr>
+                </thead>
+                <thead style="border-bottom: 1px solid #ddd;">
+                    <tr>
+                        <!-- <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Description</th> -->
+                        <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Description</th>
+                        <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">Amount</th>
+                        <!-- <th style="padding:3px 5px; text-align: right; color: #000;">Year To Date </th> -->
+                    </tr>
+
+                    @php
+                    $totalAe = 0;
+                    if (count($data->additionalEarnings) > 0) {
+                        foreach($data->additionalEarnings as $key => $val) {
+                            if($val->payhead->pay_type !='earnings') {
+                                $totalAe += $val->amount;
+                    @endphp
+                            <tr>
+                                <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd;">Deduction from Net Pay</td> -->
+                                <td style="padding:3px 5px; border-right: 1px solid #ddd;">{{ $val->payhead->name}}</td>
+                                <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($val->amount, 2)}}</td>
+                                <!-- <td style="padding:3px 5px; text-align: right;">${{number_format($val->amount+$deductionsYTD+$reimbursementYTD, 2)}}</td> -->
+                            </tr>
+                    @php
+                            }
+                        }
+                    }
+                    @endphp
+                    <tr>
+                    
+                        <td style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Total</td>
+                        <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">${{$totalAe}}</td>
+                    </tr>
+                </thead>
+            </table>
+        </td>
+        <!-- <td style="padding-left: 10px;">
             <table style="width: 100%; border-collapse:collapse; table-layout: fixed;">
                 <thead style="border-bottom: 2px solid #58a8a4;">
                     <tr>
@@ -250,7 +310,7 @@
                 <tbody style="border-bottom: 1px solid #ddd;">
                     <tr>
                         <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Company Tax </th>
-                        <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">Current</th>
+                        <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">Amount</th>
                         <th style="padding:3px 5px; text-align: right; color: #000;">Year To Date </th>
                     </tr>
                     <tr>
@@ -270,7 +330,7 @@
                     </tr>
                 </tbody>
             </table>
-        </td>
+        </td> -->
     </tbody>
 </table>
 <table style="width: 100%; border-collapse:collapse; table-layout: fixed; text-align: left; margin-bottom: 25px;">
@@ -283,8 +343,8 @@
         <tr>
             <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Description</th>
             <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Type</th>
-            <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">Current</th>
-            <th style="padding:3px 5px; text-align: right; color: #000;">Year To Date </th>
+            <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">Amount</th>
+            <!-- <th style="padding:3px 5px; text-align: right; color: #000;">Year To Date </th> -->
         </tr>
 
         @php
@@ -296,7 +356,7 @@
                     <td style="padding:3px 5px; border-right: 1px solid #ddd;">Addition to Gross Pay</td> <?php //$val->payhead->pay_type ?>
                     <td style="padding:3px 5px; border-right: 1px solid #ddd;">{{ $val->payhead->name}}</td>
                     <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($val->amount, 2)}}</td>
-                    <td style="padding:3px 5px; text-align: right;">${{number_format($val->amount + $earningsYTD, 2)}}</td>
+                    <!-- <td style="padding:3px 5px; text-align: right;">${{number_format($val->amount + $earningsYTD, 2)}}</td> -->
                 </tr>
         @php
                 }
@@ -305,82 +365,48 @@
         @endphp
     </thead>
 </table>
-
 <table style="width: 100%; border-collapse:collapse; table-layout: fixed; text-align: left; margin-bottom: 25px;">
     <thead style="border-bottom: 2px solid #58a8a4;">
         <tr>
-            <th style="padding:3px 5px; color: #000; font-size: 14px;" colspan="3">Employer Post-Tax Deductions </th>
+            <th style="padding:3px 5px; color: #000; font-size: 14px;" colspan="2">Summary </th>
         </tr>
     </thead>
     <thead style="border-bottom: 1px solid #ddd;">
         <tr>
             <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Description</th>
-            <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Type</th>
-            <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">Current</th>
-            <th style="padding:3px 5px; text-align: right; color: #000;">Year To Date </th>
-        </tr>
-
-        @php
-        if (count($data->additionalEarnings) > 0) {
-            foreach($data->additionalEarnings as $key => $val) {
-                if($val->payhead->pay_type =='deductions') {
-        @endphp
-                <tr>
-                    <td style="padding:3px 5px; border-right: 1px solid #ddd;">Deduction from Net Pay</td>
-                    <td style="padding:3px 5px; border-right: 1px solid #ddd;">{{ $val->payhead->name}}</td>
-                    <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($val->amount, 2)}}</td>
-                    <td style="padding:3px 5px; text-align: right;">${{number_format($val->amount+$deductionsYTD, 2)}}</td>
-                </tr>
-        @php
-                }
-            }
-        }
-        @endphp
-    </thead>
-</table>
-
-<table style="width: 100%; border-collapse:collapse; table-layout: fixed; text-align: left; margin-bottom: 25px;">
-    <thead style="border-bottom: 2px solid #58a8a4;">
-        <tr>
-            <th style="padding:3px 5px; color: #000; font-size: 14px;" colspan="3">Summary </th>
-        </tr>
-    </thead>
-    <thead style="border-bottom: 1px solid #ddd;">
-        <tr>
-            <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Description</th>
-            <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">Current</th>
-            <th style="padding:3px 5px;  border-right: 1px solid #ddd; text-align: right; color: #000;">Year To Date</th>
+            <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">Amount</th>
+            <!-- <th style="padding:3px 5px;  border-right: 1px solid #ddd; text-align: right; color: #000;">Year To Date</th> -->
         </tr>
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Gross Earnings</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($gross, 2)}}</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($gross + $grossYTD, 2)}}</td>
+            <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($gross + $grossYTD, 2)}}</td> -->
         </tr>
-        <tr>
+        <!-- tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Pre-Tax Additions/Contributions</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($earnings, 2)}}</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($earnings + $earningsYTD, 2)}}</td>
-        </tr>
+        </tr> -->
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Taxes</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($totalTaxes, 2)}}</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($totalTaxes + $totalTaxesYTD, 2)}}</td>
+            <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($totalTaxes + $totalTaxesYTD, 2)}}</td> -->
         </tr>
         <tr>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd;">Post-Tax Deductions/Contributions </td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd;">Employee additions/deductions </td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($deductions, 2)}}</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($deductions+$deductionsYTD, 2)}}</td>
+            <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($deductions+$deductionsYTD, 2)}}</td> -->
         </tr>
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Net Pay </td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->net_pay, 2)}}</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->net_pay +$netPayYTD, 2)}}</td>
+            <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->net_pay +$netPayYTD, 2)}}</td> -->
         </tr>
-        <tr>
+        <!-- <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Reimbursements</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($reimbursement, 2)}}</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($reimbursement+$reimbursementYTD, 2)}}</td>
-        </tr>
+        </tr> -->
         <!-- <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Check Amount </td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($totalTaxes, 2)}}</td>

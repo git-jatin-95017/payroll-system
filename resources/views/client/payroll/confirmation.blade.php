@@ -1,5 +1,49 @@
 @extends('layouts.app')
 @section('content')
+@php  
+    $TotalPayroll =0; 
+    $TotalTaxes =0; 
+@endphp
+@foreach($data as $row)
+    <?php
+        $tempGross = 0;
+        $deductions1 = 0;
+        $earnings1 = 0;
+        $paidTimeOff1 = 0;
+        $nothingAdditionTonetPay1 = 0;
+
+        if (count($row->additionalEarnings) > 0){
+            foreach($row->additionalEarnings as $key => $val) {
+                if($val->payhead->pay_type =='earnings') {
+                    $earnings1 += $val->amount;
+                }
+
+                if($val->payhead->pay_type =='deductions') {
+                    $deductions1 += $val->amount;
+                }
+
+                if($val->payhead->pay_type =='nothing') {
+                    $nothingAdditionTonetPay1 += $val->amount;
+                }
+            }
+        }
+
+        if (count($row->additionalPaids) > 0){
+            foreach($row->additionalPaids as $key => $val) {
+                $paidTimeOff1 += $val->amount;                                            
+            }
+        }
+
+        $regHrs1 = $row->user->employeeProfile->pay_rate * $row->total_hours;
+
+        $tempGross += ($regHrs1 + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings1 + $nothingAdditionTonetPay1) + $row->paid_time_off);
+        
+        $employeePay1 = $tempGross - ($row->medical +$row->security + $row->edu_levy) + ($nothingAdditionTonetPay1) - $deductions1;
+        $TotalPayroll += $employeePay1;
+
+        $TotalTaxes += ($row->medical +$row->security + $row->edu_levy);
+    ?>
+@endforeach
 <div class="row page-titles">
     <div class="col-md-5 align-self-center">
         <h3 class="text-themecolor">
@@ -24,7 +68,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="payroll-heading">
-                        <h3 class="text-themecolor">Confirm Payroll</h3>
+                        <h3 class="text-themecolor">Review Submit</h3>
                     </div>
                 </div>
             </div>		
@@ -47,8 +91,8 @@
                             </li>
                         
                             <li class="progress-step" style="width: 25%;">
-                            <span class="count"></span>
-                            <span class="description" style="left: 11px !important;font-weight: bold;"> 4. Confirmation</span>
+                            <span class="count @if(!empty(request()->is_green)) highlight-index @endif"></span>
+                            <span class="description" style="left: 11px !important;font-weight: bold;"> 4. Submitted</span>
                             </li>
                         </ol>
                     </div>
@@ -61,11 +105,11 @@
                     <div class="d-flex justify-content-between">
                         <div class="dabit-data">
                             <span>Total Payroll</span>
-                            <p>${{number_format($totalPayroll, 2)}}</p>
+                            <p>${{number_format($TotalPayroll, 2)}}</p>
                         </div>
                         <div class="dabit-data">
-                            <span>Taxes</span>
-                            <p>${{number_format($taxes, 2)}}</p>
+                            <span>Total Taxes</span>
+                            <p>${{number_format($TotalTaxes, 2)}}</p>
                         </div>
                         <div class="dabit-data">
                             <span>Direct deposits</span>
@@ -152,8 +196,9 @@
                                                 <td style="font-weight:bold !important;"></td>
                                                 <td> </td>
                                                 <td>
-                                                    <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityEmployerTotal+$securityTotal+$eduLevytotal, 2)}}</span><br>
+                                                    <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityTotal+$eduLevytotal, 2)}}</span><br>
                                                     <small style="color: #000 !important;font-weight: 600 !important;">Total Taxes</small>
+                                                    <?php //$securityEmployerTotal ?>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -173,6 +218,7 @@
                                         <thead>
                                           <tr>
                                             <th scope="col">Employee</th>
+                                            <th scope="col">Gross Pay</th>
                                             <!-- <th scope="col">Regular hours</th> -->
                                             <!-- <th scope="col">OT</th> -->
                                             <!-- <th scope="col">Dbl OT</th> -->
@@ -183,7 +229,6 @@
                                             <th scope="col">Addition to net pay</th>
                                             <th scope="col">Deductions</th>
                                             <!-- <th scope="col">Paid time off</th> -->
-                                            <th scope="col">Gross Pay</th>
                                             <th scope="col">Employee Pay</th>
                                           </tr>
                                         </thead>
@@ -244,6 +289,7 @@
                                                 ?>
                                                 <tr>
                                                     <td>{{ucfirst($row->user->employeeProfile->first_name)}} {{ucfirst($row->user->employeeProfile->last_name)}}</td>
+                                                    <td>${{number_format($gross, 2)}}</td>
                                                     <td>${{number_format($row->medical, 2)}}</td>
                                                     <td>${{number_format($row->security, 2)}}</td>
                                                     <td>${{number_format($row->edu_levy, 2)}}</td>
@@ -257,8 +303,7 @@
                                                     <td>${{number_format($row->holiday_pay, 2)}}</td>
                                                     <td>${{number_format($row->paid_time_off, 2)}}</td>
                                                     */
-                                                    ?>
-                                                    <td>${{number_format($gross, 2)}}</td>
+                                                    ?>                                                
                                                     <td>${{number_format($employeePay, 2)}}</td>                                                    
                                                 </tr>                   
                                             @endforeach     
@@ -269,7 +314,8 @@
                                                     <td></td>
                                                     <td></td> -->
                                                     <td></td>
-                                                    <td></td>
+                                                    <td><span style="color: #000 !important;font-weight: 700 !important;">${{number_format($grossFinal, 2)}}</span><br>
+                                                        <small style="color: #000 !important;font-weight: 600 !important;">Total Gross Pay</small></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -391,8 +437,8 @@
 <script>
     var dataFinal = @json($dataGraph);
     var grossFinal = @json(number_format($grossFinal, 2));
-    var totalEmployeePay = @json($totalEmployeePay);
-    var totalTaxes = @json($totalTaxes);
+    var totalEmployeePay = @json($TotalPayroll);
+    var totalTaxes = @json($TotalTaxes);
     var totalDeductions = @json($totalDeductions);
     var totalAdditions = @json($nothingAdditionTonetPayTotal);
     // setup 

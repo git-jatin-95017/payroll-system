@@ -248,7 +248,7 @@
 												<select class="form-control {{ $errors->has('identity_document') ? ' is-invalid' : '' }}" id="identity_document" name="identity_document">
 													<option selected value disabled>Please Select</option>
 													<option @if(old('identity_document') == "Voter Id") selected @endif value="Voter Id">Voter Id</option>
-													<option @if(old('identity_document') == "Aadhar Card") selected @endif value="Aadhar Card">Aadhar Card</option>
+													<!-- <option @if(old('identity_document') == "Aadhar Card") selected @endif value="Aadhar Card">Aadhar Card</option> -->
 													<option @if(old('identity_document') == "Driving License") selected @endif value="Driving License">Driving License</option>
 													<option @if(old('identity_document') == "Passport") selected @endif value="Passport">Passport</option>
 												</select>

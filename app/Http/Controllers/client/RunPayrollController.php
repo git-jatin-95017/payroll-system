@@ -47,7 +47,7 @@ class RunPayrollController extends Controller
 	 */
 	public function stepOne(Request $request)
 	{
-		$employees = User::where('role_id', 3)->get();
+		$employees = User::where('role_id', 3)->where('status', 1)->get();
 
 		$from = $request->start_date; //date('Y-m-01'); //date('m-01-Y');
 		$to = $request->end_date; //date('Y-m-t'); //date('m-t-Y');
@@ -143,7 +143,7 @@ class RunPayrollController extends Controller
 	 */
 	public function stepTwo(Request $request)
 	{
-		$employees = User::where('role_id', 3)->get();
+		$employees = User::where('role_id', 3)->where('status', 1)->get();
 
 		$from = $request->start_date; //date('Y-m-01'); //date('m-01-Y');
 		$to = $request->end_date; //date('Y-m-t'); //date('m-t-Y');
@@ -245,15 +245,17 @@ class RunPayrollController extends Controller
 	}
 
 	public function showConfirmation (Request $request) {
-
 		$empIds = PayrollSheet::where('approval_status', 1)
+			->join('users', function($join) {
+ 	            $join->on('users.id', '=', 'payroll_sheets.emp_id')->where('status', 1);
+ 	        })
 			->where('appoval_number', $request->appoval_number)
 			->whereNotNull('payroll_date')
 			->select('emp_id')
 			->get()
 			->pluck('emp_id');
 
-		$data = PayrollAmount::where('start_date', '>=', $request->start_date)->where('end_date', '<=', $request->end_date)->where('status', 0)->whereIn('user_id', $empIds)->get();
+		$data = PayrollAmount::where('start_date', '>=', $request->start_date)->where('end_date', '<=', $request->end_date)->where('status', !empty($request->is_green) ? 1 :0)->whereIn('user_id', $empIds)->get();
 
 		$totalPayroll = collect($data)->sum(function ($row) { return (float) $row->gross; });
 		
@@ -330,6 +332,9 @@ class RunPayrollController extends Controller
 		// })->pluck('emp_id');
 
 		$empIds = PayrollSheet::where('approval_status', 1)
+			->join('users', function($join) {
+ 	            $join->on('users.id', '=', 'payroll_sheets.emp_id')->where('status', 1);
+ 	        })
 			->where('appoval_number', $request->appoval_number)
 			->whereNotNull('payroll_date')
 			->select('emp_id')
@@ -344,7 +349,7 @@ class RunPayrollController extends Controller
 		for ($i = 0; $i < count($empIds); $i++) {
 			$data = PayrollAmount::where('start_date', '>=', $request->start_date)
 				->where('end_date', '<=', $request->end_date)
-				->where('status', 0)
+				->whereIn('status', [0,1])
 				->where('user_id', $empIds[$i])
 				->first();
 

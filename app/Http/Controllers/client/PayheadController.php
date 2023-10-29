@@ -67,6 +67,12 @@ class PayheadController extends Controller
 				if ($val->pay_type == 'nothing') {
 					$records[$key]['pay_type'] = 'Addition to Net Pay';
 				}
+				if ($val->pay_type == 'deductions') {
+					$records[$key]['pay_type'] = 'Deduction to Net Pay';
+				}
+				if ($val->pay_type == 'earnings') {
+					$records[$key]['pay_type'] = 'Addition to Gross Pay';
+				}
 			}
 
 			$response = array(

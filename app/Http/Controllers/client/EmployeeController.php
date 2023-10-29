@@ -179,6 +179,7 @@ class EmployeeController extends Controller
 			'role_id' => 3,
 			'user_code' => strtoupper(uniqid()), //$request->emp_code,
 			'is_proifle_edit_access' => $request->is_proifle_edit_access,
+			'status' => $request->status,
 		]);		
 
 		$data = [
@@ -208,8 +209,7 @@ class EmployeeController extends Controller
 			'bank_name' => $request->bank_name,
 			'bank_acc_number' => $request->bank_acc_number,
 			'ifsc_code' => $request->ifsc_code,
-			'pf_account_number' => $request->pf_account_number,
-			'status' => $request->status,
+			'pf_account_number' => $request->pf_account_number
 		];
 
 		if ($request->file('file')) {			
@@ -316,6 +316,7 @@ class EmployeeController extends Controller
 			'phone_number' => $data['phone_number'],
 			'user_code' => $request->emp_code,
 			'is_proifle_edit_access' => $request->is_proifle_edit_access,
+			'status' => $request->status,
 		]);
 
 		$data = [

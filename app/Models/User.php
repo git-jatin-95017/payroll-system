@@ -25,7 +25,8 @@ class User extends Authenticatable
         'phone_number',
         'user_code',
         'is_proifle_edit_access',
-        'logo'
+        'logo',
+        'status'
     ];
 
     /**

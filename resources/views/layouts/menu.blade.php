@@ -184,14 +184,10 @@
 		</li>
 	@endif
 	<li>
-		<a href="#"
-		   onclick="event.preventDefault(); document.getElementById('logout-form-1').submit();">
+		<a href="/logout">
 			<i class="mdi mdi-power"></i>
 			<span class="hide-menu">
 				Logout
 			</span>
-		</a>
-		<form id="logout-form-1" action="{{ route('logout') }}" method="GET" class="d-none">
-			@csrf
-		</form>
+		</a>		
 	</li>

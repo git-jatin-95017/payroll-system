@@ -257,7 +257,7 @@
 												<select class="form-control {{ $errors->has('identity_document') ? ' is-invalid' : '' }}" id="identity_document" name="identity_document" @if($disabledDrop) style="pointer-events: none;" @endif>
 						                            <option selected value disabled>Please make a choice</option>
 						                            <option @if($employee->employeeProfile->identity_document == "Voter Id") selected @endif value="Voter Id">Voter Id</option>
-						                            <option @if($employee->employeeProfile->identity_document == "Aadhar Card") selected @endif value="Aadhar Card">Aadhar Card</option>
+						                            <!-- <option @if($employee->employeeProfile->identity_document == "Aadhar Card") selected @endif value="Aadhar Card">Aadhar Card</option> -->
 						                            <option @if($employee->employeeProfile->identity_document == "Driving License") selected @endif value="Driving License">Driving License</option>
 						                            <option @if($employee->employeeProfile->identity_document == "Passport") selected @endif value="Passport">Passport</option>
 						                        </select>
@@ -314,8 +314,8 @@
 													<label for="name">Employee Status</label>
 													<select class="form-control" id="status" name="status">
 														<option selected value disabled>Please Select</option>
-														<option @if($employee->is_proifle_edit_access == "1") selected @endif value="1">Active</option>
-														<option @if($employee->is_proifle_edit_access == "0") selected @endif value="0">Inactive</option>
+														<option @if($employee->status == "1") selected @endif value="1">Active</option>
+														<option @if($employee->status == "0") selected @endif value="0">Inactive</option>
 													</select>
 													@if ($errors->has('status'))
 														<span class="text-danger">
