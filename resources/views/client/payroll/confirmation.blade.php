@@ -39,9 +39,10 @@
         $tempGross += ($regHrs1 + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings1 + $nothingAdditionTonetPay1) + $row->paid_time_off);
         
         $employeePay1 = $tempGross - ($row->medical +$row->security + $row->edu_levy) + ($nothingAdditionTonetPay1) - $deductions1;
-        $TotalPayroll += $employeePay1;
+        // $TotalPayroll += $employeePay1; Commented
+        $TotalPayroll += $tempGross;
 
-        $TotalTaxes += ($row->medical +$row->security + $row->edu_levy);
+        $TotalTaxes += ($row->medical +$row->security + $row->edu_levy) + ($row->medical +$row->security_employer);
     ?>
 @endforeach
 <div class="row page-titles">
@@ -196,7 +197,7 @@
                                                 <td style="font-weight:bold !important;"></td>
                                                 <td> </td>
                                                 <td>
-                                                    <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityTotal+$eduLevytotal, 2)}}</span><br>
+                                                    <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityTotal+$eduLevytotal+$medicalTotal+$securityEmployerTotal, 2)}}</span><br>
                                                     <small style="color: #000 !important;font-weight: 600 !important;">Total Taxes</small>
                                                     <?php //$securityEmployerTotal ?>
                                                 </td>
@@ -228,7 +229,7 @@
                                             <th scope="col">Education levy</th>
                                             <th scope="col">Addition to net pay</th>
                                             <th scope="col">Deductions</th>
-                                            <!-- <th scope="col">Paid time off</th> -->
+                                            <th scope="col">Paid time off</th>
                                             <th scope="col">Employee Pay</th>
                                           </tr>
                                         </thead>
@@ -275,9 +276,12 @@
 
                                                     $regHrs = $row->user->employeeProfile->pay_rate * $row->total_hours;
 
-                                                    $gross += ($regHrs + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings + $nothingAdditionTonetPay) + $row->paid_time_off);
+                                                    $gross = $row->gross;
 
-                                                    $grossFinal += $gross;
+                                                    // $gross += ($regHrs + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings + $nothingAdditionTonetPay) + $row->paid_time_off); commented
+
+                                                    // $grossFinal += $gross; commented
+                                                    $grossFinal += ($regHrs + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings + $nothingAdditionTonetPay) + $row->paid_time_off);
 
                                                     $employeePay = $gross - ($row->medical +$row->security + $row->edu_levy) + ($nothingAdditionTonetPay) - $deductions;
 
@@ -289,7 +293,7 @@
                                                 ?>
                                                 <tr>
                                                     <td>{{ucfirst($row->user->employeeProfile->first_name)}} {{ucfirst($row->user->employeeProfile->last_name)}}</td>
-                                                    <td>${{number_format($gross, 2)}}</td>
+                                                    <td>${{number_format($row->gross, 2)}}</td> <?php //$gross; commented?>
                                                     <td>${{number_format($row->medical, 2)}}</td>
                                                     <td>${{number_format($row->security, 2)}}</td>
                                                     <td>${{number_format($row->edu_levy, 2)}}</td>
@@ -301,9 +305,9 @@
                                                     <td>{{$row->overtime_hrs}}</td>
                                                     <td>{{$row->doubl_overtime_hrs}}</td>
                                                     <td>${{number_format($row->holiday_pay, 2)}}</td>
-                                                    <td>${{number_format($row->paid_time_off, 2)}}</td>
                                                     */
                                                     ?>                                                
+                                                    <td>${{number_format($row->paid_time_off, 2)}}</td>
                                                     <td>${{number_format($employeePay, 2)}}</td>                                                    
                                                 </tr>                   
                                             @endforeach     
@@ -313,13 +317,19 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td> -->
+                                                    <?php
+                                                        /*
+                                                            <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($grossFinal, 2)}}</span><br>
+                                                        <small style="color: #000 !important;font-weight: 600 !important;">Total Gross Pay</small>
+                                                        */
+                                                    ?>
                                                     <td></td>
-                                                    <td><span style="color: #000 !important;font-weight: 700 !important;">${{number_format($grossFinal, 2)}}</span><br>
-                                                        <small style="color: #000 !important;font-weight: 600 !important;">Total Gross Pay</small></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
+                                                    <td></td>
+                                                    <td></td>                                                    
                                                     <td></td>                                                    
                                                     <td>
                                                         <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($totalEmployeePay, 2)}}</span><br>

@@ -53,6 +53,7 @@
 									  <th scope="col">Payroll Period</th>								      
 									  <th scope="col">Status</th>
 									  <th scope="col">Action</th>
+									  <th scope="col"></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -95,8 +96,9 @@
 											'start_date' => $startDate, 
 											'end_date' => $endDate, 
 											'number' => $result[0]['appoval_number']]) }}">Click here to process</a>
-											@endif
-
+											@endif										
+										</td>
+										<td>
 											<a href="{{ route('delete.payroll',  ['appoval_number' => $result[0]['appoval_number'] ]) }}"class="btn btn-sm btn-danger" onclick="return confirm('Are you sure? Once you delete the payroll then you have to approve the timesheet hours again for the same date range and employees.')" style="color:#fff;" title="Delete"><i class='fa fa-trash'></i></a>
 										</td>
 									</tr>			

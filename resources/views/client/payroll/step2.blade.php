@@ -128,6 +128,10 @@
 												<table>
 													<tr>
 														<td>
+															<?php
+																//Last leave balance
+														        $isLastPayroll = \App\Models\PayrollAmount::where('start_date', '>=', date('Y-01-01'))->where('end_date', '<', $from)->where('user_id',  $employee->id)->orderBy('id', 'DESC')->first();
+															?>
 															@foreach($empLeavesPaid as $key =>$value)
 																<?php
 																	$employeeID = $employee->id;
@@ -155,6 +159,13 @@
 														                //$totalday   = $leavetypes->leave_day . '/' . ($daysTaken/8);
 														                $totalday = (float)$leavetypes->leave_day - (float)$daysTakenval;
 														            }
+														            
+														            $pastLeaveBalancer = 0;
+														            if (!empty($isLastPayroll)) {
+														            	$paidLdata = $isLastPayroll->additionalPaids()->select('amount')->where('user_id', $employeeID)->where('leave_type_id', $value->leave_type_id)->first();
+
+																		$pastLeaveBalancer = (!empty($paidLdata->amount) ? $paidLdata->amount: 0);
+														            }
 																?>
 
 																<?php
@@ -170,7 +181,12 @@
 																	if (date('m-d') == '08-29') {
 																		$amountPaidOff  += 	$leavetypes->carry_over_amount;
 																	}
-														
+																	
+																	if (empty($amountPaidOff)) {
+																		if ($pastLeaveBalancer > 0) {
+																			$amountPaidOff = $pastLeaveBalancer;
+																		}
+																	}
 																?>
 																<p>
 																	<label class="cursor-pointer" data-toggle="collapse" href="#bonus{{$employee->id}}{{$key}}" role="button" aria-expanded="false" aria-controls="bonus{{$employee->id}}{{$key}}">
@@ -185,9 +201,9 @@
 																		<input type="hidden" id="paid-time-off-{{$employee->id}}" value="0" name="input[{{$employee->id}}][paid_time_off]">
 																		<input type="text" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" value="{{$amountPaidOff}}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totalday*8; ?>')" min=0>
 																		<br>
-																		Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) : 0}}</b><br>
+																		Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) : 0}}</b>hrs<br>
 																		Leave Balance | <b class="leave-balance-all" id="balance-{{$employee->id}}-{{$value->leave->id}}">{{$totalday*8}}</b>hrs<br>
-																		Remaining Amount | {{$totalday}}<br>
+																		<br>
 
 																		<?php
 																			if (!empty($employee->employeeProfile->doj)) {
