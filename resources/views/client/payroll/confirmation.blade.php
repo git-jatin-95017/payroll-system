@@ -36,8 +36,10 @@
 
         $regHrs1 = $row->user->employeeProfile->pay_rate * $row->total_hours;
 
-        $tempGross += ($regHrs1 + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings1 + $nothingAdditionTonetPay1) + $row->paid_time_off);
+        // $tempGross += ($regHrs1 + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings1 + $nothingAdditionTonetPay1) + $row->paid_time_off); commented
         
+        $tempGross += $row->gross + $row->paid_time_off;
+
         $employeePay1 = $tempGross - ($row->medical +$row->security + $row->edu_levy) + ($nothingAdditionTonetPay1) - $deductions1;
         // $TotalPayroll += $employeePay1; Commented
         $TotalPayroll += $tempGross;
@@ -276,14 +278,14 @@
 
                                                     $regHrs = $row->user->employeeProfile->pay_rate * $row->total_hours;
 
-                                                    $gross = $row->gross;
+                                                    $gross = $row->gross + $row->paid_time_off;
 
                                                     // $gross += ($regHrs + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings + $nothingAdditionTonetPay) + $row->paid_time_off); commented
 
-                                                    // $grossFinal += $gross; commented
-                                                    $grossFinal += ($regHrs + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings + $nothingAdditionTonetPay) + $row->paid_time_off);
+                                                    $grossFinal += $gross;
+                                                    // $grossFinal += ($regHrs + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings + $nothingAdditionTonetPay) + $row->paid_time_off);
 
-                                                    $employeePay = $gross - ($row->medical +$row->security + $row->edu_levy) + ($nothingAdditionTonetPay) - $deductions;
+                                                    $employeePay = $gross;// - ($row->medical +$row->security + $row->edu_levy) + ($nothingAdditionTonetPay) - $deductions;
 
                                                     $totalEmployeePay += $employeePay;
                                                     $totalTaxes += ($row->medical +$row->security + $row->edu_levy);
@@ -396,12 +398,14 @@
 
                                                     $regHrs1 = $row->user->employeeProfile->pay_rate * $row->total_hours;
 
-                                                    $gross1 += ($regHrs1 + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings1 + $nothingAdditionTonetPay1) + $row->paid_time_off);
+                                                    // $gross1 += ($regHrs1 + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings1 + $nothingAdditionTonetPay1) + $row->paid_time_off); commented
 
-                                                    $employeePay1 = $gross1 - ($row->medical +$row->security + $row->edu_levy) + ($nothingAdditionTonetPay1) - $deductions1;
+                                                    $gross1 = $row->gross + $row->paid_time_off;;
+
+                                                    $employeePay1 = $gross1; //- ($row->medical +$row->security + $row->edu_levy) + ($nothingAdditionTonetPay1) - $deductions1;
                                                 ?>
                                                 <?php 
-                                                    $subtotal+= $employeePay1 + $row->medical+$row->security+$row->edu_levy + $row->security_employer;
+                                                    $subtotal+= $employeePay1 ;//+ $row->medical+$row->security+$row->edu_levy + $row->security_employer;
                                                     $total+= $subtotal;
                                                 ?>
 

@@ -204,6 +204,7 @@
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($regHrs, 2)}}</td>
             <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($regHrs+$regHrsYTD, 2)}}</td> -->
         </tr>
+        @if($data->paid_time_off > 0)
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Paid Time Off</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;"></td>
@@ -211,6 +212,7 @@
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->paid_time_off, 2)}}</td>
             <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($gross+$grossYTD, 2)}}</td> -->
         </tr>
+        @endif
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Gross Earnings</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;"></td>
@@ -235,21 +237,29 @@
                         <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">Amount</th>
                         <!-- <th style="text-align: right; color: #000;">Year To Date </th> -->
                     </tr>
+                    @if($data->medical > 0)
                     <tr>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; ">Medical benefits </td>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->medical, 2)}}</td>
                         <!-- <td style="padding:3px 5px; text-align: right;">${{number_format($data->medical +$medicalYTD, 2)}}</td> -->
                     </tr>
+                    @endif
+
+                    @if($data->security > 0)
                     <tr>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd;">Social Social Security</td>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->security, 2)}}</td>
                         <!-- <td style="padding:3px 5px; text-align: right;">${{number_format($data->security + $securityYTD, 2)}}</td> -->
                     </tr>
+                    @endif
+
+                    @if($data->edu_levy > 0)
                     <tr>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd;">Education Levy </td>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->edu_levy, 2)}}</td>
                         <!-- <td style="padding:3px 5px; text-align: right;">${{number_format($data->edu_levy + $edu_levyYTD, 2)}}</td> -->
                     </tr>
+                    @endif
                 </thead>
             </table>
         </td>
@@ -279,12 +289,15 @@
                             if($val->payhead->pay_type !='earnings') {
                                 $totalAe += $val->amount;
                     @endphp
+
+                            @if($val->amount > 0)
                             <tr>
                                 <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd;">Deduction from Net Pay</td> -->
                                 <td style="padding:3px 5px; border-right: 1px solid #ddd;">{{ $val->payhead->name}}</td>
                                 <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($val->amount, 2)}}</td>
                                 <!-- <td style="padding:3px 5px; text-align: right;">${{number_format($val->amount+$deductionsYTD+$reimbursementYTD, 2)}}</td> -->
                             </tr>
+                            @endif
                     @php
                             }
                         }
@@ -389,16 +402,21 @@
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($earnings, 2)}}</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($earnings + $earningsYTD, 2)}}</td>
         </tr> -->
+        @if($totalTaxes > 0)
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Taxes</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($totalTaxes, 2)}}</td>
             <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($totalTaxes + $totalTaxesYTD, 2)}}</td> -->
         </tr>
+        @endif
+
+        @if($deductions > 0)
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Employee additions/deductions </td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($deductions, 2)}}</td>
             <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($deductions+$deductionsYTD, 2)}}</td> -->
         </tr>
+        @endif
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Net Pay </td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->net_pay, 2)}}</td>
@@ -449,14 +467,19 @@
 
                     ?>
 
+                    @if($paidTimeOff > 0)
                     <tr>    
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">Hours used this period</td>
                         <td style="padding:3px 5px; text-align: right;  width: 50%;">{{$paidTimeOff}}</td>
                     </tr>
+                    @endif
+
+                    @if($paidTimeOffBalane > 0)
                     <tr>    
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">Remaining Paid Time off Balance</td>
                         <td style="padding:3px 5px; text-align: right;  width: 50%;">{{$paidTimeOffBalane}}</td>
                     </tr>
+                    @endif
                 </tbody>
             </table>
         </td>
@@ -472,14 +495,19 @@
                         <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000; width: 50%;">Description</th>
                         <th style="padding:3px 5px;  text-align: right; color: #000;  width: 50%;">Hours</th>
                     </tr>
+                    @if($unpaidTimeOff > 0)
                     <tr>    
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">Hours used this period</td>
                         <td style="padding:3px 5px; text-align: right;  width: 50%;">{{$unpaidTimeOff}}</td>
                     </tr>
+                    @endif
+
+                    @if($unpaidTimeOffBalane > 0)
                     <tr>    
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">Remaining Paid Time off Balance</td>
                         <td style="padding:3px 5px; text-align: right;  width: 50%;">{{$unpaidTimeOffBalane}}</td>
                     </tr>
+                    @endif
                 </tbody>
             </table>
         </td>
