@@ -5,6 +5,8 @@
 	        width: 100%;
 	    }
 	</style>
+	<link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/responsive.bootstrap4.min.css') }}">
 @endpush
 @section('content')
 	<div class="content-header">
@@ -63,7 +65,7 @@
 							   	
 							</div> -->
 							<!-- <br> -->
-							<table class="table table-bordered table-hover nowrap" id="dataTableBuilder">
+							<table class="table table-bordered table-hover nowrap" style="width:100%" id="dataTableBuilder">
 								<thead>
 									<tr>
 										<!-- <th><input type="checkbox" class='checkall' id='checkall'>
@@ -75,6 +77,7 @@
 										<th>Created At</th>
 										<th>Updated At</th>
 										<th>Action</th>										
+										<th>Login As Client</th>										
 									</tr>
 								</thead>
 							</table>
@@ -136,9 +139,8 @@
 
 		  	var table = $('#dataTableBuilder').DataTable({
 					processing: true,
-					serverSide: true,
-					// autoWidth: true,
-					// scrollX: true,
+					autoWidth: true,
+					scrollX: true,
 					scrollY: "400px",
 					ajax: {
 						url: "{{ route('client.index') }}",
@@ -156,6 +158,7 @@
 						{data:'created_at_formatted', name: 'created_at'},
 						{data:'updated_at_formatted', name: 'updated_at'},
 						{data:'action_button', name: 'Action', orderable: false, searchable: false},
+						{data:'action_button2', name: 'Action', orderable: false, searchable: false},
 			        ],
 			        orderCellsTop: true,
         			// fixedHeader: true,
@@ -196,6 +199,42 @@
 			   }else{
 			      $('#checkall').prop('checked', false);
 			   }
+			}
+
+
+			//single record move to delete
+			$(document).on('click','a.delete',function(){
+			    var trashRecordUrl = $(this).data('href');
+			    moveToDelete(trashRecordUrl);
+			});
+
+			// move to Delete single record by just pass the url of 
+			function moveToDelete(trashRecordUrl) {
+			  Swal.fire({
+			      text: "You Want to Delete?",
+			      showCancelButton: true,
+			      confirmButtonText: '<i class="ik trash-2 ik-trash-2"></i> Permanent Delete!',
+			      cancelButtonText: 'Not Now!',
+			      reverseButtons: true,
+			      showCloseButton : true,
+			      allowOutsideClick:false,
+			    }).then((result)=>{
+			      var action = 'delete';
+			      if(result.value == true){
+			        $.ajax({
+			          	url: trashRecordUrl,
+			          	type: 'DELETE',
+			          	data: {
+		                	_token: "{{ csrf_token() }}",
+		             	},
+			          	dataType:'JSON',
+			          	success:(result)=>{
+			          		location.reload();
+			            	//$('#dataTableBuilder').DataTable().draw(true);		           
+			          	}
+			        });
+			      }
+			    });
 			}
 
 	</script>		

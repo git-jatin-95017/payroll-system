@@ -12,6 +12,7 @@ use App\Http\Controllers\client\LeaveTypeController;
 use App\Http\Controllers\employee\LeaveController;
 use App\Http\Controllers\employee\LeaveController as EMPLEAVE;
 use App\Http\Controllers\employee\MyProfileController;
+use App\Http\Controllers\client\MyProfileController as MPF;
 use App\Http\Controllers\PunchController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\client\PayrollController;
@@ -43,6 +44,7 @@ Route::get('sample-download/{file}', [App\Http\Controllers\admin\DashboardContro
 Route::prefix('admin')->group(function () {
 	//Dashboard
 	Route::get('dashboard', [App\Http\Controllers\admin\DashboardController::class, 'index'])->name('admin.dashboard');	
+	Route::post('login-as-client', [ClientController::class, 'loginAs'])->name('login-as-client');
 	Route::resource('client', ClientController::class);
 
 	Route::get('attendance/getData/', [AttendanceController::class, 'getData'])->name('attendance.getData');
@@ -58,7 +60,7 @@ Route::prefix('admin')->group(function () {
 
 	Route::get('calculating-payroll', function () {
 		return view('admin.payroll.thanks');
-	})->name('admin.calculating-payroll');	
+	})->name('admin.calculating-payroll');
 });
 
 Route::prefix('client')->group(function () {
@@ -117,19 +119,19 @@ Route::prefix('client')->group(function () {
 
 	Route::get('delete/payroll', [RunPayrollController::class, 'deletePayroll'])->name('delete.payroll');
 	Route::get('download-pdf', [RunPayrollController::class, 'downloadPdf'])->name('download.pdf');
-
+	Route::resource('my-profile', MPF::class);
 });
 
 Route::prefix('employee')->group(function () {
 	//Dashboard
 	Route::get('dashboard', [App\Http\Controllers\employee\DashboardController::class, 'index'])->name('dashboard');	
 
-	Route::get('my-leaves/getData/', [LeaveController::class, 'getData'])->name('my.leaves.getData')->middleware([CheckPunchin::class]);
-	Route::resource('my-leaves', LeaveController::class)->middleware([CheckPunchin::class]);	
+	Route::get('my-leaves/getData/', [LeaveController::class, 'getData'])->name('my.leaves.getData');//->middleware([CheckPunchin::class]);
+	Route::resource('my-leaves', LeaveController::class);//->middleware([CheckPunchin::class]);	
 	
 	Route::resource('holidays', HolidayController::class);//->middleware([CheckPunchin::class]);	
 
-	Route::resource('emp-my-profile', MyProfileController::class)->middleware([CheckPunchin::class]);
+	Route::resource('emp-my-profile', MyProfileController::class);//->middleware([CheckPunchin::class]);
 });
 
 Route::resource('edit-my-profile', ProfileController::class);
@@ -140,6 +142,8 @@ Auth::routes(['logout' => false]);
 
 //Logout
 Route::get('/employee/logout', function() {
+	/*
+
 	if (auth()->user()->role_id == 3) {
 		$attendanceDate = date('Y-m-d');
 
@@ -161,7 +165,8 @@ Route::get('/employee/logout', function() {
      	   return redirect()->route('dashboard')->with('error','Please punch out first!');   
         }
 	}
-
+	
+	*/
 	//logout user
     auth()->logout();
     
@@ -170,6 +175,8 @@ Route::get('/employee/logout', function() {
 });
 
 Route::get('/logout', function() {
+	
+	/*
 	if (auth()->user()->role_id == 3) {
 		$attendanceDate = date('Y-m-d');
 
@@ -191,7 +198,8 @@ Route::get('/logout', function() {
      	   return redirect()->route('dashboard')->with('error','Please punch out first!');   
         }
 	}
-
+	
+	*/
 	//logout user
     auth()->logout();
     

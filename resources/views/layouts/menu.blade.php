@@ -173,6 +173,15 @@
 				</span>
 			</a>
 		</li>
+	@elseif(auth()->user()->role_id == 2)
+		<li>
+			<a href="{{ route('my-profile.edit', auth()->user()->id) }}">
+				<i class="mdi mdi-account"></i>
+				<span class="hide-menu">
+					Profile
+				</span>
+			</a>
+		</li>
 	@else
 		<li>
 			<a href="{{ route('edit-my-profile.edit', auth()->user()->id) }}">

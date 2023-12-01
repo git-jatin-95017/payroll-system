@@ -50,6 +50,10 @@ class User extends Authenticatable
 
     protected $appends = ['created_at_formatted', 'updated_at_formatted'];
 
+    public function companyProfile() {
+        return $this->hasOne(CompanyProfile::class);
+    }
+
     public function employeeProfile() {
         return $this->hasOne(EmployeeProfile::class);
     }

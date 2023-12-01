@@ -9,7 +9,8 @@ use DataTables;
 use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Validation\Rule;
+use App\Models\CompanyProfile;
 class ClientController extends Controller
 {
 	/**
@@ -51,12 +52,23 @@ class ClientController extends Controller
 					})
 					->addColumn('action_button', function($data){
                             $btn = "<div class='table-actions'>                           
-                            <a href='".route("client.edit",$data->id)."'><i class='fas fa-pen'></i></a>
-                            <a data-href='".route("client.destroy",$data->id)."' class='delete cursure-pointer'><i class='fas fa-trash'></i></a>
-                            </div>";
+                            <a class='btn btn-sm btn-primary' href='".route("client.edit",$data->id)."'><i class='fas fa-pen'></i></a>
+                            <a data-href='".route("client.destroy",$data->id)."' class='btn btn-sm btn-danger delete' style='color:#fff;'><i class='fas fa-trash'></i></a>";
                             return $btn;
                     })
-					->rawColumns(['action', 'action_button'])
+                    ->addColumn('action_button2', function($data) {
+                            $btn1 = "<div class='table-actions'>                         
+                            <form action='".route("login-as-client")."' method='post'>
+                                ".csrf_field()."
+                                    <input type='hidden' name='user_id' value=".$data->id.">
+                                    <button type='submit' class='btn-primary btn'>
+                                        Login
+                                    </button>
+                                </form>
+                            </div>";
+                            return $btn1;
+                    })
+					->rawColumns(['action', 'action_button', 'action_button2'])
 					->make(true);
 		}
 
@@ -81,24 +93,150 @@ class ClientController extends Controller
 	 */
 	public function store(Request $request) 
 	{
+		// $data = $request->all();
+
+		// $request->validate([
+		// 	'name' => 'required|max:255',
+		// 	'email' => ['required', 'email', 'max:191', 'unique:users'],
+		// 	'phone_number' => ['required'],
+		// 	'password' => ['required', 'string', 'min:8', 'confirmed'],
+		// 	'password_confirmation' => 'required_with:password'
+		// ]);
+
+		// User::create([
+		// 	'name' => $data['name'],
+		// 	'email' => $data['email'],
+		// 	'phone_number' => $data['phone_number'],
+		// 	'password' => Hash::make($data['password']),
+		// 	'role_id' => 2,
+		// 	'user_code' => $this->generateUniqueNumber()
+		// ]);
+
 		$data = $request->all();
 
 		$request->validate([
-			'name' => 'required|max:255',
-			'email' => ['required', 'email', 'max:191', 'unique:users'],
-			'phone_number' => ['required'],
-			'password' => ['required', 'string', 'min:8', 'confirmed'],
-			'password_confirmation' => 'required_with:password'
+			'company_name' => ['required'],
+			'country' => ['required'],
+			'city' => ['required'],
+			'address' => ['required'],
+			'email_address' => ['required', 'email', 'max:191', Rule::unique('users', 'email')],	
+			'passwordc' => ['required', 'string', 'min:8'],
+			// 'password_confirmationc' => 'required_with:passwordc',
+			'file' => 'nullable|mimes:png,jpg,jpeg|max:2048'
+		], [], [
+			'levy_id_no' => 'Education Levy ID Number',
+			// 'doj' => 'Start Date',
 		]);
 
-		User::create([
-			'name' => $data['name'],
-			'email' => $data['email'],
-			'phone_number' => $data['phone_number'],
-			'password' => Hash::make($data['password']),
+		$user = User::create([
+			'name' => $request->company_name,
+			'email' => $request->email_address,
+			'phone_number' => $request->phone_number,
+			'password' => Hash::make( $request->passwordc),
 			'role_id' => 2,
-			'user_code' => $this->generateUniqueNumber()
-		]);
+			'status' => 1,
+		]);		
+
+		$data = [
+			'company_name' => $request->company_name,
+			'city' => $request->city,
+			'address' => $request->address,
+			'state' => NULL,
+			'country' => $request->country,
+			'phone_number' => $request->phone_number,
+			'medical_no' => $request->medical_no,
+			'ssr_no' => $request->ssr_no,
+			'levy_id_no' => $request->levy_id_no,
+			'bank_name' => $request->bank_name,
+			'account_number' => !empty($request->account_number) ? $request->account_number : NULL,
+			'bank_address' => !empty($request->bank_address) ? $request->bank_address : NULL,
+			'routing_number' => !empty($request->routing_number) ? $request->routing_number : NULL,
+		];
+
+	   	//Logo
+	   	if ($request->file('file')) {
+			$oldFile = $user->companyProfile->file;
+			if (\File::exists(public_path('files/'.$oldFile))) {
+				\File::delete(public_path('files/'.$oldFile));
+			}
+
+	        $file = $request->file('file');
+	        $filename = time().'_'.$file->getClientOriginalName();
+
+	        // File upload location
+	        $location = 'files';
+
+	        // Upload file
+	        $file->move($location, $filename);
+
+	        $data['file'] = $filename;
+	   	}
+
+	   	//Logo
+	   	if ($request->file('logo')) {
+			$oldLogo = $user->companyProfile->logo;
+			if (\File::exists(public_path('files/'.$oldLogo))) {
+				\File::delete(public_path('files/'.$oldLogo));
+			}
+
+	        $file2 = $request->file('logo');
+	        $filename2 = time().'_'.$file2->getClientOriginalName();
+
+	        // File upload location
+	        $location2 = 'files';
+
+	        // Upload file
+	        $file2->move($location2, $filename2);
+
+	        $data['logo'] = $filename2;
+	   	}
+	   	
+		CompanyProfile::updateOrCreate(
+		    ['user_id' => $user->id],
+		    $data
+		);
+
+		// Loop through the submitted data and validate
+	    foreach ($request->input('name') as $index => $name) {
+	        $userFriendlyIndex = $index + 1;
+
+	        $this->validate($request, [
+	            'name.' . $index => 'nullable|string|max:255',
+	            'email.' . $index => 'nullable|email|unique:users,email',
+	            'password.' . $index => ['nullable', 'min:8'],
+				'password_confirmation.' . $index => 'required_with:password.' . $index,
+	        ], [
+	            'name.' . $index . '.required' => 'The name field is required for row ' . $userFriendlyIndex . '.',
+	            'email.' . $index . '.required' => 'The email field is required for row ' . $userFriendlyIndex . '.',
+	            'email.' . $index . '.email' => 'The email must be a valid email address for row ' . $userFriendlyIndex . '.',
+	            'email.' . $index . '.unique' => 'The email has already been taken for row ' . $userFriendlyIndex . '.',
+	            'password.' . $index . '.required' => 'The password field is required for row ' . $userFriendlyIndex . '.',
+	            'password.' . $index . '.string' => 'The password must be a string for row ' . $userFriendlyIndex . '.',
+	            'password.' . $index . '.min' => 'The password must be at least :min characters for row ' . $userFriendlyIndex . '.',
+				// 'password.' . $index . '.confirmed' => 'The password confirmation does not match for row ' . $userFriendlyIndex . '.',
+	           	'password_confirmation.' . $index . '.required_with' => 'The password confirmation field is required for row ' . $userFriendlyIndex . '.',
+	        ]);
+	    }
+
+	    // Manually compare password and password_confirmation
+	    if ($request->input("password.$index") !== $request->input("password_confirmation.$index")) {
+	        $validator = \Validator::make([], []); // Create an empty validator
+	        $validator->errors()->add("password.$index", "The password confirmation does not match for row " . ($index + 1) . ".");
+	        // throw new \Illuminate\Validation\ValidationException($validator);
+	       	return redirect()->back()->with('error', $validator);
+	    }
+
+	    foreach ($request->input('name') as $index => $name) {
+	        $user = new User();
+		    $user->name = $request->input('name')[$index];
+		    $user->email = $request->input('email')[$index];
+		    $user->password = Hash::make($request->input('password')[$index]);
+		    $user->role_id = 2; //Company as admin
+		    $user->status = 1;
+		    $user->save();
+	    }
+
+		// Mail::to($user->email)->send(new StaffCreated($data));	
 
 		return redirect()->route('client.index')->with('message', 'Client created successfully.');
 	}
@@ -136,9 +274,9 @@ class ClientController extends Controller
 	 */
 	public function edit($id)
 	{
-		$client = User::findOrFail($id);		
+		$company = User::find($id);		
 
-		return view('admin.client.edit', compact('client'));
+		return view('admin.client.edit', compact('company'));
 	}
 
 	/**
@@ -150,21 +288,185 @@ class ClientController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
-			'name' => 'required|string|max:255',
-			'email' => ['required', 'email', 'max:191', 'unique:users,email,'.$id],
-			'phone_number' => ['required']                  
-		]);
+		// $request->validate([
+		// 	'name' => 'required|string|max:255',
+		// 	'email' => ['required', 'email', 'max:191', 'unique:users,email,'.$id],
+		// 	'phone_number' => ['required']                  
+		// ]);
 
-		$client = User::findOrFail($id);
+		// $client = User::findOrFail($id);
 
-		if (!empty($request->password)) {
-			$request['password'] =  Hash::make($request->password);
+		// if (!empty($request->password)) {
+		// 	$request['password'] =  Hash::make($request->password);
+		// } else {
+		// 	unset($request['password']);
+		// }
+
+		// $client->update($request->all());
+
+		$data = $request->all();
+		
+		$company = User::find($id);
+
+		if ($data['update_request'] == 'payment') {
+			$request->validate([
+				'bank_name' =>['required'],
+				'routing_number' => ['required'],
+				'account_number' => ['required'],
+				'bank_address' => ['required'],
+			], [], []);
+
+			$data = [
+				'routing_number' => $request->routing_number ?? '',
+				'account_number' => $request->account_number ?? '',
+				'bank_name' => $request->bank_name ?? '',
+				'bank_address' => $request->bank_address ?? '',
+			];
+
+			unset($data['update_request']);
+
+			CompanyProfile::updateOrCreate(
+			    ['user_id' => $company->id],
+			    $data
+			);
+		} else if ($data['update_request'] == 'changepwd') {
+			// Loop through the submitted data and validate
+		    foreach ($request->input('name') as $index => $name) {
+		        $userFriendlyIndex = $index + 1;
+
+		        $this->validate($request, [
+		            'name.' . $index => 'required|string|max:255',
+		            'email.' . $index => 'required|email|unique:users,email',
+		            'password.' . $index => ['required', 'string', 'min:8'],
+					'password_confirmation.' . $index => 'required_with:password.' . $index,
+		        ], [
+		            'name.' . $index . '.required' => 'The name field is required for row ' . $userFriendlyIndex . '.',
+		            'email.' . $index . '.required' => 'The email field is required for row ' . $userFriendlyIndex . '.',
+		            'email.' . $index . '.email' => 'The email must be a valid email address for row ' . $userFriendlyIndex . '.',
+		            'email.' . $index . '.unique' => 'The email has already been taken for row ' . $userFriendlyIndex . '.',
+		            'password.' . $index . '.required' => 'The password field is required for row ' . $userFriendlyIndex . '.',
+		            'password.' . $index . '.string' => 'The password must be a string for row ' . $userFriendlyIndex . '.',
+		            'password.' . $index . '.min' => 'The password must be at least :min characters for row ' . $userFriendlyIndex . '.',
+					// 'password.' . $index . '.confirmed' => 'The password confirmation does not match for row ' . $userFriendlyIndex . '.',
+		           	'password_confirmation.' . $index . '.required_with' => 'The password confirmation field is required for row ' . $userFriendlyIndex . '.',
+		        ]);
+		    }
+
+		    // Manually compare password and password_confirmation
+		    if ($request->input("password.$index") !== $request->input("password_confirmation.$index")) {
+		        $validator = \Validator::make([], []); // Create an empty validator
+		        $validator->errors()->add("password.$index", "The password confirmation does not match for row " . ($index + 1) . ".");
+		        // throw new \Illuminate\Validation\ValidationException($validator);
+		       	return redirect()->back()->with('error', $validator);
+		    }
+
+		    foreach ($request->input('name') as $index => $name) {
+		        $user = new User();
+			    $user->name = $request->input('name')[$index];
+			    $user->email = $request->input('email')[$index];
+			    $user->password = Hash::make($request->input('password')[$index]);
+			    $user->role_id = 2; //Company as admin
+			    $user->status = 1; //Company as admin
+			    $user->save();
+		    }
+
+			/*
+			$request->validate([
+				'old_password' => ['required'],
+				'password' => ['required', 'string', 'min:8', 'confirmed'],
+				'password_confirmation' => 'required_with:password',
+			], [], [
+				'old_password' => 'current password'
+			]);
+
+			unset($data['update_request']);
+
+			$company->password = Hash::make($data['password_confirmation']);
+			
+			$company->save();
+			*/
 		} else {
-			unset($request['password']);
-		}
+			$request->validate([
+				'company_name' => ['required'],
+				'country' => ['required'],
+				'city' => ['required'],
+				'address' => ['required'],
+				'email' => ['required', 'email', 'max:191', 'unique:users,email,'.$company->id],	
+				// 'password' => ['required', 'string', 'min:8', 'confirmed'],
+				// 'password_confirmation' => 'required_with:password',
+				'file' => 'nullable|mimes:png,jpg,jpeg|max:2048'
+			], [], [
+				'levy_id_no' => 'Education Levy ID Number',
+				// 'doj' => 'Start Date',
+			]);
 
-		$client->update($request->all());
+			$company->update([
+				'name' => $request->company_name,
+				'email' =>$request->email,
+				'phone_number' => $request->phone_number,
+			]);
+
+			$data = [
+				'company_name' => $request->company_name,
+				'city' => $request->city,
+				'address' => $request->address,
+				'state' => NULL,
+				'country' => $request->country,
+				'phone_number' => $request->phone_number,
+				'medical_no' => $request->medical_no,
+				'ssr_no' => $request->ssr_no,
+				'levy_id_no' => $request->levy_id_no,
+				'bank_name' => $request->bank_name,
+				'account_number' => !empty($request->account_number) ? $request->account_number : NULL,
+				'bank_address' => !empty($request->bank_address) ? $request->bank_address : NULL,
+				'routing_number' => !empty($request->routing_number) ? $request->routing_number : NULL,
+			];
+
+		   	//Logo
+		   	if ($request->file('file')) {
+				$oldFile = $company->companyProfile->file;
+				if (\File::exists(public_path('files/'.$oldFile))) {
+					\File::delete(public_path('files/'.$oldFile));
+				}
+
+		        $file = $request->file('file');
+		        $filename = time().'_'.$file->getClientOriginalName();
+
+		        // File upload location
+		        $location = 'files';
+
+		        // Upload file
+		        $file->move($location, $filename);
+
+		        $data['file'] = $filename;
+		   	}
+
+		   	//Logo
+		   	if ($request->file('logo')) {
+				$oldLogo = $company->companyProfile->logo;
+				if (\File::exists(public_path('files/'.$oldLogo))) {
+					\File::delete(public_path('files/'.$oldLogo));
+				}
+
+		        $file2 = $request->file('logo');
+		        $filename2 = time().'_'.$file2->getClientOriginalName();
+
+		        // File upload location
+		        $location2 = 'files';
+
+		        // Upload file
+		        $file2->move($location2, $filename2);
+
+		        $data['logo'] = $filename2;
+		   	}
+
+		   	unset($data['update_request']);
+		   	CompanyProfile::updateOrCreate(
+			    ['user_id' => $company->id],
+			    $data
+			);
+			// $company->companyProfile->update($data);
+		}
 
 		return redirect()->route('client.index')->with('message','Record updated successfully.');
 	}
@@ -177,10 +479,21 @@ class ClientController extends Controller
 	 */
 	public function destroy($id)
 	{
-		$code = User::find($id);
-		$code->delete();
+		if (request()->ajax()) {
+			 $trash = User::find($id);
 
-		return true;
+	        if (!empty($trash->companyProfile->file)) {
+	            $oldFile = $trash->companyProfile->file;
+
+				if (\File::exists(public_path('files/'.$oldFile))) {
+					\File::delete(public_path('files/'.$oldFile));
+				}
+	        }
+
+	        $trash->delete();
+
+			return response()->json(['status'=>true, 'message'=>"Client deleted successfully."]);
+		}
 	}
 
 	public function deleteAll(Request $request)  
@@ -202,4 +515,25 @@ class ClientController extends Controller
 			}
 		} 
 	} 
+
+	/**
+     * loginas client method
+     * 
+     * @param \Illuminate\Http\Request $request
+     */
+    public function loginAs(Request $request)
+    {
+        $userId = $request->get('user_id');
+        //if session exists remove it and return login to original user
+        if (session()->has('hasClonedUser')) {
+            auth()->loginUsingId(session()->get('hasClonedUser'));
+            session()->remove('hasClonedUser');
+            return redirect()->back();
+        }
+
+        // Set session for client cloning
+        session()->put('hasClonedUser', auth()->user()->id);
+        auth()->loginUsingId($userId);
+        return redirect()->route('client.dashboard');
+    }
 }

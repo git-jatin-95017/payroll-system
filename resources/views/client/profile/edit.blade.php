@@ -6,7 +6,7 @@
     <div class="col-md-5 align-self-center">
         <h3 class="text-themecolor">
             <i class="mdi mdi-account-outline" style="color:#1976d2"></i>
-            Manage Clients
+            My Profile
         </h3>
     </div>
 
@@ -15,8 +15,7 @@
             <li class="breadcrumb-item">
                 <a href="javascript:void(0)">Home</a>
             </li>
-            <li class="breadcrumb-item"><a href="#">Clients</a></li>
-			<li class="breadcrumb-item active">Modify Client</li>
+            <li class="breadcrumb-item active">My Profile</li>
         </ol>
     </div>
 </div>
@@ -63,7 +62,7 @@
 						<div class="card-body">
 							<div class="tab-content">
 								<div class="tab-pane active" id="activity">
-									<form class="form-horizontal" method="POST" action="{{ route('client.update', $company->id) }}" enctype="multipart/form-data">
+									<form class="form-horizontal" method="POST" action="{{ route('my-profile.update', auth()->user()->id) }}" enctype="multipart/form-data">
 									@csrf
 									{{ method_field('PUT') }}
 										<input type="hidden" name="update_request" value="personal">
@@ -111,7 +110,7 @@
 										<div class="form-row mb-3">
 											<div class="col-md-4">
 												<label for="name">Company Name</label>
-												<input id="company_name" type="text" class="form-control {{ $errors->has('company_name') ? ' is-invalid' : '' }}" name="company_name" value="{{ !empty($company->companyProfile->company_name) ? $company->companyProfile->company_name : null }}" >
+												<input id="company_name" type="text" class="form-control {{ $errors->has('company_name') ? ' is-invalid' : '' }}" name="company_name" value="{{ !empty($company->companyProfile->company_name) ? $company->companyProfile->company_name : auth()->user()->name }}" >
 
 												@if ($errors->has('company_name'))
 													<span class="text-danger">
@@ -214,10 +213,9 @@
 									</form>
 								</div>								
 								<div class="tab-pane" id="payment-method">
-									<form class="form-horizontal" method="POST" action="{{ route('client.update', $company->id) }}">
+									<form class="form-horizontal" method="POST" action="{{ route('my-profile.update', auth()->user()->id) }}">
 									@csrf
 									{{ method_field('PUT') }}
-									
 									<input type="hidden" name="update_request" value="payment">								
 									<div class="form-row mb-3">
 										<div class="col-md-4">
@@ -279,7 +277,7 @@
 								</form>									
 								</div>
 								<div class="tab-pane" id="settings">
-									<form class="form-horizontal" method="POST" action="{{ route('client.update', $company->id) }}">
+									<form class="form-horizontal" method="POST" action="{{ route('my-profile.update', auth()->user()->id) }}">
 										@csrf
 										{{ method_field('PUT') }}
 										<input type="hidden" name="update_request" value="changepwd">
@@ -299,7 +297,7 @@
 									            </div>
 									            <div class="col-md-3">
 									                <label for="email">Email address</label>
-									                <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email[]" value="">
+									                <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email[]" value="{{ $company->email }}">
 
 									                @if ($errors->has('email'))
 									                    <span class="text-danger">

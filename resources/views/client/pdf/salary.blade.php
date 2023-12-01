@@ -434,6 +434,61 @@
         </tr> -->
     </thead>
 </table>
+<table style="width: 100%; border-collapse: collapse; table-layout: fixed; text-align: left; vertical-align: middle; margin-bottom: 25px;">
+    <tbody>
+        <td style="padding-right: 10px;">
+            <table style="width: 100%; border-collapse:collapse; table-layout: auto;">
+                <thead style="border-bottom: 2px solid #58a8a4;">
+                    <tr>
+                        <th style="padding:3px 5px; color: #000; font-size: 14px;" colspan="3">Direct Deposit</th>
+                    </tr>
+                </thead>
+                <tbody style="border-bottom: 1px solid #ddd;">
+                    <tr>
+                        <th  style="padding:3px 5px; border-right: 1px solid #ddd; color: #000; width: 50%;">Description</th>
+                        <th style="padding:3px 5px;  text-align: right; color: #000; width: 50%;">Title</th>
+                    </tr>
+                    <tr>    
+                        <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">Bank Name</td>
+                        <td style="padding:3px 5px; text-align: right;  width: 50%;">
+                            @if(!empty($data->user->paymentProfile->bank_name))
+                                {{$data->user->paymentProfile->bank_name}}
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>    
+                        <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">Routing Number </td>
+                        <td style="padding:3px 5px; text-align: right;  width: 50%;">
+                            @if(!empty($data->user->paymentProfile->routing_number))
+                                {{$data->user->paymentProfile->routing_number}}
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>    
+                        <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">Account Number</td>
+                        <td style="padding:3px 5px; text-align: right;  width: 50%;">
+                            @if(!empty($data->user->paymentProfile->account_number))
+                                {{$data->user->paymentProfile->account_number}}
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>    
+                        <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">Account Type</td>
+                        <td style="padding:3px 5px; text-align: right;  width: 50%;">
+                            @if(!empty($data->user->paymentProfile->account_type) && $data->user->paymentProfile->account_type == "checking")
+                                Chequing
+                            @endif
+
+                            @if(!empty($data->user->paymentProfile->payment_method) && $data->user->paymentProfile->payment_method == "saving")
+                                Saving
+                            @endif
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tbody>
+</table>
 
 <table style="width: 100%; border-collapse: collapse; table-layout: fixed; text-align: left; vertical-align: middle; margin-bottom: 25px;">
     <tbody>
