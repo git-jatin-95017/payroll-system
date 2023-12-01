@@ -106,11 +106,16 @@
                                     </li>
                                     <li role="separator" class="divider"></li>
 										<i class="mdi mdi-power"></i> Logout
-                                    <li><a href="{{ route('edit-my-profile.edit', Auth::user()->id) }}"><i class="mdi mdi-account"></i> My Profile</a></li>
+                                    <li>
+                                    	<a href="{{ route('edit-my-profile.edit', Auth::user()->id) }}"><i class="mdi mdi-account"></i> My Profile</a>
+                                    </li>
                                     <!-- <li><a href="#"><i class="ti-settings"></i> Account Setting</a></li> -->
                                     <li>
-									@if(Auth::user()->role_id == 1)
-										<a href="{{ route('edit-my-profile.edit', Auth::user()->id) }}" >Profile</a>
+										@if(Auth::user()->role_id == 1)
+											<a href="{{ route('edit-my-profile.edit', Auth::user()->id) }}" >Profile</a>
+										@endif
+										@if(Auth::user()->role_id == 2)
+											<a href="{{ route('my-profile.edit', Auth::user()->id) }}" >Profile</a>
 										@endif
 										<a href="#"
 										onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
