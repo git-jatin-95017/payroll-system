@@ -56,7 +56,7 @@
 						<div class="card-header p-2">
 							<ul class="nav nav-pills">
 								<li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Company Information</a></li>
-								<li class="nav-item"><a class="nav-link" href="#payment-method" data-toggle="tab">Bank Details</a></li>
+								<li class="nav-item"><a class="nav-link" href="#payment-method" data-toggle="tab">Payment Method</a></li>
 								<li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Administrators</a></li>
 							</ul>
 						</div>
@@ -221,10 +221,66 @@
 									<input type="hidden" name="update_request" value="payment">								
 									<div class="form-row mb-3">
 										<div class="col-md-4">
-											<label for="bank_name" class="control-label">Bank Name</label>
-											<div class="form-group mb-0">
-												<input id="bank_name" type="bank_name" class="form-control {{ $errors->has('bank_name') ? ' is-invalid' : '' }}" value="{{ !empty($company->companyProfile->bank_name) ? $company->companyProfile->bank_name:'' }}" name="bank_name" >
-
+											<label for="name" >Payment Method</label>
+											<select class="form-control {{ $errors->has('payment_method') ? ' is-invalid' : '' }}" id="payment_method" name="payment_method" onchange="showDiv(this)">
+												<option value="" selected disabled>Please Select</option>
+												<option @if(!empty($company->paymentProfile->payment_method) && $company->paymentProfile->payment_method == "check") selected @endif value="check">Cheque</option>
+												<option @if(!empty($company->paymentProfile->payment_method) && $company->paymentProfile->payment_method == "Direct Deposit") selected @endif svalue="deposit">Direct Deposit</option>
+											</select>
+											@if ($errors->has('payment_method'))
+												<span class="text-danger">
+													{{ $errors->first('payment_method') }}
+												</span>
+											@endif
+										</div>
+										<div class="col-md-4 
+											@if(empty($company->paymentProfile->routing_number)) d-none @endif" 												
+											id="routing_number_div"
+										>
+											<div class="col-md-12">
+												<label for="routing_number">Routing Number</label>
+												<input id="routing_number" type="routing_number" class="form-control {{ $errors->has('routing_number') ? ' is-invalid' : '' }}" name="routing_number" value="{{ $company->paymentProfile->routing_number?? '' }}" >
+												@if ($errors->has('routing_number'))
+													<span class="text-danger">
+														{{ $errors->first('routing_number') }}
+													</span>
+												@endif
+											</div>
+										</div>
+										<div class="col-md-4 
+											@if(empty($company->paymentProfile->account_number)) d-none @endif" 
+											id="account_number_div">
+											<div class="col-md-12">
+												<label for="account_number">Account Number</label>
+												<input id="account_number" type="account_number" class="form-control {{ $errors->has('account_number') ? ' is-invalid' : '' }}" name="account_number" value="{{ $company->paymentProfile->account_number ?? '' }}" >
+												@if ($errors->has('account_number'))
+													<span class="text-danger">
+														{{ $errors->first('account_number') }}
+													</span>
+												@endif
+											</div>
+										</div>
+									</div>
+									<div class="form-row mb-3
+										@if(empty($company->paymentProfile->account_type)) d-none @endif" 
+										id="account_type_div">
+										<div class="col-md-4">
+											<label for="name" >Account Type</label>
+											<select class="form-control {{ $errors->has('account_type') ? ' is-invalid' : '' }}" id="account_type" name="account_type">
+												<option value="" disabled>Please Select</option>
+												<option @if(!empty($company->paymentProfile->account_type) && $company->paymentProfile->account_type == "checking") selected @endif value="checking">Chequing</option>
+												<option @if(!empty($company->paymentProfile->account_type) && $company->paymentProfile->account_type == "saving") selected @endif value="saving">Saving</option>
+											</select>
+											@if ($errors->has('account_type'))
+												<span class="text-danger">
+													{{ $errors->first('account_type') }}
+												</span>
+											@endif
+										</div>
+										<div class="col-md-4">
+											<div class="col-md-12">
+												<label for="bank_name">Bank Name</label>
+												<input id="bank_name" type="bank_name" class="form-control {{ $errors->has('bank_name') ? ' is-invalid' : '' }}" name="bank_name" value="{{ $company->paymentProfile->bank_name ?? '' }}" >
 												@if ($errors->has('bank_name'))
 													<span class="text-danger">
 														{{ $errors->first('bank_name') }}
@@ -232,44 +288,6 @@
 												@endif
 											</div>
 										</div>
-										<div class="col-md-4">
-											<label for="bank_address" class="control-label">Bank Address</label>
-											<div class="form-group mb-0">
-												<input id="bank_address" type="bank_address" class="form-control {{ $errors->has('bank_address') ? ' is-invalid' : '' }}" value="{{ !empty($company->companyProfile->bank_address) ? $company->companyProfile->bank_address:'' }}" name="bank_address" >
-
-												@if ($errors->has('bank_address'))
-													<span class="text-danger">
-														{{ $errors->first('bank_address') }}
-													</span>
-												@endif
-											</div>
-										</div>
-									</div>
-									<div class="form-row mb-3">	
-										<div class="col-md-4" id="account_number_div">
-											<label for="account_number" class="control-label">Account Number</label>
-											<div class="form-group mb-0">
-												<input id="account_number" type="account_number" class="form-control {{ $errors->has('account_number') ? ' is-invalid' : '' }}" value="{{ !empty($company->companyProfile->account_number) ? $company->companyProfile->account_number:'' }}" name="account_number" >
-
-												@if ($errors->has('account_number'))
-													<span class="text-danger">
-														{{ $errors->first('account_number') }}
-													</span>
-												@endif
-											</div>
-										</div>							
-										<div class="col-md-4" id="routing_number_div">
-											<label for="routing_number" class="control-label">Routing Number</label>
-											<div class="form-group mb-0">
-												<input id="routing_number" type="routing_number" class="form-control {{ $errors->has('routing_number') ? ' is-invalid' : '' }}" name="routing_number" value="{{ !empty($company->companyProfile->routing_number) ? $company->companyProfile->routing_number : '' }}" >
-
-												@if ($errors->has('routing_number'))
-													<span class="text-danger">
-														{{ $errors->first('routing_number') }}
-													</span>
-												@endif
-											</div>
-										</div>																			
 									</div>
 									<div class="form-group row">
 										<div class="col-12">
@@ -408,20 +426,21 @@
 </script>
 <script>
 	function showDiv(obj) {
-		if ($(obj).val() == 'check') {
+		console.log(obj.value);
+		if (obj.value == 'check') {
 			$('#routing_number_div').addClass('d-none');
 			$('#account_number_div').addClass('d-none');
 			$('#account_type_div').addClass('d-none');
-			$('#bank_div').addClass('d-none');
 		}
 
-		if ($(obj).val() == 'deposit') {
+		if (obj.value == 'Direct Deposit') {
 			$('#routing_number_div').removeClass('d-none');
 			$('#account_number_div').removeClass('d-none');
 			$('#account_type_div').removeClass('d-none');
-			$('#bank_div').removeClass('d-none');
 		}
 	}
+</script>
+<script>
 
 	imgInp.onchange = evt => {
 	  const [file] = imgInp.files

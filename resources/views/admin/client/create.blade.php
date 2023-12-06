@@ -57,7 +57,7 @@
 						<div class="card-header p-2">
 							<ul class="nav nav-pills">
 								<li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Company Information</a></li>
-								<li class="nav-item"><a class="nav-link" href="#payment-method" data-toggle="tab">Bank Details</a></li>
+								<li class="nav-item"><a class="nav-link" href="#payment-method" data-toggle="tab">Payment Method</a></li>
 								<li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Administrators</a></li>
 							</ul>
 						</div>									
@@ -197,58 +197,66 @@
 									<div class="tab-pane" id="payment-method">
 										<div class="form-row mb-3">
 											<div class="col-md-4">
-												<label for="bank_name" class="control-label">Bank Name</label>
-												<div class="form-group mb-0">
-													<input id="bank_name" type="bank_name" class="form-control {{ $errors->has('bank_name') ? ' is-invalid' : '' }}" name="bank_name" >
-
-													@if ($errors->has('bank_name'))
-														<span class="text-danger">
-															{{ $errors->first('bank_name') }}
-														</span>
-													@endif
-												</div>
+												<label for="name" >Payment Method</label>
+												<select class="form-control {{ $errors->has('payment_method') ? ' is-invalid' : '' }}" id="payment_method" name="payment_method" onchange="showDiv(this)">
+													<option value="" selected disabled>Please Select</option>
+													<option value="check">Cheque</option>
+													<option value="deposit">Direct Deposit</option>
+												</select>
+												@if ($errors->has('payment_method'))
+													<span class="text-danger">
+														{{ $errors->first('payment_method') }}
+													</span>
+												@endif
 											</div>
-											<div class="col-md-4">
-												<label for="bank_address" class="control-label">Bank Address</label>
-												<div class="form-group mb-0">
-													<input id="bank_address" type="bank_address" class="form-control {{ $errors->has('bank_address') ? ' is-invalid' : '' }}" name="bank_address" >
-
-													@if ($errors->has('bank_address'))
-														<span class="text-danger">
-															{{ $errors->first('bank_address') }}
-														</span>
-													@endif
-												</div>
-											</div>
-										</div>
-										<div class="form-row mb-3">	
-											<div class="col-md-4" id="account_number_div">
-												<label for="account_number" class="control-label">Account Number</label>
-												<div class="form-group mb-0">
-													<input id="account_number" type="account_number" class="form-control {{ $errors->has('account_number') ? ' is-invalid' : '' }}" name="account_number" >
-
-													@if ($errors->has('account_number'))
-														<span class="text-danger">
-															{{ $errors->first('account_number') }}
-														</span>
-													@endif
-												</div>
-											</div>							
-											<div class="col-md-4" id="routing_number_div">
-												<label for="routing_number" class="control-label">Routing Number</label>
+											<div class="col-md-4 d-none" id="routing_number_div">
+												<label for="routing_number">Routing Number</label>
 												<div class="form-group mb-0">
 													<input id="routing_number" type="routing_number" class="form-control {{ $errors->has('routing_number') ? ' is-invalid' : '' }}" name="routing_number">
-
 													@if ($errors->has('routing_number'))
 														<span class="text-danger">
 															{{ $errors->first('routing_number') }}
 														</span>
 													@endif
 												</div>
-											</div>																			
+											</div>
+											<div class="col-md-4 d-none" id="account_number_div">
+												<label for="account_number">Account Number</label>
+												<div class="form-group mb-0">
+													<input id="account_number" type="account_number" class="form-control {{ $errors->has('account_number') ? ' is-invalid' : '' }}" name="account_number">
+													@if ($errors->has('account_number'))
+														<span class="text-danger">
+															{{ $errors->first('account_number') }}
+														</span>
+													@endif
+												</div>
+											</div>
+										</div>
+										<div class="form-row mb-3 d-none" id="account_type_div">
+											<div class="col-md-4">
+												<label for="name" >Account Type</label>
+												<select class="form-control {{ $errors->has('account_type') ? ' is-invalid' : '' }}" id="account_type" name="account_type">
+													<option value="" disabled>Please Select</option>
+													<option value="checking">Chequing</option>
+													<option value="saving">Saving</option>
+												</select>
+												@if ($errors->has('account_type'))
+													<span class="text-danger">
+														{{ $errors->first('account_type') }}
+													</span>
+												@endif
+											</div>
+											<div class="col-md-4">
+													<label for="bank_name">Bank Name</label>
+													<input id="bank_name" type="bank_name" class="form-control {{ $errors->has('bank_name') ? ' is-invalid' : '' }}" name="bank_name" >
+													@if ($errors->has('bank_name'))
+														<span class="text-danger">
+															{{ $errors->first('bank_name') }}
+														</span>
+													@endif
+											</div>
 										</div>
 									</div>
-
 									<div class="tab-pane" id="settings">
 										<div id="dynamicRowsContainer">
 									        <div class="form-row mb-3">

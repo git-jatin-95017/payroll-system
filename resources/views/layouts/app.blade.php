@@ -43,8 +43,8 @@
                 <div class="navbar-header pt-4">
                     <a class="navbar-brand" href="#">
                     	@if(auth()->user()->role_id == 2)
-                			@if(!empty(auth()->user()->logo))
-								<img src="/files/{{auth()->user()->logo}}" />
+                			@if(!empty(auth()->user()->companyProfile->logo))
+								<img src="/files/{{auth()->user()->companyProfile->logo}}" />
 							@else
 								<img src="{{URL::asset('/img/logo-color.svg')}}" alt="">
 							@endif

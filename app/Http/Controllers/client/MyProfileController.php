@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\CompanyProfile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Models\PaymentDetail;
 
 class MyProfileController extends Controller
 {
@@ -35,25 +36,20 @@ class MyProfileController extends Controller
 		$company = User::find($id);
 
 		if ($data['update_request'] == 'payment') {
-			$request->validate([
-				'bank_name' =>['required'],
-				'routing_number' => ['required'],
-				'account_number' => ['required'],
-				'bank_address' => ['required'],
-			], [], []);
 
-			$data = [
+			$paymentdata = [
 				'routing_number' => $request->routing_number ?? '',
 				'account_number' => $request->account_number ?? '',
+				'account_type' => $request->account_type ?? '',
 				'bank_name' => $request->bank_name ?? '',
-				'bank_address' => $request->bank_address ?? '',
+				'payment_method' => $request->payment_method ?? ''
 			];
 
 			unset($data['update_request']);
 
-			CompanyProfile::updateOrCreate(
-			    ['user_id' => auth()->user()->id],
-			    $data
+			PaymentDetail::updateOrCreate(
+			    ['user_id' => $company->id],
+			    $paymentdata
 			);
 		} else if ($data['update_request'] == 'changepwd') {
 
@@ -151,7 +147,7 @@ class MyProfileController extends Controller
 
 		   	//Logo
 		   	if ($request->file('file')) {
-				$oldFile = $employee->companyProfile->file;
+				$oldFile = $company->companyProfile->file;
 				if (\File::exists(public_path('files/'.$oldFile))) {
 					\File::delete(public_path('files/'.$oldFile));
 				}
@@ -170,7 +166,7 @@ class MyProfileController extends Controller
 
 		   	//Logo
 		   	if ($request->file('logo')) {
-				$oldLogo = $employee->companyProfile->logo;
+				$oldLogo = $company->companyProfile->logo;
 				if (\File::exists(public_path('files/'.$oldLogo))) {
 					\File::delete(public_path('files/'.$oldLogo));
 				}
