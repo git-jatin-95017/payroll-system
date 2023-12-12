@@ -173,7 +173,7 @@
 												@endif
 											</div>
 											<div class="col-md-4">
-												<label for="my_pwd" class="col-md-4 control-label">My Password</label>
+												<label for="my_pwd" class="col-md-4 control-label">Password</label>
 												<input id="my_pwd" type="my_pwd" class="form-control {{ $errors->has('my_pwd') ? ' is-invalid' : '' }}" name="my_pwd">
 
 												@if ($errors->has('my_pwd'))
