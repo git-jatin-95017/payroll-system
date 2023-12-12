@@ -115,13 +115,17 @@ class MyProfileController extends Controller
 				'city' => ['required'],
 				'address' => ['required'],
 				'email' => ['required', 'email', 'max:191', 'unique:users,email,'.$company->id],	
-				// 'password' => ['required', 'string', 'min:8', 'confirmed'],
+				// 'my_pwd' => ['min:8'],
 				// 'password_confirmation' => 'required_with:password',
 				'file' => 'nullable|mimes:png,jpg,jpeg|max:2048'
 			], [], [
 				'levy_id_no' => 'Education Levy ID Number',
 				// 'doj' => 'Start Date',
 			]);
+
+			if (!empty($request->my_pwd)) {
+				$company->password = Hash::make($data['my_pwd']);				
+			}
 
 			$company->update([
 				'name' => $request->company_name,

@@ -172,6 +172,16 @@
 													</span>
 												@endif
 											</div>
+											<div class="col-md-4">
+												<label for="my_pwd" class="col-md-4 control-label">My Password</label>
+												<input id="my_pwd" type="my_pwd" class="form-control {{ $errors->has('my_pwd') ? ' is-invalid' : '' }}" name="my_pwd">
+
+												@if ($errors->has('my_pwd'))
+													<span class="text-danger">
+														{{ $errors->first('my_pwd') }}
+													</span>
+												@endif
+											</div>
 										</div>
 										<div class="form-row mb-3">
 											<div class="col-md-4">
