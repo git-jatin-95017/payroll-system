@@ -327,10 +327,6 @@ class RunPayrollController extends Controller
 	}
 
 	public function downloadPdf(Request $request) {
-		// $empIds = PayrollSheet::select('emp_id')->where('approval_status', 1)->orderBy('appoval_number')->whereNotNull('date_range')->get()->groupBy(function($item) {
-		//      return $item->appoval_number;
-		// })->pluck('emp_id');
-
 		$empIds = PayrollSheet::where('approval_status', 1)
 			->join('users', function($join) {
  	            $join->on('users.id', '=', 'payroll_sheets.emp_id')->where('status', 1);
@@ -342,7 +338,6 @@ class RunPayrollController extends Controller
 			->pluck('emp_id')->unique()->values()->all();
 
 	    $zip = new \ZipArchive();
-
 	    $tempFilename = tempnam(sys_get_temp_dir(), 'pdf_zip_');
     	$zip->open($tempFilename, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
@@ -353,7 +348,10 @@ class RunPayrollController extends Controller
 				->where('user_id', $empIds[$i])
 				->first();
 
-			$allApprovedData = PayrollAmount::where('start_date', '>=', date('Y-01-01'))->where('end_date', '<=', date('Y-12-31'))->where('status', 1)->where('user_id', $empIds[$i])->get();
+			$allApprovedData = PayrollAmount::where('start_date', '>=', date('Y-01-01'))
+				->where('end_date', '<=', date('Y-12-31'))
+				->where('status', 1)->where('user_id', $empIds[$i])
+				->get();
 			
 			$parameters = [
 	            'start_date' => $request->start_date,
@@ -371,12 +369,33 @@ class RunPayrollController extends Controller
 
 		    $filename = 'Salary_Slip_' . str_replace(' ', '_', ucfirst($data->user->name)) . '.pdf';
 		    $zip->addFromString($filename, $pdf->output());
-
-	    	// return $pdf->download('document_' . $i . '.pdf');
 		}
     	
-    	$zip->close();
+    	// Add Direct Deposit PDF to the zip
+    	$pdf2 = $this->generateDirectDepositPdf($request, $empIds);
+	    $zip->addFromString('Direct_Deposit_' . date('Y-m-d') . '.pdf', $pdf2->output());
 
+	    $zip->close();
+   
     	return response()->download($tempFilename, 'employees.zip')->deleteFileAfterSend(true);
+	}
+
+	private function generateDirectDepositPdf(Request $request, $empIds) {
+	    $data2 = PayrollAmount::where('start_date', '>=', $request->start_date)
+	    	->where('end_date', '<=', $request->end_date)
+	    	->whereIn('status', [0,1])
+	    	->whereIn('user_id', $empIds)
+	    	->get();
+
+	    $parameters = [
+	    	'data' => $data2,
+	    ];
+	    $pdf = SnappyPdf::loadView('client.pdf.deposit', $parameters);
+	    $pdf->setOption('margin-top', 10);
+	    $pdf->setOption('margin-right', 10);
+	    $pdf->setOption('margin-bottom', 10);
+	    $pdf->setOption('margin-left', 10);
+
+	    return $pdf;
 	}
 }
