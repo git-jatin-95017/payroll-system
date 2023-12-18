@@ -133,12 +133,22 @@
 												@endif
 											</div>	
 											<div class="col-md-4">
-												<label for="email_address" >Email address</label>
+												<label for="email_address" >Company Email address</label>
 												<input id="email_address" type="text" class="form-control {{ $errors->has('email_address') ? ' is-invalid' : '' }}" name="email_address">
 
 												@if ($errors->has('email_address'))
 													<span class="text-danger">
 														{{ $errors->first('email_address') }}
+													</span>
+												@endif
+											</div>
+											<div class="col-md-4">
+												<label for="passwordc" >Company Password</label>
+												<input id="passwordc" type="passwordc" class="form-control {{ $errors->has('passwordc') ? ' is-invalid' : '' }}" name="passwordc">
+
+												@if ($errors->has('passwordc'))
+													<span class="text-danger">
+														{{ $errors->first('passwordc') }}
 													</span>
 												@endif
 											</div>
@@ -174,24 +184,7 @@
 													</span>
 												@endif
 											</div>
-										</div>
-										<hr>
-										<div class="form-row mb-3">
-											<div class="col-md-4">
-												<label for="passwordc" >Client Login Password</label>
-												<input id="passwordc" type="passwordc" class="form-control {{ $errors->has('passwordc') ? ' is-invalid' : '' }}" name="passwordc">
-
-												@if ($errors->has('passwordc'))
-													<span class="text-danger">
-														{{ $errors->first('passwordc') }}
-													</span>
-												@endif
-											</div>
-											<!-- <div class="col-md-4">
-												<label for="password-confirm" >Confirm Password</label>
-												<input id="password-confirm" type="password" class="form-control" name="password_confirmation">
-											</div> -->
-										</div>
+										</div>									
 									</div>
 									
 									<div class="tab-pane" id="payment-method">
@@ -261,7 +254,7 @@
 										<div id="dynamicRowsContainer">
 									        <div class="form-row mb-3">
 									            <div class="col-md-3">
-									                <label for="name" class="col-md-4 control-label">Name</label>
+									                <label for="name" class="col-md-4 control-label">Admin Name</label>
 									                <div class="col-md-12">
 									                    <input id="name" type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name[]">
 
@@ -273,7 +266,7 @@
 									                </div>
 									            </div>
 									            <div class="col-md-3">
-									                <label for="email">Email address</label>
+									                <label for="email">Admin Email address</label>
 									                <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email[]">
 
 									                @if ($errors->has('email'))
@@ -283,7 +276,7 @@
 									                @endif
 									            </div>
 									            <div class="col-md-3">
-									                <label for="password">New Password</label>
+									                <label for="password">Admin Password</label>
 									                <input type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password[]">
 
 									                    @if ($errors->has('password'))
@@ -327,17 +320,17 @@
                 rowNum++;
 	            var newRow = '<div class="form-row mb-3">' +
 	                '   <div class="col-md-3">' +
-	                '       <label for="name" class="col-md-4 control-label">Name</label>' +
+	                '       <label for="name" class="col-md-4 control-label">Admin Name</label>' +
 	                '       <div class="col-md-12">' +
 	                '           <input type="text" class="form-control" name="name[]">' +
 	                '       </div>' +
 	                '   </div>' +
 	                '   <div class="col-md-3">' +
-	                '       <label for="email">Email address</label>' +
+	                '       <label for="email">Admin Email address</label>' +
 	                '       <input type="text" class="form-control" name="email[]">' +
 	                '   </div>' +
 	                '   <div class="col-md-3">' +
-	                '       <label for="password">New Password</label>' +
+	                '       <label for="password">Admin Password</label>' +
 	                '       <input type="password" class="form-control" name="password[]">' +
 	                '   </div>' +
 	                '   <div class="col-md-3">' +
