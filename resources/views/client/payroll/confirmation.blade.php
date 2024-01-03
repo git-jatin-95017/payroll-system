@@ -1,52 +1,143 @@
 @extends('layouts.app')
 @section('content')
 @php  
-    $TotalPayroll =0; 
     $TotalTaxes =0; 
+@endphp
+@php  
+    $TotalPayroll = 0;
+    $medical_benefits11T = $social_security11T = $education_lvey11T = $social_security11T_employer = [];
 @endphp
 @foreach($data as $row)
     <?php
-        $tempGross = 0;
-        $deductions1 = 0;
-        $earnings1 = 0;
-        $paidTimeOff1 = 0;
-        $nothingAdditionTonetPay1 = 0;
+        $grossT =0;
+        $employeePayT =0;
+        $deductionsT = 0;
+        $earningsT = 0;
+        // $earningsT = 0;
+        // $paidTimeOff = 0;
+        // $reimbursement = $row->reimbursement;
+        $nothingAdditionTonetPayT = 0;
 
-        if (count($row->additionalEarnings) > 0){
+        if (count($row->additionalEarnings) > 0) {
             foreach($row->additionalEarnings as $key => $val) {
                 if($val->payhead->pay_type =='earnings') {
-                    $earnings1 += $val->amount;
+                    $earningsT += $val->amount;
                 }
 
                 if($val->payhead->pay_type =='deductions') {
-                    $deductions1 += $val->amount;
+                    $deductionsT += $val->amount;
                 }
 
                 if($val->payhead->pay_type =='nothing') {
-                    $nothingAdditionTonetPay1 += $val->amount;
+                    $nothingAdditionTonetPayT += $val->amount;
                 }
             }
         }
 
-        if (count($row->additionalPaids) > 0){
-            foreach($row->additionalPaids as $key => $val) {
-                $paidTimeOff1 += $val->amount;                                            
+        // if (count($row->additionalPaids) > 0){
+        //     foreach($row->additionalPaids as $key => $val) {
+        //         $paidTimeOff += $val->amount;                                            
+        //     }
+        // }
+
+        // $regHrs = $row->user->employeeProfile->pay_rate * $row->total_hours;
+
+        $grossT = $row->gross + $row->paid_time_off;
+
+        $pay_type = $row->user->employeeProfile->pay_type;
+        $diff = date_diff(date_create($row->user->employeeProfile->dob), date_create(date("Y-m-d")));
+        $dob = $diff->format('%y');
+        $days = $row->total_hours;
+       
+        if ($pay_type == 'hourly' || $pay_type == 'weekly') {
+            if ($dob <= 60) {
+                $medical_benefitsT = ($grossT * 3.5) / 100;
+            } else if ($dob > 60 && $dob <=79 ) {
+                $medical_benefitsT = ($grossT * 2.5) / 100;
+            } else if ($dob > 70 ) {
+                $medical_benefitsT = 0;
             }
+
+            $social_securityT = ( $grossT>1500 ? ((1500*6.5) / 100) : ($grossT*6.5) / 100 );  
+            $social_securityT_employer = ( $grossT>1500 ? ((1500*8.5) / 100) : ($grossT*8.5) / 100 );  
+            $education_lveyT = ($grossT<=125?0:($grossT>1154?( ((1154-125)*2.5) / 100)+( (($grossT-1154)*5) / 100 ):( (($grossT-125)*2.5) /100)));
+            $mbse_deductions = $medical_benefitsT + $social_securityT + $education_lveyT;
+            $net_pay = $grossT - $mbse_deductions;
+        } else if ($pay_type == 'bi-weekly') {
+            //$medical_benefitsT = ($grossT * 3.5) / 100;
+            if ($dob <= 60) {
+                $medical_benefitsT = ($grossT * 3.5) / 100;
+            } else if ($dob > 60 && $dob <=79 ) {
+                $medical_benefitsT = ($grossT * 2.5) / 100;
+            } else if ($dob > 70 ) {
+                $medical_benefitsT = 0;
+            }
+
+            if ($days <= 7) {
+                $social_securityT = ( $grossT>3000 ? ((3000*6.5) / 100) : ($grossT*6.5) / 100 ); 
+                $social_securityT_employer = ( $grossT>3000 ? ((3000*8.5) / 100) : ($grossT*8.5) / 100 ); 
+            } else {
+                $social_securityT = ( $grossT>3000 ? ((3000*6.5) / 100) : ($grossT*6.5) / 100 ); 
+                $social_securityT_employer = ( $grossT>3000 ? ((3000*8.5) / 100) : ($grossT*8.5) / 100 ); 
+            }
+            $education_lveyT = ($grossT<=250?0:($grossT>2308?(((2308-250)*2.5)/100)+((($grossT-2308)*5)/100):((($grossT-250)*2.5)/100)));
+            $mbse_deductions = $medical_benefitsT + $social_securityT + $education_lveyT;
+            $net_pay = $grossT - $mbse_deductions;
+            if ($days <= 7) {
+            } else {
+                $net_pay = 2 * $net_pay;                
+            }
+        } else if ($pay_type == 'semi-monthly') {
+            if ($dob <= 60) {
+                $medical_benefitsT = ($grossT * 3.5) / 100;
+            } else if ($dob > 60 && $dob <=79 ) {
+                $medical_benefitsT = ($grossT * 2.5) / 100;
+            } else if ($dob > 70 ) {
+                $medical_benefitsT = 0;
+            }
+            $social_securityT = ( $grossT>3000 ? ((3000*6.5) / 100) : ($grossT*6.5) / 100 ); 
+            $social_securityT_employer = ( $grossT>3000 ? ((3000*8.5) / 100) : ($grossT*8.5) / 100 ); 
+            $education_lveyT = ($grossT<=125?0:($grossT>2500?(((2500-270.84)*2.5)/100)+((($grossT-2500)*5)/100):((($grossT-270.84)*2.5)/100)));
+            $mbse_deductions = $medical_benefitsT + $social_securityT + $education_lveyT;
+            $net_pay = $grossT - $mbse_deductions;
+        } else if ($pay_type == 'monthly') {
+            if ($dob <= 60) {
+                $medical_benefitsT = ($grossT * 3.5) / 100;
+            } else if ($dob > 60 && $dob <=79 ) {
+                $medical_benefitsT = ($grossT * 2.5) / 100;
+            } else if ($dob > 70 ) {
+                $medical_benefitsT = 0;
+            }
+            $social_securityT = ( $grossT>6500 ? ((6500*6.5) / 100) : ($grossT*6.5) / 100 ); 
+            $social_securityT_employer = ( $grossT>6500 ? ((6500*8.5) / 100) : ($grossT*8.5) / 100 ); 
+            $education_lveyT = ($grossT<=125?0:($grossT>5000?(((5000-541.67)*2.5)/100)+((($grossT-5000)*5)/100):((($grossT-541.67)*2.5)/100)));
+            $mbse_deductions = $medical_benefitsT + $social_securityT + $education_lveyT;
+            $net_pay = $grossT - $mbse_deductions;
         }
+        // $grossT += ($regHrs + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earningsT + $nothingAdditionTonetPayT) + $row->paid_time_off); commented
 
-        $regHrs1 = $row->user->employeeProfile->pay_rate * $row->total_hours;
+        // $grossTFinal += $grossT;
+        // $grossTFinal += ($regHrs + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earningsT + $nothingAdditionTonetPayT) + $row->paid_time_off);
 
-        // $tempGross += ($regHrs1 + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings1 + $nothingAdditionTonetPay1) + $row->paid_time_off); commented
-        
-        $tempGross += $row->gross + $row->paid_time_off;
+        $employeePayT = $grossT- ($mbse_deductions) + ($nothingAdditionTonetPayT) - $deductionsT;
 
-        $employeePay1 = $tempGross - ($row->medical +$row->security + $row->edu_levy) + ($nothingAdditionTonetPay1) - $deductions1;
-        // $TotalPayroll += $employeePay1; Commented
-        $TotalPayroll += $tempGross;
+        // $totalEmployeePay += $employeePayT;
+        // $totalTaxes += ($row->medical +$row->security + $row->edu_levy);
+        // $totalDeductions += $deductionsT;
+        // $totalAdditions += $earningsT;
+        // $nothingAdditionTonetPayTTotal += $nothingAdditionTonetPayT;
 
-        $TotalTaxes += ($row->medical +$row->security + $row->edu_levy) + ($row->medical +$row->security_employer);
-    ?>
-@endforeach
+        $TotalPayroll += $employeePayT + $mbse_deductions + $row->security_employer;
+
+        array_push($medical_benefits11T, $medical_benefitsT);
+        array_push($social_security11T, $social_securityT);
+        array_push($education_lvey11T, $education_lveyT);
+        array_push($social_security11T_employer, $social_securityT_employer);
+    ?> 
+@endforeach 
+<?php
+    $TotalTaxes = array_sum($medical_benefits11T)+array_sum($social_security11T)+array_sum($education_lvey11T)+array_sum($medical_benefits11T)+array_sum($social_security11T_employer);
+?>
 <div class="row page-titles">
     <div class="col-md-5 align-self-center">
         <h3 class="text-themecolor">
@@ -284,7 +375,7 @@
                                                 <td style="font-weight:bold !important;"></td>
                                                 <td> </td>
                                                 <td>
-                                                    <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($medicalTotal+$securityTotal+$eduLevytotal+$medicalTotal+$securityEmployerTotal, 2)}}</span><br>
+                                                    <span style="color: #000 !important;font-weight: 700 !important;">${{number_format(array_sum($medical_benefits11)+array_sum($social_security11)+array_sum($education_lvey11)+array_sum($medical_benefits11)+array_sum($social_security_employer11), 2)}}</span><br>
                                                     <small style="color: #000 !important;font-weight: 600 !important;">Total Taxes</small>
                                                     <?php //$securityEmployerTotal ?>
                                                 </td>

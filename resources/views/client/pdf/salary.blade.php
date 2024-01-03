@@ -33,7 +33,7 @@
     </tr>
     <tr>
         <td style="padding:3px 5px;">
-            <span style="font-size: 12px; color: #000;">{{ $data->user->name }}</span>
+            <span style="font-size: 13px; color: #000;">{{ $data->user->name }}</span>
         </td>
     </tr><br>
     <tr>
@@ -204,15 +204,36 @@
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($regHrs, 2)}}</td>
             <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($regHrs+$regHrsYTD, 2)}}</td> -->
         </tr>
-        @if($data->paid_time_off > 0)
-        <tr>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd;">Paid Time Off</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;"></td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;"></td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->paid_time_off, 2)}}</td>
-            <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($gross+$grossYTD, 2)}}</td> -->
-        </tr>
-        @endif
+        @php
+            if (count($data->additionalPaids) > 0) {
+                foreach($data->additionalPaids as $key => $val) {
+                    
+
+                    if ($data->user->employeeProfile->pay_type == 'hourly') {
+                        $ptoff = $data->user->employeeProfile->pay_rate *  $val->amount;
+                    }  else if ($data->user->employeeProfile->pay_type == 'weekly') {
+                        $ptoff = $data->user->employeeProfile->pay_rate *  $val->amount;
+                    }  else if ($data->user->employeeProfile->pay_type == 'bi-weekly') {
+                        $ptoff = ((($data->user->employeeProfile->pay_rate * 26)/52)/40)*$val->amount;            
+                    }  else if ($data->user->employeeProfile->pay_type == 'semi-monthly') {
+                        $ptoff = ((($data->user->employeeProfile->pay_rate * 24)/52)/40)*$val->amount;
+                    }  else if ($data->user->employeeProfile->pay_type == 'monthly') {
+                        $ptoff = ((($data->user->employeeProfile->pay_rate * 12)/52)/40)*$val->amount;
+                    } else {
+                        $ptoff = 0;
+                    }
+        @endphp
+            <tr>    
+                <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">{{ $val->leaveTypes->name}}</td>
+                <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->user->employeeProfile->pay_rate, 2)}}</td>
+                <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">{{$val->amount}}</td>
+                <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;  width: 50%;">{{number_format($ptoff, 2)}}</td>
+            </tr>
+        @php                                                     
+                }
+            }
+        @endphp
+
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;">Gross Earnings</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;"></td>
@@ -239,7 +260,7 @@
                     </tr>
                     @if($data->medical > 0)
                     <tr>
-                        <td style="padding:3px 5px; border-right: 1px solid #ddd; ">Medical benefits </td>
+                        <td style="padding:3px 5px; border-right: 1px solid #ddd; ">Medical Benefits </td>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->medical, 2)}}</td>
                         <!-- <td style="padding:3px 5px; text-align: right;">${{number_format($data->medical +$medicalYTD, 2)}}</td> -->
                     </tr>
@@ -260,6 +281,13 @@
                         <!-- <td style="padding:3px 5px; text-align: right;">${{number_format($data->edu_levy + $edu_levyYTD, 2)}}</td> -->
                     </tr>
                     @endif
+
+                    <tr>
+                        <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd;">Deduction from Net Pay</td> -->
+                        <td style="padding:3px 5px; border-right: 1px solid #ddd;">Total</td>
+                        <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($data->medical+$data->security+$data->edu_levy, 2)}}</td>
+                        <!-- <td style="padding:3px 5px; text-align: right;">${{number_format($val->amount+$deductionsYTD+$reimbursementYTD, 2)}}</td> -->
+                    </tr>
                 </thead>
             </table>
         </td>
@@ -278,6 +306,7 @@
                     <tr>
                         <!-- <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Description</th> -->
                         <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Description</th>
+                        <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Type</th>
                         <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">Amount</th>
                         <!-- <th style="padding:3px 5px; text-align: right; color: #000;">Year To Date </th> -->
                     </tr>
@@ -294,7 +323,16 @@
                             <tr>
                                 <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd;">Deduction from Net Pay</td> -->
                                 <td style="padding:3px 5px; border-right: 1px solid #ddd;">{{ $val->payhead->name}}</td>
-                                <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($val->amount, 2)}}</td>
+                                <td style="padding:3px 5px; border-right: 1px solid #ddd;">
+                                    @if( $val->payhead->pay_type == 'nothing') 
+                                        Addition
+                                    @else 
+                                        {{ ucfirst($val->payhead->pay_type)}}
+                                    @endif
+                                </td>
+                                <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">
+                                    @if($val->payhead->pay_type == 'deductions') - @endif${{number_format($val->amount, 2)}}
+                                </td>
                                 <!-- <td style="padding:3px 5px; text-align: right;">${{number_format($val->amount+$deductionsYTD+$reimbursementYTD, 2)}}</td> -->
                             </tr>
                             @endif
@@ -404,7 +442,7 @@
         </tr> -->
         @if($totalTaxes > 0)
         <tr>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd;">Taxes</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd;">Statutory deductions</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($totalTaxes, 2)}}</td>
             <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($totalTaxes + $totalTaxesYTD, 2)}}</td> -->
         </tr>
@@ -433,140 +471,6 @@
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;">${{number_format($totalTaxes, 2)}}</td>
         </tr> -->
     </thead>
-</table>
-<table style="width: 100%; border-collapse: collapse; table-layout: fixed; text-align: left; vertical-align: middle; margin-bottom: 25px;">
-    <tbody>
-        <td style="padding-right: 10px;">
-            <table style="width: 100%; border-collapse:collapse; table-layout: auto;">
-                <thead style="border-bottom: 2px solid #58a8a4;">
-                    <tr>
-                        <th style="padding:3px 5px; color: #000; font-size: 14px;" colspan="3">Direct Deposit</th>
-                    </tr>
-                </thead>
-                <tbody style="border-bottom: 1px solid #ddd;">
-                    <tr>
-                        <th  style="padding:3px 5px; border-right: 1px solid #ddd; color: #000; width: 50%;">Description</th>
-                        <th style="padding:3px 5px;  text-align: right; color: #000; width: 50%;">Title</th>
-                    </tr>
-                    <tr>    
-                        <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">Bank Name</td>
-                        <td style="padding:3px 5px; text-align: right;  width: 50%;">
-                            @if(!empty($data->user->paymentProfile->bank_name))
-                                {{$data->user->paymentProfile->bank_name}}
-                            @endif
-                        </td>
-                    </tr>
-                    <tr>    
-                        <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">Routing Number </td>
-                        <td style="padding:3px 5px; text-align: right;  width: 50%;">
-                            @if(!empty($data->user->paymentProfile->routing_number))
-                                {{$data->user->paymentProfile->routing_number}}
-                            @endif
-                        </td>
-                    </tr>
-                    <tr>    
-                        <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">Account Number</td>
-                        <td style="padding:3px 5px; text-align: right;  width: 50%;">
-                            @if(!empty($data->user->paymentProfile->account_number))
-                                {{$data->user->paymentProfile->account_number}}
-                            @endif
-                        </td>
-                    </tr>
-                    <tr>    
-                        <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">Account Type</td>
-                        <td style="padding:3px 5px; text-align: right;  width: 50%;">
-                            @if(!empty($data->user->paymentProfile->account_type) && $data->user->paymentProfile->account_type == "checking")
-                                Chequing
-                            @endif
-
-                            @if(!empty($data->user->paymentProfile->payment_method) && $data->user->paymentProfile->payment_method == "saving")
-                                Saving
-                            @endif
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </td>
-    </tbody>
-</table>
-
-<table style="width: 100%; border-collapse: collapse; table-layout: fixed; text-align: left; vertical-align: middle; margin-bottom: 25px;">
-    <tbody>
-        <td style="padding-right: 10px;">
-            <table style="width: 100%; border-collapse:collapse; table-layout: auto;">
-                <thead style="border-bottom: 2px solid #58a8a4;">
-                    <tr>
-                        <th style="padding:3px 5px; color: #000; font-size: 14px;" colspan="3">Paid Time Off Policy </th>
-                    </tr>
-                </thead>
-                <tbody style="border-bottom: 1px solid #ddd;">
-                    <tr>
-                        <th  style="padding:3px 5px; border-right: 1px solid #ddd; color: #000; width: 50%;">Description</th>
-                        <th style="padding:3px 5px;  text-align: right; color: #000; width: 50%;">Hours </th>
-                    </tr>
-                    <?php
-                    /*
-                    @php
-                        if (count($data->additionalPaids) > 0){
-                            foreach($data->additionalPaids as $key => $val) {
-                    @endphp
-                                <tr>    
-                                    <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">{{ $val->leaveTypes->name}}</td>
-                                    <td style="padding:3px 5px; text-align: right;  width: 50%;">{{$val->amount}}</td>
-                                </tr>
-                    @php                                         
-                            }
-                        }
-                    @endphp
-                    */
-
-                    ?>
-
-                    @if($paidTimeOff > 0)
-                    <tr>    
-                        <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">Hours used this period</td>
-                        <td style="padding:3px 5px; text-align: right;  width: 50%;">{{$paidTimeOff}}</td>
-                    </tr>
-                    @endif
-
-                    @if($paidTimeOffBalane > 0)
-                    <tr>    
-                        <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">Remaining Paid Time off Balance</td>
-                        <td style="padding:3px 5px; text-align: right;  width: 50%;">{{$paidTimeOffBalane}}</td>
-                    </tr>
-                    @endif
-                </tbody>
-            </table>
-        </td>
-        <td style="padding-left: 10px;">
-            <table style="width: 100%; border-collapse:collapse; table-layout: auto;">
-                <thead style="border-bottom: 2px solid #58a8a4;">
-                    <tr>
-                        <th style="padding:3px 5px; color: #000; font-size: 14px;" colspan="3">Unpaid Time off Policy  </th>
-                    </tr>
-                </thead>
-                <tbody style="border-bottom: 1px solid #ddd;">
-                    <tr>
-                        <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000; width: 50%;">Description</th>
-                        <th style="padding:3px 5px;  text-align: right; color: #000;  width: 50%;">Hours</th>
-                    </tr>
-                    @if($unpaidTimeOff > 0)
-                    <tr>    
-                        <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">Hours used this period</td>
-                        <td style="padding:3px 5px; text-align: right;  width: 50%;">{{$unpaidTimeOff}}</td>
-                    </tr>
-                    @endif
-
-                    @if($unpaidTimeOffBalane > 0)
-                    <tr>    
-                        <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;">Remaining Paid Time off Balance</td>
-                        <td style="padding:3px 5px; text-align: right;  width: 50%;">{{$unpaidTimeOffBalane}}</td>
-                    </tr>
-                    @endif
-                </tbody>
-            </table>
-        </td>
-    </tbody>
 </table>
 </body>
 </html>

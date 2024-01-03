@@ -22,6 +22,7 @@
 </head>
 <body style="font-family: Arial, Helvetica, sans-serif; font-size: 13px;">
 @php  
+	$bankData = []; 
 	$bankHTML = '';
 	$totalEmployeePay =0; 
 	$totalTaxes =0; 
@@ -33,6 +34,8 @@
 @endphp
 @foreach($data as $row)
 	<?php
+		$bankName = ucfirst($row->user->paymentProfile->bank_name);
+
 		$gross =0;
 		$employeePay =0;
 		$deductions = 0;
@@ -142,6 +145,17 @@
 		// $totalAdditions += $earnings;
 		// $nothingAdditionTonetPayTotal += $nothingAdditionTonetPay;
 		
+		// Group data by bank name
+        if (!isset($bankData[$bankName])) {
+            $bankData[$bankName] = [
+                'count' => 1,
+                'totalAmount' => $employeePay,
+            ];
+        } else {
+            $bankData[$bankName]['count']++;
+            $bankData[$bankName]['totalAmount'] += $employeePay;
+        }
+
 		$bankHTML.= '<tr>
 		    <td style="padding: 3px 5px; border-right: 1px solid #ddd;">' . ucfirst($row->user->paymentProfile->bank_name) . '</td>
 		    <td style="padding: 3px 5px; border-right: 1px solid #ddd;">' . ucfirst($row->user->employeeProfile->first_name) . '</td>
@@ -164,27 +178,26 @@
 	</tr>
 	<tr>
 		<td style="padding:3px 5px;">
-			<span style="font-size: 12px; color: #000;">{{ strtoupper(auth()->user()->name) }}</span>
+			<span style="font-size: 14px; color: #000;">{{ strtoupper(auth()->user()->name) }}</span>
 		</td>
 	</tr><br>
 	<tr>
 		<td>
 			<table style="width: 100%; border-collapse:collapse; table-layout: fixed;">
+				<!-- <tr>
+					<td style="padding:3px 5px;">
+						<strong style="font-size: 14px; color: #000;">Date of email: {{ date('m/d/Y') }}</strong>
+					</td>
+				</tr> -->
 				<tr>
 					<td style="padding:3px 5px;">
-						<strong style="font-size: 10px; color: #000;">Date of email (Todays date): {{ date('m/d/Y') }}</strong>
+						<strong style="font-size: 14px; color: #000;">{{ ucfirst(auth()->user()->paymentProfile->bank_name) }}</strong>
 					</td>
 				</tr>
 
 				<tr>
 					<td style="padding:3px 5px;">
-						<strong style="font-size: 10px; color: #000;">{{ auth()->user()->paymentProfile->bank_name }}</strong>
-					</td>
-				</tr>
-
-				<tr>
-					<td style="padding:3px 5px;">
-						<strong style="font-size: 10px; color: #000;">{{ auth()->user()->companyProfile->address }}</strong>
+						<strong style="font-size: 14px; color: #000;">{{ ucfirst(auth()->user()->companyProfile->address) }}</strong>
 					</td>
 				</tr>
 			</table>
@@ -195,9 +208,41 @@
 <p>Dear Sir/Madam</p>
 <p>We write to request your assistance in making payroll direct deposits to our employee. Please
 see attached list of related employee names and bank account #'s listed. Therefore, kindly
-accept this letter as authorization to debit our account# ({{ auth()->user()->paymentProfile->account_number }}) for
+accept this letter as authorization to debit our account# {{ auth()->user()->paymentProfile->account_number }} for
 ${{number_format($totalEmployeePay, 2)}} (Total Employee Amount) and make the necessary transfers as detailed in the
 afprmentioned list.</p>
+<table style="width: 100%; border-collapse: collapse; table-layout: fixed; text-align: left; vertical-align: middle; margin-bottom: 25px;">
+	<tbody>
+		<td>
+			<table style="width: 100%; border-collapse:collapse; table-layout: fixed;">
+				<thead style="border-bottom: 2px solid #58a8a4;">
+					<tr>
+						<th style="padding:3px 5px; color: #000; font-size: 14px;" colspan="2">Direct Deposit Summary</th>
+					</tr>
+				</thead>
+				<thead style="border-bottom: 1px solid #ddd;">
+					<tr>
+						<!-- <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Description</th> -->
+						<th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Bank Name</th>
+						<th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Deposit Total</th>
+						<th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Deposit Amount</th>
+					</tr>
+					<tbody>
+    					@if(count($bankData) > 0)
+    					@foreach($bankData as $k => $bank)
+						<tr>						
+							<td style="padding:3px 5px; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; border-right: 1px solid #ddd; color: #000;">{{$k}}</td>
+							<td style="padding:3px 5px; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; border-right: 1px solid #ddd; color: #000;">{{$bank['count']}}</td>
+							<td style="padding:3px 5px; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; border-right: 1px solid #ddd; color: #000;">{{number_format($bank['totalAmount'], 2)}}</td>
+						</tr>
+						@endforeach
+						@endif
+					</tbody>
+				</thead>
+			</table>
+		</td>       
+	</tbody>
+</table>
 <table style="width: 100%; border-collapse: collapse; table-layout: fixed; text-align: left; vertical-align: middle; margin-bottom: 25px;">
 	<tbody>
 		<td>
@@ -213,7 +258,7 @@ afprmentioned list.</p>
 						<th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">BANK NAME</th>
 						<th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">FIRST NAME</th>
 						<th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">LAST NAME</th>
-						<th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">BANK AC</th>
+						<th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">BANK ACCOUNT NUMBER</th>
 						<th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">AC TYPE</th>
 						<th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">NET AMOUNT</th>                        
 					</tr>
@@ -233,5 +278,11 @@ afprmentioned list.</p>
 		</td>       
 	</tbody>
 </table>
+
+<p>We thank you for your assistance.</p>
+<p>Authorized By: ____________________</p>
+<p>Position: ____________________</p>
+<p>Signiture: ____________________</p>
+
 </body>
 </html>
