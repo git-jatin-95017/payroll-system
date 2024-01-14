@@ -211,3 +211,8 @@ Route::get('/logout', function() {
 Route::get('client/step-4', function () {
 	return view('client.payroll.step4');
 });
+
+
+Route::get('r_five_form', function(){
+    return view('pages.r_five_form');
+});
