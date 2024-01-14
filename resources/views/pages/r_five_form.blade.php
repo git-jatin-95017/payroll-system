@@ -1115,8 +1115,7 @@
     </div>
 </div>
 @endsection
-
-@push('page_scripts')
+('page_scripts')
 	<script>
 		window.addEventListener('load', function () {
 			setTimeout(function() {
