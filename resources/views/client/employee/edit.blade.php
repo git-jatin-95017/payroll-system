@@ -460,8 +460,8 @@
 												@if(empty($employee->paymentProfile->routing_number)) d-none @endif" 												
 												id="routing_number_div"
 											>
-												<label for="routing_number">Routing Number</label>
 												<div class="col-md-12">
+													<label for="routing_number">Routing Number</label>
 													<input id="routing_number" type="routing_number" class="form-control {{ $errors->has('routing_number') ? ' is-invalid' : '' }}" name="routing_number" value="{{ $employee->paymentProfile->routing_number?? '' }}" {{$disabled}}>
 													@if ($errors->has('routing_number'))
 														<span class="text-danger">
@@ -473,12 +473,21 @@
 											<div class="col-md-4 
 												@if(empty($employee->paymentProfile->account_number)) d-none @endif" 
 												id="account_number_div">
-												<label for="account_number">Account Number</label>
-												<div class="col-md-12">
+												<div class="col-md-6">
+													<label for="account_number">Account Number</label>
 													<input id="account_number" type="account_number" class="form-control {{ $errors->has('account_number') ? ' is-invalid' : '' }}" name="account_number" value="{{ $employee->paymentProfile->account_number ?? '' }}" {{$disabled}}>
 													@if ($errors->has('account_number'))
 														<span class="text-danger">
 															{{ $errors->first('account_number') }}
+														</span>
+													@endif
+												</div>
+												<div class="col-md-6">
+													<label for="bank_name">Bank Name</label>
+													<input id="bank_name" type="bank_name" class="form-control {{ $errors->has('bank_name') ? ' is-invalid' : '' }}" name="bank_name"  value="{{ $employee->paymentProfile->bank_name ?? '' }}">
+													@if ($errors->has('bank_name'))
+														<span class="text-danger">
+															{{ $errors->first('bank_name') }}
 														</span>
 													@endif
 												</div>

@@ -470,6 +470,7 @@
 													@endif
 												</div>
 											</div>
+
 										</div>
 										<div class="form-row mb-3 d-none" id="account_type_div">
 											<div class="col-md-4">
@@ -485,7 +486,16 @@
 													</span>
 												@endif
 											</div>
-										</div>
+											<div class="col-md-4">
+												<label for="bank_name">Bank Name</label>
+												<input id="bank_name" type="bank_name" class="form-control {{ $errors->has('bank_name') ? ' is-invalid' : '' }}" name="bank_name" >
+												@if ($errors->has('bank_name'))
+													<span class="text-danger">
+														{{ $errors->first('bank_name') }}
+													</span>
+												@endif
+											</div>
+										</div>										
 									</div>
 									<div class="tab-pane" id="settings">
 										<div class="form-row mb-3">

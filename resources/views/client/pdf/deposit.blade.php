@@ -157,11 +157,11 @@
         }
 
 		$bankHTML.= '<tr>
-		    <td style="padding: 3px 5px; border-right: 1px solid #ddd;">' . ucfirst($row->user->paymentProfile->bank_name) . '</td>
-		    <td style="padding: 3px 5px; border-right: 1px solid #ddd;">' . ucfirst($row->user->employeeProfile->first_name) . '</td>
-		    <td style="padding: 3px 5px; border-right: 1px solid #ddd;">' . ucfirst($row->user->employeeProfile->last_name) . '</td>
-		    <td style="padding: 3px 5px; border-right: 1px solid #ddd;">' . ucfirst($row->user->paymentProfile->account_number) . '</td>
-		    <td style="padding: 3px 5px; border-right: 1px solid #ddd;">' . ucfirst($row->user->paymentProfile->account_type) . '</td>
+		    <td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->paymentProfile->bank_name) . '</td>
+		    <td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->employeeProfile->first_name) . '</td>
+		    <td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->employeeProfile->last_name) . '</td>
+		    <td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->paymentProfile->account_number) . '</td>
+		    <td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->paymentProfile->account_type) . '</td>
 		    <td style="padding: 3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">$' . number_format($employeePay, 2) . '</td>
 		</tr>';                 
 	?>
@@ -204,9 +204,9 @@
 		</td>
 	</tr>
 </table>
-<p style="text-align: center;">RE: Payroll Direct Deposit Request</p>
-<p>Dear Sir/Madam</p>
-<p>We write to request your assistance in making payroll direct deposits to our employee. Please
+<p style="text-align: center;color: #000;">RE: Payroll Direct Deposit Request</p>
+<p style="color: #000;">Dear Sir/Madam</p>
+<p style="color: #000;">We write to request your assistance in making payroll direct deposits to our employee. Please
 see attached list of related employee names and bank account #'s listed. Therefore, kindly
 accept this letter as authorization to debit our account# {{ auth()->user()->paymentProfile->account_number }} for
 ${{number_format($totalEmployeePay, 2)}} (Total Employee Amount) and make the necessary transfers as detailed in the
@@ -279,10 +279,10 @@ afprmentioned list.</p>
 	</tbody>
 </table>
 
-<p>We thank you for your assistance.</p>
-<p>Authorized By: ____________________</p>
-<p>Position: ____________________</p>
-<p>Signiture: ____________________</p>
+<p style="color: #000;">We thank you for your assistance.</p>
+<p style="color: #000;">Authorized By: ____________________</p>
+<p style="color: #000;">Position: ____________________</p>
+<p style="color: #000;">Signiture: ____________________</p>
 
 </body>
 </html>

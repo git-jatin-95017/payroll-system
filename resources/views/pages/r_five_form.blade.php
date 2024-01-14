@@ -566,7 +566,7 @@
                 </tr>
             </table>
         </div>
-        <div class="bg-white p-4 rounded mb-4">
+        <!-- <div class="bg-white p-4 rounded mb-4">
             <div class="d-flex w-100 align-items-center mb-4">
                 <div class="logo-tabled">
                     <img src="https://dynamic.brandcrowd.com/asset/logo/c5d02ad5-9111-4a7c-847f-39199bd91ac6/logo-search-grid-1x" alt="">
@@ -1111,11 +1111,11 @@
                     <td style="border: none; padding: 5px;" colspan="3"></td>
                 </tr>
             </table>
-        </div>
+        </div> -->
     </div>
 </div>
 @endsection
-('page_scripts')
+@push('page_scripts')
 	<script>
 		window.addEventListener('load', function () {
 			setTimeout(function() {

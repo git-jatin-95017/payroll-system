@@ -130,7 +130,14 @@
 														<td>
 															<?php
 																//Last leave balance
-														        $isLastPayroll = \App\Models\PayrollAmount::where('start_date', '>=', date('Y-01-01'))->where('end_date', '<', $from)->where('user_id',  $employee->id)->orderBy('id', 'DESC')->first();
+														        $isLastPayroll = \App\Models\PayrollAmount::where('user_id',  $employee->id)
+															        ->where(function ($query) use ($from, $to) {
+																        // Exclude records where both start_date and end_date are within the specified date range
+																        $query->whereNotBetween('start_date', [$from, $to])
+																              ->whereNotBetween('end_date', [$from, $to]);
+																    })
+															        ->orderBy('id', 'DESC')
+															        ->first();															        
 															?>
 															@foreach($empLeavesPaid as $key =>$value)
 																<?php
@@ -190,10 +197,10 @@
 																?>
 																<p>
 																	<label class="cursor-pointer" data-toggle="collapse" href="#bonus{{$employee->id}}{{$key}}" role="button" aria-expanded="false" aria-controls="bonus{{$employee->id}}{{$key}}">
-																		{{$value->leave->name}} 
 																		<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007bff" aria-hidden="true">
 																			<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
 																		</svg>
+																		{{$value->leave->name}} 
 																	</label>
 																	<p class="collapse" id="bonus{{$employee->id}}{{$key}}">
 																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_type_id]">
@@ -277,10 +284,10 @@
 																?>
 																<p>
 																	<label class="cursor-pointer" data-toggle="collapse" href="#unpaid{{$employee->id}}{{$key}}" role="button" aria-expanded="false" aria-controls="unpaid{{$employee->id}}{{$key}}">
-																		{{$value->leave->name}} 
 																		<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007bff" aria-hidden="true">
 																			<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
 																		</svg>
+																		{{$value->leave->name}} 
 																	</label>
 																	<p class="collapse" id="unpaid{{$employee->id}}{{$key}}">
 																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings_unpaid][{{$key }}][leave_type_id_unpaid]">

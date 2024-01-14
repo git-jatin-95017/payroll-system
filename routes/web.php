@@ -213,6 +213,6 @@ Route::get('client/step-4', function () {
 });
 
 
-Route::get('r_five_form', function(){
+Route::get('report', function(){
     return view('pages.r_five_form');
 });
