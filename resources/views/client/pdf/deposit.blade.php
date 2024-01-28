@@ -197,7 +197,7 @@
 
 				<tr>
 					<td style="padding:3px 5px;">
-						<strong style="font-size: 14px; color: #000;">{{ ucfirst(auth()->user()->paymentProfile->bank_address) }}</strong>
+						<strong style="font-size: 14px; color: #000;">{!! ucfirst(auth()->user()->paymentProfile->bank_address) !!}</strong>
 					</td>
 				</tr>
 			</table>
