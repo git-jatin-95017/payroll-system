@@ -502,7 +502,7 @@
 													</span>
 												@endif
 											</div>	
-											<div class="col-md-4 @if(empty($employee->paymentProfile->bank_name)) d-none @endif">
+											<div class="col-md-4">
 												<div class="col-md-12">
 													<label for="bank_name">Bank Name</label>
 													<input id="bank_name" type="bank_name" class="form-control {{ $errors->has('bank_name') ? ' is-invalid' : '' }}" name="bank_name"  value="{{ $employee->paymentProfile->bank_name ?? '' }}">
