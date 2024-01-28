@@ -249,6 +249,7 @@ class EmployeeController extends Controller
 			'account_number' => $request->account_number ?? '',
 			'account_type' => $request->account_type ?? '',
 			'payment_method' => $request->payment_method ?? ''
+			'bank_name' => $request->bank_name ?? ''
 		];
 
 		PaymentDetail::updateOrCreate(
@@ -391,7 +392,8 @@ class EmployeeController extends Controller
 			'routing_number' => $request->routing_number ?? '',
 			'account_number' => $request->account_number ?? '',
 			'account_type' => $request->account_type ?? '',
-			'payment_method' => $request->payment_method ?? ''
+			'payment_method' => $request->payment_method ?? '',
+			'bank_name' => $request->bank_name ?? ''
 		];
 
 		PaymentDetail::updateOrCreate(
