@@ -197,7 +197,7 @@
 
 				<tr>
 					<td style="padding:3px 5px;">
-						<strong style="font-size: 14px; color: #000;">{{ ucfirst(auth()->user()->companyProfile->address) }}</strong>
+						<strong style="font-size: 14px; color: #000;">{{ ucfirst(auth()->user()->paymentProfile->bank_address) }}</strong>
 					</td>
 				</tr>
 			</table>
@@ -209,8 +209,7 @@
 <p style="color: #000;">We write to request your assistance in making payroll direct deposits to our employee. Please
 see attached list of related employee names and bank account #'s listed. Therefore, kindly
 accept this letter as authorization to debit our account# {{ auth()->user()->paymentProfile->account_number }} for
-${{number_format($totalEmployeePay, 2)}} (Total Employee Amount) and make the necessary transfers as detailed in the
-afprmentioned list.</p>
+${{number_format($totalEmployeePay, 2)}} and make the necessary transfers as detailed in the list below.</p>
 <table style="width: 100%; border-collapse: collapse; table-layout: fixed; text-align: left; vertical-align: middle; margin-bottom: 25px;">
 	<tbody>
 		<td>
@@ -265,7 +264,7 @@ afprmentioned list.</p>
 					<tbody>
     					{!! $bankHTML !!}
 						<tr>						
-							<td style="padding:3px 5px; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; border-right: 1px solid #ddd; color: #000;">Total</td>
+							<td style="padding:3px 5px; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; border-right: 1px solid #ddd; color: #000;"><strong>Total</strong></td>
 							<td style="padding:3px 5px; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; border-right: 1px solid #ddd; color: #000;"></td>
 							<td style="padding:3px 5px; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; border-right: 1px solid #ddd; color: #000;"></td>
 							<td style="padding:3px 5px; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; border-right: 1px solid #ddd; color: #000;"></td>

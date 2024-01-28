@@ -288,6 +288,18 @@
 												@endif
 											</div>
 										</div>
+										<div class="col-md-4">
+												<div class="col-md-12">
+													<label for="bank_address">Bank Address</label>
+													<textarea name="bank_address" id="bank_address" class="form-control {{ $errors->has('bank_address') ? ' is-invalid' : '' }}" rows="4" >{!! $company->paymentProfile->bank_address !!}</textarea>
+
+													@if ($errors->has('bank_address'))
+														<span class="text-danger">
+															{{ $errors->first('bank_address') }}
+														</span>
+													@endif
+												</div>
+											</div>
 									</div>
 									<div class="form-group row">
 										<div class="col-12">

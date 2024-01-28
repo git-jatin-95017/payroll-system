@@ -19,6 +19,7 @@ use App\Http\Controllers\client\PayrollController;
 use App\Http\Controllers\client\PayheadController;
 use App\Http\Controllers\admin\RunPayrollController as RPC;
 use App\Http\Controllers\client\RunPayrollController;
+use App\Http\Controllers\client\ReportController;
 use App\Http\Middleware\CheckPunchin;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
@@ -120,6 +121,9 @@ Route::prefix('client')->group(function () {
 	Route::get('delete/payroll', [RunPayrollController::class, 'deletePayroll'])->name('delete.payroll');
 	Route::get('download-pdf', [RunPayrollController::class, 'downloadPdf'])->name('download.pdf');
 	Route::resource('my-profile', MPF::class);
+
+	Route::post('show-medical-form', [ReportController::class, 'showMedicalForm'])->name('report.showMedicalForm');
+	Route::resource('report', ReportController::class);
 });
 
 Route::prefix('employee')->group(function () {

@@ -53,8 +53,8 @@
 								<table class="table custom-table-run">
 									<thead>
 									    <tr>
-									      <th scope="col">Employees ({{count($employees)}})</th>
-									      <th scope="col">Hours Worked (hours.)</th>
+									      <th scope="col">Employees</th>
+									      <th scope="col">Hours Worked</th>
 									      <th scope="col">Additional Earnings</th>
 									      <th scope="col">Gross Pay</th>
 									    </tr>

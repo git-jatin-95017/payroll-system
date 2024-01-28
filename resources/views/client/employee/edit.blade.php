@@ -473,7 +473,7 @@
 											<div class="col-md-4 
 												@if(empty($employee->paymentProfile->account_number)) d-none @endif" 
 												id="account_number_div">
-												<div class="col-md-6">
+												<div class="col-md-12">
 													<label for="account_number">Account Number</label>
 													<input id="account_number" type="account_number" class="form-control {{ $errors->has('account_number') ? ' is-invalid' : '' }}" name="account_number" value="{{ $employee->paymentProfile->account_number ?? '' }}" {{$disabled}}>
 													@if ($errors->has('account_number'))
@@ -482,16 +482,9 @@
 														</span>
 													@endif
 												</div>
-												<div class="col-md-6">
-													<label for="bank_name">Bank Name</label>
-													<input id="bank_name" type="bank_name" class="form-control {{ $errors->has('bank_name') ? ' is-invalid' : '' }}" name="bank_name"  value="{{ $employee->paymentProfile->bank_name ?? '' }}">
-													@if ($errors->has('bank_name'))
-														<span class="text-danger">
-															{{ $errors->first('bank_name') }}
-														</span>
-													@endif
-												</div>
+												
 											</div>
+
 										</div>
 										<div class="form-row mb-3
 											@if(empty($employee->paymentProfile->account_type)) d-none @endif" 
@@ -508,7 +501,18 @@
 														{{ $errors->first('account_type') }}
 													</span>
 												@endif
-											</div>
+											</div>	
+											<div class="col-md-4 @if(empty($employee->paymentProfile->bank_name)) d-none @endif">
+												<div class="col-md-12">
+													<label for="bank_name">Bank Name</label>
+													<input id="bank_name" type="bank_name" class="form-control {{ $errors->has('bank_name') ? ' is-invalid' : '' }}" name="bank_name"  value="{{ $employee->paymentProfile->bank_name ?? '' }}">
+													@if ($errors->has('bank_name'))
+														<span class="text-danger">
+															{{ $errors->first('bank_name') }}
+														</span>
+													@endif
+												</div>
+											</div>										
 										</div>
 									</div>
 									<div class="tab-pane" id="settings">

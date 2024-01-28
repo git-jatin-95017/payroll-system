@@ -184,6 +184,7 @@ class ClientController extends Controller
 			'account_number' => $request->account_number ?? '',
 			'account_type' => $request->account_type ?? '',
 			'bank_name' => $request->bank_name ?? '',
+			'bank_address' => $request->bank_address ?? '',
 			'payment_method' => $request->payment_method ?? ''
 		];
 
@@ -312,7 +313,8 @@ class ClientController extends Controller
 				'account_number' => $request->account_number ?? '',
 				'account_type' => $request->account_type ?? '',
 				'bank_name' => $request->bank_name ?? '',
-				'payment_method' => $request->payment_method ?? ''
+				'payment_method' => $request->payment_method ?? '',
+				'bank_address' => $request->bank_address ?? '',
 			];
 
 			unset($data['update_request']);

@@ -110,6 +110,14 @@
 			</a>
 		</li>
 		<li>
+			<a href="{{ route('report.index') }}">
+				<i class="mdi mdi-calendar"></i>
+				<span class="hide-menu">
+					Reports
+				</span>
+			</a>
+		</li>
+		<li>
 			<a href="{{ route('list.step1') }}" class="has-arrow waves-effect waves-dark" aria-expanded="false">
 				<i class="mdi mdi-cash"></i>
 				<span class="hide-menu">
