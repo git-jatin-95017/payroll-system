@@ -20,6 +20,7 @@ use App\Http\Controllers\client\PayheadController;
 use App\Http\Controllers\admin\RunPayrollController as RPC;
 use App\Http\Controllers\client\RunPayrollController;
 use App\Http\Controllers\client\ReportController;
+use App\Http\Controllers\admin\SettingController;
 use App\Http\Middleware\CheckPunchin;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
@@ -62,6 +63,10 @@ Route::prefix('admin')->group(function () {
 	Route::get('calculating-payroll', function () {
 		return view('admin.payroll.thanks');
 	})->name('admin.calculating-payroll');
+
+	Route::get('settings/tax', [SettingController::class, 'create'])->name('settings.create');
+	Route::post('settings/tax', [SettingController::class, 'updateSettings'])->name('settings.update');
+
 });
 
 Route::prefix('client')->group(function () {

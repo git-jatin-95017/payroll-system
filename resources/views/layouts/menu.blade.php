@@ -46,6 +46,14 @@
 				</li>
 			</ul>
 		</li>
+		<li>
+			<a href="{{ route('settings.create', auth()->user()->id) }}">
+				<i class="mdi mdi-settings"></i>
+				<span class="hide-menu">
+					Settings
+				</span>
+			</a>
+		</li>
 	@endif
 
 	@if(auth()->user()->role_id == 2)
