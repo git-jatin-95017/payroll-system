@@ -25,7 +25,7 @@
 				</li>
 			</ul>
 		</li>
-		<li class="<?php //echo $page_name == "attendance" ? 'active' : ''; ?>">
+		<!-- <li class="<?php //echo $page_name == "attendance" ? 'active' : ''; ?>">
 			<a href="{{ route('attendance.index') }}">
 				<i class="fa fa-calendar nav-icon"></i>
 				<span class="hide-menu">Attendance</span>
@@ -45,7 +45,7 @@
 					</a>
 				</li>
 			</ul>
-		</li>
+		</li> -->
 		<li>
 			<a href="{{ route('settings.create', auth()->user()->id) }}">
 				<i class="mdi mdi-settings"></i>

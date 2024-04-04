@@ -116,7 +116,7 @@
 	                                	<input type="date" name="startdate" class="form-control" id="recipient-name1" value="{{$leave->start_date}}">
 	                                </div>
 	                            </div>
-	                            <div class="form-group" id="enddate" style="display:none">
+	                            <div class="form-group" id="enddate">
 	                            	<div class="col-md-12">
 	                                <label class="control-label">End Date</label>
 	                                <input type="date" name="enddate" class="form-control" id="recipient-name1" value="{{$leave->end_date}}">
@@ -184,17 +184,17 @@
                 var duration = $('input[name=type]:checked', '#leaveapply').attr('data-value');
 
                 if(duration =='Half'){
-                    $('#enddate').hide();
+                    // $('#enddate').hide();
                     $('#hourlyFix').text('Date');
                     $('#hourAmount').show();
                 }
                 else if(duration =='Full'){
-                    $('#enddate').hide();  
+                    // $('#enddate').hide();  
                     $('#hourAmount').hide();  
                     $('#hourlyFix').text('Start date');  
                 }
                 else if(duration =='More'){
-                    $('#enddate').show();
+                    // $('#enddate').show();
                     $('#hourAmount').hide();
                 }
             });
