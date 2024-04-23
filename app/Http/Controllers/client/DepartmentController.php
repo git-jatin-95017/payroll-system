@@ -51,15 +51,20 @@ class DepartmentController extends Controller
 			$searchValue = $search_arr['value']; // Search value
 
 			// Total records
-			$totalRecords = Department::select('count(*) as allcount')->count();
-			$totalRecordswithFilter = Department::select('count(*) as allcount')->count();
+			$totalRecords = Department::select('count(*) as allcount')->where('created_by', auth()->user()->id)->count();
+			$totalRecordswithFilter = Department::select('count(*) as allcount')->where('created_by', auth()->user()->id)->count();
 
 			// Get records, also we have included search filter as well
-			$records = Department::orderBy($columnName, $columnSortOrder)                	           
-				->orWhere('departments.dep_name', 'like', '%' . $searchValue . '%')                
-				->skip($start)
-				->take($rowperpage)
-				->get();
+			$records = Department::orderBy($columnName, $columnSortOrder)
+				->where('departments.created_by', auth()->user()->id)             	 
+				->where(function ($query) use($searchValue) {
+			        $query
+			        	->orWhere('departments.dep_name', 'like', '%' . $searchValue . '%');
+			    })
+			    ->skip($start)
+			    ->take($rowperpage)
+			    ->get();
+
 
 			$response = array(
 				"draw" => intval($draw),
@@ -216,7 +221,7 @@ class DepartmentController extends Controller
 	        	$query->whereNotIn('departments.id', $assignLocationsids);
 	        }
 
-	        $alllocations = $query->get();
+	        $alllocations = $query->where('departments.created_by', auth()->user()->id)->get();
 
 			return response()->json([
 				'result' => $result,

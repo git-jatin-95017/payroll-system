@@ -66,8 +66,8 @@ class EmployeeController extends Controller
             $folder = date('Y-m-d', strtotime($request->filter_date));
 
             // Total records
-            $totalRecords = User::select('count(*) as allcount')->count();
-            $totalRecordswithFilter = User::select('count(*) as allcount')->join('employee_profile', function($join) {
+            $totalRecords = User::select('count(*) as allcount')->where('users.created_by', auth()->user()->id) ->count();
+            $totalRecordswithFilter = User::select('count(*) as allcount')->where('users.created_by', auth()->user()->id) ->join('employee_profile', function($join) {
                 $join->on('users.id', '=', 'employee_profile.user_id');
             })
             // ->where('users.email', 'like', '%' . $searchValue . '%')
@@ -77,14 +77,18 @@ class EmployeeController extends Controller
             $records = User::orderBy($columnName, $columnSortOrder)
                 ->join('employee_profile', function($join) {
 	                $join->on('users.id', '=', 'employee_profile.user_id');
-	            })                         
-                ->orWhere(DB::raw("CONCAT(employee_profile.first_name, ' ', employee_profile.last_name)"), 'like', '%' . $searchValue . '%')
-                ->orWhere('users.user_code', 'like', '%' . $searchValue . '%')
-                ->orWhere('employee_profile.phone_number', 'like', '%' . $searchValue . '%')
-                ->orWhere('employee_profile.pan_number', 'like', '%' . $searchValue . '%')
-                ->orWhere('employee_profile.ifsc_code', 'like', '%' . $searchValue . '%')
-                ->orWhere('employee_profile.designation', 'like', '%' . $searchValue . '%')
-                ->orWhere('employee_profile.pay_rate', 'like', '%' . $searchValue . '%')
+	            }) 
+	            ->where('users.created_by', auth()->user()->id)             	 
+				->where(function ($query) use($searchValue) {
+			        $query
+			        	->orWhere(DB::raw("CONCAT(employee_profile.first_name, ' ', employee_profile.last_name)"), 'like', '%' . $searchValue . '%')
+		                ->orWhere('users.user_code', 'like', '%' . $searchValue . '%')
+		                ->orWhere('employee_profile.phone_number', 'like', '%' . $searchValue . '%')
+		                ->orWhere('employee_profile.pan_number', 'like', '%' . $searchValue . '%')
+		                ->orWhere('employee_profile.ifsc_code', 'like', '%' . $searchValue . '%')
+		                ->orWhere('employee_profile.designation', 'like', '%' . $searchValue . '%')
+		                ->orWhere('employee_profile.pay_rate', 'like', '%' . $searchValue . '%');
+			    })
                 ->select(
                     'users.id',
                     'users.user_code',
@@ -179,7 +183,7 @@ class EmployeeController extends Controller
 			'role_id' => 3,
 			'user_code' => strtoupper(uniqid()), //$request->emp_code,
 			'is_proifle_edit_access' => $request->is_proifle_edit_access,
-			'status' => $request->status,
+			'status' => $request->status ?? 1,
 		]);		
 
 		$data = [
@@ -324,7 +328,7 @@ class EmployeeController extends Controller
 			'first_name' => $request->first_name,
 			'last_name' => $request->last_name,
 			'dob' => $request->dob,
-			'gender' => $request->gender,
+			'gender' => $request->gender ?? 'Male',
 			'marital_status' => $request->marital_status,
 			'nationality' => $request->nationality,
 			'blood_group' => NULL,

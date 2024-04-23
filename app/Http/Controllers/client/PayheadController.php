@@ -51,14 +51,18 @@ class PayheadController extends Controller
 			$searchValue = $search_arr['value']; // Search value
 
 			// Total records
-			$totalRecords = Payhead::select('count(*) as allcount')->count();
-			$totalRecordswithFilter = Payhead::select('count(*) as allcount')->count();
+			$totalRecords = Payhead::select('count(*) as allcount')->where('created_by', auth()->user()->id)->count();
+			$totalRecordswithFilter = Payhead::select('count(*) as allcount')->where('created_by', auth()->user()->id)->count();
 
 			// Get records, also we have included search filter as well
-			$records = Payhead::orderBy($columnName, $columnSortOrder)                	           
-				->orWhere('payheads.name', 'like', '%' . $searchValue . '%')                
-				->orWhere('payheads.description', 'like', '%' . $searchValue . '%')                
-				->orWhere('payheads.pay_type', 'like', '%' . $searchValue . '%')                
+			$records = Payhead::orderBy($columnName, $columnSortOrder)   
+				->where('payheads.created_by', auth()->user()->id)             	 
+				->where(function ($query) use($searchValue) {
+			        $query
+			        	->orWhere('payheads.name', 'like', '%' . $searchValue . '%')                
+						->orWhere('payheads.description', 'like', '%' . $searchValue . '%')                
+						->orWhere('payheads.pay_type', 'like', '%' . $searchValue . '%');
+			    })                
 				->skip($start)
 				->take($rowperpage)
 				->get();
@@ -239,7 +243,7 @@ class PayheadController extends Controller
 	        	$query->whereNotIn('payheads.id', $assignPayheadsids);
 	        }
 
-	        $payheads = $query->get();
+	        $payheads = $query->where('payheads.created_by', auth()->user()->id)->get();
 
 			return response()->json([
 				'result' => $result,

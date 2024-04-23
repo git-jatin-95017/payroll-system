@@ -62,7 +62,8 @@ class LeavesController extends Controller
             // Get records, also we have included search filter as well
             $records = Leave::orderBy($columnName, $columnSortOrder)                
 	            ->join('users', function($join) {
-	                $join->on('users.id', '=', 'leaves.user_id');
+	                $join->on('users.id', '=', 'leaves.user_id')
+                         ->where('users.created_by', auth()->user()->id);
 	            })         
 	            ->join('employee_profile', function($join) {
 	                $join->on('users.id', '=', 'employee_profile.user_id');

@@ -32,7 +32,7 @@ class HolidayController extends Controller
 		if (request()->ajax()) {
 			$holidayQuery = Holiday::query();
 
-			$data = $holidayQuery->select('*')->get();
+			$data = $holidayQuery->select('*')->where('holidays.created_by', auth()->user()->id)  ->get();
 			
 			return Datatables::of($data)
 					->addIndexColumn()   					            

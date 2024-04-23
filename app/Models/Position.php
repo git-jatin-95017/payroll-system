@@ -37,4 +37,15 @@ class Position extends Model
     {
         return 'slug';
     }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        // Event listener for creating a new department
+        static::creating(function ($model) {
+            // Set the created_by field to the current user's ID
+            $model->created_by = auth()->user()->id;
+        });
+    }
 }

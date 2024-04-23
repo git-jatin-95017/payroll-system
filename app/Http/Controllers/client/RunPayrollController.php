@@ -33,7 +33,12 @@ class RunPayrollController extends Controller
 	public function listPayroll(Request $request) {
 		// $results = PayrollSheet::where('approval_status', 1)->get();
 
-		$results = PayrollSheet::where('approval_status', 1)->orderBy('appoval_number')->whereNotNull('date_range')->get()->groupBy(function($item) {
+		$results = PayrollSheet::where('approval_status', 1)
+			->join('users', function($join) {
+	            $join->on('users.id', '=', 'payroll_sheets.emp_id')
+	            	 ->where('users.created_by', auth()->user()->id);
+	        })
+			->orderBy('appoval_number')->whereNotNull('date_range')->get()->groupBy(function($item) {
 		     return $item->appoval_number;
 		});
 

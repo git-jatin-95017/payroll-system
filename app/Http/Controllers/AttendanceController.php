@@ -44,9 +44,11 @@ class AttendanceController extends Controller
             $folder = date('Y-m-d', strtotime($request->filter_date));
 
             // Total records
-            $totalRecords = Attendance::select('count(*) as allcount')->count();
+            $totalRecords = Attendance::select('count(*) as allcount')->join('users', function($join) {
+                $join->on('users.id', '=', 'attendances.user_id')->where('users.created_by', auth()->user()->id);
+            })->count();
             $totalRecordswithFilter = Attendance::select('count(*) as allcount')->join('users', function($join) {
-                $join->on('users.id', '=', 'attendances.user_id');
+                $join->on('users.id', '=', 'attendances.user_id')->where('users.created_by', auth()->user()->id);
             })
             // ->where('users.email', 'like', '%' . $searchValue . '%')
             ->count();
@@ -64,7 +66,7 @@ class AttendanceController extends Controller
                 // ->selectRaw('GROUP_CONCAT(attendances.action_time) as times')
                 // ->selectRaw('GROUP_CONCAT(attendances.emp_desc) as descs')
                 ->join('users', function($join) {
-                    $join->on('users.id', '=', 'attendances.user_id');
+                    $join->on('users.id', '=', 'attendances.user_id')->where('users.created_by', auth()->user()->id);
                 }) 
                 ->join('employee_profile', function($join) {
                     $join->on('users.id', '=', 'employee_profile.user_id');

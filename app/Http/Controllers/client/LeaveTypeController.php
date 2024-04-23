@@ -51,13 +51,17 @@ class LeaveTypeController extends Controller
 			$searchValue = $search_arr['value']; // Search value
 
 			// Total records
-			$totalRecords = LeaveType::select('count(*) as allcount')->count();
-			$totalRecordswithFilter = LeaveType::select('count(*) as allcount')->count();
+			$totalRecords = LeaveType::select('count(*) as allcount')->where('created_by', auth()->user()->id)->count();
+			$totalRecordswithFilter = LeaveType::select('count(*) as allcount')->where('created_by', auth()->user()->id)->count();
 
 			// Get records, also we have included search filter as well
-			$records = LeaveType::orderBy($columnName, $columnSortOrder)                	           
-				->orWhere('leave_types.name', 'like', '%' . $searchValue . '%')                
-				->orWhere('leave_types.leave_day', 'like', '%' . $searchValue . '%')                
+			$records = LeaveType::orderBy($columnName, $columnSortOrder)	
+			    ->where('leave_types.created_by', auth()->user()->id)             	 
+				->where(function ($query) use($searchValue) {
+			        $query
+			        	->orWhere('leave_types.name', 'like', '%' . $searchValue . '%')
+			        	->orWhere('leave_types.leave_day', 'like', '%' . $searchValue . '%');
+			    })           
 				->skip($start)
 				->take($rowperpage)
 				->get();
@@ -229,7 +233,7 @@ class LeaveTypeController extends Controller
 	        	$query->whereNotIn('leave_types.id', $assignleaveids);
 	        }
 
-	        $leavePolicies = $query->get();
+	        $leavePolicies = $query->where('leave_types.created_by', auth()->user()->id)->get();
 
 			return response()->json([
 				'result' => $result,

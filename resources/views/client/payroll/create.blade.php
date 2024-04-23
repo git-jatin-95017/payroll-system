@@ -234,8 +234,7 @@
 
 										</td>
 
-										<!-- <td>{{ !empty($v->employeeProfile) ? $v->employeeProfile->doj : ''}}</td> -->
-										<!-- <td>{{ !empty($v->employeeProfile) ? $v->employeeProfile->pay_rate : 0}}</td> -->
+										
 										<?php
 										$sum = 0;
 										for ($i=0;$i<=$weekday;$i++) {
