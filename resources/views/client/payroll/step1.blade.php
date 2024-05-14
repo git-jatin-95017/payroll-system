@@ -342,6 +342,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.min.js"></script>
 
 <script>
+	var medical_less_60_amt = @json((float)$medical_less_60);
+	var medical_gre_60_amt  = @json((float)$medical_gre_60);
+	var social_security_amt  = @json((float)$social_security);
+	var social_security_employer_amt  = @json((float)$social_security_employer);
+	var education_levy_amt  = @json((float)$education_levy);
+
 	const formatter = new Intl.NumberFormat('en-US', {
 		style: 'currency',
 		currency: 'USD',
@@ -423,36 +429,36 @@
 	  	if (pay_type == 'hourly' || pay_type == 'weekly') {
 
 	  		if (dob <= 60) {
-	  			medical_benefits = (gross * 3.5) / 100;
+	  			medical_benefits = (gross * medical_less_60_amt) / 100;
 	  		} else if (dob > 60 && dob <=79 ) {
-				medical_benefits = (gross * 2.5) / 100;
+				medical_benefits = (gross * medical_gre_60_amt) / 100;
 	  		} else if (dob > 70 ) {
 	  			medical_benefits = 0;
 	  		}
 
-	  		social_security = ( gross>1500 ? ((1500*6.5) / 100) : (gross*6.5) / 100 );  
-	  		social_security_employer = ( gross>1500 ? ((1500*8.5) / 100) : (gross*8.5) / 100 );  
-	  		education_lvey = (gross<=125?0:(gross>1154?( ((1154-125)*2.5) / 100)+( ((gross-1154)*5) / 100 ):( ((gross-125)*2.5) /100)));
+	  		social_security = ( gross>1500 ? ((1500*social_security_amt) / 100) : (gross*social_security_amt) / 100 );  
+	  		social_security_employer = ( gross>1500 ? ((1500*social_security_employer_amt) / 100) : (gross*social_security_employer_amt) / 100 );  
+	  		education_lvey = (gross<=125?0:(gross>1154?( ((1154-125)*education_levy_amt) / 100)+( ((gross-1154)*5) / 100 ):( ((gross-125)*education_levy_amt) /100)));
 	  		total_deductions = medical_benefits + social_security + education_lvey;
 	  		net_pay = gross - total_deductions;
 	  	} else if (pay_type == 'bi-weekly') {
 	  		//medical_benefits = (gross * 3.5) / 100;
   			if (dob <= 60) {
-	  			medical_benefits = (gross * 3.5) / 100;
+	  			medical_benefits = (gross * medical_less_60_amt) / 100;
 	  		} else if (dob > 60 && dob <=79 ) {
-				medical_benefits = (gross * 2.5) / 100;
+				medical_benefits = (gross * medical_gre_60_amt) / 100;
 	  		} else if (dob > 70 ) {
 	  			medical_benefits = 0;
 	  		}
 
 	  		if (days <= 7) {
-	  			social_security = ( gross>3000 ? ((3000*6.5) / 100) : (gross*6.5) / 100 ); 
-	  			social_security_employer = ( gross>3000 ? ((3000*8.5) / 100) : (gross*8.5) / 100 ); 
+	  			social_security = ( gross>3000 ? ((3000*social_security_amt) / 100) : (gross*social_security_amt) / 100 ); 
+	  			social_security_employer = ( gross>3000 ? ((3000*social_security_employer_amt) / 100) : (gross*social_security_employer_amt) / 100 ); 
 	  		} else {
-	  			social_security = ( gross>3000 ? ((3000*6.5) / 100) : (gross*6.5) / 100 ); 
-	  			social_security_employer = ( gross>3000 ? ((3000*8.5) / 100) : (gross*8.5) / 100 ); 
+	  			social_security = ( gross>3000 ? ((3000*social_security_amt) / 100) : (gross*social_security_amt) / 100 ); 
+	  			social_security_employer = ( gross>3000 ? ((3000*social_security_employer_amt) / 100) : (gross*social_security_employer_amt) / 100 ); 
 	  		}
-	  		education_lvey = (gross<=250?0:(gross>2308?(((2308-250)*2.5)/100)+(((gross-2308)*5)/100):(((gross-250)*2.5)/100)));
+	  		education_lvey = (gross<=250?0:(gross>2308?(((2308-250)*education_levy_amt)/100)+(((gross-2308)*5)/100):(((gross-250)*education_levy_amt)/100)));
 	  		total_deductions = medical_benefits + social_security + education_lvey;
 	  		net_pay = gross - total_deductions;
 	  		if (days <= 7) {
@@ -461,28 +467,28 @@
 	  		}
 	  	} else if (pay_type == 'semi-monthly') {
 	  		if (dob <= 60) {
-	  			medical_benefits = (gross * 3.5) / 100;
+	  			medical_benefits = (gross * medical_less_60_amt) / 100;
 	  		} else if (dob > 60 && dob <=79 ) {
-				medical_benefits = (gross * 2.5) / 100;
+				medical_benefits = (gross * medical_gre_60_amt) / 100;
 	  		} else if (dob > 70 ) {
 	  			medical_benefits = 0;
 	  		}
-	  		social_security = ( gross>3000 ? ((3000*6.5) / 100) : (gross*6.5) / 100 ); 
-	  		social_security_employer = ( gross>3000 ? ((3000*8.5) / 100) : (gross*8.5) / 100 ); 
-	  		education_lvey = (gross<=125?0:(gross>2500?(((2500-270.84)*2.5)/100)+(((gross-2500)*5)/100):(((gross-270.84)*2.5)/100)));
+	  		social_security = ( gross>3000 ? ((3000*social_security_amt) / 100) : (gross*social_security_amt) / 100 ); 
+	  		social_security_employer = ( gross>3000 ? ((3000*social_security_employer_amt) / 100) : (gross*social_security_employer_amt) / 100 ); 
+	  		education_lvey = (gross<=125?0:(gross>2500?(((2500-270.84)*education_levy_amt)/100)+(((gross-2500)*5)/100):(((gross-270.84)*education_levy_amt)/100)));
 	  		total_deductions = medical_benefits + social_security + education_lvey;
 	  		net_pay = gross - total_deductions;
 	  	} else if (pay_type == 'monthly') {
 	  		if (dob <= 60) {
-	  			medical_benefits = (gross * 3.5) / 100;
+	  			medical_benefits = (gross * medical_less_60_amt) / 100;
 	  		} else if (dob > 60 && dob <=79 ) {
-				medical_benefits = (gross * 2.5) / 100;
+				medical_benefits = (gross * medical_gre_60_amt) / 100;
 	  		} else if (dob > 70 ) {
 	  			medical_benefits = 0;
 	  		}
-	  		social_security = ( gross>6500 ? ((6500*6.5) / 100) : (gross*6.5) / 100 ); 
-	  		social_security_employer = ( gross>6500 ? ((6500*8.5) / 100) : (gross*8.5) / 100 ); 
-	  		education_lvey = (gross<=125?0:(gross>5000?(((5000-541.67)*2.5)/100)+(((gross-5000)*5)/100):(((gross-541.67)*2.5)/100)));
+	  		social_security = ( gross>6500 ? ((6500*social_security_amt) / 100) : (gross*social_security_amt) / 100 ); 
+	  		social_security_employer = ( gross>6500 ? ((6500*social_security_employer_amt) / 100) : (gross*social_security_employer_amt) / 100 ); 
+	  		education_lvey = (gross<=125?0:(gross>5000?(((5000-541.67)*education_levy_amt)/100)+(((gross-5000)*5)/100):(((gross-541.67)*education_levy_amt)/100)));
 	  		total_deductions = medical_benefits + social_security + education_lvey;
 	  		net_pay = gross - total_deductions;
 	  	}

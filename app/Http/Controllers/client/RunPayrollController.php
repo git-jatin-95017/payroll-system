@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\PaymentDetail;
 use Barryvdh\Snappy\Facades\SnappyPdf;
+use App\Models\Setting;
 
 class RunPayrollController extends Controller
 {
@@ -58,7 +59,19 @@ class RunPayrollController extends Controller
 		$to = $request->end_date; //date('Y-m-t'); //date('m-t-Y');
 		$appoval_number = $request->number; //date('Y-m-t'); //date('m-t-Y');
 
-		return view('client.payroll.step1', compact('employees', 'from', 'to', 'appoval_number'));
+		$settings = Setting::find(1);
+
+		$medical_less_60 = $settings->medical_less_60;
+		$medical_gre_60 = $settings->medical_gre_60;
+		$social_security = $settings->social_security;
+		$social_security_employer = $settings->social_security_employer;
+		$education_levy = $settings->education_levy;
+
+		return view('client.payroll.step1', compact(
+			'employees', 'from', 'to', 'appoval_number',
+			'medical_less_60', 'medical_gre_60', 'social_security', 'social_security_employer',
+			'education_levy'
+		));
 	}
 
 	public function storeStepOne(Request $request)
