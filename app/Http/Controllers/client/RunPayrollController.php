@@ -61,16 +61,9 @@ class RunPayrollController extends Controller
 
 		$settings = Setting::find(1);
 
-		$medical_less_60 = $settings->medical_less_60;
-		$medical_gre_60 = $settings->medical_gre_60;
-		$social_security = $settings->social_security;
-		$social_security_employer = $settings->social_security_employer;
-		$education_levy = $settings->education_levy;
-
 		return view('client.payroll.step1', compact(
 			'employees', 'from', 'to', 'appoval_number',
-			'medical_less_60', 'medical_gre_60', 'social_security', 'social_security_employer',
-			'education_levy'
+			'settings'
 		));
 	}
 
@@ -78,10 +71,18 @@ class RunPayrollController extends Controller
 	{   		
 		$data = $request->all();
 
+		$settings = Setting::find(1);
+
 		if (!empty($data['input'])) {
 			foreach($data['input'] as $k => $v) {
 				if (!empty($v['id'])) {
 					$payroll =  PayrollAmount::findOrFail($v['id']);
+
+					$medical_less_60_amt = $v['medical_less_60_amt'] ?? $settings->medical_less_60_amt;
+					$medical_gre_60_amt = $v['medical_gre_60_amt'] ?? $settings->medical_gre_60_amt;
+					$social_security_amt = $v['social_security_amt'] ?? $settings->social_security_amt;
+					$social_security_employer_amt = $v['social_security_employer_amt'] ?? $settings->social_security_employer_amt;
+					$education_levy_amt = $v['education_levy_amt'] ?? $settings->education_levy_amt;
 
 					$payroll->update([
 						'user_id' => $k,
@@ -94,7 +95,7 @@ class RunPayrollController extends Controller
 						'overtime_hrs' => (float) $v['overtime_hrs'] ?? 0,
 						'doubl_overtime_hrs' => (float) $v['double_overtime_hrs'] ?? 0,
 						'overtime_calc' => (float) $v['overtime_calc'] ?? 0,
-						'doubl_overtime_calc' => (float) $v['doubl_overtime_calc'] ?? 0,						
+						'doubl_overtime_calc' => (float) $v['doubl_overtime_calc'] ?? 0,
 						'gross' => (float) $v['gross'] ?? 0,
 						'medical' => (float) $v['medical'] ?? 0,
 						'security' => (float) $v['security'] ?? 0,
@@ -102,8 +103,19 @@ class RunPayrollController extends Controller
 						'net_pay' => (float) $v['net_pay'] ?? 0,
 						'edu_levy' => (float) $v['edu_levy'] ?? 0,
 						'status' => 0,
+						'medical_less_60' => $medical_less_60_amt,
+						'medical_gre_60' => $medical_gre_60_amt,
+						'social_security' => $social_security_amt,
+						'social_security_employer' => $social_security_employer_amt,
+						'education_levy' => $education_levy_amt
 					]);
 				} else {
+					$medical_less_60_amt = $v['medical_less_60_amt'] ?? $settings->medical_less_60_amt;
+					$medical_gre_60_amt = $v['medical_gre_60_amt'] ?? $settings->medical_gre_60_amt;
+					$social_security_amt = $v['social_security_amt'] ?? $settings->social_security_amt;
+					$social_security_employer_amt = $v['social_security_employer_amt'] ?? $settings->social_security_employer_amt;
+					$education_levy_amt = $v['education_levy_amt'] ?? $settings->education_levy_amt;
+
 					$payroll = PayrollAmount::create([
 						'user_id' => $k,
 						'start_date' => $v['start_date'],
@@ -123,6 +135,11 @@ class RunPayrollController extends Controller
 						'net_pay' => (float) $v['net_pay'] ?? 0,
 						'edu_levy' => (float) $v['edu_levy'] ?? 0,
 						'status' => 0,
+						'medical_less_60' => $medical_less_60_amt,
+						'medical_gre_60' => $medical_gre_60_amt,
+						'social_security' => $social_security_amt,
+						'social_security_employer' => $social_security_employer_amt,
+						'education_levy' => $education_levy_amt
 					]);
 				}
 

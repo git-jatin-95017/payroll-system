@@ -94,6 +94,12 @@
 												$otCalc = $isDataExist->overtime_calc;
 												$dotCalc = $isDataExist->doubl_overtime_calc;
 												$edu_levy = $isDataExist->edu_levy;
+
+												$medical_less_60_amt = $isDataExist->medical_less_60_amt ?? $settings->medical_less_60;
+												$medical_gre_60_amt = $isDataExist->medical_gre_60_amt ?? $settings->medical_gre_60;
+												$social_security_amt = $isDataExist->social_security_amt ?? $settings->social_security;
+												$social_security_employer_amt = $isDataExist->social_security_employer_amt ?? $settings->social_security_employer;
+												$education_levy_amt = $isDataExist->education_levy_amt ?? $settings->education_levy;
 											} else {
 												$id = NULL;
 												$totalHours = collect($timeCardData)->sum(function ($row) {
@@ -112,6 +118,12 @@
 												$securityEmployer = 0;
 												$net_pay = 0;
 												$edu_levy = 0;
+
+												$medical_less_60_amt = $settings->medical_less_60;
+												$medical_gre_60_amt = $settings->medical_gre_60;
+												$social_security_amt = $settings->social_security;
+												$social_security_employer_amt = $settings->social_security_employer;
+												$education_levy_amt = $settings->education_levy;
 											}
 
 
@@ -286,6 +298,12 @@
 														<input type="hidden" class="social-security-employer-hidden" name="input[{{$employee->id}}][security_employer]" value="{{ $securityEmployer }}">
 														<input type="hidden" class="net-pay-hidden" name="input[{{$employee->id}}][net_pay]" value="{{ $net_pay }}">
 														<input type="hidden" class="edu-levy-hidden" name="input[{{$employee->id}}][edu_levy]" value="{{ $edu_levy }}">
+
+														<input type="hidden" class="medical_less_60_amthidden" name="input[{{$employee->id}}][medical_less_60_amt]" value="{{ $medical_less_60_amt }}">	
+												    	<input type="hidden" class="medical_gre_60_amthidden" name="input[{{$employee->id}}][medical_gre_60_amt]" value="{{ $medical_gre_60_amt }}">	
+												    	<input type="hidden" class="social_security_amthidden" name="input[{{$employee->id}}][social_security_amt]" value="{{ $social_security_amt }}">	
+												    	<input type="hidden" class="social_security_employer_amthidden" name="input[{{$employee->id}}][social_security_employer_amt]" value="{{ $social_security_employer_amt }}">	
+												    	<input type="hidden" class="education_levy_amthidden" name="input[{{$employee->id}}][education_levy_amt]" value="{{ $education_levy_amt }}">	
 													</td>
 												</tr>
 												<tr>
@@ -306,7 +324,8 @@
 												</tr>
 											</table>
 									      </td>
-									    </tr>								
+									    </tr>
+
 									    @endforeach	    
 									</tbody>
 								</table>
@@ -342,11 +361,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.min.js"></script>
 
 <script>
-	var medical_less_60_amt = @json((float)$medical_less_60);
-	var medical_gre_60_amt  = @json((float)$medical_gre_60);
-	var social_security_amt  = @json((float)$social_security);
-	var social_security_employer_amt  = @json((float)$social_security_employer);
-	var education_levy_amt  = @json((float)$education_levy);
 
 	const formatter = new Intl.NumberFormat('en-US', {
 		style: 'currency',
@@ -376,6 +390,12 @@
 		double_overtime_hrs_val = parseFloat(focusedRow.find(".double_overtime_hrs").val());
 		reimbursement_hrs = parseFloat(focusedRow.find(".reimbursement_hrs").val());
 
+		var medical_less_60_amt = parseFloat(focusedRow.find(".medical_less_60_amthidden").val());
+		var medical_gre_60_amt  = parseFloat(focusedRow.find(".medical_gre_60_amthidden").val());
+		var social_security_amt  = parseFloat(focusedRow.find(".social_security_amthidden").val());
+		var social_security_employer_amt  = parseFloat(focusedRow.find(".social_security_employer_amthidden").val());
+		var education_levy_amt  = parseFloat(focusedRow.find(".education_levy_amthidden").val());
+		console.log(medical_less_60_amt,medical_gre_60_amt,social_security_amt,social_security_employer_amt,education_levy_amt);
 		//Caluclate Additonal Hours
 		var additionalHrsEarnings = 0;
 		var additionalHrsDeductions = 0;
