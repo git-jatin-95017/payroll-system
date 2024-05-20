@@ -330,6 +330,8 @@ class RunPayrollController extends Controller
 
 		$dataGraph = [$totalPayroll, $taxes, $deductions];
 
+		$settings = Setting::find(1);
+
 		return view('client.payroll.confirmation', [
 			'start_date' => $request->start_date, 
 			'end_date' => $request->end_date, 
@@ -345,6 +347,7 @@ class RunPayrollController extends Controller
 			'data' => $data,
 			'ids' => $ids,
 			'dataGraph' => $dataGraph,
+			'settings' => $settings
 		]);
 	}
 
@@ -362,6 +365,7 @@ class RunPayrollController extends Controller
 	}
 
 	public function downloadPdf(Request $request) {
+		$settings = Setting::find(1);
 		$empIds = PayrollSheet::where('approval_status', 1)
 			->join('users', function($join) {
  	            $join->on('users.id', '=', 'payroll_sheets.emp_id')->where('status', 1);
@@ -394,6 +398,7 @@ class RunPayrollController extends Controller
 	            'approval_number' => $request->approval_number,
 	            'data' => $data,
 	            'allApprovedData' => $allApprovedData,
+	            'settings' => $settings
 	        ];
 
 		    $pdf = SnappyPdf::loadView('client.pdf.salary', $parameters);
@@ -416,6 +421,7 @@ class RunPayrollController extends Controller
 	}
 
 	private function generateDirectDepositPdf(Request $request, $empIds) {
+		$settings = Setting::find(1);
 	    $data2 = PayrollAmount::where('start_date', '>=', $request->start_date)
 	    	->where('end_date', '<=', $request->end_date)
 	    	->whereIn('status', [0,1])
@@ -424,6 +430,7 @@ class RunPayrollController extends Controller
 
 	    $parameters = [
 	    	'data' => $data2,
+	    	'settings' => $settings
 	    ];
 	    $pdf = SnappyPdf::loadView('client.pdf.deposit', $parameters);
 	    $pdf->setOption('margin-top', 10);
