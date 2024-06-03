@@ -303,14 +303,6 @@
 																	</p>
 																</p>
 															@endforeach
-															<!-- <p>
-																<label class="cursor-pointer">
-																	Total Leave Balance
-																</label>
-																<p>
-																	<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input hrs" id="last-row-{{$employee->id}}">
-																</p>										      	
-															</p> -->
 														</td>
 													</tr>
 													</tr>

@@ -143,26 +143,29 @@ class RunPayrollController extends Controller
 					]);
 				}
 
-				foreach($v['earnings'] as $key => $value) {
+				if (!empty($v['earnings'])) {
+					foreach($v['earnings'] as $key => $value) {
 
-					AdditionalEarning::where('user_id', $k)->where('payroll_amount_id', $payroll->id)->where('payhead_id', $value['payhead_id'])->delete();
-					// if (!empty($value['id'])) {
-					// 	$ae =  AdditionalEarning::findOrFail($value['id']);
-					// 	$ae->update([
-					// 		// 'payroll_amount_id' => $run->id,
-					// 		// 'user_id' => $run->user_id,
-					// 			//'payhead_id' => $value['payhead_id'],
-					// 		'amount' => (float) $value['amount']
-					// 	]);					
-					// } else {
-						AdditionalEarning::create([
-							'payroll_amount_id' => $payroll->id,
-							'user_id' => $payroll->user_id,
-							'payhead_id' => $value['payhead_id'],
-							'amount' => (float) $value['amount']
-						]);					
-					// }
+						AdditionalEarning::where('user_id', $k)->where('payroll_amount_id', $payroll->id)->where('payhead_id', $value['payhead_id'])->delete();
+						// if (!empty($value['id'])) {
+						// 	$ae =  AdditionalEarning::findOrFail($value['id']);
+						// 	$ae->update([
+						// 		// 'payroll_amount_id' => $run->id,
+						// 		// 'user_id' => $run->user_id,
+						// 			//'payhead_id' => $value['payhead_id'],
+						// 		'amount' => (float) $value['amount']
+						// 	]);					
+						// } else {
+							AdditionalEarning::create([
+								'payroll_amount_id' => $payroll->id,
+								'user_id' => $payroll->user_id,
+								'payhead_id' => $value['payhead_id'],
+								'amount' => (float) $value['amount']
+							]);					
+						// }
+					}
 				}
+				
 			}
 		}
 
@@ -197,28 +200,32 @@ class RunPayrollController extends Controller
 					$payroll =  PayrollAmount::findOrFail($v['id']);
 
 					$newGross = 0;
-					foreach($v['earnings'] as $key => $value) {
-						AdditionalPaid::where('user_id', $k)->where('payroll_amount_id', $payroll->id)->where('leave_type_id', $value['leave_type_id'])->delete();
-						// if (!empty($value['id'])) {
-						// 	$ae =  AdditionalEarning::findOrFail($value['id']);
-						// 	$ae->update([
-						// 		// 'payroll_amount_id' => $run->id,
-						// 		// 'user_id' => $run->user_id,
-						// 			//'payhead_id' => $value['payhead_id'],
-						// 		'amount' => (float) $value['amount']
-						// 	]);					
-						// } else {
-							AdditionalPaid::create([
-								'payroll_amount_id' => $payroll->id,
-								'user_id' => $payroll->user_id,
-								'leave_type_id' => $value['leave_type_id'],
-								'amount' => (float) $value['amount'],							
-								'leave_balance' => (float) $value['leave_balance'],							
-							]);				
 
-							$newGross += (float) $value['amount'];
-						// }
+					if (!empty($v['earnings'])) {
+						foreach($v['earnings'] as $key => $value) {
+							AdditionalPaid::where('user_id', $k)->where('payroll_amount_id', $payroll->id)->where('leave_type_id', $value['leave_type_id'])->delete();
+							// if (!empty($value['id'])) {
+							// 	$ae =  AdditionalEarning::findOrFail($value['id']);
+							// 	$ae->update([
+							// 		// 'payroll_amount_id' => $run->id,
+							// 		// 'user_id' => $run->user_id,
+							// 			//'payhead_id' => $value['payhead_id'],
+							// 		'amount' => (float) $value['amount']
+							// 	]);					
+							// } else {
+								AdditionalPaid::create([
+									'payroll_amount_id' => $payroll->id,
+									'user_id' => $payroll->user_id,
+									'leave_type_id' => $value['leave_type_id'],
+									'amount' => (float) $value['amount'],							
+									'leave_balance' => (float) $value['leave_balance'],							
+								]);				
+
+								$newGross += (float) $value['amount'];
+							// }
+						}
 					}
+					
 
 					if(array_key_exists('earnings_unpaid', $v) && count($v['earnings_unpaid']) > 0) {
 						foreach($v['earnings_unpaid'] as $key => $value) {
@@ -237,7 +244,7 @@ class RunPayrollController extends Controller
 						//'vacation_hrs' => (float) $v['vacation_hrs'],
 						//'sick_hrs' => (float) $v['sick_hrs'],					
 						'status' => 0,
-						'paid_time_off' => (float) $v['paid_time_off']
+						'paid_time_off' => !empty($v['paid_time_off']) ? (float) $v['paid_time_off'] : 0
 						// 'gross' => $payroll->gross + $newGross,
 					]);
 				}
