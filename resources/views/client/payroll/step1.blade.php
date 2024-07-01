@@ -78,9 +78,11 @@
 
 											if(!empty($isDataExist)) {
 												$id = $isDataExist->id;
-												$totalHours = collect($timeCardData)->sum(function ($row) {
-												    return (float) $row->daily_hrs;
-												}); //$isDataExist->total_hours;
+												$totalHours = $isDataExist->total_hours;
+												// collect($timeCardData)->sum(function ($row) {
+												//     return (float) $row->daily_hrs;
+												// }); 
+												//$isDataExist->total_hours;
 												$totalDays = collect($timeCardData)->count('daily_hrs');
 												$reimbursement = $isDataExist->reimbursement;
 												$overtimeHours = $isDataExist->overtime_hrs;
