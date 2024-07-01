@@ -179,7 +179,7 @@
 																	<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][id]">
 																	  <input type="hidden" value="{{$from}}" name="input[{{$employee->id}}][start_date]">
 																	  <input type="hidden" value="{{$to}}" name="input[{{$employee->id}}][end_date]">
-																	 <input type="number" name="input[{{$employee->id}}][working_hrs]" min="0" value="{{ $totalHours }}" class="form-control fixed-input working_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'working_hrs', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>' , '<?php echo $dob; ?>')">
+																	 <input type="text" name="input[{{$employee->id}}][working_hrs]" min="0" value="{{ $totalHours }}" class="form-control fixed-input working_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'working_hrs', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>' , '<?php echo $dob; ?>')">
 																</p>
 															</p>
 
@@ -190,7 +190,7 @@
 																	</svg> OT
 																</button>
 																<p class="collapse" id="overtime{{$k}}">
-																	<input type="number" name="input[{{$employee->id}}][overtime_hrs]" min="0" value="{{ $overtimeHours }}" class="form-control fixed-input overtime_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'overtime_hrs', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>', '<?php echo $dob; ?>')">
+																	<input type="text" name="input[{{$employee->id}}][overtime_hrs]" min="0" value="{{ $overtimeHours }}" class="form-control fixed-input overtime_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'overtime_hrs', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>', '<?php echo $dob; ?>')">
 																</p>
 															</p>
 															<p>
@@ -200,7 +200,7 @@
 																	</svg> DT
 																</button>
 																<p class="collapse" id="doubleovertime{{$k}}">
-																	 <input type="number" name="input[{{$employee->id}}][double_overtime_hrs]" min="0" value="{{ $dovertimeHours }}" class="form-control fixed-input double_overtime_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'double_overtime_hrs', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>', '<?php echo $dob; ?>')">
+																	 <input type="text" name="input[{{$employee->id}}][double_overtime_hrs]" min="0" value="{{ $dovertimeHours }}" class="form-control fixed-input double_overtime_hrs" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'double_overtime_hrs', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>', '<?php echo $dob; ?>')">
 																</p>
 															</p>
 
@@ -211,7 +211,7 @@
 																	</svg> Holiday pay
 																</button>
 																<p class="collapse" id="holiday_pay{{$k}}">
-																	<input type="number" name="input[{{$employee->id}}][holiday_pay]" min="0" value="{{ $holidayPayHrs }}" class="form-control fixed-input holiday_pay" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'holiday_pay', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>', '<?php echo $dob; ?>')">
+																	<input type="text" name="input[{{$employee->id}}][holiday_pay]" min="0" value="{{ $holidayPayHrs }}" class="form-control fixed-input holiday_pay" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'holiday_pay', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>', '<?php echo $dob; ?>')">
 																</p>
 															</p>
 														</td>
@@ -248,7 +248,7 @@
 																	</label>
 																	<p class="collapse" id="bonus{{$employee->id}}{{$key}}">
 																		<input type="hidden" value="{{$value->payhead_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][payhead_id]">
-																		<input type="number" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" value="{{$amountPayhead}}"  data-payheadtype="{{$value->payhead->pay_type}}" class="form-control fixed-input additional-hrs" data-payhead="{{ $value->payhead->id}}-{{$employee->id}}" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'additional', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>', '<?php echo $dob; ?>')">
+																		<input type="text" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" value="{{$amountPayhead}}"  data-payheadtype="{{$value->payhead->pay_type}}" class="form-control fixed-input additional-hrs" data-payhead="{{ $value->payhead->id}}-{{$employee->id}}" onchange="calculateGross(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', 'additional', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $totalDays; ?>', '<?php echo $dob; ?>')">
 																	</p>										      	
 																</p>
 															@endforeach
