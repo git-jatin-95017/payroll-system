@@ -15,6 +15,7 @@
         $social_security_amt = $row->social_security ?? $settings->social_security;
         $social_security_employer_amt = $row->social_security_employer ?? $settings->social_security_employer;
         $education_levy_amt = $row->education_levy ?? $settings->education_levy;
+        $education_levy_amt_5 = $row->education_levy ?? $settings->education_levy_5;
 
         $grossT =0;
         $employeePayT =0;
@@ -67,7 +68,7 @@
 
             $social_securityT = ( $grossT>1500 ? ((1500*$social_security_amt) / 100) : ($grossT*$social_security_amt) / 100 );  
             $social_securityT_employer = ( $grossT>1500 ? ((1500*$social_security_employer_amt) / 100) : ($grossT*$social_security_employer_amt) / 100 );  
-            $education_lveyT = ($grossT<=125?0:($grossT>1154?( ((1154-125)*$education_levy_amt) / 100)+( (($grossT-1154)*5) / 100 ):( (($grossT-125)*$education_levy_amt) /100)));
+            $education_lveyT = ($grossT<=125?0:($grossT>1154?( ((1154-125)*$education_levy_amt) / 100)+( (($grossT-1154)*$education_levy_amt_5) / 100 ):( (($grossT-125)*$education_levy_amt) /100)));
             $mbse_deductions = $medical_benefitsT + $social_securityT + $education_lveyT;
             $net_pay = $grossT - $mbse_deductions;
         } else if ($pay_type == 'bi-weekly') {
@@ -87,7 +88,7 @@
                 $social_securityT = ( $grossT>3000 ? ((3000*$social_security_amt) / 100) : ($grossT*$social_security_amt) / 100 ); 
                 $social_securityT_employer = ( $grossT>3000 ? ((3000*$social_security_employer_amt) / 100) : ($grossT*$social_security_employer_amt) / 100 ); 
             }
-            $education_lveyT = ($grossT<=250?0:($grossT>2308?(((2308-250)*$education_levy_amt)/100)+((($grossT-2308)*5)/100):((($grossT-250)*$education_levy_amt)/100)));
+            $education_lveyT = ($grossT<=250?0:($grossT>2308?(((2308-250)*$education_levy_amt)/100)+((($grossT-2308)*$education_levy_amt_5)/100):((($grossT-250)*$education_levy_amt)/100)));
             $mbse_deductions = $medical_benefitsT + $social_securityT + $education_lveyT;
             $net_pay = $grossT - $mbse_deductions;
             if ($days <= 7) {
@@ -104,7 +105,7 @@
             }
             $social_securityT = ( $grossT>3000 ? ((3000*$social_security_amt) / 100) : ($grossT*$social_security_amt) / 100 ); 
             $social_securityT_employer = ( $grossT>3000 ? ((3000*$social_security_employer_amt) / 100) : ($grossT*$social_security_employer_amt) / 100 ); 
-            $education_lveyT = ($grossT<=125?0:($grossT>2500?(((2500-270.84)*$education_levy_amt)/100)+((($grossT-2500)*5)/100):((($grossT-270.84)*$education_levy_amt)/100)));
+            $education_lveyT = ($grossT<=125?0:($grossT>2500?(((2500-270.84)*$education_levy_amt)/100)+((($grossT-2500)*$education_levy_amt_5)/100):((($grossT-270.84)*$education_levy_amt)/100)));
             $mbse_deductions = $medical_benefitsT + $social_securityT + $education_lveyT;
             $net_pay = $grossT - $mbse_deductions;
         } else if ($pay_type == 'monthly') {
@@ -117,7 +118,7 @@
             }
             $social_securityT = ( $grossT>6500 ? ((6500*$social_security_amt) / 100) : ($grossT*$social_security_amt) / 100 ); 
             $social_securityT_employer = ( $grossT>6500 ? ((6500*$social_security_employer_amt) / 100) : ($grossT*$social_security_employer_amt) / 100 ); 
-            $education_lveyT = ($grossT<=125?0:($grossT>5000?(((5000-541.67)*$education_levy_amt)/100)+((($grossT-5000)*5)/100):((($grossT-541.67)*$education_levy_amt)/100)));
+            $education_lveyT = ($grossT<=125?0:($grossT>5000?(((5000-541.67)*$education_levy_amt)/100)+((($grossT-5000)*$education_levy_amt_5)/100):((($grossT-541.67)*$education_levy_amt)/100)));
             $mbse_deductions = $medical_benefitsT + $social_securityT + $education_lveyT;
             $net_pay = $grossT - $mbse_deductions;
         }
@@ -280,6 +281,7 @@
                                                 $social_security_amt = $row->social_security ?? $settings->social_security;
                                                 $social_security_employer_amt = $row->social_security_employer ?? $settings->social_security_employer;
                                                 $education_levy_amt = $row->education_levy ?? $settings->education_levy;
+                                                $education_levy_amt_5 = $row->education_levy ?? $settings->education_levy_5;
 
                                                 $gross1 =0;
                                                 $gross1 = $row->gross + $row->paid_time_off;
@@ -300,7 +302,7 @@
 
                                                     $social_security1 = ( $gross1>1500 ? ((1500*$social_security_amt) / 100) : ($gross1*$social_security_amt) / 100 );  
                                                     $social_security_employer1 = ( $gross1>1500 ? ((1500*$social_security_employer_amt) / 100) : ($gross1*$social_security_employer_amt) / 100 );  
-                                                    $education_lvey1 = ($gross1<=125?0:($gross1>1154?( ((1154-125)*$education_levy_amt) / 100)+( (($gross1-1154)*5) / 100 ):( (($gross1-125)*$education_levy_amt) /100)));
+                                                    $education_lvey1 = ($gross1<=125?0:($gross1>1154?( ((1154-125)*$education_levy_amt) / 100)+( (($gross1-1154)*$education_levy_amt_5) / 100 ):( (($gross1-125)*$education_levy_amt) /100)));
                                                     // $mbse_deductions = $medical_benefits1 + $social_security1 + $education_lvey1;
                                                     // $net_pay = $gross1 - $mbse_deductions;
                                                 } else if ($pay_type == 'bi-weekly') {
@@ -320,7 +322,7 @@
                                                         $social_security1 = ( $gross1>3000 ? ((3000*$social_security_amt) / 100) : ($gross1*$social_security_amt) / 100 ); 
                                                         $social_security_employer1 = ( $gross1>3000 ? ((3000*$social_security_employer_amt) / 100) : ($gross1*$social_security_employer_amt) / 100 ); 
                                                     }
-                                                    $education_lvey1 = ($gross1<=250?0:($gross1>2308?(((2308-250)*$education_levy_amt)/100)+((($gross1-2308)*5)/100):((($gross1-250)*$education_levy_amt)/100)));
+                                                    $education_lvey1 = ($gross1<=250?0:($gross1>2308?(((2308-250)*$education_levy_amt)/100)+((($gross1-2308)*$education_levy_amt_5)/100):((($gross1-250)*$education_levy_amt)/100)));
                                                     // $mbse_deductions = $medical_benefits1 + $social_security1 + $education_lvey1;
                                                     
                                                 } else if ($pay_type == 'semi-monthly') {
@@ -333,7 +335,7 @@
                                                     }
                                                     $social_security1 = ( $gross1>3000 ? ((3000*$social_security_amt) / 100) : ($gross1*$social_security_amt) / 100 ); 
                                                     $social_security_employer1 = ( $gross1>3000 ? ((3000*$social_security_employer_amt) / 100) : ($gross1*$social_security_employer_amt) / 100 ); 
-                                                    $education_lvey1 = ($gross1<=125?0:($gross1>2500?(((2500-270.84)*$education_levy_amt)/100)+((($gross1-2500)*5)/100):((($gross1-270.84)*$education_levy_amt)/100)));
+                                                    $education_lvey1 = ($gross1<=125?0:($gross1>2500?(((2500-270.84)*$education_levy_amt)/100)+((($gross1-2500)*$education_levy_amt_5)/100):((($gross1-270.84)*$education_levy_amt)/100)));
                                                     // $mbse_deductions = $medical_benefits1 + $social_security1 + $education_lvey1;
                                                 } else if ($pay_type == 'monthly') {
                                                     if ($dob <= 60) {
@@ -345,7 +347,7 @@
                                                     }
                                                     $social_security1 = ( $gross1>6500 ? ((6500*$social_security_amt) / 100) : ($gross1*$social_security_amt) / 100 ); 
                                                     $social_security_employer1 = ( $gross1>6500 ? ((6500*$social_security_employer_amt) / 100) : ($gross1*$social_security_employer_amt) / 100 ); 
-                                                    $education_lvey1 = ($gross1<=125?0:($gross1>5000?(((5000-541.67)*$education_levy_amt)/100)+((($gross1-5000)*5)/100):((($gross1-541.67)*$education_levy_amt)/100)));
+                                                    $education_lvey1 = ($gross1<=125?0:($gross1>5000?(((5000-541.67)*$education_levy_amt)/100)+((($gross1-5000)*$education_levy_amt_5)/100):((($gross1-541.67)*$education_levy_amt)/100)));
                                                     // $mbse_deductions = $medical_benefits1 + $social_security1 + $education_lvey1;
                                                 }
 
@@ -442,6 +444,7 @@
                                                     $social_security_amt = $row->social_security ?? $settings->social_security;
                                                     $social_security_employer_amt = $row->social_security_employer ?? $settings->social_security_employer;
                                                     $education_levy_amt = $row->education_levy ?? $settings->education_levy;
+                                                    $education_levy_amt_5 = $row->education_levy ?? $settings->education_levy_5;
 
                                                     $gross =0;
                                                     $employeePay =0;
@@ -493,7 +496,7 @@
 
                                                         $social_security = ( $gross>1500 ? ((1500*$social_security_amt) / 100) : ($gross*$social_security_amt) / 100 );  
                                                         $social_security_employer = ( $gross>1500 ? ((1500*$social_security_employer_amt) / 100) : ($gross*$social_security_employer_amt) / 100 );  
-                                                        $education_lvey = ($gross<=125?0:($gross>1154?( ((1154-125)*$education_levy_amt) / 100)+( (($gross-1154)*5) / 100 ):( (($gross-125)*$education_levy_amt) /100)));
+                                                        $education_lvey = ($gross<=125?0:($gross>1154?( ((1154-125)*$education_levy_amt) / 100)+( (($gross-1154)*$education_levy_amt_5) / 100 ):( (($gross-125)*$education_levy_amt) /100)));
                                                         $mbse_deductions = $medical_benefits + $social_security + $education_lvey;
                                                         $net_pay = $gross - $mbse_deductions;
                                                     } else if ($pay_type == 'bi-weekly') {
@@ -513,7 +516,7 @@
                                                             $social_security = ( $gross>3000 ? ((3000*$social_security_amt) / 100) : ($gross*$social_security_amt) / 100 ); 
                                                             $social_security_employer = ( $gross>3000 ? ((3000*$social_security_employer_amt) / 100) : ($gross*$social_security_employer_amt) / 100 ); 
                                                         }
-                                                        $education_lvey = ($gross<=250?0:($gross>2308?(((2308-250)*$education_levy_amt)/100)+((($gross-2308)*5)/100):((($gross-250)*$education_levy_amt)/100)));
+                                                        $education_lvey = ($gross<=250?0:($gross>2308?(((2308-250)*$education_levy_amt)/100)+((($gross-2308)*$education_levy_amt_5)/100):((($gross-250)*$education_levy_amt)/100)));
                                                         $mbse_deductions = $medical_benefits + $social_security + $education_lvey;
                                                         $net_pay = $gross - $mbse_deductions;
                                                         if ($days <= 7) {
@@ -530,7 +533,7 @@
                                                         }
                                                         $social_security = ( $gross>3000 ? ((3000*$social_security_amt) / 100) : ($gross*$social_security_amt) / 100 ); 
                                                         $social_security_employer = ( $gross>3000 ? ((3000*$social_security_employer_amt) / 100) : ($gross*$social_security_employer_amt) / 100 ); 
-                                                        $education_lvey = ($gross<=125?0:($gross>2500?(((2500-270.84)*$education_levy_amt)/100)+((($gross-2500)*5)/100):((($gross-270.84)*$education_levy_amt)/100)));
+                                                        $education_lvey = ($gross<=125?0:($gross>2500?(((2500-270.84)*$education_levy_amt)/100)+((($gross-2500)*$education_levy_amt_5)/100):((($gross-270.84)*$education_levy_amt)/100)));
                                                         $mbse_deductions = $medical_benefits + $social_security + $education_lvey;
                                                         $net_pay = $gross - $mbse_deductions;
                                                     } else if ($pay_type == 'monthly') {
@@ -543,7 +546,7 @@
                                                         }
                                                         $social_security = ( $gross>6500 ? ((6500*$social_security_amt) / 100) : ($gross*$social_security_amt) / 100 ); 
                                                         $social_security_employer = ( $gross>6500 ? ((6500*$social_security_employer_amt) / 100) : ($gross*$social_security_employer_amt) / 100 ); 
-                                                        $education_lvey = ($gross<=125?0:($gross>5000?(((5000-541.67)*$education_levy_amt)/100)+((($gross-5000)*5)/100):((($gross-541.67)*$education_levy_amt)/100)));
+                                                        $education_lvey = ($gross<=125?0:($gross>5000?(((5000-541.67)*$education_levy_amt)/100)+((($gross-5000)*$education_levy_amt_5)/100):((($gross-541.67)*$education_levy_amt)/100)));
                                                         $mbse_deductions = $medical_benefits + $social_security + $education_lvey;
                                                         $net_pay = $gross - $mbse_deductions;
                                                     }
@@ -628,6 +631,7 @@
                                                     $social_security_amt = $row->social_security ?? $settings->social_security;
                                                     $social_security_employer_amt = $row->social_security_employer ?? $settings->social_security_employer;
                                                     $education_levy_amt = $row->education_levy ?? $settings->education_levy;
+                                                    $education_levy_amt_5 = $row->education_levy ?? $settings->education_levy_5;
 
                                                     $gross =0;
                                                     $employeePay =0;
@@ -679,7 +683,7 @@
 
                                                         $social_security = ( $gross>1500 ? ((1500*$social_security_amt) / 100) : ($gross*$social_security_amt) / 100 );  
                                                         $social_security_employer = ( $gross>1500 ? ((1500*$social_security_employer_amt) / 100) : ($gross*$social_security_employer_amt) / 100 );  
-                                                        $education_lvey = ($gross<=125?0:($gross>1154?( ((1154-125)*$education_levy_amt) / 100)+( (($gross-1154)*5) / 100 ):( (($gross-125)*$education_levy_amt) /100)));
+                                                        $education_lvey = ($gross<=125?0:($gross>1154?( ((1154-125)*$education_levy_amt) / 100)+( (($gross-1154)*$education_levy_amt_5) / 100 ):( (($gross-125)*$education_levy_amt) /100)));
                                                         $mbse_deductions = $medical_benefits + $social_security + $education_lvey;
                                                         $net_pay = $gross - $mbse_deductions;
                                                     } else if ($pay_type == 'bi-weekly') {
@@ -699,7 +703,7 @@
                                                             $social_security = ( $gross>3000 ? ((3000*$social_security_amt) / 100) : ($gross*$social_security_amt) / 100 ); 
                                                             $social_security_employer = ( $gross>3000 ? ((3000*$social_security_employer_amt) / 100) : ($gross*$social_security_employer_amt) / 100 ); 
                                                         }
-                                                        $education_lvey = ($gross<=250?0:($gross>2308?(((2308-250)*$education_levy_amt)/100)+((($gross-2308)*5)/100):((($gross-250)*$education_levy_amt)/100)));
+                                                        $education_lvey = ($gross<=250?0:($gross>2308?(((2308-250)*$education_levy_amt)/100)+((($gross-2308)*$education_levy_amt_5)/100):((($gross-250)*$education_levy_amt)/100)));
                                                         $mbse_deductions = $medical_benefits + $social_security + $education_lvey;
                                                         $net_pay = $gross - $mbse_deductions;
                                                         if ($days <= 7) {
@@ -716,7 +720,7 @@
                                                         }
                                                         $social_security = ( $gross>3000 ? ((3000*$social_security_amt) / 100) : ($gross*$social_security_amt) / 100 ); 
                                                         $social_security_employer = ( $gross>3000 ? ((3000*$social_security_employer_amt) / 100) : ($gross*$social_security_employer_amt) / 100 ); 
-                                                        $education_lvey = ($gross<=125?0:($gross>2500?(((2500-270.84)*$education_levy_amt)/100)+((($gross-2500)*5)/100):((($gross-270.84)*$education_levy_amt)/100)));
+                                                        $education_lvey = ($gross<=125?0:($gross>2500?(((2500-270.84)*$education_levy_amt)/100)+((($gross-2500)*$education_levy_amt_5)/100):((($gross-270.84)*$education_levy_amt)/100)));
                                                         $mbse_deductions = $medical_benefits + $social_security + $education_lvey;
                                                         $net_pay = $gross - $mbse_deductions;
                                                     } else if ($pay_type == 'monthly') {
@@ -729,7 +733,7 @@
                                                         }
                                                         $social_security = ( $gross>6500 ? ((6500*$social_security_amt) / 100) : ($gross*$social_security_amt) / 100 ); 
                                                         $social_security_employer = ( $gross>6500 ? ((6500*$social_security_employer_amt) / 100) : ($gross*$social_security_employer_amt) / 100 ); 
-                                                        $education_lvey = ($gross<=125?0:($gross>5000?(((5000-541.67)*$education_levy_amt)/100)+((($gross-5000)*5)/100):((($gross-541.67)*$education_levy_amt)/100)));
+                                                        $education_lvey = ($gross<=125?0:($gross>5000?(((5000-541.67)*$education_levy_amt)/100)+((($gross-5000)*$education_levy_amt_5)/100):((($gross-541.67)*$education_levy_amt)/100)));
                                                         $mbse_deductions = $medical_benefits + $social_security + $education_lvey;
                                                         $net_pay = $gross - $mbse_deductions;
                                                     }

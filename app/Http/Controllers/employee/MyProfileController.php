@@ -7,8 +7,19 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\PaymentDetail;
 use App\Models\EmployeeProfile;
+
+use App\Models\PayrollSheet;
+use App\Models\Attendance;
+use App\Models\LeaveType;
+use App\Models\PayrollAmount;
+use App\Models\AdditionalEarning;
+use App\Models\AdditionalPaid;
+use App\Models\AdditionalUnPaid;
+use DataTables;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\Snappy\Facades\SnappyPdf;
+use App\Models\Setting;
 
 class MyProfileController extends Controller
 {
@@ -212,4 +223,74 @@ class MyProfileController extends Controller
 	
 		return redirect()->back()->with('message', 'Records updated successfully.');	
 	}   
+
+
+	public function myPayslip() {
+		$data = PayrollAmount::where('status', 1)->where('user_id', auth()->user()->id)->get();
+
+		$settings = Setting::find(1);
+
+		return view('employee.profile.slip', compact('data', 'settings'));
+	}
+
+
+	public function downloadPdf(Request $request) {
+		$settings = Setting::find(1);
+
+	    $zip = new \ZipArchive();
+	    $tempFilename = tempnam(sys_get_temp_dir(), 'pdf_zip_');
+    	$zip->open($tempFilename, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+		$data = PayrollAmount::where('id', $request->id)->first();
+
+		$empId = $data->user_id;
+		// $allApprovedData = PayrollAmount::where('start_date', '>=', date('Y-01-01'))
+		// 	->where('end_date', '<=', date('Y-12-31'))
+		// 	->where('status', 1)->where('user_id', $empIds[$i])
+		// 	->get();
+		
+		$parameters = [
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'approval_number' => $request->approval_number,
+            'data' => $data,
+            // 'allApprovedData' => $allApprovedData,
+            'settings' => $settings
+        ];
+
+	    $pdf = SnappyPdf::loadView('client.pdf.salary', $parameters);
+	    $pdf->setOption('margin-top', 10);
+	    $pdf->setOption('margin-right', 10);
+	    $pdf->setOption('margin-bottom', 10);
+	    $pdf->setOption('margin-left', 10);
+
+	    $filename = 'Salary_Slip_' . str_replace(' ', '_', ucfirst($data->user->name)) . '.pdf';
+	    $zip->addFromString($filename, $pdf->output());
+	
+    	
+    	// Add Direct Deposit PDF to the zip
+    	$pdf2 = $this->generateDirectDepositPdf($request, $empId);
+	    $zip->addFromString('Direct_Deposit_' . date('Y-m-d') . '.pdf', $pdf2->output());
+
+	    $zip->close();
+   
+    	return response()->download($tempFilename, 'employees.zip')->deleteFileAfterSend(true);
+	}
+
+	private function generateDirectDepositPdf(Request $request, $empId) {
+		$settings = Setting::find(1);
+	    $data2 = PayrollAmount::where('id', $empId)->get();
+
+	    $parameters = [
+	    	'data' => $data2,
+	    	'settings' => $settings
+	    ];
+	    $pdf = SnappyPdf::loadView('client.pdf.deposit', $parameters);
+	    $pdf->setOption('margin-top', 10);
+	    $pdf->setOption('margin-right', 10);
+	    $pdf->setOption('margin-bottom', 10);
+	    $pdf->setOption('margin-left', 10);
+
+	    return $pdf;
+	}
 }

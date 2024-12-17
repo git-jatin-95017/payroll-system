@@ -141,6 +141,10 @@ Route::prefix('employee')->group(function () {
 	Route::resource('holidays', HolidayController::class);//->middleware([CheckPunchin::class]);	
 
 	Route::resource('emp-my-profile', MyProfileController::class);//->middleware([CheckPunchin::class]);
+
+	Route::get('my-payslip', [MyProfileController::class, 'myPayslip'])->name('my.payslip');
+
+	Route::get('download-pdf', [MyProfileController::class, 'downloadPdf'])->name('download.pdf');
 });
 
 Route::resource('edit-my-profile', ProfileController::class);

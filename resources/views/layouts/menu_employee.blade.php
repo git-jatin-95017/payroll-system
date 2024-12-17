@@ -23,6 +23,15 @@
 			</a>
     	</li>
 
+    	<li>
+			<a href="{{ route('my.payslip') }}">
+				<i class="mdi mdi-account"></i>
+				<span class="hide-menu">
+					Salary Slips
+				</span>
+			</a>
+		</li>
+
 	@endif
 
 	@if(auth()->user()->role_id == 3)

@@ -126,6 +126,18 @@
 									@endif
 								</div>
 							</div>
+							<div class="form-group">
+								<label for="education_levy_amt_5" class="col-sm-8 control-label">Education Levy (5%)</label>
+								<div class="col-md-6">
+									<input id="education_levy_amt_5" type="text" class="form-control {{ $errors->has('education_levy_amt_5') ? ' is-invalid' : '' }}" name="education_levy_amt_5" value="{{ $settings->education_levy_amt_5 }}">
+
+									@if ($errors->has('education_levy_amt_5'))
+										<span class="text-danger">
+											{{ $errors->first('education_levy_amt_5') }}
+										</span>
+									@endif
+								</div>
+							</div>
 						</div>
 						<div class="card-footer">
 							<button type="submit" class="btn btn-primary">Submit</button>
