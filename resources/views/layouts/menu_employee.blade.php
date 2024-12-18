@@ -27,7 +27,7 @@
 			<a href="{{ route('my.payslip') }}">
 				<i class="mdi mdi-account"></i>
 				<span class="hide-menu">
-					Salary Slips
+					Pay Slip
 				</span>
 			</a>
 		</li>
