@@ -144,7 +144,7 @@ Route::prefix('employee')->group(function () {
 
 	Route::get('my-payslip', [MyProfileController::class, 'myPayslip'])->name('my.payslip');
 
-	Route::get('download-pdf', [MyProfileController::class, 'downloadPdf'])->name('download.pdf');
+	Route::get('download-pdf', [MyProfileController::class, 'downloadPdf'])->name('empdownload.pdf');
 });
 
 Route::resource('edit-my-profile', ProfileController::class);

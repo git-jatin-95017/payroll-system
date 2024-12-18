@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.employee')
 
 @section('content')
 <div class="row page-titles">
@@ -223,7 +223,7 @@
                                             ?>                                                
                                             <td>${{number_format($employeePay, 2)}}</td>
                                             <td>
-                                            	<a href="{{ route('download.pdf') }}?id={{$row->id}}" class="btn btn-primary mr-2">
+                                            	<a href="{{ route('empdownload.pdf') }}?id={{$row->id}}" class="btn btn-primary mr-2">
                                             		Download PDF
                                             	</a>
                                             </td>                                                 

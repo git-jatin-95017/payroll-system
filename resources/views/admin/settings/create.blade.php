@@ -91,7 +91,7 @@
 							</div>
 
 							<div class="form-group">
-								<label for="social_security" class="col-sm-8 control-label">Social Security</label>
+								<label for="social_security" class="col-sm-8 control-label">Social Security (Employee)</label>
 								<div class="col-md-6">
 									<input id="social_security" type="text" class="form-control {{ $errors->has('social_security') ? ' is-invalid' : '' }}" name="social_security" value="{{ $settings->social_security }}">
 
@@ -127,7 +127,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="education_levy_amt_5" class="col-sm-8 control-label">Education Levy (5%)</label>
+								<label for="education_levy_amt_5" class="col-sm-8 control-label">Education Levy</label>
 								<div class="col-md-6">
 									<input id="education_levy_amt_5" type="text" class="form-control {{ $errors->has('education_levy_amt_5') ? ' is-invalid' : '' }}" name="education_levy_amt_5" value="{{ $settings->education_levy_amt_5 }}">
 
