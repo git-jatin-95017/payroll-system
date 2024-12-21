@@ -130,20 +130,22 @@
 														<td>
 															<?php
 																//Last leave balance
-														        $isLastPayroll = \App\Models\PayrollAmount::where('user_id',  $employee->id)
-															        ->where(function ($query) use ($from, $to) {
-																        // Exclude records where both start_date and end_date are within the specified date range
-																        $query->whereNotBetween('start_date', [$from, $to])
-																              ->whereNotBetween('end_date', [$from, $to]);
-																    })
-															        ->orderBy('id', 'DESC')
-															        ->first();															        
+														        // $isLastPayroll = \App\Models\PayrollAmount::where('user_id',  $employee->id)
+															    //     ->where(function ($query) use ($from, $to) {
+																//         // Exclude records where both start_date and end_date are within the specified date range
+																//         $query->whereNotBetween('start_date', [$from, $to])
+																//               ->whereNotBetween('end_date', [$from, $to]);
+																//     })
+															    //     ->orderBy('id', 'DESC')
+															    //     ->first();															        
 															?>
 															@foreach($empLeavesPaid as $key =>$value)
 																<?php
 																	$employeeID = $employee->id;
 
 														            $leaveID = $value->leave->id;
+
+																	$carryOverAmount = $value->leave->carry_over_amount * 8 ?? 0;
 
 														            $year = date('Y');
 														            
@@ -167,12 +169,14 @@
 														                $totalday = (float)$leavetypes->leave_day - (float)$daysTakenval;
 														            }
 														            
-														            $pastLeaveBalancer = 0;
+														            /*
+																	$pastLeaveBalancer = 0;
 														            if (!empty($isLastPayroll)) {
 														            	$paidLdata = $isLastPayroll->additionalPaids()->select('amount')->where('user_id', $employeeID)->where('leave_type_id', $value->leave_type_id)->first();
 
 																		$pastLeaveBalancer = (!empty($paidLdata->amount) ? $paidLdata->amount: 0);
 														            }
+																	*/
 																?>
 
 																<?php
@@ -186,14 +190,21 @@
 																	}
 
 																	if (date('m-d') == '08-29') {
-																		$amountPaidOff  += 	$leavetypes->carry_over_amount;
+																		// $amountPaidOff  += 	$leavetypes->carry_over_amount;
 																	}
 																	
+																	/*
 																	if (empty($amountPaidOff)) {
 																		if ($pastLeaveBalancer > 0) {
 																			$amountPaidOff = $pastLeaveBalancer;
 																		}
 																	}
+																	*/
+
+																	$runningBalance = \App\Models\LeaveBalance::where('user_id', $employeeID)
+																		->where('leave_type_id', $value->leave_type_id)
+																		->where('leave_year', date('Y', strtotime($isDataExist->start_date)))
+																		->first();
 																?>
 																<p>
 																	<label class="cursor-pointer" data-toggle="collapse" href="#bonus{{$employee->id}}{{$key}}" role="button" aria-expanded="false" aria-controls="bonus{{$employee->id}}{{$key}}">
@@ -206,7 +217,7 @@
 																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_type_id]">
 																		<input type="hidden" id="paid-leave-balnce-{{$employee->id}}-{{$value->leave->id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_balance]">
 																		<input type="hidden" id="paid-time-off-{{$employee->id}}" value="0" name="input[{{$employee->id}}][paid_time_off]">
-																		<input type="text" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" value="{{$amountPaidOff}}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totalday*8; ?>')" min=0>
+																		<input type="text" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" value="{{$amountPaidOff > 0 ? $amountPaidOff : $runningBalance->amount ?? 0;}}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totalday*8; ?>', '<?php echo $carryOverAmount; ?>')" min=0>
 																		<br>
 																		Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) : 0}}</b>hrs<br>
 																		Leave Balance | <b class="leave-balance-all" id="balance-{{$employee->id}}-{{$value->leave->id}}">{{$totalday*8}}</b>hrs<br>
@@ -251,6 +262,8 @@
 
 														            $leaveID = $value->leave->id;
 
+																	$carryOverAmount = $value->leave->carry_over_amount * 8 ?? 0;
+
 														            $year = date('Y');
 														            
 														            $daysTaken = \App\Models\AssignLeave::where('emp_id', $employeeID)->where('type_id', $leaveID)->where('dateyear', $year)->first();
@@ -281,6 +294,11 @@
 
 																		$amountUnPaidOff = !empty($arrTemp->amount) ? $arrTemp->amount: 0;
 																	}
+
+																	$runningBalance = \App\Models\LeaveBalance::where('user_id', $employeeID)
+																		->where('leave_type_id', $value->leave_type_id)
+																		->where('leave_year', date('Y', strtotime($isDataExist->start_date)))
+																		->first();
 																?>
 																<p>
 																	<label class="cursor-pointer" data-toggle="collapse" href="#unpaid{{$employee->id}}{{$key}}" role="button" aria-expanded="false" aria-controls="unpaid{{$employee->id}}{{$key}}">
@@ -293,8 +311,8 @@
 																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings_unpaid][{{$key }}][leave_type_id_unpaid]">
 																		<input type="hidden" id="unpaid-leave-balnce-{{$employee->id}}-{{$value->leave->id}}" name="input[{{$employee->id}}][earnings_unpaid][{{$key }}][leave_balance_unpaid]">
 
-																		<input min=0 type="number" name="input[{{$employee->id}}][earnings_unpaid][{{$key }}][amount_unpaid]" min="0" class="form-control fixed-input leave-hrs-unpaid" value="{{$amountUnPaidOff}}"
-																		onchange="calculateUnpaidOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totaldayunpaid*8; ?>')"
+																		<input min=0 type="number" name="input[{{$employee->id}}][earnings_unpaid][{{$key }}][amount_unpaid]" min="0" class="form-control fixed-input leave-hrs-unpaid" value="{{$amountUnPaidOff > 0 ? $amountUnPaidOff : $runningBalance->amount ?? 0}}"
+																		onchange="calculateUnpaidOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totaldayunpaid*8; ?>', '<?php echo $carryOverAmount; ?>')"
 																		>
 																		<br>
 																		Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) : 0}}</b><br>
@@ -358,12 +376,12 @@
 		$('.leave-hrs-unpaid').each(function() { $(this).trigger('change');})
 	});
 
-	function calculateOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary, leave_day_terms, leave_id, leave_balance) {
+	function calculateOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary, leave_day_terms, leave_id, leave_balance, carry_over_amount) {
 		// console.log(obj.value, emp_id, pay_type, row_key, rate_per_hour, salary);
 		
 		let initial_enter_val = obj.value;
 
-		let final_balance = leave_balance - initial_enter_val;
+		let final_balance = (leave_balance - initial_enter_val ) + Number(carry_over_amount);
 
 		var focusedRow = $(obj).closest('.row-tr-js');
 
@@ -428,9 +446,9 @@
 		form.submit();
 	});
 
-	function calculateUnpaidOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary, leave_day_terms, leave_id, leave_balance) {		
+	function calculateUnpaidOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary, leave_day_terms, leave_id, leave_balance, carry_ovr_amnt) {		
 		let initial_enter_val = obj.value;
-		let final_balance = leave_balance - initial_enter_val;
+		let final_balance = (leave_balance - initial_enter_val) + Number(carry_ovr_amnt);
 
 		var focusedRow = $(obj).closest('.row-tr-js');
 

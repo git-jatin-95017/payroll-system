@@ -8,6 +8,7 @@ use App\Models\PayrollSheet;
 use App\Models\User;
 use App\Models\Attendance;
 use App\Models\LeaveType;
+use App\Models\LeaveBalance;
 use App\Models\PayrollAmount;
 use App\Models\AdditionalEarning;
 use App\Models\AdditionalPaid;
@@ -83,6 +84,7 @@ class RunPayrollController extends Controller
 					$social_security_amt = $v['social_security_amt'] ?? $settings->social_security_amt;
 					$social_security_employer_amt = $v['social_security_employer_amt'] ?? $settings->social_security_employer_amt;
 					$education_levy_amt = $v['education_levy_amt'] ?? $settings->education_levy_amt;
+					$education_levy_amt_5 = $v['education_levy_amt_5'] ?? $settings->education_levy_amt_5;
 
 					$payroll->update([
 						'user_id' => $k,
@@ -107,7 +109,8 @@ class RunPayrollController extends Controller
 						'medical_gre_60' => $medical_gre_60_amt,
 						'social_security' => $social_security_amt,
 						'social_security_employer' => $social_security_employer_amt,
-						'education_levy' => $education_levy_amt
+						'education_levy' => $education_levy_amt,
+						'education_levy_amt_5' => $education_levy_amt_5
 					]);
 				} else {
 					$medical_less_60_amt = $v['medical_less_60_amt'] ?? $settings->medical_less_60_amt;
@@ -115,6 +118,7 @@ class RunPayrollController extends Controller
 					$social_security_amt = $v['social_security_amt'] ?? $settings->social_security_amt;
 					$social_security_employer_amt = $v['social_security_employer_amt'] ?? $settings->social_security_employer_amt;
 					$education_levy_amt = $v['education_levy_amt'] ?? $settings->education_levy_amt;
+					$education_levy_amt_5 = $v['education_levy_amt_5'] ?? $settings->education_levy_amt_5;
 
 					$payroll = PayrollAmount::create([
 						'user_id' => $k,
@@ -139,7 +143,8 @@ class RunPayrollController extends Controller
 						'medical_gre_60' => $medical_gre_60_amt,
 						'social_security' => $social_security_amt,
 						'social_security_employer' => $social_security_employer_amt,
-						'education_levy' => $education_levy_amt
+						'education_levy' => $education_levy_amt,
+						'education_levy_amt_5' => $education_levy_amt_5
 					]);
 				}
 
@@ -219,7 +224,20 @@ class RunPayrollController extends Controller
 									'leave_type_id' => $value['leave_type_id'],
 									'amount' => (float) $value['amount'],							
 									'leave_balance' => (float) $value['leave_balance'],							
-								]);				
+								]);		
+								
+								LeaveBalance::updateOrCreate(
+									[
+										'user_id' => $payroll->user_id,
+										'leave_type_id' => $value['leave_type_id'],
+										'leave_year' => date('Y', strtotime($payroll->start_date))
+									],
+									[
+										'balance' => $value['leave_balance'],
+										'amount' => (float) $value['amount'],
+										'updated_at' => now() // Optional: Only if you want to explicitly set the update time
+									]
+								);
 
 								$newGross += (float) $value['amount'];
 							// }
@@ -237,6 +255,19 @@ class RunPayrollController extends Controller
 								'amount' => (float) $value['amount_unpaid'],	//hrs actual field name wrong in db by mistake			
 								'leave_balance' => (float) $value['leave_balance_unpaid'],				
 							]);
+
+							LeaveBalance::updateOrCreate(
+								[
+									'user_id' => $payroll->user_id,
+									'leave_type_id' => $value['leave_type_id_unpaid'],
+									'leave_year' => date('Y', strtotime($payroll->start_date))
+								],
+								[
+									'balance' => $value['leave_balance_unpaid'],
+									'amount' => (float) $value['amount_unpaid'],
+									'updated_at' => now() // Optional: Only if you want to explicitly set the update time
+								]
+							);
 						}
 					}
 

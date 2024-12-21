@@ -97,11 +97,12 @@
 												$dotCalc = $isDataExist->doubl_overtime_calc;
 												$edu_levy = $isDataExist->edu_levy;
 
-												$medical_less_60_amt = $isDataExist->medical_less_60_amt ?? $settings->medical_less_60;
-												$medical_gre_60_amt = $isDataExist->medical_gre_60_amt ?? $settings->medical_gre_60;
-												$social_security_amt = $isDataExist->social_security_amt ?? $settings->social_security;
-												$social_security_employer_amt = $isDataExist->social_security_employer_amt ?? $settings->social_security_employer;
-												$education_levy_amt = $isDataExist->education_levy_amt ?? $settings->education_levy;
+												$medical_less_60_amt = $isDataExist->medical_less_60 ?? $settings->medical_less_60;
+												$medical_gre_60_amt = $isDataExist->medical_gre_60 ?? $settings->medical_gre_60;
+												$social_security_amt = $isDataExist->social_security ?? $settings->social_security;
+												$social_security_employer_amt = $isDataExist->social_security_employer ?? $settings->social_security_employer;
+												$education_levy_amt = $isDataExist->education_levy ?? $settings->education_levy;
+												$education_levy_amt_5 = $isDataExist->education_levy_amt_5 ?? $settings->education_levy_amt_5;
 											} else {
 												$id = NULL;
 												$totalHours = collect($timeCardData)->sum(function ($row) {
@@ -126,6 +127,7 @@
 												$social_security_amt = $settings->social_security;
 												$social_security_employer_amt = $settings->social_security_employer;
 												$education_levy_amt = $settings->education_levy;
+												$education_levy_amt_5 = $settings->education_levy_amt_5;
 											}
 
 
@@ -306,6 +308,7 @@
 												    	<input type="hidden" class="social_security_amthidden" name="input[{{$employee->id}}][social_security_amt]" value="{{ $social_security_amt }}">	
 												    	<input type="hidden" class="social_security_employer_amthidden" name="input[{{$employee->id}}][social_security_employer_amt]" value="{{ $social_security_employer_amt }}">	
 												    	<input type="hidden" class="education_levy_amthidden" name="input[{{$employee->id}}][education_levy_amt]" value="{{ $education_levy_amt }}">	
+														<input type="hidden" class="education_levy_amt_5hidden" name="input[{{$employee->id}}][education_levy_amt_5]" value="{{ $education_levy_amt_5 }}">	
 													</td>
 												</tr>
 												<tr>
@@ -397,7 +400,8 @@
 		var social_security_amt  = parseFloat(focusedRow.find(".social_security_amthidden").val());
 		var social_security_employer_amt  = parseFloat(focusedRow.find(".social_security_employer_amthidden").val());
 		var education_levy_amt  = parseFloat(focusedRow.find(".education_levy_amthidden").val());
-		console.log(medical_less_60_amt,medical_gre_60_amt,social_security_amt,social_security_employer_amt,education_levy_amt);
+		var education_levy_amt_5 = parseFloat(focusedRow.find(".education_levy_amt_5hidden").val());
+		console.log(medical_less_60_amt,medical_gre_60_amt,social_security_amt,social_security_employer_amt,education_levy_amt, education_levy_amt_5);
 		//Caluclate Additonal Hours
 		var additionalHrsEarnings = 0;
 		var additionalHrsDeductions = 0;
@@ -460,7 +464,7 @@
 
 	  		social_security = ( gross>1500 ? ((1500*social_security_amt) / 100) : (gross*social_security_amt) / 100 );  
 	  		social_security_employer = ( gross>1500 ? ((1500*social_security_employer_amt) / 100) : (gross*social_security_employer_amt) / 100 );  
-	  		education_lvey = (gross<=125?0:(gross>1154?( ((1154-125)*education_levy_amt) / 100)+( ((gross-1154)*5) / 100 ):( ((gross-125)*education_levy_amt) /100)));
+	  		education_lvey = (gross<=125?0:(gross>1154?( ((1154-125)*education_levy_amt) / 100)+( ((gross-1154)*education_levy_amt_5) / 100 ):( ((gross-125)*education_levy_amt) /100)));
 	  		total_deductions = medical_benefits + social_security + education_lvey;
 	  		net_pay = gross - total_deductions;
 	  	} else if (pay_type == 'bi-weekly') {
@@ -480,7 +484,7 @@
 	  			social_security = ( gross>3000 ? ((3000*social_security_amt) / 100) : (gross*social_security_amt) / 100 ); 
 	  			social_security_employer = ( gross>3000 ? ((3000*social_security_employer_amt) / 100) : (gross*social_security_employer_amt) / 100 ); 
 	  		}
-	  		education_lvey = (gross<=250?0:(gross>2308?(((2308-250)*education_levy_amt)/100)+(((gross-2308)*5)/100):(((gross-250)*education_levy_amt)/100)));
+	  		education_lvey = (gross<=250?0:(gross>2308?(((2308-250)*education_levy_amt)/100)+(((gross-2308)*education_levy_amt_5)/100):(((gross-250)*education_levy_amt)/100)));
 	  		total_deductions = medical_benefits + social_security + education_lvey;
 	  		net_pay = gross - total_deductions;
 	  		if (days <= 7) {
@@ -497,7 +501,7 @@
 	  		}
 	  		social_security = ( gross>3000 ? ((3000*social_security_amt) / 100) : (gross*social_security_amt) / 100 ); 
 	  		social_security_employer = ( gross>3000 ? ((3000*social_security_employer_amt) / 100) : (gross*social_security_employer_amt) / 100 ); 
-	  		education_lvey = (gross<=125?0:(gross>2500?(((2500-270.84)*education_levy_amt)/100)+(((gross-2500)*5)/100):(((gross-270.84)*education_levy_amt)/100)));
+	  		education_lvey = (gross<=125?0:(gross>2500?(((2500-270.84)*education_levy_amt)/100)+(((gross-2500)*education_levy_amt_5)/100):(((gross-270.84)*education_levy_amt)/100)));
 	  		total_deductions = medical_benefits + social_security + education_lvey;
 	  		net_pay = gross - total_deductions;
 	  	} else if (pay_type == 'monthly') {
@@ -510,7 +514,7 @@
 	  		}
 	  		social_security = ( gross>6500 ? ((6500*social_security_amt) / 100) : (gross*social_security_amt) / 100 ); 
 	  		social_security_employer = ( gross>6500 ? ((6500*social_security_employer_amt) / 100) : (gross*social_security_employer_amt) / 100 ); 
-	  		education_lvey = (gross<=125?0:(gross>5000?(((5000-541.67)*education_levy_amt)/100)+(((gross-5000)*5)/100):(((gross-541.67)*education_levy_amt)/100)));
+	  		education_lvey = (gross<=125?0:(gross>5000?(((5000-541.67)*education_levy_amt)/100)+(((gross-5000)*education_levy_amt_5)/100):(((gross-541.67)*education_levy_amt)/100)));
 	  		total_deductions = medical_benefits + social_security + education_lvey;
 	  		net_pay = gross - total_deductions;
 	  	}

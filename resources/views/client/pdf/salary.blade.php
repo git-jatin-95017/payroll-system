@@ -74,6 +74,7 @@
     $social_security_amt = $data->social_security ?? $settings->social_security;
     $social_security_employer_amt = $data->social_security_employer ?? $settings->social_security_employer;
     $education_levy_amt = $data->education_levy ?? $settings->education_levy;
+    $education_levy_amt_5 = $data->education_levy_amt_5 > 0 ? $data->education_levy_amt_5 : $settings->education_levy_amt_5;
 
     $totalEmployeePay =0; 
     $totalTaxes =0; 
@@ -133,7 +134,7 @@
 
         $social_security = ( $gross>1500 ? ((1500*$social_security_amt) / 100) : ($gross*$social_security_amt) / 100 );  
         $social_security_employer = ( $gross>1500 ? ((1500*$social_security_employer_amt) / 100) : ($gross*$social_security_employer_amt) / 100 );  
-        $education_lvey = ($gross<=125?0:($gross>1154?( ((1154-125)*$education_levy_amt) / 100)+( (($gross-1154)*5) / 100 ):( (($gross-125)*$education_levy_amt) /100)));
+        $education_lvey = ($gross<=125?0:($gross>1154?( ((1154-125)*$education_levy_amt) / 100)+( (($gross-1154)*$education_levy_amt_5) / 100 ):( (($gross-125)*$education_levy_amt) /100)));
         $mbse_deductions = $medical_benefits + $social_security + $education_lvey;
         $net_pay = $gross - $mbse_deductions;
     } else if ($pay_type == 'bi-weekly') {
@@ -153,7 +154,7 @@
             $social_security = ( $gross>3000 ? ((3000*$social_security_amt) / 100) : ($gross*$social_security_amt) / 100 ); 
             $social_security_employer = ( $gross>3000 ? ((3000*$social_security_employer_amt) / 100) : ($gross*$social_security_employer_amt) / 100 ); 
         }
-        $education_lvey = ($gross<=250?0:($gross>2308?(((2308-250)*$education_levy_amt)/100)+((($gross-2308)*5)/100):((($gross-250)*$education_levy_amt)/100)));
+        $education_lvey = ($gross<=250?0:($gross>2308?(((2308-250)*$education_levy_amt)/100)+((($gross-2308)*$education_levy_amt_5)/100):((($gross-250)*$education_levy_amt)/100)));
         $mbse_deductions = $medical_benefits + $social_security + $education_lvey;
         $net_pay = $gross - $mbse_deductions;
         if ($days <= 7) {
@@ -170,7 +171,7 @@
         }
         $social_security = ( $gross>3000 ? ((3000*$social_security_amt) / 100) : ($gross*$social_security_amt) / 100 ); 
         $social_security_employer = ( $gross>3000 ? ((3000*$social_security_employer_amt) / 100) : ($gross*$social_security_employer_amt) / 100 ); 
-        $education_lvey = ($gross<=125?0:($gross>2500?(((2500-270.84)*$education_levy_amt)/100)+((($gross-2500)*5)/100):((($gross-270.84)*$education_levy_amt)/100)));
+        $education_lvey = ($gross<=125?0:($gross>2500?(((2500-270.84)*$education_levy_amt)/100)+((($gross-2500)*$education_levy_amt_5)/100):((($gross-270.84)*$education_levy_amt)/100)));
         $mbse_deductions = $medical_benefits + $social_security + $education_lvey;
         $net_pay = $gross - $mbse_deductions;
     } else if ($pay_type == 'monthly') {
@@ -183,7 +184,7 @@
         }
         $social_security = ( $gross>6500 ? ((6500*$social_security_amt) / 100) : ($gross*$social_security_amt) / 100 ); 
         $social_security_employer = ( $gross>6500 ? ((6500*$social_security_employer_amt) / 100) : ($gross*$social_security_employer_amt) / 100 ); 
-        $education_lvey = ($gross<=125?0:($gross>5000?(((5000-541.67)*$education_levy_amt)/100)+((($gross-5000)*5)/100):((($gross-541.67)*$education_levy_amt)/100)));
+        $education_lvey = ($gross<=125?0:($gross>5000?(((5000-541.67)*$education_levy_amt)/100)+((($gross-5000)*$education_levy_amt_5)/100):((($gross-541.67)*$education_levy_amt)/100)));
         $mbse_deductions = $medical_benefits + $social_security + $education_lvey;
         $net_pay = $gross - $mbse_deductions;
     }
@@ -398,7 +399,7 @@
         @endif
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;color: #000;">Net Pay </td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($grossFinal-$deductions, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($grossFinal-$deductions-$totalTaxes, 2)}}</td>
         </tr>
     </thead>
 </table>

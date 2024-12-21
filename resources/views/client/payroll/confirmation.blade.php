@@ -15,7 +15,7 @@
         $social_security_amt = $row->social_security ?? $settings->social_security;
         $social_security_employer_amt = $row->social_security_employer ?? $settings->social_security_employer;
         $education_levy_amt = $row->education_levy ?? $settings->education_levy;
-        $education_levy_amt_5 = $row->education_levy ?? $settings->education_levy_5;
+        $education_levy_amt_5 = $row->education_levy_amt_5 > 0 ? $row->education_levy_amt_5 : $settings->education_levy_amt_5;
 
         $grossT =0;
         $employeePayT =0;
@@ -68,7 +68,7 @@
 
             $social_securityT = ( $grossT>1500 ? ((1500*$social_security_amt) / 100) : ($grossT*$social_security_amt) / 100 );  
             $social_securityT_employer = ( $grossT>1500 ? ((1500*$social_security_employer_amt) / 100) : ($grossT*$social_security_employer_amt) / 100 );  
-            $education_lveyT = ($grossT<=125?0:($grossT>1154?( ((1154-125)*$education_levy_amt) / 100)+( (($grossT-1154)*$education_levy_amt_5) / 100 ):( (($grossT-125)*$education_levy_amt) /100)));
+            $education_lveyT = ($grossT<=125?0: ($grossT>1154?( ((1154-125)*$education_levy_amt) / 100) + ( (($grossT-1154)*$education_levy_amt_5) / 100 ) : ( (($grossT-125)*$education_levy_amt) /100)));
             $mbse_deductions = $medical_benefitsT + $social_securityT + $education_lveyT;
             $net_pay = $grossT - $mbse_deductions;
         } else if ($pay_type == 'bi-weekly') {
@@ -281,7 +281,7 @@
                                                 $social_security_amt = $row->social_security ?? $settings->social_security;
                                                 $social_security_employer_amt = $row->social_security_employer ?? $settings->social_security_employer;
                                                 $education_levy_amt = $row->education_levy ?? $settings->education_levy;
-                                                $education_levy_amt_5 = $row->education_levy ?? $settings->education_levy_5;
+                                                $education_levy_amt_5 = $row->education_levy_amt_5 > 0 ? $row->education_levy_amt_5 : $settings->education_levy_amt_5;
 
                                                 $gross1 =0;
                                                 $gross1 = $row->gross + $row->paid_time_off;
@@ -444,7 +444,7 @@
                                                     $social_security_amt = $row->social_security ?? $settings->social_security;
                                                     $social_security_employer_amt = $row->social_security_employer ?? $settings->social_security_employer;
                                                     $education_levy_amt = $row->education_levy ?? $settings->education_levy;
-                                                    $education_levy_amt_5 = $row->education_levy ?? $settings->education_levy_5;
+                                                    $education_levy_amt_5 = $row->education_levy_amt_5 > 0 ? $row->education_levy_amt_5 : $settings->education_levy_amt_5;
 
                                                     $gross =0;
                                                     $employeePay =0;
@@ -631,7 +631,7 @@
                                                     $social_security_amt = $row->social_security ?? $settings->social_security;
                                                     $social_security_employer_amt = $row->social_security_employer ?? $settings->social_security_employer;
                                                     $education_levy_amt = $row->education_levy ?? $settings->education_levy;
-                                                    $education_levy_amt_5 = $row->education_levy ?? $settings->education_levy_5;
+                                                    $education_levy_amt_5 = $row->education_levy_amt_5 > 0 ? $row->education_levy_amt_5 : $settings->education_levy_amt_5;
 
                                                     $gross =0;
                                                     $employeePay =0;
