@@ -219,7 +219,7 @@
 																		<input type="hidden" id="paid-time-off-{{$employee->id}}" value="0" name="input[{{$employee->id}}][paid_time_off]">
 																		<input type="text" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" value="{{$amountPaidOff > 0 ? $amountPaidOff : $runningBalance->amount ?? 0;}}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totalday*8; ?>', '<?php echo $carryOverAmount; ?>')" min=0>
 																		<br>
-																		Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) : 0}}</b>hrs<br>
+																		Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) + $carryOverAmount: 0}}</b>hrs<br>
 																		Leave Balance | <b class="leave-balance-all" id="balance-{{$employee->id}}-{{$value->leave->id}}">{{$totalday*8}}</b>hrs<br>
 																		<br>
 
@@ -315,7 +315,7 @@
 																		onchange="calculateUnpaidOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totaldayunpaid*8; ?>', '<?php echo $carryOverAmount; ?>')"
 																		>
 																		<br>
-																		Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) : 0}}</b><br>
+																		Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) + $carryOverAmount : 0}}</b><br>
 
 																		Leave Balance | <b class="leave-balance-all-unpaids" id="balanceunpaid-{{$employee->id}}-{{$value->leave->id}}">{{$totaldayunpaid* 8}}</b>hrs<br><br>																
 																	</p>
