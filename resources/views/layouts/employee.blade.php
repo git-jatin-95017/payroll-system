@@ -194,7 +194,24 @@
 		reserved.
 	</footer>
 </div>
-
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Session Timeout</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>You have been inactive for a while. Do you want to stay logged in?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="logoutCancel" class="btn btn-secondary" data-bs-dismiss="modal">Stay Logged In</button>
+                <button type="button" id="logoutConfirm" class="btn btn-danger">Log Out</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- <script src="{{ asset('js/jquery.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script> -->
 <!-- <script src="{{ asset('js/responsive.bootstrap4.min.js') }}"></script> -->
@@ -215,5 +232,45 @@
 @yield('third_party_scripts')
 
 @stack('page_scripts')
+
+<script>
+    let logoutTimer, modalTimer;
+
+    // Reset the timers when user is active
+    function resetTimers() {
+        clearTimeout(logoutTimer);
+        clearTimeout(modalTimer);
+        logoutTimer = setTimeout(showLogoutModal, 5 * 60 * 1000); // 1 minute for testing
+    }
+
+    // Show the logout modal
+    function showLogoutModal() {
+        $('#logoutModal').modal('show'); // Show the Bootstrap modal using jQuery
+
+        modalTimer = setTimeout(() => {
+            logoutUser();
+        }, 30 * 1000); // Auto logout after 30 seconds
+    }
+
+    // Stay logged in
+    function stayLoggedIn() {
+        $('#logoutModal').modal('hide'); // Hide the modal
+        resetTimers();
+    }
+
+    // Logout the user
+    function logoutUser() {
+        window.location.href = '/logout'; // Ensure /logout is a GET route
+    }
+
+    // Attach event listeners
+    $(document).on('click keypress mousemove scroll touchstart', resetTimers);
+    $('#logoutCancel').on('click', stayLoggedIn);
+    $('#logoutConfirm').on('click', logoutUser);
+
+    // Initialize the timer
+    resetTimers();
+</script>
+
 </body>
 </html>

@@ -759,7 +759,7 @@
                                                         ${{number_format($employeePay, 2)}}
                                                     </td>
                                                     <td>${{number_format($mbse_deductions, 2)}}</td>
-                                                    <td>${{number_format($row->security_employer, 2)}}</td>
+                                                    <td>${{number_format($row->security_employer+$medical_benefits, 2)}}</td>
                                                     <td>${{number_format($employeePay + $mbse_deductions + $row->security_employer, 2)}}</td>
                                                 </tr>  
                                             @endforeach       
