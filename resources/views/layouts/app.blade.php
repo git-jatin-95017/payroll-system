@@ -59,36 +59,6 @@
                         <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="mdi mdi-menu"></i></a> </li>
                         <li class="nav-item m-l-10">
                             <a class="nav-link sidebartoggler hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="ti-menu"></i></a> </li>
-                        <!-- <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-muted text-muted waves-effect waves-dark" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-bell"></i>
-                                <div class="notify">
-								<span class="heartbit">
-								</span> <span class="point"></span>
-							</div>
-                            </a>
-                            <div class="dropdown-menu mailbox scale-up-left">
-                                <ul>
-                                    <li>
-                                        <div class="drop-title">Notifications</div>
-                                    </li>
-                                    <li>
-                                        <div class="message-center">
-                                            <a href="#">
-                                                <div class="btn btn-danger btn-circle"><i class="fa fa-link"></i></div>
-                                                <div class="mail-contnet">
-                                                    <h5>Rakesh</h5> <span class="mail-desc">date</span> </div>
-                                            </a>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link text-center" href="javascript:void(0);">
-											<strong>Check all notifications</strong>
-											<i class="fa fa-angle-right"></i>
-										</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li> -->
                     </ul>
                     <ul class="navbar-nav my-lg-0">
                         <li class="nav-item dropdown">
@@ -143,48 +113,6 @@
         </header>
 
 
-	<!-- <header class="topbar">
-		<nav class="main-header navbar navbar-expand navbar-white navbar-light">
-		<ul class="navbar-nav">
-			<li class="nav-item">
-				<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-			</li>
-		</ul>
-
-		<ul class="navbar-nav ml-auto">
-			<li class="nav-item dropdown user-menu">
-				<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-					<img src="/img/logo3.png"
-						 class="user-image img-circle elevation-2" alt="User Image">
-					<span class="d-none d-md-inline">Welcome {{ ucwords(Auth::user()->name) }}</span>
-				</a>
-				<ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-					<li class="user-header bg-primary">
-						<img src="/img/logo3.jpg"
-							 class="img-circle elevation-2" style="object-fit: contain;"
-							 alt="User Image">
-						<p>
-							{{ ucwords(Auth::user()->name) }}
-							<small>Member since {{ Auth::user()->created_at->format('M. Y') }}</small>
-						</p>
-					</li>
-					<li class="user-footer">
-						@if(Auth::user()->role_id == 1)
-						<a href="{{ route('edit-my-profile.edit', Auth::user()->id) }}" class="btn btn-default btn-flat">Profile</a>
-						@endif
-						<a href="#" class="btn btn-default btn-flat float-right"
-						   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-							Sign out
-						</a>
-						<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-							@csrf
-						</form>
-					</li>
-				</ul>
-			</li>
-		</ul>
-		</nav>
-	</header> -->
 
 	<!-- Left side column. contains the logo and sidebar -->
 @include('layouts.sidebar')

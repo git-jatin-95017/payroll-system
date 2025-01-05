@@ -25,27 +25,6 @@
 				</li>
 			</ul>
 		</li>
-		<!-- <li class="<?php //echo $page_name == "attendance" ? 'active' : ''; ?>">
-			<a href="{{ route('attendance.index') }}">
-				<i class="fa fa-calendar nav-icon"></i>
-				<span class="hide-menu">Attendance</span>
-			</a>
-		</li>
-		<li>
-			<a href="#" class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
-				<i class="mdi mdi-cash"></i>
-				<span class="hide-menu">
-					Salaries
-				</span>
-			</a>
-			<ul aria-expanded="false" class="collapse ">				
-				<li>
-					<a href="{{ route('admin.list.step1') }}">
-						<span class="hide-menu"> &nbsp;Run Payroll</span>
-					</a>
-				</li>
-			</ul>
-		</li> -->
 		<li>
 			<a href="{{ route('settings.create', auth()->user()->id) }}">
 				<i class="mdi mdi-settings"></i>

@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.0.2",
         "barryvdh/laravel-snappy": "^1.0",
+        "blade-ui-kit/blade-heroicons": "^2.5",
         "guzzlehttp/guzzle": "^7.2",
         "h4cc/wkhtmltopdf-amd64": "0.12.x",
         "laravel/framework": "^9.19",
@@ -14,6 +15,7 @@
         "laravel/tinker": "^2.7",
         "laravel/ui": "^3.4",
         "maatwebsite/excel": "^3.1",
+        "mallardduck/blade-boxicons": "^2.4",
         "psr/simple-cache": "^2.0",
         "yajra/laravel-datatables": "^9.0",
         "yajra/laravel-datatables-oracle": "^10.0"
