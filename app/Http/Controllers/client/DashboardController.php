@@ -50,7 +50,7 @@ class DashboardController extends Controller
 		$countSts 	= 0;
 		$countSms 	= 0;
 
-		return view('admin.dashboard.index', compact(
+		return view('client.dashboard.index', compact(
 			'countLc',
 			'countHc',
 			'countEx',
