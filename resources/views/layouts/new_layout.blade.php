@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ config('app.name') }}</title>
+    <!-- Add CSRF Token Meta Tag -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     @yield('third_party_stylesheets')
     @stack('page_css')
@@ -34,7 +36,13 @@
         <span class="small-logo">S!M</span>
     </div>
     <div id="left-menu" class="d-flex flex-column">
-        @include('layouts.side_nav')
+        @if(auth()->user()->role_id == 1)
+            @include('layouts.admin_sidebar_new')
+        @elseif(auth()->user()->role_id == 2)
+            @include('layouts.client_sidebar_new')    
+        @else
+            @include('layouts.employee_sidebar_new')
+        @endif
     </div>
 
 
