@@ -2,7 +2,7 @@
 	<div class="sb-menu-h pb-3">
 		<span>Menu</span>
 	</div>
-	<ul>
+	<ul class="main-navigation">
 		@if(auth()->user()->role_id == 2)
 		<li class="active">
 			<a href="{{ route('client.dashboard') }}">
@@ -52,10 +52,9 @@
 			</ul>
 		</li>
 		@endif
-		
 	</ul>
 </div>
-<div class="bottom-nav mt-auto">
+<div class="bottom-nav auto">
 	<ul>
 		<li>
 			<a href="/logout">

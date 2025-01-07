@@ -78,6 +78,10 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+
     @yield('third_party_scripts')
 
     <script>
@@ -94,6 +98,23 @@
             $('#logo .big-logo').toggle('300');
             $('#logo .small-logo').toggle('300');
             $('#logo').toggleClass('p-0 pl-1');
+        });
+
+        $('#left-menu li.has-sub > a').click(function () {
+            var _this = $(this).parent();
+
+            _this.find('ul').toggleClass('open');
+            $(this).closest('li').toggleClass('rotate');
+
+            _this.closest('#left-menu').find('.open').not(_this.find('ul')).removeClass('open');
+            _this.closest('#left-menu').find('.rotate').not($(this).closest('li')).removeClass('rotate');
+            _this.closest('#left-menu').find('ul').css('height', 0);
+
+            if (_this.find('ul').hasClass('open')) {
+                const height = 47;
+                var count_submenu_li = _this.find('ul > li').length;
+                _this.find('ul').css('height', height * count_submenu_li + 'px');
+            }
         });
     </script>
     @stack('page_scripts')
