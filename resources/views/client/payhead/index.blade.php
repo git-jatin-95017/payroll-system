@@ -1,99 +1,51 @@
 @extends('layouts.new_layout')
 @push('page_css')
-	<style>
-		thead input.top-filter {
-	        width: 100%;
-	    }
-
-	    table.dataTable tbody td {
-			word-break: break-word;
-		  	vertical-align: top;
-		}
-	</style>
-	<link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/responsive.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css">
 @endpush
 @section('content')
-
-
-<div class="row page-titles">
-    <div class="col-md-5 align-self-center">
-        <h3 class="text-themecolor">
-            <i class="fa fa-braille" style="color:#1976d2"></i>
-            Pay Heads
-        </h3>
-    </div>
-
-    <div class="col-md-7 align-self-center">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a href="javascript:void(0)">Home</a>
-            </li>
-            <li class="breadcrumb-item active">Pay Heads</li>
-        </ol>
-    </div>
+<div>
+   <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-4">
+		<div>
+			<h3>Pay Heads</h3>
+			<p class="mb-0">Track and manage pay heads here</p>
+		</div>
+		<div>
+			<!-- <a href="{{ route('holidays.create' )}}" class="d-flex justify-content-center gap-2 primary-add ">
+				<x-heroicon-o-plus width="16" />
+				<span>Add Holiday</span>
+			</a> -->
+		</div>
+   </div>
+   @if (session('message'))
+   <div>
+      <div class="alert alert-success alert-dismissible">
+         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+         {{ session('message') }}
+      </div>
+   </div>
+   @elseif (session('error'))
+   <div class="col-md-12">
+      <div class="alert alert-danger alert-dismissible">
+         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+         {{ session('error') }}
+      </div>
+   </div>
+   @endif
+   <div class="bg-white table-custom">
+	   <table id="dataTableBuilder" class="table table-hover responsive nowrap" style="width:100%">
+		 	<thead>
+				<tr>
+					<th>Id</th>
+					<th>Head Name</th>										
+					<th>Head Description</th>										
+					<th>Head Type</th>										
+					<th>Action</th>		
+				</tr>
+		 	</thead>
+	   </table>
+   </div>
 </div>
-
-
-	<section class="content">
-		<div class="container-fluid">
-			@if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="m-0">
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
-			@if (session('message'))
-				<div class="row">
-					<div class="col-md-12">
-						<div class="alert alert-success alert-dismissible">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-							{{ session('message') }}
-						</div>
-					</div>
-				</div>
-			@elseif (session('error'))
-				<div class="row">
-					<div class="col-md-12">
-						<div class="alert alert-danger alert-dismissible">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-							{{ session('error') }}
-						</div>
-					</div>
-				</div>
-			@endif
-			<div class="row">            				
-				<div class="col-12">					
-					<div class="card">
-						<div class="card-header d-flex justify-content-between">
-							<h3 class="card-title">List Of Pay Heads</h3>
-							<div class="card-tools">
-								<div class="input-group input-group-sm">
-									<a href="{{ route('pay-head.create' )}}" class="btn btn-primary">Add New</a>
-								</div>
-							</div>
-						</div>					
-						<div class="card-body">							
-							<table class="table table-bordered table-hover wrap" id="dataTableBuilder">
-								<thead>
-									<tr>										
-										<th>Id</th>
-										<th>Head Name</th>										
-										<th>Head Description</th>										
-										<th>Head Type</th>										
-										<th>Action</th>								
-									</tr>
-								</thead>
-							</table>
-						</div>
-					  </div>
-				</div>
-			</div>
-		</div>		
-	</section>    
 @endsection
 @push('page_css')
 	<link rel="stylesheet" href="{{ asset('js/datepicker/datepicker3.css') }}">
@@ -101,11 +53,9 @@
 
 @push('page_scripts')
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-	<script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
-	<script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
-	<script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
-	<script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
-	<script src="{{ asset('js/datepicker/bootstrap-datepicker.js') }}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+	<script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.js"></script>
 	<script type="text/javascript">
 		//single record move to delete
 		$(document).on('click','a.delete',function(){

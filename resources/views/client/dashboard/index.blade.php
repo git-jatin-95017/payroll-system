@@ -32,7 +32,7 @@
             </a>
         </div>
         <div class="widget-container">
-            <a href="#" class="d-flex flex-column align-items-center">
+            <a href="{{ route('leave-type.index') }}" class="d-flex flex-column align-items-center">
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-donate-heart class="w-24 h-24" />
                 </div>
@@ -40,7 +40,7 @@
             </a>
         </div>
         <div class="widget-container">
-            <a href="#" class="d-flex flex-column align-items-center">
+            <a href="{{ route('pay-head.index') }}" class="d-flex flex-column align-items-center">
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-dollar-circle class="w-24 h-24" />
                 </div>
@@ -48,7 +48,7 @@
             </a>
         </div>
         <div class="widget-container">
-            <a href="#" class="d-flex flex-column align-items-center">
+            <a href="{{ route('department.index') }}" class="d-flex flex-column align-items-center">
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-map class="w-24 h-24" />
                 </div>
@@ -148,7 +148,7 @@
                         <h3>Manage your business</h3>
                     </div>
                     <div class="db-card">
-                        <a href="#" class="d-block mb-3">
+                        <a href="{{ route('my-profile.edit', auth()->user()->id) }}" class="d-block mb-3">
                             <div class="d-flex gap-3 align-items-center">
                                 <div class="notice-icon shadow-sm">
                                     <x-bx-briefcase-alt-2 class="w-20 h-20" />
@@ -159,18 +159,18 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="#" class="d-block mb-3">
+                        <a href="{{ route('payroll.create', ['week_search' => 2]) }}" class="d-block mb-3">
                             <div class="d-flex gap-3 align-items-center">
                                 <div class="notice-icon shadow-sm">
                                     <x-bx-time class="w-20 h-20" />
                                 </div>
                                 <div>
-                                    <h3>Profile</h3>
+                                    <h3>Time</h3>
                                     <span>Track your employee’s time</span>
                                 </div>
                             </div>
                         </a>
-                        <a href="#" class="d-block mb-3">
+                        <a href="{{ route('holidays.index') }}" class="d-block mb-3">
                             <div class="d-flex gap-3 align-items-center">
                                 <div class="notice-icon shadow-sm">
                                     <x-bxs-plane-take-off class="w-20 h-20" />
@@ -181,14 +181,14 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="#" class="d-block">
+                        <a href="{{ route('leaves.index') }}" class="d-block">
                             <div class="d-flex gap-3 align-items-center">
                                 <div class="notice-icon shadow-sm">
                                     <x-bx-user class="w-20 h-20" />
                                 </div>
                                 <div>
                                     <h3>Leave</h3>
-                                    <span>Redirects you to Leave section</span>
+                                    <!-- <span>Redirects you to Leave section</span> -->
                                 </div>
                             </div>
                         </a>
@@ -207,10 +207,117 @@
                     <div class="heading-db-container mb-4">
                         <h3>Calendar</h3>
                     </div>
-
+					<!-- Small Calendar Container -->
+					<div id="calendar"></div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 @endsection
+
+@section('third_party_stylesheets')
+    <!-- FullCalendar CSS -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet"> -->
+	 <!-- Styles for the dots -->
+	  <!-- jQuery UI Datepicker -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<style>
+    .ui-datepicker td {
+        position: relative;
+    }
+
+    .ui-datepicker .event-birthday a::after {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background-color: #FF5722;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+    }
+
+    .ui-datepicker .event-leave a::after {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background-color: #4CAF50;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+    }
+
+    .ui-datepicker .event-holiday a::after {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background-color: #2196F3;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+    }
+</style>
+@endsection
+
+@section('third_party_scripts')
+    <!-- FullCalendar JS -->
+	 
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+	@endsection
+@push('page_scripts')
+<script>
+    $(function () {
+        // Define your events
+        var events = [
+            { date: '2025-01-12', type: 'birthday' },
+            { date: '2025-01-18', type: 'leave' },
+            { date: '2025-01-26', type: 'holiday' },
+        ];
+
+        // Initialize the Datepicker
+        $('#calendar').datepicker({
+            beforeShowDay: function (date) {
+                var formattedDate = $.datepicker.formatDate('yy-mm-dd', date);
+                var event = events.find(e => e.date === formattedDate);
+                
+                if (event) {
+                    // Return true to enable the date, and add a class for styling
+                    return [true, 'event-' + event.type, event.type.charAt(0).toUpperCase() + event.type.slice(1)];
+                }
+                return [true, ''];
+            }
+        });
+    });
+
+
+	/*
+		$(function () {
+			// Fetch events from your API route
+			$.ajax({
+				url: "",
+				method: "GET",
+				success: function (response) {
+					var events = response;
+
+					$('#calendar').datepicker({
+						beforeShowDay: function (date) {
+							var formattedDate = $.datepicker.formatDate('yy-mm-dd', date);
+							var event = events.find(e => e.date === formattedDate);
+							
+							if (event) {
+								return [true, 'event-' + event.type, event.title];
+							}
+							return [true, ''];
+						}
+					});
+				}
+			});
+		});
+	*/
+</script>
+
+@endpush
