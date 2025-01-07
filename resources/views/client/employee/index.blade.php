@@ -1,181 +1,5 @@
 @extends('layouts.new_layout')
 @push('page_css')
-<style>
-   thead input.top-filter {
-   width: 100%;
-   }
-   .table {
-	border-spacing: 0 0.85rem !important;
-  }
-  
-  .table .dropdown {
-	display: inline-block;
-  }
-  
-  .table td,
-  .table th {
-	vertical-align: middle;
-	margin-bottom: 10px;
-	border: none;
-  }
-  
-  .table thead tr,
-  .table thead th {
-	border: none;
-	font-size: 12px;
-	text-transform: uppercase;
-	background: transparent;
-	color: #64748B;
-  }
-  
-  .table td {
-	background: #f7f9fc !important;
-  }
-  
-  .table td:first-child {
-	border-top-left-radius: 10px;
-	border-bottom-left-radius: 10px;
-  }
-  
-  .table td:last-child {
-	border-top-right-radius: 10px;
-	border-bottom-right-radius: 10px;
-  }
-  
-  .avatar {
-	width: 2.75rem;
-	height: 2.75rem;
-	line-height: 3rem;
-	border-radius: 50%;
-	display: inline-block;
-	background: transparent;
-	position: relative;
-	text-align: center;
-	color: #868e96;
-	font-weight: 700;
-	vertical-align: bottom;
-	font-size: 1rem;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-  }
-  
-  .avatar-sm {
-	width: 2.5rem;
-	height: 2.5rem;
-	font-size: 0.83333rem;
-	line-height: 1.5;
-  }
-  
-  .avatar-img {
-	width: 100%;
-	height: 100%;
-	-o-object-fit: cover;
-	object-fit: cover;
-  }
-  
-  .avatar-blue {
-	background-color: #c8d9f1;
-	color: #467fcf;
-  }
-  
-  table.dataTable.dtr-inline.collapsed
-	> tbody
-	> tr[role="row"]
-	> td:first-child:before,
-  table.dataTable.dtr-inline.collapsed
-	> tbody
-	> tr[role="row"]
-	> th:first-child:before {
-	top: 28px;
-	left: 14px;
-	border: none;
-	box-shadow: none;
-  }
-  
-  table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child,
-  table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child {
-	padding-left: 48px;
-  }
-  
-  table.dataTable > tbody > tr.child ul.dtr-details {
-	width: 100%;
-  }
-  
-  table.dataTable > tbody > tr.child span.dtr-title {
-	min-width: 50%;
-  }
-  
-  table.dataTable.dtr-inline.collapsed > tbody > tr > td.child,
-  table.dataTable.dtr-inline.collapsed > tbody > tr > th.child,
-  table.dataTable.dtr-inline.collapsed > tbody > tr > td.dataTables_empty {
-	padding: 0.75rem 1rem 0.125rem;
-  }
-  
-  div.dataTables_wrapper div.dataTables_length label,
-  div.dataTables_wrapper div.dataTables_filter label {
-	margin-bottom: 0;
-  }
-  
-  @media (max-width: 767px) {
-	div.dataTables_wrapper div.dataTables_paginate ul.pagination {
-	  -ms-flex-pack: center !important;
-	  justify-content: center !important;
-	  margin-top: 1rem;
-	}
-  }
-  
-  .btn-icon {
-	background: #fff;
-  }
-  .btn-icon .bx {
-	font-size: 20px;
-  }
-  
-  .btn .bx {
-	vertical-align: middle;
-	font-size: 20px;
-  }
-  
-  .dropdown-menu {
-	padding: 0.25rem 0;
-  }
-  
-  .dropdown-item {
-	padding: 0.5rem 1rem;
-  }
-
-  
-  .table a:hover,
-  .table a:focus {
-	text-decoration: none;
-  }
-  
-  table.dataTable {
-	margin-top: 12px !important;
-	border-collapse: separate !important;
-  }
-  
-  .icon > .bx {
-	display: block;
-	min-width: 1.5em;
-	min-height: 1.5em;
-	text-align: center;
-	font-size: 1.0625rem;
-  }
-
-  
-  .avatar-blue {
-		background-color: #c8d9f1;
-		color: #467fcf;
-	  }
-  
-	  .avatar-pink {
-		background-color: #fcd3e1;
-		color: #f66d9b;
-	  }
-</style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css">
 @endpush
@@ -834,9 +658,24 @@
 							// orderable: true
 						},
 						{data:'phone_number'},						
-						{data:'pan_number'},						
-						{data:'ifsc_code'},						
-						{data:'start_date'},						
+						{
+                            data: 'pan_number',
+                            render: function (data, type, row, meta) {
+                                return `<span class="text-primary">${data}</span>`;
+                            }
+                        },						
+						{data:'ifsc_code'},
+                        {
+                            data: 'start_date',
+                            render: function (data, type, row, meta) {
+                                return `
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1.75 12C1.75 13.2426 2.75736 14.25 4 14.25H10.2485C10.5513 14.25 10.8438 14.1401 11.0717 13.9407L13.8231 11.5332C14.0944 11.2958 14.25 10.9529 14.25 10.5925V4C14.25 2.75736 13.2426 1.75 12 1.75H4C2.75736 1.75 1.75 2.75736 1.75 4V12Z" stroke="#5E5ADB" stroke-width="1.5"/>
+                                    <path d="M5.25 6.5H10.75" stroke="#5E5ADB" stroke-width="1.5" stroke-linecap="round"/>
+                                    <path d="M5.25 9.5H8.75" stroke="#5E5ADB" stroke-width="1.5" stroke-linecap="round"/>
+                                    </svg><span class="ms-2">${data}</span>`;
+                                }
+                        },						
 						{data:'designation'},						
 						{data:'pay_rate'},
 						{
@@ -850,20 +689,39 @@
 			                	editRoute = editRoute.replace(':id', row.id);
 			                	var destrRoute = '{{ route("employee.destroy", ":id") }}';
 			                	destrRoute = destrRoute.replace(':id', row.id);
-			                	var action = `<div class="table-actions">`;
-
-			                	action += "<a href='javascript:void(0);' data-bs-toggle='modal' data-bs-target='#ManageModal' title='Assign Pay Head' class='btn btn-sm btn-info' onclick='updateEmpCode("+row.id+")'><i class='mdi mdi-credit-card'></i></a>";
-
-			                	action += " <a href='javascript:void(0);' data-bs-toggle='modal' data-bs-target='#LeavePolicyModal' title='Assign Leave Policy' class='btn btn-sm btn-success' onclick='updateLeaveAssign("+row.id+")'><i class='mdi mdi-file-outline'></i></a>";
-
-			                	action += " <a href='javascript:void(0);' data-bs-toggle='modal' data-bs-target='#LocationModal' title='Assign Location' class='btn btn-sm btn-warning' onclick='updateLocationAssign("+row.id+")'><i class='mdi mdi-map-marker'></i></a>";
-
-			                	action += " <a href=" + editRoute + " class='btn btn-sm btn-primary' title='Edit'><i class='fas fa-pen'></i></a>";
-
-			                	action += " <a data-href=" + destrRoute + " class='btn btn-sm btn-danger delete' style='color:#fff;'  title='Delete'><i class='fas fa-trash'></i></a>";
-
-			                	action += `</div>`;
-
+			                	var action = `
+                                    <div class="dropdown">
+                                        <button class="btn action-dropdown-toggle dropdown-toggle" type="button" id="dropdownMenuButton${row.id}" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <x-bx-dots-horizontal-rounded class="w-20 h-20" />
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${row.id}">
+                                            <li>
+                                                <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#ManageModal" class="dropdown-item" onclick="updateEmpCode(${row.id})">
+                                                    <x-bx-dollar-circle class="w-16 h-16" /> Assign Pay Head
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#LeavePolicyModal" class="dropdown-item" onclick="updateLeaveAssign(${row.id})">
+                                                    <x-bx-user-check class="w-16 h-16" /> Assign Leave Policy
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#LocationModal" class="dropdown-item" onclick="updateLocationAssign(${row.id})">
+                                                    <x-bx-map-alt class="w-16 h-16" /> Assign Location
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="${editRoute}" class="dropdown-item">
+                                                    <x-bx-edit-alt class="w-16 h-16" /> Edit
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a data-href="${destrRoute}" class="dropdown-item delete" style="color:#dc3545;">
+                                                     <x-heroicon-o-trash class="w-16 h-16" /> Delete
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>`;
 			                	return action;
 			                }
 			            }

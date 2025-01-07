@@ -1,5 +1,5 @@
 <div>
-	<div class="sb-menu-h">
+	<div class="sb-menu-h pt-2 pb-3">
 		<span>Menu</span>
 	</div>
 	<ul>

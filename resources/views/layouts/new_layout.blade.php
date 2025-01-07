@@ -27,22 +27,25 @@
 </head>
 
 <body>
-    <div id="logo">
-        <span class="big-logo">
+    <div id="left-menu">
+        <div class="sidebar-logo">
+            <button id="toggle-left-menu">
+                <x-heroicon-m-bars-3 />
+            </button>
             <a href="">
                 <img src="{{ asset('img/paywiz-logo.png') }}" alt="logo">
             </a>
-        </span>
-        <span class="small-logo">S!M</span>
-    </div>
-    <div id="left-menu" class="d-flex flex-column">
-        @if(auth()->user()->role_id == 1)
+            <span class="small-logo">Pay</span>
+        </div>
+        <div class="d-flex flex-column sidebar-nav">
+            @if(auth()->user()->role_id == 1)
             @include('layouts.admin_sidebar_new')
-        @elseif(auth()->user()->role_id == 2)
-            @include('layouts.client_sidebar_new')    
-        @else
+            @elseif(auth()->user()->role_id == 2)
+            @include('layouts.client_sidebar_new')
+            @else
             @include('layouts.employee_sidebar_new')
-        @endif
+            @endif
+        </div>
     </div>
 
 
@@ -50,9 +53,7 @@
     <div id="main-content">
         <div id="header" class="px-4">
             <div class="d-flex justify-content-end align-items-center">
-                <div>
-                    <i id="toggle-left-menu" class="ion-android-menu"></i>
-                </div>
+
                 <div>
                     <ul class="d-flex m-0 p-0 gap-3 align-items-center top-right-bar">
                         <li>
