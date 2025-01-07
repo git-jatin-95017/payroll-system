@@ -19,12 +19,12 @@
 <section class="dashboard-top-bg p-5">
     <div class="text-center px-4">
         <div class="admin-name pb-4">
-            <h2>Hello, Rhye</h2>
+            <h2>Hello, {{ ucwords(Auth::user()->name) }}</h2>
         </div>
     </div>
     <div class="d-flex gap-5 justify-content-center widget-container-main">
         <div class="widget-container">
-            <a href="#" class="d-flex flex-column align-items-center">
+            <a href="{{ route('employee.create') }}" class="d-flex flex-column align-items-center">
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-user class="w-24 h-24" />
                 </div>
@@ -74,7 +74,7 @@
                             <div class="db-data-container p-3">
                                 <div class="d-flex justify-content-between">
                                     <div>
-                                        <h3>89,935</h3>
+                                        <h3>{{$totalEmp}}</h3>
                                     </div>
                                     <div>
                                         <x-heroicon-s-users class="w-20 h-20" />

@@ -15,6 +15,7 @@ use App\Models\NationalSample;
 use App\Models\PropertyTaxSample;
 use App\Models\SaleTaxSample;
 use App\Models\SupermarketSample;
+use App\Models\User;
 use File;
 use Response;
 use DB;
@@ -49,6 +50,10 @@ class DashboardController extends Controller
 		$countPts 	= 0;
 		$countSts 	= 0;
 		$countSms 	= 0;
+		$totalEmp = User::join('employee_profile', function($join) {
+			$join->on('users.id', '=', 'employee_profile.user_id');
+		}) 
+		->where('users.created_by', auth()->user()->id)->count();
 
 		return view('client.dashboard.index', compact(
 			'countLc',
@@ -62,6 +67,7 @@ class DashboardController extends Controller
 			'countPts',
 			'countSts',
 			'countSms',
+			'totalEmp'
 		));
 	}
 

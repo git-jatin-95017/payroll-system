@@ -58,7 +58,7 @@
 <div class="bottom-nav mt-auto">
 	<ul>
 		<li>
-			<a href="#">
+			<a href="/logout">
 				<x-bxs-user class="w-20 h-20"/>
 				<span>Logout</span>
 			</a>
