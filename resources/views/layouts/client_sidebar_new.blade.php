@@ -17,13 +17,13 @@
 			</a>
 		</li>
 		<li>
-			<a href="{{ route('holidays.index') }}">
+			<a href="#">
 				<x-bxs-plane-take-off class="w-20 h-20"/>
 				<span>Holidays</span>
 			</a>
 		</li>
 		<li>
-			<a href="{{ route('leave-type.index') }}">
+			<a href="#">
 				<x-bxs-file-doc class="w-20 h-20"/>
 				<span>Leave</span>
 			</a>
