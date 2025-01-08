@@ -185,7 +185,6 @@ body {
     margin: 0 -10px;
     padding-left: 45px;
     height: 0;
-    overflow: hidden;
     -webkit-transition: all 0.3s ease;
     -o-transition: all 0.3s ease;
     transition: all 0.3s ease;
@@ -573,6 +572,19 @@ a:hover {
 .action-dropdown-toggle{
     border: none;
 }
+
+
+.main-navigation .has-sub ul {
+    display: none;
+    /* Hidden by default */
+    padding-left: 20px;
+}
+
+.main-navigation .has-sub.open ul {
+    display: block;
+    /* Show dropdown when open */
+}
+
 
 /* .db-sub-menu .collapse {
     padding-left: 24px !important;
