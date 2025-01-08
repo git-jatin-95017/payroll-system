@@ -86,19 +86,24 @@
                         <div class="col-4">
                             <div class="db-data-container time-card p-3">
                                 <label>Time Card</label>
+                                <?php 
+                                $requestData['start_date'] = date('Y-m-d', strtotime('-1 week'));
+
+                                $requestData['end_date'] = date('Y-m-d');
+                                ?>
                                 <div class="d-flex align-items-center gap-3">
-                                    <input type="text" placeholder="11/27">
+                                    <input type="text" placeholder="{{date('m/d', strtotime('-1 week'))}}">
                                     <span>
                                         <x-heroicon-o-arrow-right class="w-20" />
                                     </span>
-                                    <input type="text" placeholder="12/03">
+                                    <input type="text" placeholder="{{date('m/d')}}">
                                 </div>
                             </div>
                         </div>
                         <div class="col-4">
                             <div>
-                                <button class="btn d-block btn-db mb-2 w-100">Approve Employees</button>
-                                <button class="btn d-block btn-db w-100">Run Payroll</button>
+                                <a href="{{ route('employee.index') }}" class="btn d-block btn-db mb-2 w-100">Approved Employees</a>
+                                <a href="{{ route('payroll.create', ['week_search' => 2, 'start_date' => $requestData['start_date'], 'end_date' => $requestData['end_date']]) }}" class="btn d-block btn-db w-100">Run Payroll</a>
                             </div>
                         </div>
                     </div>
@@ -219,105 +224,87 @@
 @section('third_party_stylesheets')
     <!-- FullCalendar CSS -->
     <!-- <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet"> -->
-	 <!-- Styles for the dots -->
-	  <!-- jQuery UI Datepicker -->
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css">
 
-<style>
-    .ui-datepicker td {
-        position: relative;
-    }
+    <!-- Custom CSS for dots -->
+    <style>
+        .custom-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            background-color: #3b82f6;
+        }
 
-    .ui-datepicker .event-birthday a::after {
-        content: '';
-        width: 8px;
-        height: 8px;
-        background-color: #FF5722;
-        border-radius: 50%;
-        position: absolute;
-        bottom: 4px;
-        right: 4px;
-    }
+        .custom-dot.birthday {
+            background-color: #fbbf24;
+        }
 
-    .ui-datepicker .event-leave a::after {
-        content: '';
-        width: 8px;
-        height: 8px;
-        background-color: #4CAF50;
-        border-radius: 50%;
-        position: absolute;
-        bottom: 4px;
-        right: 4px;
-    }
+        .custom-dot.leave {
+            background-color: #10b981;
+        }
 
-    .ui-datepicker .event-holiday a::after {
-        content: '';
-        width: 8px;
-        height: 8px;
-        background-color: #2196F3;
-        border-radius: 50%;
-        position: absolute;
-        bottom: 4px;
-        right: 4px;
-    }
-</style>
+        .custom-dot.public_holiday {
+            background-color: #ef4444;
+        }
+
+        .custom-dot.voluntary_holiday {
+            background-color: #6366f1;
+        }
+
+        .tippy-box[data-theme~='light'] {
+            background-color: #fff;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 @endsection
 
 @section('third_party_scripts')
     <!-- FullCalendar JS -->
-	 
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-	@endsection
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+@endsection
+
 @push('page_scripts')
 <script>
-    $(function () {
-        // Define your events
-        var events = [
-            { date: '2025-01-12', type: 'birthday' },
-            { date: '2025-01-18', type: 'leave' },
-            { date: '2025-01-26', type: 'holiday' },
-        ];
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
 
-        // Initialize the Datepicker
-        $('#calendar').datepicker({
-            beforeShowDay: function (date) {
-                var formattedDate = $.datepicker.formatDate('yy-mm-dd', date);
-                var event = events.find(e => e.date === formattedDate);
-                
-                if (event) {
-                    // Return true to enable the date, and add a class for styling
-                    return [true, 'event-' + event.type, event.type.charAt(0).toUpperCase() + event.type.slice(1)];
+        if (calendarEl) {
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                eventContent: function (info) {
+                    var dot = document.createElement('div');
+                    dot.className = 'custom-dot ' + info.event.extendedProps.type;
+
+                    // Initialize Tippy.js tooltip
+                    tippy(dot, {
+                        content: info.event.title,
+                        theme: 'light'
+                    });
+
+                    return { domNodes: [dot] };
+                },
+                events: function (fetchInfo, successCallback, failureCallback) {
+                    $.ajax({
+                        url: '/client/fetch-calendar-data',
+                        method: 'GET',
+                        success: function (data) {
+                            successCallback(data);
+                        },
+                        error: function () {
+                            failureCallback();
+                        }
+                    });
                 }
-                return [true, ''];
-            }
-        });
+            });
+
+            calendar.render();
+        }
     });
-
-
-	/*
-		$(function () {
-			// Fetch events from your API route
-			$.ajax({
-				url: "",
-				method: "GET",
-				success: function (response) {
-					var events = response;
-
-					$('#calendar').datepicker({
-						beforeShowDay: function (date) {
-							var formattedDate = $.datepicker.formatDate('yy-mm-dd', date);
-							var event = events.find(e => e.date === formattedDate);
-							
-							if (event) {
-								return [true, 'event-' + event.type, event.title];
-							}
-							return [true, ''];
-						}
-					});
-				}
-			});
-		});
-	*/
 </script>
-
 @endpush
