@@ -2,7 +2,7 @@
 	<div class="sb-menu-h pb-3">
 		<span>Menu</span>
 	</div>
-	<ul class="main-navigation">
+	<ul class="list-unstyled main-navigation">
 		<li class="active">
 			<a href="{{ route('client.dashboard') }}">
 				<x-bxs-home-alt-2 class="w-20 h-20" />
@@ -44,7 +44,7 @@
 				<x-bxs-user class="w-20 h-20"/>
 				<span>Company</span>
 			</a>
-			<ul>
+			<ul class="list-unstyled">
 				<li><a href="{{ route('my-profile.edit', auth()->user()->id) }}">Profile</a></li>
 				<li><a href="{{ route('pay-head.index') }}">Pay Labels</a></li>
 				<li><a href="{{ route('leave-type.index') }}">Leave Polices</a></li>
