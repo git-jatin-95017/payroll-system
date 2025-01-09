@@ -638,45 +638,43 @@ a:hover {
     display: none;
 } */
 
-.custom-calendar.fc .fc-daygrid-day-frame {
+/* .custom-calendar.fc .fc-daygrid-day-frame {
     min-height: 100%;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.custom-calendar.fc-theme-standard .fc-scrollgrid{
-    border: none;
-}
-/* .custom-calendar table.fc-scrollgrid-sync-table {
-    height: 100% !important;
 } */
 
-.custom-calendar .fc-view-harness.fc-view-harness-active{
+/* .custom-calendar.fc-theme-standard .fc-scrollgrid{
+    border: none;
+} */
+
+
+/* .custom-calendar .fc-view-harness.fc-view-harness-active{
     height: 250px !important;
-}
+} */
 
 .custom-calendar.fc .fc-daygrid-day.fc-day-today{
     background-color: transparent;
 }
 
-.custom-calendar .fc-day .fc-daygrid-day-top {
+/* .custom-calendar .fc-day .fc-daygrid-day-top {
     width: 36px;
     height: 36px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 100em;
-}
+} */
 
-.custom-calendar .fc-day.fc-day-today .fc-daygrid-day-top{
+/* .custom-calendar .fc-day.fc-day-today .fc-daygrid-day-top{
     background-color: #5E5ADB;
 }
 
 .custom-calendar .fc-day.fc-day-today .fc-daygrid-day-top a{
     color: #fff;
-}
+} */
 
 
 
