@@ -86,7 +86,7 @@
                         <div class="col-4">
                             <div class="db-data-container time-card p-3">
                                 <label>Time Card</label>
-                                <?php 
+                                <?php
                                 $requestData['start_date'] = date('Y-m-d', strtotime('-1 week'));
 
                                 $requestData['end_date'] = date('Y-m-d');
@@ -213,7 +213,7 @@
                         <h3>Calendar</h3>
                     </div>
 					<!-- Small Calendar Container -->
-					<div id="calendar"></div>
+					<div class="custom-calendar" id="calendar"></div>
                 </div>
             </div>
         </div>
@@ -277,6 +277,12 @@
         if (calendarEl) {
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev',
+                    center: 'title',
+                    right: 'next'
+                },
+
                 eventContent: function (info) {
                     var dot = document.createElement('div');
                     dot.className = 'custom-dot ' + info.event.extendedProps.type;
@@ -307,4 +313,5 @@
         }
     });
 </script>
+
 @endpush
