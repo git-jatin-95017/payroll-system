@@ -32,7 +32,7 @@
             </a>
         </div>
         <div class="widget-container">
-            <a href="#" class="d-flex flex-column align-items-center">
+            <a href="{{ route('leave-type.index') }}" class="d-flex flex-column align-items-center">
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-donate-heart class="w-24 h-24" />
                 </div>
@@ -40,7 +40,7 @@
             </a>
         </div>
         <div class="widget-container">
-            <a href="#" class="d-flex flex-column align-items-center">
+            <a href="{{ route('pay-head.index') }}" class="d-flex flex-column align-items-center">
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-dollar-circle class="w-24 h-24" />
                 </div>
@@ -48,7 +48,7 @@
             </a>
         </div>
         <div class="widget-container">
-            <a href="#" class="d-flex flex-column align-items-center">
+            <a href="{{ route('department.index') }}" class="d-flex flex-column align-items-center">
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-map class="w-24 h-24" />
                 </div>
@@ -86,19 +86,24 @@
                         <div class="col-4">
                             <div class="db-data-container time-card p-3">
                                 <label>Time Card</label>
+                                <?php 
+                                $requestData['start_date'] = date('Y-m-d', strtotime('-1 week'));
+
+                                $requestData['end_date'] = date('Y-m-d');
+                                ?>
                                 <div class="d-flex align-items-center gap-3">
-                                    <input type="text" placeholder="11/27">
+                                    <input type="text" placeholder="{{date('m/d', strtotime('-1 week'))}}">
                                     <span>
                                         <x-heroicon-o-arrow-right class="w-20" />
                                     </span>
-                                    <input type="text" placeholder="12/03">
+                                    <input type="text" placeholder="{{date('m/d')}}">
                                 </div>
                             </div>
                         </div>
                         <div class="col-4">
                             <div>
-                                <button class="btn d-block btn-db mb-2 w-100">Approve Employees</button>
-                                <button class="btn d-block btn-db w-100">Run Payroll</button>
+                                <a href="{{ route('employee.index') }}" class="btn d-block btn-db mb-2 w-100">Approved Employees</a>
+                                <a href="{{ route('payroll.create', ['week_search' => 2, 'start_date' => $requestData['start_date'], 'end_date' => $requestData['end_date']]) }}" class="btn d-block btn-db w-100">Run Payroll</a>
                             </div>
                         </div>
                     </div>
@@ -148,7 +153,7 @@
                         <h3>Manage your business</h3>
                     </div>
                     <div class="db-card">
-                        <a href="#" class="d-block mb-3">
+                        <a href="{{ route('my-profile.edit', auth()->user()->id) }}" class="d-block mb-3">
                             <div class="d-flex gap-3 align-items-center">
                                 <div class="notice-icon shadow-sm">
                                     <x-bx-briefcase-alt-2 class="w-20 h-20" />
@@ -159,18 +164,18 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="#" class="d-block mb-3">
+                        <a href="{{ route('payroll.create', ['week_search' => 2]) }}" class="d-block mb-3">
                             <div class="d-flex gap-3 align-items-center">
                                 <div class="notice-icon shadow-sm">
                                     <x-bx-time class="w-20 h-20" />
                                 </div>
                                 <div>
-                                    <h3>Profile</h3>
+                                    <h3>Time</h3>
                                     <span>Track your employee’s time</span>
                                 </div>
                             </div>
                         </a>
-                        <a href="#" class="d-block mb-3">
+                        <a href="{{ route('holidays.index') }}" class="d-block mb-3">
                             <div class="d-flex gap-3 align-items-center">
                                 <div class="notice-icon shadow-sm">
                                     <x-bxs-plane-take-off class="w-20 h-20" />
@@ -181,14 +186,14 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="#" class="d-block">
+                        <a href="{{ route('leaves.index') }}" class="d-block">
                             <div class="d-flex gap-3 align-items-center">
                                 <div class="notice-icon shadow-sm">
                                     <x-bx-user class="w-20 h-20" />
                                 </div>
                                 <div>
                                     <h3>Leave</h3>
-                                    <span>Redirects you to Leave section</span>
+                                    <!-- <span>Redirects you to Leave section</span> -->
                                 </div>
                             </div>
                         </a>
@@ -207,10 +212,99 @@
                     <div class="heading-db-container mb-4">
                         <h3>Calendar</h3>
                     </div>
-
+					<!-- Small Calendar Container -->
+					<div id="calendar"></div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 @endsection
+
+@section('third_party_stylesheets')
+    <!-- FullCalendar CSS -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css">
+
+    <!-- Custom CSS for dots -->
+    <style>
+        .custom-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            background-color: #3b82f6;
+        }
+
+        .custom-dot.birthday {
+            background-color: #fbbf24;
+        }
+
+        .custom-dot.leave {
+            background-color: #10b981;
+        }
+
+        .custom-dot.public_holiday {
+            background-color: #ef4444;
+        }
+
+        .custom-dot.voluntary_holiday {
+            background-color: #6366f1;
+        }
+
+        .tippy-box[data-theme~='light'] {
+            background-color: #fff;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+@endsection
+
+@section('third_party_scripts')
+    <!-- FullCalendar JS -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+@endsection
+
+@push('page_scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+
+        if (calendarEl) {
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                eventContent: function (info) {
+                    var dot = document.createElement('div');
+                    dot.className = 'custom-dot ' + info.event.extendedProps.type;
+
+                    // Initialize Tippy.js tooltip
+                    tippy(dot, {
+                        content: info.event.title,
+                        theme: 'light'
+                    });
+
+                    return { domNodes: [dot] };
+                },
+                events: function (fetchInfo, successCallback, failureCallback) {
+                    $.ajax({
+                        url: '/client/fetch-calendar-data',
+                        method: 'GET',
+                        success: function (data) {
+                            successCallback(data);
+                        },
+                        error: function () {
+                            failureCallback();
+                        }
+                    });
+                }
+            });
+
+            calendar.render();
+        }
+    });
+</script>
+@endpush

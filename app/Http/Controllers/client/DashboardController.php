@@ -32,6 +32,35 @@ class DashboardController extends Controller
 		$this->middleware('auth');
 	}
 
+	public function fetchCalendarData()
+    {
+        $birthdays = DB::table('users')
+            ->join('employee_profile', 'users.id', '=', 'employee_profile.user_id')
+            ->select(DB::raw('CONCAT(employee_profile.first_name, " ", employee_profile.last_name, "’s Birthday") as title'), 'employee_profile.dob as start', DB::raw('"birthday" as type'))
+            ->get();
+
+        $leaves = DB::table('leaves')
+			->join('leave_types', 'leave_types.id', '=', 'leaves.type_id')
+            ->select('leave_types.name as title', 'start_date as start', DB::raw('"leave" as type'))
+			->where('leave_status', 'approved')
+            ->get();
+
+        $publicHolidays = DB::table('holidays')
+            ->select('title', 'holiday_date as start', DB::raw('"public_holiday" as type'))
+			->where('type', 1)
+            ->get();
+
+        $voluntaryHolidays = DB::table('holidays')
+            ->select('title', 'holiday_date as start', DB::raw('"voluntary_holiday" as type'))
+			->where('type', 3)
+            ->get();
+
+        // Merge all events
+        $events = $birthdays->merge($leaves)->merge($publicHolidays)->merge($voluntaryHolidays);
+
+        return response()->json($events);
+    }
+
 	/**
 	 * Show the application dashboard.
 	 *

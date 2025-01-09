@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.new_layout')
 
 @push('page_css')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />

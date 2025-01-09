@@ -3,7 +3,6 @@
 		<span>Menu</span>
 	</div>
 	<ul class="list-unstyled main-navigation">
-		@if(auth()->user()->role_id == 2)
 		<li class="active">
 			<a href="{{ route('client.dashboard') }}">
 				<x-bxs-home-alt-2 class="w-20 h-20" />
@@ -17,25 +16,25 @@
 			</a>
 		</li>
 		<li>
-			<a href="#">
+			<a href="{{ route('holidays.index') }}">
 				<x-bxs-plane-take-off class="w-20 h-20"/>
 				<span>Holidays</span>
 			</a>
 		</li>
 		<li>
-			<a href="#">
+			<a href="{{ route('leaves.index') }}">
 				<x-bxs-file-doc class="w-20 h-20"/>
 				<span>Leave</span>
 			</a>
 		</li>
 		<li>
-			<a href="#">
+			<a href="{{ route('payroll.create', ['week_search' => 2]) }}">
 				<x-bxs-time class="w-20 h-20"/>
 				<span>Time</span>
 			</a>
 		</li>
 		<li>
-			<a href="#">
+			<a href="{{ route('list.payroll') }}">
 				<x-bxs-dollar-circle class="w-20 h-20"/>
 				<span>Payroll </span>
 			</a>
@@ -46,12 +45,11 @@
 				<span>Company</span>
 			</a>
 			<ul class="list-unstyled">
-				<li><a href="#">Profile</a></li>
-				<li><a href="#">Pay Labels</a></li>
-				<li><a href="#">Leave Polices</a></li>
+				<li><a href="{{ route('my-profile.edit', auth()->user()->id) }}">Profile</a></li>
+				<li><a href="{{ route('pay-head.index') }}">Pay Labels</a></li>
+				<li><a href="{{ route('leave-type.index') }}">Leave Polices</a></li>
 			</ul>
 		</li>
-		@endif
 	</ul>
 </div>
 <div class="bottom-nav auto">

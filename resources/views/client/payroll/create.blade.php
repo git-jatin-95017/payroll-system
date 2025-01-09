@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.new_layout')
 
 @section('content')
 <style>
@@ -157,7 +157,7 @@
 							?>
 							<div class="card-body p-0">
 							<div class="table-responsive">
-								<table class="table table-bordered ts-custom-table border-0">
+								<table class="table table-bordered ts-custom-table border-0 responsive">
 								<thead>
 									<tr class="ts-date-row">
 										<th></th>
