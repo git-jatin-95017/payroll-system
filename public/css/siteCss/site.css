@@ -633,10 +633,10 @@ a:hover {
 .fc-theme-standard td {
     border: none;
 }
-.custom-calendar .fc-daygrid-day-events,
+/* .custom-calendar .fc-daygrid-day-events,
 .custom-calendar .fc-daygrid-day-bg{
     display: none;
-}
+} */
 
 .custom-calendar.fc .fc-daygrid-day-frame {
     min-height: 100%;
