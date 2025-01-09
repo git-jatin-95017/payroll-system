@@ -282,7 +282,11 @@
                     center: 'title',
                     right: 'next'
                 },
-
+                // dayMaxEvents: true,  // Enable "+ more" link when too many events
+                eventLimit: true,
+                // dayMaxEventRows: 4, // Show max 4 events per day, then display "+ more"
+                // moreLinkClick: 'popover',
+                eventDisplay: 'list-item', 
                 eventContent: function (info) {
                     var dot = document.createElement('div');
                     dot.className = 'custom-dot ' + info.event.extendedProps.type;
@@ -295,6 +299,12 @@
 
                     return { domNodes: [dot] };
                 },
+                // eventContent: function (arg) {
+                //     // Custom content with a dot and title
+                //     return {
+                //         html: `<span class="fc-event-dot" style="background-color:${arg.event.backgroundColor};"></span> ${arg.event.title}`
+                //     };
+                // },
                 events: function (fetchInfo, successCallback, failureCallback) {
                     $.ajax({
                         url: '/client/fetch-calendar-data',

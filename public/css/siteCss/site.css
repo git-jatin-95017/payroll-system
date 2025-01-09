@@ -631,7 +631,7 @@ a:hover {
 
 .custom-calendar th,
 .fc-theme-standard td {
-    border: none;
+    border: 1px solid #ccc;
 }
 /* .custom-calendar .fc-daygrid-day-events,
 .custom-calendar .fc-daygrid-day-bg{
