@@ -2,7 +2,7 @@
 	<div class="sb-menu-h pb-3">
 		<span>Menu</span>
 	</div>
-	<ul class="main-navigation">
+	<ul class="list-unstyled main-navigation">
 		@if(auth()->user()->role_id == 2)
 		<li class="active">
 			<a href="{{ route('client.dashboard') }}">
@@ -45,7 +45,7 @@
 				<x-bxs-user class="w-20 h-20"/>
 				<span>Company</span>
 			</a>
-			<ul>
+			<ul class="list-unstyled">
 				<li><a href="#">Profile</a></li>
 				<li><a href="#">Pay Labels</a></li>
 				<li><a href="#">Leave Polices</a></li>
