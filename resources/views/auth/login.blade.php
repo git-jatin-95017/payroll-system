@@ -164,7 +164,7 @@
               </div>
             </div>
             <div class="mt-4">
-                <button type="submit" class="btn btn-login w-100 mb-3" type="submit">Login</button>
+                <button type="submit" class="btn btn-login w-100 mb-3" type="submit">Sign in</button>
                 <div class="text-center text-muted mb-3 or-line">
                     <span>OR</span>
                 </div>
