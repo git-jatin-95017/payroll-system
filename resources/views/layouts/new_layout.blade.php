@@ -18,7 +18,6 @@
     <!-- style -->
     <link href=" {{ asset('css/siteCss/bootstrap.min.css') }}" rel="stylesheet">
     <link href=" {{ asset('css/siteCss/site.css') }}" rel="stylesheet">
-    <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
     <style>
         body {
             background: #fff;
