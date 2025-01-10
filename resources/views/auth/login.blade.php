@@ -131,7 +131,7 @@
           <div class="login-header">
             <div class="mb-5">
                 <img src="{{ asset('img/big-logo.svg') }}" alt="PayWiz Logo">
-                <h3 class="mt-2">Sign in</h3>
+                <h3 class="mt-4">Sign in</h3>
             </div>
           </div>
           <form method="post" id="loginform" action="{{ url('/login') }}">
