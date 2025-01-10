@@ -109,11 +109,24 @@ class DashboardController extends Controller
 	public function getRecentPayroll()
     {
         // Query to get the latest 2 payrolls
-        $payrolls = DB::table('payrolls')
+        /*
+		$payrolls = DB::table('payrolls')
             ->select('month', 'total_amount')
             ->orderBy('created_at', 'desc')
             ->limit(2)
             ->get();
+		*/
+		
+		$payrolls = [
+			[
+				'month' => 'January',
+				'total_amount' => 5000
+			],
+			[
+				'month' => 'February',
+				'total_amount' => 7000
+			]
+		];
 
         return response()->json($payrolls);
     }

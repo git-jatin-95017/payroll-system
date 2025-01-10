@@ -372,54 +372,54 @@
 </script>
 
 <script>
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     // Chart instance
-    //     const ctx = document.getElementById('payrollChart').getContext('2d');
+    document.addEventListener('DOMContentLoaded', function () {
+        // Chart instance
+        const ctx = document.getElementById('payrollChart').getContext('2d');
 
-    //     // Create the bar chart
-    //     const payrollChart = new Chart(ctx, {
-    //         type: 'bar',
-    //         data: {
-    //             labels: [], // Labels will be populated via AJAX
-    //             datasets: [{
-    //                 label: 'Total Amount',
-    //                 data: [], // Data will be populated via AJAX
-    //                 backgroundColor: ['#FF5733', '#33B5FF'],
-    //                 borderColor: ['#FF5733', '#33B5FF'],
-    //                 borderWidth: 1
-    //             }]
-    //         },
-    //         options: {
-    //             responsive: true,
-    //             scales: {
-    //                 y: {
-    //                     beginAtZero: true
-    //                 }
-    //             }
-    //         }
-    //     });
+        // Create the bar chart
+        const payrollChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [], // Labels will be populated via AJAX
+                datasets: [{
+                    label: 'Total Amount',
+                    data: [], // Data will be populated via AJAX
+                    backgroundColor: ['#FF5733', '#33B5FF'],
+                    borderColor: ['#FF5733', '#33B5FF'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
 
-    //     // AJAX request to fetch recent payroll data
-    //     function loadPayrollData() {
-    //         fetch('/client/recent-payroll')
-    //             .then(response => response.json())
-    //             .then(data => {
-    //                 const labels = data.map(item => item.month);
-    //                 const amounts = data.map(item => item.total_amount);
+        // AJAX request to fetch recent payroll data
+        function loadPayrollData() {
+            fetch('/client/recent-payroll')
+                .then(response => response.json())
+                .then(data => {
+                    const labels = data.map(item => item.month);
+                    const amounts = data.map(item => item.total_amount);
 
-    //                 // Update the chart with new data
-    //                 payrollChart.data.labels = labels;
-    //                 payrollChart.data.datasets[0].data = amounts;
-    //                 payrollChart.update();
-    //             })
-    //             .catch(error => {
-    //                 console.error('Error fetching payroll data:', error);
-    //             });
-    //     }
+                    // Update the chart with new data
+                    payrollChart.data.labels = labels;
+                    payrollChart.data.datasets[0].data = amounts;
+                    payrollChart.update();
+                })
+                .catch(error => {
+                    console.error('Error fetching payroll data:', error);
+                });
+        }
 
-    //     // Load data on page load
-    //     loadPayrollData();
-    // });
+        // Load data on page load
+        loadPayrollData();
+    });
 </script>
 
 @endpush
