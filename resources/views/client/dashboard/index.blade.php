@@ -200,14 +200,15 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4 mb-5">
+            <div class="col-8 mb-5">
                 <div class="db-container p-4 shadow-sm bg-white">
                     <div class="heading-db-container mb-4">
                         <h3>Recent Payroll</h3>
                     </div>
+                    <canvas id="payrollChart"></canvas>
                 </div>
             </div>
-            <div class="col-4 mb-5">
+            <div class="col-12 mb-5">
                 <div class="db-container p-4 shadow-sm bg-white">
                     <div class="heading-db-container mb-4">
                         <h3>Calendar</h3>
@@ -267,6 +268,7 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 @endsection
 
 @push('page_scripts')
@@ -278,27 +280,49 @@
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 headerToolbar: {
-                    left: 'prev',
+                    left: 'prev,next',
                     center: 'title',
-                    right: 'next'
+                    right: 'dayGridWeek,dayGridDay,dayGridMonth,dayGridYear' // user can switch between the two
                 },
+                // headerToolbar: {
+                //     left: 'prev',
+                //     center: 'title',
+                //     right: 'next'
+                // },
                 // dayMaxEvents: true,  // Enable "+ more" link when too many events
                 eventLimit: true,
-                // dayMaxEventRows: 4, // Show max 4 events per day, then display "+ more"
+                dayMaxEventRows: 1, // Show max 4 events per day, then display "+ more"
                 // moreLinkClick: 'popover',
                 eventDisplay: 'list-item', 
-                eventContent: function (info) {
-                    var dot = document.createElement('div');
-                    dot.className = 'custom-dot ' + info.event.extendedProps.type;
+                // dayCellContent: function (arg) {
+                //     // Show a dot if there are events on that date
+                //     let events = calendar.getEvents().filter(event => event.startStr === arg.dateStr);
+                //     if (events.length > 0) {
+                //         return '<div class="dot"></div>';
+                //     }
+                // },
+                // dayCellDidMount: function (info) {
+                //     // Optionally add more interactions if needed
+                // },
+                // eventClick: function (info) {
+                //     // Use FullCalendar's default functionality to show event details
+                //     info.jsEvent.preventDefault(); // Prevent browser default behavior
 
-                    // Initialize Tippy.js tooltip
-                    tippy(dot, {
-                        content: info.event.title,
-                        theme: 'light'
-                    });
+                //     // You can use FullCalendar's built-in event details modal or customize this behavior
+                //     alert('Event: ' + info.event.title + '\nDate: ' + info.event.start.toISOString());
+                // },
+                // eventContent: function (info) {
+                //     var dot = document.createElement('div');
+                //     dot.className = 'custom-dot ' + info.event.extendedProps.type;
 
-                    return { domNodes: [dot] };
-                },
+                //     // Initialize Tippy.js tooltip
+                //     // tippy(dot, {
+                //     //     content: info.event.title,
+                //     //     theme: 'light'
+                //     // });
+
+                //     return { domNodes: [dot] };
+                // },
                 // eventContent: function (arg) {
                 //     // Custom content with a dot and title
                 //     return {
@@ -316,12 +340,86 @@
                             failureCallback();
                         }
                     });
-                }
+                },
+                // dayCellContent: function (arg) {
+                //     // Show a dot if there are any events on that date
+                //     let events = calendar.getEvents().filter(event => event.startStr === arg.dateStr);
+                //     if (events.length > 0) {
+                //         return '<div class="dot"></div>';
+                //     }
+                // },
+                // dayCellDidMount: function (info) {
+                //     // Get all events for the current date
+                //     let events = calendar.getEvents().filter(event => event.startStr === info.dateStr);
+                    
+                //     // If there are events, add a Tippy tooltip on the dot
+                //     if (events.length > 0) {
+                //         let eventTitles = events.map(event => `<strong>${event.title}</strong><br>`).join('');
+                        
+                //         tippy(info.el.querySelector('.dot'), {
+                //             content: eventTitles,
+                //             interactive: true,
+                //             allowHTML: true,
+                //             theme: 'light',
+                //         });
+                //     }
+                // }
             });
 
             calendar.render();
         }
     });
+</script>
+
+<script>
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     // Chart instance
+    //     const ctx = document.getElementById('payrollChart').getContext('2d');
+
+    //     // Create the bar chart
+    //     const payrollChart = new Chart(ctx, {
+    //         type: 'bar',
+    //         data: {
+    //             labels: [], // Labels will be populated via AJAX
+    //             datasets: [{
+    //                 label: 'Total Amount',
+    //                 data: [], // Data will be populated via AJAX
+    //                 backgroundColor: ['#FF5733', '#33B5FF'],
+    //                 borderColor: ['#FF5733', '#33B5FF'],
+    //                 borderWidth: 1
+    //             }]
+    //         },
+    //         options: {
+    //             responsive: true,
+    //             scales: {
+    //                 y: {
+    //                     beginAtZero: true
+    //                 }
+    //             }
+    //         }
+    //     });
+
+    //     // AJAX request to fetch recent payroll data
+    //     function loadPayrollData() {
+    //         fetch('/client/recent-payroll')
+    //             .then(response => response.json())
+    //             .then(data => {
+    //                 const labels = data.map(item => item.month);
+    //                 const amounts = data.map(item => item.total_amount);
+
+    //                 // Update the chart with new data
+    //                 payrollChart.data.labels = labels;
+    //                 payrollChart.data.datasets[0].data = amounts;
+    //                 payrollChart.update();
+    //             })
+    //             .catch(error => {
+    //                 console.error('Error fetching payroll data:', error);
+    //             });
+    //     }
+
+    //     // Load data on page load
+    //     loadPayrollData();
+    // });
 </script>
 
 @endpush

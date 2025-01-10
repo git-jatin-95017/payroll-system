@@ -596,7 +596,7 @@ a:hover {
 
 /* Calender */
 
-.custom-calendar .fc-header-toolbar .fc-toolbar-chunk button {
+/* .custom-calendar .fc-header-toolbar .fc-toolbar-chunk button {
     background-color: transparent;
     color: #3F3F46;
     border: 1px solid #E7E7E9;
@@ -614,7 +614,7 @@ a:hover {
     font-size: 16px;
     color: #09090B;
     font-weight: 600;
-}
+}*/
 
 .custom-calendar th .fc-scrollgrid-sync-inner a{
     color: #71717A;
@@ -629,10 +629,10 @@ a:hover {
     text-decoration: none;
 }
 
-.custom-calendar th,
+/* .custom-calendar th,
 .fc-theme-standard td {
-    border: 1px solid #ccc;
-}
+    border: none;
+} */
 /* .custom-calendar .fc-daygrid-day-events,
 .custom-calendar .fc-daygrid-day-bg{
     display: none;

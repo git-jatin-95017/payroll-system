@@ -73,7 +73,8 @@ Route::prefix('client')->group(function () {
 	//Dashboard
 	Route::get('dashboard', [App\Http\Controllers\client\DashboardController::class, 'index'])->name('client.dashboard');	
 
-	Route::get('/fetch-calendar-data', [App\Http\Controllers\client\DashboardController::class, 'fetchCalendarData']);
+	Route::get('fetch-calendar-data', [App\Http\Controllers\client\DashboardController::class, 'fetchCalendarData']);
+	Route::get('recent-payroll', [App\Http\Controllers\client\DashboardController::class, 'getRecentPayroll']);
 
 	Route::get('employee/getData/', [EmployeeController::class, 'getData'])->name('employee.getData');
 	Route::resource('employee', EmployeeController::class);	

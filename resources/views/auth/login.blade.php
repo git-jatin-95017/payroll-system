@@ -135,10 +135,11 @@
             </div>
           </div>
           <form method="post" id="loginform" action="{{ url('/login') }}">
+          @csrf
             <div class="mb-3 login-input-container">
               <label for="email" class="form-label">Email Address</label>
               <div class="input-group">
-                  <input type="email" class="form-control" ame="email" value="" required placeholder="Email">
+                  <input type="email" class="form-control" name="email" value="" required placeholder="Email">
                   <span class="input-group-text login-icon-container">
                       <x-bx-envelope class="w-20 h-20" />
                   </span>

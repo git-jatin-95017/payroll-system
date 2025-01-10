@@ -105,4 +105,16 @@ class DashboardController extends Controller
 		$filepath = public_path("sample/{$file}");
         return Response::download($filepath); 
 	}
+
+	public function getRecentPayroll()
+    {
+        // Query to get the latest 2 payrolls
+        $payrolls = DB::table('payrolls')
+            ->select('month', 'total_amount')
+            ->orderBy('created_at', 'desc')
+            ->limit(2)
+            ->get();
+
+        return response()->json($payrolls);
+    }
 }
