@@ -200,12 +200,14 @@
                     </div>
                 </div>
             </div>
-            <div class="col-8 mb-5">
+            <div class="col-4 mb-5">
                 <div class="db-container p-4 shadow-sm bg-white">
                     <div class="heading-db-container mb-4">
                         <h3>Recent Payroll</h3>
                     </div>
                     <canvas id="payrollChart"></canvas>
+
+                    <span id="pay-period"></span>
                 </div>
             </div>
             <div class="col-12 mb-5">
@@ -259,6 +261,10 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .small, small {
+            font-size: .75em !important;
         }
     </style>
 @endsection
@@ -395,6 +401,15 @@
                     y: {
                         beginAtZero: true
                     }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return 'Total: ' + tooltipItem.raw.toFixed(2) + ' USD';
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -411,6 +426,20 @@
                     payrollChart.data.labels = labels;
                     payrollChart.data.datasets[0].data = amounts;
                     payrollChart.update();
+
+                    // Assuming data contains pay period and amount info
+                    const payPeriod1 = data[0].dateRange; // e.g., "December 13, 2024"
+                    const payPeriod2 = data[1].dateRange;
+                    const amount1 = data[0].total_amount; // e.g., "December 20, 2024"
+                    const amount2 = data[1].total_amount; // e.g., "December 20, 2024"
+
+                    
+                    // Update the span with the pay period and amount
+                    $('#pay-period').html(`
+                        Pay - Period:<br> 
+                        <small>${payPeriod1} : $${amount1.toLocaleString()}</small><br>
+                        <small>${payPeriod2} : $${amount2.toLocaleString()}</small>
+                    `);
                 })
                 .catch(error => {
                     console.error('Error fetching payroll data:', error);
