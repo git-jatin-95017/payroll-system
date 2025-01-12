@@ -72,7 +72,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-12 mb-3">
                                     <div class="db-data-container time-card py-2 px-3">
                                         <div class="d-flex justify-content-between">
                                             <div>
@@ -85,7 +85,7 @@
                                         <p>Approved Employees</p>
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-12">
                                     <div class="db-data-container time-card py-2 px-3">
                                         <label>Time Card</label>
                                         <?php
@@ -127,7 +127,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-4" x-data="noticeBoard">
                 <div class="db-container p-4 shadow-sm bg-white">
                     <div class="heading-db-container mb-4">
@@ -216,7 +216,7 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </div>
 </section>
@@ -402,7 +402,7 @@
                         beginAtZero: true,
                         ticks: {
                             // Format Y-axis labels with $
-                            callback: function(value) {
+                            callback: function (value) {
                                 return '$' + value.toLocaleString();
                             }
                         },
