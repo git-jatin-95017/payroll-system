@@ -731,6 +731,11 @@ a:hover {
     color: #252525;
 }
 
+.custom-calendar .fc-toolbar-chunk button.fc-button-active {
+    background-color: #5e5adb !important;
+    color: #fff !important;
+}
+
 .pay-container .pay-period-time{
     width: 68%;
 }
