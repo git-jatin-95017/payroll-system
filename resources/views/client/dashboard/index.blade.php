@@ -60,56 +60,75 @@
 <section class="px-2 db-main-container">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-8 mb-4">
-                <div class="db-container px-4 py-5 shadow-sm h-100 bg-white">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="heading-db-container mb-4">
-                                <h2>Recent Payroll</h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="db-data-container p-3">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h3>{{$totalEmp}}</h3>
-                                    </div>
-                                    <div>
-                                        <x-heroicon-s-users class="w-20 h-20" />
+            <div class="col-4 mb-4">
+                <div class="row">
+                    <div class="col-12 mb-4">
+                        <div class="db-container p-4 shadow-sm  bg-white">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="heading-db-container mb-4">
+                                        <h3>Recent Payroll</h3>
                                     </div>
                                 </div>
-                                <p>Approved Employees</p>
                             </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="db-data-container time-card p-3">
-                                <label>Time Card</label>
-                                <?php
-                                $requestData['start_date'] = date('Y-m-d', strtotime('-1 week'));
-
-                                $requestData['end_date'] = date('Y-m-d');
-                                ?>
-                                <div class="d-flex align-items-center gap-3">
-                                    <input type="text" placeholder="{{date('m/d', strtotime('-1 week'))}}">
-                                    <span>
-                                        <x-heroicon-o-arrow-right class="w-20" />
-                                    </span>
-                                    <input type="text" placeholder="{{date('m/d')}}">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="db-data-container time-card py-2 px-3">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h3>{{$totalEmp}}</h3>
+                                            </div>
+                                            <div>
+                                                <x-heroicon-s-users class="w-20 h-20" />
+                                            </div>
+                                        </div>
+                                        <p>Approved Employees</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div>
-                                <a href="{{ route('employee.index') }}" class="btn d-block btn-db mb-2 w-100">Approved Employees</a>
-                                <a href="{{ route('payroll.create', ['week_search' => 2, 'start_date' => $requestData['start_date'], 'end_date' => $requestData['end_date']]) }}" class="btn d-block btn-db w-100">Run Payroll</a>
+                                <div class="col-6">
+                                    <div class="db-data-container time-card py-2 px-3">
+                                        <label>Time Card</label>
+                                        <?php
+                                        $requestData['start_date'] = date('Y-m-d', strtotime('-1 week'));
+        
+                                        $requestData['end_date'] = date('Y-m-d');
+                                        ?>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <input type="text" placeholder="{{date('m/d', strtotime('-1 week'))}}">
+                                            <span>
+                                                <x-heroicon-o-arrow-right class="w-20" />
+                                            </span>
+                                            <input type="text" placeholder="{{date('m/d')}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <div>
+                                        <a href="{{ route('employee.index') }}"
+                                            class="btn d-block btn-db mb-2 w-100">Approved Employees</a>
+                                        <a href="{{ route('payroll.create', ['week_search' => 2, 'start_date' => $requestData['start_date'], 'end_date' => $requestData['end_date']]) }}"
+                                            class="btn d-block btn-db w-100">Run Payroll</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-4 mb-4" x-data="noticeBoard">
+            <div class="col-4 mb-2">
+                <div class="db-container p-2 shadow-sm bg-white">
+                    <div class="row">
+                        <div class="col-12">
+                            <canvas id="payrollChart" width="300" height="300" style="max-width: 100%;"></canvas>
+                            <div class="pay-period-container mt-2">
+                                <span id="pay-period"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-4" x-data="noticeBoard">
                 <div class="db-container p-4 shadow-sm bg-white">
                     <div class="heading-db-container mb-4">
                         <h3>Notice Board</h3>
@@ -127,7 +146,7 @@
                             </div>
                         </template>
                         <div class="more-notification text-center">
-                            <!-- <a href="#">More Notification</a> -->
+                            <a href="#">More Notification</a>
                         </div>
                     </div>
                 </div>
@@ -180,105 +199,82 @@
                                 </div>
                                 <div>
                                     <h3>Leave</h3>
-                                    <!-- <span>Redirects you to Leave section</span> -->
                                 </div>
                             </div>
                         </a>
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-4 mb-5">
-                <div class="db-container p-4 shadow-sm bg-white">
-                    <div class="heading-db-container mb-4">
-                        <h3>Recent Payroll</h3>
-                    </div>
-                    <canvas id="payrollChart"></canvas>
-
-                    <span id="pay-period"></span>
-                </div>
-            </div> -->
-
-            <div class="col-8 mb-5">
-                <div class="db-container p-4 shadow-sm bg-white">
-                    <div class="row">
-                        <div class="col-8">
-                            <canvas id="payrollChart"></canvas>
-                        </div>
-                        <div class="col-4">
-                            <div class="pay-period-container">
-                                <span id="pay-period"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-12 mb-5">
+            <div class="col-8 mb-4">
                 <div class="db-container p-4 shadow-sm bg-white">
                     <div class="heading-db-container mb-4">
                         <h3>Calendar</h3>
                     </div>
-					<!-- Small Calendar Container -->
-					<div class="custom-calendar" id="calendar"></div>
+                    <!-- Small Calendar Container -->
+                    <div class="custom-calendar">
+                        <div id="calendar"></div>
+                    </div>
                 </div>
             </div>
+            
         </div>
     </div>
 </section>
 @endsection
 
 @section('third_party_stylesheets')
-    <!-- FullCalendar CSS -->
-    <!-- <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet"> -->
-    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css">
+<!-- FullCalendar CSS -->
+<!-- <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet"> -->
+<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css">
 
-    <!-- Custom CSS for dots -->
-    <style>
-        .custom-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            background-color: #3b82f6;
-        }
+<!-- Custom CSS for dots -->
+<style>
+    .custom-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        background-color: #3b82f6;
+    }
 
-        .custom-dot.birthday {
-            background-color: #fbbf24;
-        }
+    .custom-dot.birthday {
+        background-color: #fbbf24;
+    }
 
-        .custom-dot.leave {
-            background-color: #10b981;
-        }
+    .custom-dot.leave {
+        background-color: #10b981;
+    }
 
-        .custom-dot.public_holiday {
-            background-color: #ef4444;
-        }
+    .custom-dot.public_holiday {
+        background-color: #ef4444;
+    }
 
-        .custom-dot.voluntary_holiday {
-            background-color: #6366f1;
-        }
+    .custom-dot.voluntary_holiday {
+        background-color: #6366f1;
+    }
 
-        .tippy-box[data-theme~='light'] {
-            background-color: #fff;
-            color: #333;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+    .tippy-box[data-theme~='light'] {
+        background-color: #fff;
+        color: #333;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-        .small, small {
-            font-size: .75em !important;
-        }
-    </style>
+    .small,
+    small {
+        font-size: .75em !important;
+    }
+</style>
 @endsection
 
 @section('third_party_scripts')
-    <!-- FullCalendar JS -->
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
-    <script src="https://unpkg.com/@popperjs/core@2"></script>
-    <script src="https://unpkg.com/tippy.js@6"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<!-- FullCalendar JS -->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
 @endsection
 
@@ -291,9 +287,9 @@
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 headerToolbar: {
-                    left: 'prev,next',
-                    center: 'title',
-                    right: 'dayGridWeek,dayGridDay,dayGridMonth,dayGridYear' // user can switch between the two
+                    right: 'prev,next',
+                    left: 'title',
+                    center: 'dayGridWeek,dayGridDay,dayGridMonth,dayGridYear' // user can switch between the two
                 },
                 // headerToolbar: {
                 //     left: 'prev',
@@ -304,7 +300,7 @@
                 // eventLimit: true,
                 dayMaxEventRows: 1, // Show max 4 events per day, then display "+ more"
                 // moreLinkClick: 'popover',
-                eventDisplay: 'list-item', 
+                eventDisplay: 'list-item',
                 // dayCellContent: function (arg) {
                 //     // Show a dot if there are events on that date
                 //     let events = calendar.getEvents().filter(event => event.startStr === arg.dateStr);
@@ -362,11 +358,11 @@
                 // dayCellDidMount: function (info) {
                 //     // Get all events for the current date
                 //     let events = calendar.getEvents().filter(event => event.startStr === info.dateStr);
-                    
+
                 //     // If there are events, add a Tippy tooltip on the dot
                 //     if (events.length > 0) {
                 //         let eventTitles = events.map(event => `<strong>${event.title}</strong><br>`).join('');
-                        
+
                 //         tippy(info.el.querySelector('.dot'), {
                 //             content: eventTitles,
                 //             interactive: true,
@@ -386,17 +382,16 @@
     document.addEventListener('DOMContentLoaded', function () {
         // Chart instance
         const ctx = document.getElementById('payrollChart').getContext('2d');
-
         // Create the bar chart
         const payrollChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: [], // Labels will be populated via AJAX
                 datasets: [{
-                    label: 'Total Amount',
+                    label: '',
                     data: [], // Data will be populated via AJAX
-                    backgroundColor: ['#FF5733', '#33B5FF'],
-                    borderColor: ['#FF5733', '#33B5FF'],
+                    backgroundColor: ['#5c2c8d', '#5c2c8d'],
+                    borderColor: ['#5c2c8d', '#5c2c8d'],
                     borderWidth: 1
                 }]
             },
@@ -404,21 +399,43 @@
                 responsive: true,
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            // Format Y-axis labels with $
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        },
+                        font: {
+                            size: 10 // Smaller Y-axis font size
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 10 // Smaller X-axis font size
+                            }
+                        }
                     }
                 },
                 plugins: {
                     tooltip: {
                         callbacks: {
-                            label: function(tooltipItem) {
-                                return 'Total: ' + tooltipItem.raw.toFixed(2) + ' USD';
+                            label: function (tooltipItem) {
+                                return 'Total: $' + tooltipItem.raw.toLocaleString();
+                            }
+                        }
+                    },
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 12 // Smaller legend font size
                             }
                         }
                     }
                 }
             }
         });
-
         // AJAX request to fetch recent payroll data
         function loadPayrollData() {
             fetch('/client/recent-payroll')
@@ -438,7 +455,7 @@
                     const amount1 = data[0].total_amount; // e.g., "December 20, 2024"
                     const amount2 = data[1].total_amount; // e.g., "December 20, 2024"
 
-                    
+
                     // Update the span with the pay period and amount
                     $('#pay-period').html(`
                         <div class="pay-container mb-3">
@@ -447,9 +464,6 @@
                                 <span class="pay-period-time">${payPeriod1}</span>  
                                 <span class="pay-period-amount">$${amount1.toLocaleString()}</span>
                             </div>
-                        </div>
-                        <div class="pay-container">
-                            <h3>Pay - Period</h3>
                             <div class="d-flex justify-content-between align-items-center gap-3">
                                 <span class="pay-period-time">${payPeriod2}</span>  
                                 <span class="pay-period-amount">$${amount2.toLocaleString()}</span>
@@ -501,6 +515,40 @@
         }));
     });
 </script>
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('noticeBoard', () => ({
+            notices: [],
 
+            init() {
+                this.fetchNotices();
+                setInterval(() => this.fetchNotices(), 2000); // Refresh every 5 seconds
+            },
+
+            fetchNotices() {
+                fetch('/client/notices')
+                    .then(res => res.json())
+                    .then(data => {
+                        this.updateNotices(data);
+                    })
+                    .catch(err => console.error('Error fetching notices:', err));
+            },
+
+            updateNotices(newNotices) {
+                // Check if the notices have changed and update if necessary
+                if (JSON.stringify(this.notices) !== JSON.stringify(newNotices)) {
+                    this.notices = newNotices;
+                }
+            },
+
+            timeAgo(date) {
+                const diff = Math.floor((new Date() - new Date(date)) / 60000);
+                if (diff < 60) return `${diff} minutes ago`;
+                const hours = Math.floor(diff / 60);
+                return hours === 1 ? `1 hour ago` : `${hours} hours ago`;
+            }
+        }));
+    });
+</script>
 
 @endpush

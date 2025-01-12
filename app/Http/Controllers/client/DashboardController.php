@@ -248,7 +248,7 @@ class DashboardController extends Controller
 		$employeePayT = $grossT - $mbse_deductions + $nothingAdditionTonetPayT - $deductionsT;
 		$TotalPayroll += $employeePayT + $mbse_deductions + $row->security_employer;
 		
-		$dateRange = date('F j, Y', strtotime($row->start_date)) . ' - ' . date('F j, Y', strtotime($row->end_date));
+		$dateRange = date('M j, Y', strtotime($row->start_date)) . ' - ' . date('M j, Y', strtotime($row->end_date));
 		
 		// Get month from start_date
 		$month = date('F Y', strtotime($row->start_date));
