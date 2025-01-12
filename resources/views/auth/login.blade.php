@@ -129,9 +129,9 @@
         <div class="login-box mx-auto bg-white">
             @include('layouts.flash-admin-message')
           <div class="login-header">
-            <div class="mb-5">
+            <div class="mb-4">
                 <img src="{{ asset('img/big-logo.svg') }}" alt="PayWiz Logo">
-                <h3 class="mt-5">Sign in</h3>
+                <h3 class="mt-4">Sign in</h3>
             </div>
           </div>
           <form method="post" id="loginform" action="{{ url('/login') }}">

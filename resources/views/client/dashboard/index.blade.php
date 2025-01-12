@@ -187,7 +187,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4 mb-5">
+            <!-- <div class="col-4 mb-5">
                 <div class="db-container p-4 shadow-sm bg-white">
                     <div class="heading-db-container mb-4">
                         <h3>Recent Payroll</h3>
@@ -196,7 +196,23 @@
 
                     <span id="pay-period"></span>
                 </div>
+            </div> -->
+
+            <div class="col-8 mb-5">
+                <div class="db-container p-4 shadow-sm bg-white">
+                    <div class="row">
+                        <div class="col-8">
+                            <canvas id="payrollChart"></canvas>
+                        </div>
+                        <div class="col-4">
+                            <div class="pay-period-container">
+                                <span id="pay-period"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+            
             <div class="col-12 mb-5">
                 <div class="db-container p-4 shadow-sm bg-white">
                     <div class="heading-db-container mb-4">
@@ -425,9 +441,20 @@
                     
                     // Update the span with the pay period and amount
                     $('#pay-period').html(`
-                        Pay - Period:<br> 
-                        <small>${payPeriod1} : $${amount1.toLocaleString()}</small><br>
-                        <small>${payPeriod2} : $${amount2.toLocaleString()}</small>
+                        <div class="pay-container mb-3">
+                            <h3>Pay - Period</h3>
+                            <div class="d-flex justify-content-between align-items-center gap-3">
+                                <span class="pay-period-time">${payPeriod1}</span>  
+                                <span class="pay-period-amount">$${amount1.toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <div class="pay-container">
+                            <h3>Pay - Period</h3>
+                            <div class="d-flex justify-content-between align-items-center gap-3">
+                                <span class="pay-period-time">${payPeriod2}</span>  
+                                <span class="pay-period-amount">$${amount2.toLocaleString()}</span>
+                            </div>
+                        </div>
                     `);
                 })
                 .catch(error => {
