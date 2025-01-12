@@ -39,6 +39,12 @@
 				<span>Payroll </span>
 			</a>
 		</li>
+		<li>
+			<a href="{{ route('notice.index') }}">
+				<x-bxs-plane-take-off class="w-20 h-20"/>
+				<span>Notices</span>
+			</a>
+		</li>
 		<li class="has-sub">
 			<a href="#">
 				<x-bxs-user class="w-20 h-20"/>

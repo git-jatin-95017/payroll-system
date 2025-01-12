@@ -109,38 +109,25 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4 mb-4">
+            <div class="col-4 mb-4" x-data="noticeBoard">
                 <div class="db-container p-4 shadow-sm bg-white">
                     <div class="heading-db-container mb-4">
                         <h3>Notice Board</h3>
                     </div>
                     <div class="notice-board">
-                        <div class="d-flex gap-3 align-items-center border-bottom pb-3 mb-3">
-                            <div class="notice-icon shadow-sm">
-                                <x-bx-envelope class="w-20 h-20" />
+                        <template x-for="notice in notices" :key="notice.id">
+                            <div class="d-flex gap-3 align-items-center border-bottom pb-3 mb-3">
+                                <div class="notice-icon shadow-sm">
+                                    <x-bx-envelope class="w-20 h-20" />
+                                </div>
+                                <div>
+                                    <p x-text="notice.message"></p>
+                                    <span x-text="timeAgo(notice.created_at)"></span>
+                                </div>
                             </div>
-                            <div>
-                                <p>Payroll processing on [Date]. Update attendance, leaves, and bank details by
-                                    [Deadline
-                                    Date]. Contact HR for help.
-                                </p>
-                                <span>15 minutes ago</span>
-                            </div>
-                        </div>
-                        <div class="d-flex gap-3 align-items-center border-bottom pb-3 mb-3">
-                            <div class="notice-icon shadow-sm">
-                                <x-bx-envelope class="w-20 h-20" />
-                            </div>
-                            <div>
-                                <p>Payroll processing on [Date]. Update attendance, leaves, and bank details by
-                                    [Deadline
-                                    Date]. Contact HR for help.
-                                </p>
-                                <span>15 minutes ago</span>
-                            </div>
-                        </div>
+                        </template>
                         <div class="more-notification text-center">
-                            <a href="#">More Notification</a>
+                            <!-- <a href="#">More Notification</a> -->
                         </div>
                     </div>
                 </div>
@@ -275,6 +262,8 @@
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
 @endsection
 
 @push('page_scripts')
@@ -296,7 +285,7 @@
                 //     right: 'next'
                 // },
                 // dayMaxEvents: true,  // Enable "+ more" link when too many events
-                eventLimit: true,
+                // eventLimit: true,
                 dayMaxEventRows: 1, // Show max 4 events per day, then display "+ more"
                 // moreLinkClick: 'popover',
                 eventDisplay: 'list-item', 
@@ -450,5 +439,41 @@
         loadPayrollData();
     });
 </script>
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('noticeBoard', () => ({
+            notices: [],
+
+            init() {
+                this.fetchNotices();
+                setInterval(() => this.fetchNotices(), 2000); // Refresh every 5 seconds
+            },
+
+            fetchNotices() {
+                fetch('/client/notices')
+                    .then(res => res.json())
+                    .then(data => {
+                        this.updateNotices(data);
+                    })
+                    .catch(err => console.error('Error fetching notices:', err));
+            },
+
+            updateNotices(newNotices) {
+                // Check if the notices have changed and update if necessary
+                if (JSON.stringify(this.notices) !== JSON.stringify(newNotices)) {
+                    this.notices = newNotices;
+                }
+            },
+
+            timeAgo(date) {
+                const diff = Math.floor((new Date() - new Date(date)) / 60000);
+                if (diff < 60) return `${diff} minutes ago`;
+                const hours = Math.floor(diff / 60);
+                return hours === 1 ? `1 hour ago` : `${hours} hours ago`;
+            }
+        }));
+    });
+</script>
+
 
 @endpush

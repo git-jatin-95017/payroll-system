@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\ClientController;
 use App\Http\Controllers\admin\ProfileController;
 use App\Http\Controllers\client\EmployeeController;
 use App\Http\Controllers\client\HolidayController;
+use App\Http\Controllers\client\NoticeController;
 use App\Http\Controllers\client\LeavesController;
 use App\Http\Controllers\client\DepartmentController;
 use App\Http\Controllers\client\LeaveTypeController;
@@ -132,6 +133,10 @@ Route::prefix('client')->group(function () {
 
 	Route::post('show-medical-form', [ReportController::class, 'showMedicalForm'])->name('report.showMedicalForm');
 	Route::resource('report', ReportController::class);
+
+	Route::get('notices', [NoticeController::class, 'fetchNotices']);
+	Route::resource('notice', NoticeController::class);
+
 });
 
 Route::prefix('employee')->group(function () {
