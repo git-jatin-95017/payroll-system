@@ -16,6 +16,7 @@ use App\Models\PropertyTaxSample;
 use App\Models\SaleTaxSample;
 use App\Models\SupermarketSample;
 use App\Models\Setting;
+use App\Models\PayrollSheet;
 use App\Models\PayrollAmount;
 use App\Models\User;
 use File;
@@ -81,11 +82,20 @@ class DashboardController extends Controller
 		$countPts 	= 0;
 		$countSts 	= 0;
 		$countSms 	= 0;
-		$totalEmp = User::join('employee_profile', function($join) {
-			$join->on('users.id', '=', 'employee_profile.user_id');
-		}) 
-		->where('users.created_by', auth()->user()->id)->count();
 
+		$startD = date('Y-m-d', strtotime('-1 week'));
+
+        $endD = date('Y-m-d');
+
+		$totalEmp = PayrollSheet::join('users', function ($join) {
+			$join->on('users.id', '=', 'payroll_sheets.emp_id')
+				 ->where('status', 1);
+		})
+		->whereBetween('payroll_date', [$startD, $endD])
+		->where('approval_status', 1)
+		->distinct('payroll_sheets.emp_id')
+		->count('payroll_sheets.emp_id');
+	
 		return view('client.dashboard.index', compact(
 			'countLc',
 			'countHc',

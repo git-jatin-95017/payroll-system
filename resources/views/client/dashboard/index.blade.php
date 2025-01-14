@@ -65,7 +65,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="heading-db-container mb-4">
-                                <h3>Just Payroll</h3>
+                                <h3>Payroll</h3>
                             </div>
                         </div>
                     </div>
@@ -92,19 +92,19 @@
                                 $requestData['end_date'] = date('Y-m-d');
                                 ?>
                                 <div class="d-flex align-items-center gap-3">
-                                    <input type="text" placeholder="{{date('m/d', strtotime('-1 week'))}}">
+                                    <input type="text" placeholder="{{date('m/d/Y', strtotime('-1 week'))}}">
                                     <span>
                                         <x-heroicon-o-arrow-right class="w-20" />
                                     </span>
-                                    <input type="text" placeholder="{{date('m/d')}}">
+                                    <input type="text" placeholder="{{date('m/d/Y')}}">
                                 </div>
                             </div>
                         </div>
                         <div class="col-12 mt-4">
                             <div>
-                                <a href="{{ route('employee.index') }}"
-                                    class="btn d-block btn-db mb-3 w-100">Approved Employees</a>
                                 <a href="{{ route('payroll.create', ['week_search' => 2, 'start_date' => $requestData['start_date'], 'end_date' => $requestData['end_date']]) }}"
+                                    class="btn d-block btn-db mb-3 w-100">Approved Employees</a>
+                                <a href="{{ route('list.payroll') }}"
                                     class="btn d-block btn-db w-100">Run Payroll</a>
                             </div>
                         </div>
@@ -137,7 +137,7 @@
                             </div>
                         </template>
                         <div class="more-notification text-center">
-                            <a href="#">More Notification</a>
+                            <a href="{{ route('notice.index') }}">More Notification</a>
                         </div>
                     </div>
                 </div>
@@ -290,7 +290,7 @@
                 // },
                 // dayMaxEvents: true,  // Enable "+ more" link when too many events
                 // eventLimit: true,
-                dayMaxEventRows: 1, // Show max 4 events per day, then display "+ more"
+                dayMaxEventRows: 0, // Show max 4 events per day, then display "+ more"
                 // moreLinkClick: 'popover',
                 eventDisplay: 'list-item',
                 // dayCellContent: function (arg) {
@@ -419,11 +419,7 @@
                         }
                     },
                     legend: {
-                        labels: {
-                            font: {
-                                size: 12 // Smaller legend font size
-                            }
-                        }
+                        display: false
                     }
                 }
             }

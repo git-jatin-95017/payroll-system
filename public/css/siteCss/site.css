@@ -450,9 +450,9 @@ a:hover {
 }
 
 .time-card input {
-    width: 80px;
+    width: 130px;
     border: none;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
     background-color: transparent;
 }
