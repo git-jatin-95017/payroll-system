@@ -85,7 +85,7 @@
                         </div>
                         <div class="col-12">
                             <div class="db-data-container time-card py-2 px-3">
-                                <label>Time Card</label>
+                                <label>Time sheet</label>
                                 <?php
                                 $requestData['start_date'] = date('Y-m-d', strtotime('-1 week'));
 
