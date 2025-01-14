@@ -134,7 +134,7 @@ class NoticeController extends Controller
         $notices = DB::table('notices')
             ->orderBy('created_at', 'desc')
 			->where('notices.created_by', auth()->user()->id)
-            ->limit(2)
+            ->limit(3)
             ->get();
 
         return response()->json($notices);

@@ -278,6 +278,7 @@
         if (calendarEl) {
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
+                height: 320,
                 headerToolbar: {
                     right: 'prev,next',
                     left: 'title',
