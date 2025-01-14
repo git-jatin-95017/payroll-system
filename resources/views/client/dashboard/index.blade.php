@@ -61,75 +61,66 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-4 mb-4">
-                <div class="row">
-                    <div class="col-12 mb-4">
-                        <div class="db-container p-4 shadow-sm  bg-white">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="heading-db-container mb-4">
-                                        <h3>Recent Payroll</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 mb-3">
-                                    <div class="db-data-container time-card py-2 px-3">
-                                        <div class="d-flex justify-content-between">
-                                            <div>
-                                                <h3>{{$totalEmp}}</h3>
-                                            </div>
-                                            <div>
-                                                <x-heroicon-s-users class="w-20 h-20" />
-                                            </div>
-                                        </div>
-                                        <p>Approved Employees</p>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="db-data-container time-card py-2 px-3">
-                                        <label>Time Card</label>
-                                        <?php
-                                        $requestData['start_date'] = date('Y-m-d', strtotime('-1 week'));
-        
-                                        $requestData['end_date'] = date('Y-m-d');
-                                        ?>
-                                        <div class="d-flex align-items-center gap-3">
-                                            <input type="text" placeholder="{{date('m/d', strtotime('-1 week'))}}">
-                                            <span>
-                                                <x-heroicon-o-arrow-right class="w-20" />
-                                            </span>
-                                            <input type="text" placeholder="{{date('m/d')}}">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 mt-4">
-                                    <div>
-                                        <a href="{{ route('employee.index') }}"
-                                            class="btn d-block btn-db mb-2 w-100">Approved Employees</a>
-                                        <a href="{{ route('payroll.create', ['week_search' => 2, 'start_date' => $requestData['start_date'], 'end_date' => $requestData['end_date']]) }}"
-                                            class="btn d-block btn-db w-100">Run Payroll</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4 mb-2">
-                <div class="db-container p-2 shadow-sm bg-white">
+                <div class="db-container p-4 shadow-sm bg-white h-100">
                     <div class="row">
                         <div class="col-12">
-                            <canvas id="payrollChart" width="300" height="300" style="max-width: 100%;"></canvas>
-                            <div class="pay-period-container mt-2">
-                                <span id="pay-period"></span>
+                            <div class="heading-db-container mb-4">
+                                <h3>Just Payroll</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <div class="db-data-container time-card py-2 px-3">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h3>{{$totalEmp}}</h3>
+                                    </div>
+                                    <div>
+                                        <x-heroicon-s-users class="w-20 h-20" />
+                                    </div>
+                                </div>
+                                <p>Approved Employees</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="db-data-container time-card py-2 px-3">
+                                <label>Time Card</label>
+                                <?php
+                                $requestData['start_date'] = date('Y-m-d', strtotime('-1 week'));
+
+                                $requestData['end_date'] = date('Y-m-d');
+                                ?>
+                                <div class="d-flex align-items-center gap-3">
+                                    <input type="text" placeholder="{{date('m/d', strtotime('-1 week'))}}">
+                                    <span>
+                                        <x-heroicon-o-arrow-right class="w-20" />
+                                    </span>
+                                    <input type="text" placeholder="{{date('m/d')}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <div>
+                                <a href="{{ route('employee.index') }}"
+                                    class="btn d-block btn-db mb-3 w-100">Approved Employees</a>
+                                <a href="{{ route('payroll.create', ['week_search' => 2, 'start_date' => $requestData['start_date'], 'end_date' => $requestData['end_date']]) }}"
+                                    class="btn d-block btn-db w-100">Run Payroll</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-4" x-data="noticeBoard">
-                <div class="db-container p-4 shadow-sm bg-white">
+            <div class="col-4 mb-4">
+                <div class="db-container p-4 shadow-sm bg-white h-100">
+                    <canvas id="payrollChart" width="300" height="300" style="max-width: 100%;"></canvas>
+                    <div class="pay-period-container mt-2">
+                        <span id="pay-period"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 mb-4" x-data="noticeBoard">
+                <div class="db-container p-4 shadow-sm bg-white h-100">
                     <div class="heading-db-container mb-4">
                         <h3>Notice Board</h3>
                     </div>
@@ -159,7 +150,7 @@
                         <h3>Manage your business</h3>
                     </div>
                     <div class="db-card">
-                        <a href="{{ route('my-profile.edit', auth()->user()->id) }}" class="d-block mb-3">
+                        <a href="{{ route('my-profile.edit', auth()->user()->id) }}" class="d-block mb-4">
                             <div class="d-flex gap-3 align-items-center">
                                 <div class="notice-icon shadow-sm">
                                     <x-bx-briefcase-alt-2 class="w-20 h-20" />
@@ -170,18 +161,18 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="{{ route('payroll.create', ['week_search' => 2]) }}" class="d-block mb-3">
+                        <a href="{{ route('payroll.create', ['week_search' => 2]) }}" class="d-block mb-4">
                             <div class="d-flex gap-3 align-items-center">
                                 <div class="notice-icon shadow-sm">
                                     <x-bx-time class="w-20 h-20" />
                                 </div>
                                 <div>
                                     <h3>Time</h3>
-                                    <span>Track your employee’s time</span>
+                                    <span>Track your employees time</span>
                                 </div>
                             </div>
                         </a>
-                        <a href="{{ route('holidays.index') }}" class="d-block mb-3">
+                        <a href="{{ route('holidays.index') }}" class="d-block mb-4">
                             <div class="d-flex gap-3 align-items-center">
                                 <div class="notice-icon shadow-sm">
                                     <x-bxs-plane-take-off class="w-20 h-20" />
@@ -199,6 +190,7 @@
                                 </div>
                                 <div>
                                     <h3>Leave</h3>
+                                    <span>Track your employees leave</span>
                                 </div>
                             </div>
                         </a>
@@ -206,10 +198,10 @@
                 </div>
             </div>
             <div class="col-8 mb-4">
-                <div class="db-container p-4 shadow-sm bg-white">
-                    <div class="heading-db-container mb-4">
+                <div class="db-container py-4 px-3 shadow-sm bg-white">
+                    <!-- <div class="heading-db-container mb-4">
                         <h3>Calendar</h3>
-                    </div>
+                    </div> -->
                     <!-- Small Calendar Container -->
                     <div class="custom-calendar">
                         <div id="calendar"></div>
@@ -390,8 +382,8 @@
                 datasets: [{
                     label: '',
                     data: [], // Data will be populated via AJAX
-                    backgroundColor: ['#5c2c8d', '#5c2c8d'],
-                    borderColor: ['#5c2c8d', '#5c2c8d'],
+                    backgroundColor: ['#5E5ADB', '#5E5ADB'],
+                    borderColor: ['#5E5ADB', '#5E5ADB'],
                     borderWidth: 1
                 }]
             },
@@ -458,14 +450,14 @@
 
                     // Update the span with the pay period and amount
                     $('#pay-period').html(`
-                        <div class="pay-container mb-3">
+                        <div class="pay-container mt-3">
                             <h3>Pay - Period</h3>
                             <div class="d-flex justify-content-between align-items-center gap-3">
-                                <span class="pay-period-time">${payPeriod1}</span>  
+                                <span class="pay-period-time">${payPeriod1}</span>
                                 <span class="pay-period-amount">$${amount1.toLocaleString()}</span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center gap-3">
-                                <span class="pay-period-time">${payPeriod2}</span>  
+                                <span class="pay-period-time">${payPeriod2}</span>
                                 <span class="pay-period-amount">$${amount2.toLocaleString()}</span>
                             </div>
                         </div>
