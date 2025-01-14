@@ -69,6 +69,8 @@
                             </div>
                         </div>
                     </div>
+
+
                     <div class="row">
                         <div class="col-12 mb-3">
                             <div class="db-data-container time-card py-2 px-3">
@@ -86,7 +88,7 @@
                         <div class="col-12">
                             <div class="db-data-container time-card py-2 px-3">
                                 <label>Time Card</label>
-                                <?php
+                                <!-- <?php
                                 $requestData['start_date'] = date('Y-m-d', strtotime('-1 week'));
 
                                 $requestData['end_date'] = date('Y-m-d');
@@ -97,6 +99,10 @@
                                         <x-heroicon-o-arrow-right class="w-20" />
                                     </span>
                                     <input type="text" placeholder="{{date('m/d/Y')}}">
+                                </div> -->
+                                <div class="custom-calender">
+                                    <input type="text" class="form-control" name="daterange"
+                                        value="01/01/2018 - 01/15/2018" />
                                 </div>
                             </div>
                         </div>
@@ -104,8 +110,7 @@
                             <div>
                                 <a href="{{ route('payroll.create', ['week_search' => 2, 'start_date' => $requestData['start_date'], 'end_date' => $requestData['end_date']]) }}"
                                     class="btn d-block btn-db mb-3 w-100">Approved Employees</a>
-                                <a href="{{ route('list.payroll') }}"
-                                    class="btn d-block btn-db w-100">Run Payroll</a>
+                                <a href="{{ route('list.payroll') }}" class="btn d-block btn-db w-100">Run Payroll</a>
                             </div>
                         </div>
                     </div>
@@ -271,6 +276,17 @@
 @endsection
 
 @push('page_scripts')
+
+<script>
+    $(function () {
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'left'
+        }, function (start, end, label) {
+            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
+    });
+</script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
