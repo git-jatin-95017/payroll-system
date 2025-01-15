@@ -16,9 +16,9 @@
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
         rel="stylesheet">
         <!-- style -->
-        <link rel="stylesheet" type="text/css" href="{{ asset('css/sitecss/daterangepicker.css') }}" />
-        <link href=" {{ asset('css/sitecss/bootstrap.min.css') }}" rel="stylesheet">
-        <link href=" {{ asset('css/sitecss/site.css') }}" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/siteCss/daterangepicker.css') }}" />
+        <link href=" {{ asset('css/siteCss/bootstrap.min.css') }}" rel="stylesheet">
+        <link href=" {{ asset('css/siteCss/site.css') }}" rel="stylesheet">
     <style>
         body {
             background: #fff;
