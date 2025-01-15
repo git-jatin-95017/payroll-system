@@ -97,7 +97,7 @@
                                 ?>
                                 <div class="custom-calender">
                                     <input type="text" class="form-control" name="daterange"
-                                        value="01/01/2024 - 01/14/2024" />
+                                        value="{{date('m/d/Y', strtotime($requestData['start_date'])).' - '.date('m/d/Y', strtotime($requestData['end_date']))}}" />
                                 </div>
                             </div>
                         </div>
