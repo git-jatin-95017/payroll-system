@@ -85,6 +85,8 @@
                                 <p>Approved Employees</p>
                             </div>
                         </div>
+                        <form class="" method="GET" action="{{ route('payroll.create') }}" id="filter-timesheet">
+
                         <div class="col-12">
                             <div class="db-data-container time-card py-2 px-3">
                                 <label>Time sheet</label>
@@ -101,11 +103,11 @@
                         </div>
                         <div class="col-12 mt-4">
                             <div>
-                                <a href="{{ route('payroll.create', ['week_search' => 2, 'start_date' => $requestData['start_date'], 'end_date' => $requestData['end_date']]) }}"
-                                    class="btn d-block btn-db mb-3 w-100">Approved Employees</a>
+                                <button type="submit" class="btn d-block btn-db mb-3 w-100">Approved Employees</button>
                                 <a href="{{ route('list.payroll') }}" class="btn d-block btn-db w-100">Run Payroll</a>
                             </div>
                         </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -143,7 +145,7 @@
         </div>
         <div class="row">
             <div class="col-4 mb-5">
-                <div class="db-container p-4 shadow-sm bg-white">
+                <div class="db-container p-4 shadow-sm bg-white" style="height: 104%!important;">
                     <div class="heading-db-container mb-4">
                         <h3>Manage your business</h3>
                     </div>
@@ -287,7 +289,7 @@
         if (calendarEl) {
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                height: 320,
+                //height: 480,
                 headerToolbar: {
                     right: 'prev,next',
                     left: 'title',
@@ -381,6 +383,13 @@
 </script>
 
 <script>
+    const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+
     document.addEventListener('DOMContentLoaded', function () {
         // Chart instance
         const ctx = document.getElementById('payrollChart').getContext('2d');
@@ -405,7 +414,7 @@
                         ticks: {
                             // Format Y-axis labels with $
                             callback: function (value) {
-                                return '$' + value.toLocaleString();
+                                return '$' + formatter.format(value);
                             }
                         },
                         font: {
@@ -424,7 +433,7 @@
                     tooltip: {
                         callbacks: {
                             label: function (tooltipItem) {
-                                return 'Total: $' + tooltipItem.raw.toLocaleString();
+                                return 'Total: $' + formatter.format(tooltipItem.raw);
                             }
                         }
                     },
@@ -460,11 +469,11 @@
                             <h3>Pay - Period</h3>
                             <div class="d-flex justify-content-between align-items-center gap-3">
                                 <span class="pay-period-time">${payPeriod1}</span>
-                                <span class="pay-period-amount">$${amount1.toLocaleString()}</span>
+                                <span class="pay-period-amount">$${formatter.format(amount1)}</span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center gap-3">
                                 <span class="pay-period-time">${payPeriod2}</span>
-                                <span class="pay-period-amount">$${amount2.toLocaleString()}</span>
+                                <span class="pay-period-amount">$${formatter.format(amount2)}</span>
                             </div>
                         </div>
                     `);
@@ -541,6 +550,7 @@
 
             timeAgo(date) {
                 const diff = Math.floor((new Date() - new Date(date)) / 60000);
+                if (diff <= 0) return 'Just now';
                 if (diff < 60) return `${diff} minutes ago`;
                 const hours = Math.floor(diff / 60);
                 return hours === 1 ? `1 hour ago` : `${hours} hours ago`;
