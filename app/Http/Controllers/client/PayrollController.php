@@ -120,13 +120,15 @@ class PayrollController extends Controller
 				$isExist = PayrollSheet::where('emp_id', $data['emp_id'])->where('payroll_date', $data['payroll_date'])->first();
 				$isExist->payroll_date = $data['payroll_date'];
 				$isExist->daily_hrs = $data['daily_hrs'];
+				$isExist->created_by = auth()->user()->id;
 				$isExist->save();
 			} else{
 				PayrollSheet::create([
 					'payroll_date' => $data['payroll_date'],
 					'daily_hrs' => $data['daily_hrs'],
 					'emp_id' => $data['emp_id'],
-					'created_at' => date('Y-m-d H:i:s')
+					'created_at' => date('Y-m-d H:i:s'),
+					'created_by' => auth()->user()->id
 				]);	
 			}	
 
@@ -155,6 +157,7 @@ class PayrollController extends Controller
 										$isExist->approval_status = 1;
 										$isExist->date_range = $data['daterangehidden'];
 										$isExist->appoval_number = $number;
+										$isExist->created_by = auth()->user()->id;
 										$isExist->save();
 									}
 								}

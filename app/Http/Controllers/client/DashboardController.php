@@ -94,6 +94,7 @@ class DashboardController extends Controller
 		->whereBetween('payroll_date', [$startD, $endD])
 		->where('approval_status', 1)
 		->distinct('payroll_sheets.emp_id')
+		->where('payroll_sheets.created_by', auth()->user()->id)
 		->count('payroll_sheets.emp_id');
 	
 		return view('client.dashboard.index', compact(
