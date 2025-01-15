@@ -15,9 +15,10 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
         rel="stylesheet">
-    <!-- style -->
-    <link href=" {{ asset('css/siteCss/bootstrap.min.css') }}" rel="stylesheet">
-    <link href=" {{ asset('css/siteCss/site.css') }}" rel="stylesheet">
+        <!-- style -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/sitecss/daterangepicker.css') }}" />
+        <link href=" {{ asset('css/sitecss/bootstrap.min.css') }}" rel="stylesheet">
+        <link href=" {{ asset('css/sitecss/site.css') }}" rel="stylesheet">
     <style>
         body {
             background: #fff;
@@ -75,39 +76,12 @@
         </div>
     </div>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="{{asset('js/sitejs/libs/jquery.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('js/sitejs/datepicker/moment.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('js/sitejs/datepicker/daterangepicker.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('js/sitejs/main.js')}}"></script>
     @yield('third_party_scripts')
-
-    <script>
-        $('#toggle-left-menu').click(function () {
-            if ($('#left-menu').hasClass('small-left-menu')) {
-                $('#left-menu').removeClass('small-left-menu');
-            } else {
-                $('#left-menu').addClass('small-left-menu');
-            }
-            $('#logo').toggleClass('small-left-menu');
-            $('#main-content').toggleClass('small-left-menu');
-            $('#header .header-left').toggleClass('small-left-menu');
-
-            $('#logo .big-logo').toggle('300');
-            $('#logo .small-logo').toggle('300');
-            $('#logo').toggleClass('p-0 pl-1');
-        });
-
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const dropdownLinks = document.querySelectorAll(".main-navigation .has-sub > a");
-
-            dropdownLinks.forEach(link => {
-                link.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    const parent = link.parentElement;
-                    parent.classList.toggle("open"); // Add/remove the 'open' class
-                });
-            });
-        });
-    </script>
+    <!-- Custom js type here -->
     @stack('page_scripts')
 </body>
 

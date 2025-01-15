@@ -450,16 +450,21 @@ a:hover {
 }
 
 .time-card input {
-    width: 130px;
     border: none;
     font-size: 20px;
     font-weight: 700;
     background-color: transparent;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .time-card input::placeholder{
     color: #252525 !important;
     font-weight: 700;
+}
+
+.time-card input:focus{
+    background-color: transparent;
 }
 
 .time-card label{
@@ -472,6 +477,19 @@ a:hover {
     box-shadow: none;
 }
 
+.daterangepicker td.active, .daterangepicker td.active:hover,
+.daterangepicker td.active.end-date{
+    background-color: #5e5adb;
+    color: #fff;
+}
+
+.btn-primary{
+    background-color: #5e5adb !important;
+}
+
+.daterangepicker td.in-range {
+    background-color: #edf0f9;
+}
 
 .time-card span svg{
     color: #252525;
@@ -685,9 +703,9 @@ a:hover {
     box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
 }
 
-.fc-view-harness{
+/* .fc-view-harness{
     height: 480px !important;
-}
+} */
 .custom-calendar .fc-toolbar-title {
     font-size: 22px;
 }
