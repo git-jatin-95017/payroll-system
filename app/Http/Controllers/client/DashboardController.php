@@ -91,7 +91,7 @@ class DashboardController extends Controller
 			$join->on('users.id', '=', 'payroll_sheets.emp_id')
 				 ->where('status', 1);
 		})
-		->whereBetween('payroll_date', [$startD, $endD])
+		// ->whereBetween('payroll_date', [$startD, $endD])
 		->where('approval_status', 1)
 		->distinct('payroll_sheets.emp_id')
 		->where('payroll_sheets.created_by', auth()->user()->id)
