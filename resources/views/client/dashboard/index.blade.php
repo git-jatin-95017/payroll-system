@@ -97,7 +97,7 @@
                                 ?>
                                 <div class="custom-calender">
                                     <input type="text" class="form-control" name="daterange"
-                                        value="01/01/2018 - 01/15/2018" />
+                                        value="01/01/2024 - 01/15/2024" />
                                 </div>
                             </div>
                         </div>
