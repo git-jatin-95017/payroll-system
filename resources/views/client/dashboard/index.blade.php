@@ -414,7 +414,7 @@
                         ticks: {
                             // Format Y-axis labels with $
                             callback: function (value) {
-                                return '$' + formatter.format(value);
+                                return formatter.format(value);
                             }
                         },
                         font: {
@@ -433,7 +433,7 @@
                     tooltip: {
                         callbacks: {
                             label: function (tooltipItem) {
-                                return 'Total: $' + formatter.format(tooltipItem.raw);
+                                return 'Total: ' + formatter.format(tooltipItem.raw);
                             }
                         }
                     },
@@ -469,11 +469,11 @@
                             <h3>Pay - Period</h3>
                             <div class="d-flex justify-content-between align-items-center gap-3">
                                 <span class="pay-period-time">${payPeriod1}</span>
-                                <span class="pay-period-amount">$${formatter.format(amount1)}</span>
+                                <span class="pay-period-amount">${formatter.format(amount1)}</span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center gap-3">
                                 <span class="pay-period-time">${payPeriod2}</span>
-                                <span class="pay-period-amount">$${formatter.format(amount2)}</span>
+                                <span class="pay-period-amount">${formatter.format(amount2)}</span>
                             </div>
                         </div>
                     `);

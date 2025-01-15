@@ -125,6 +125,7 @@ class DashboardController extends Controller
 		$payrollRecords = PayrollAmount::whereIn('status', [1])
 			->latest()
 			->take(2)
+			->groupBy('start_date')
 			->get();
 
 		$totalRows = [];
