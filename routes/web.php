@@ -77,6 +77,9 @@ Route::prefix('client')->group(function () {
 	Route::get('fetch-calendar-data', [App\Http\Controllers\client\DashboardController::class, 'fetchCalendarData']);
 	Route::get('recent-payroll', [App\Http\Controllers\client\DashboardController::class, 'getRecentPayroll']);
 
+	Route::get('get-approved-employees-count', [App\Http\Controllers\client\DashboardController::class, 'getApprovedEmployeesCount'])->name('getApprovedEmployeesCount');
+
+
 	Route::get('employee/getData/', [EmployeeController::class, 'getData'])->name('employee.getData');
 	Route::resource('employee', EmployeeController::class);	
 	Route::get('leaves/getData/', [LeavesController::class, 'getData'])->name('leaves.getData');

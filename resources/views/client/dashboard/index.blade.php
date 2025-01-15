@@ -76,7 +76,7 @@
                             <div class="db-data-container time-card py-2 px-3">
                                 <div class="d-flex justify-content-between">
                                     <div>
-                                        <h3>{{$totalEmp}}</h3>
+                                        <h3 id="employeeCount">{{$totalEmp}}</h3>
                                     </div>
                                     <div>
                                         <x-heroicon-s-users class="w-20 h-20" />
@@ -275,10 +275,43 @@
 <script>
     $(function () {
         $('input[name="daterange"]').daterangepicker({
-            opens: 'left'
+            opens: 'left',
+            startDate: moment('{{ $requestData['start_date'] }}'),
+            endDate: moment('{{ $requestData['end_date'] }}'),
         }, function (start, end, label) {
             console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            // Send the selected date range via AJAX
+            updateEmployeeCount(start, end);
         });
+
+        // Trigger the function with the initial date range
+        const initialStartDate = moment('{{ $requestData['start_date'] }}');
+        const initialEndDate = moment('{{ $requestData['end_date'] }}');
+        updateEmployeeCount(initialStartDate, initialEndDate);
+
+        // Function to update employee count based on date range
+        function updateEmployeeCount(start, end) {
+            const startDate = start.format('YYYY-MM-DD');
+            const endDate = end.format('YYYY-MM-DD');
+
+            // Ajax Request
+            $.ajax({
+                url: '{{ route("getApprovedEmployeesCount") }}', // Define your route for getting employee count
+                type: 'GET',
+                data: {
+                    start_date: startDate,
+                    end_date: endDate
+                },
+                success: function(response) {
+                    // Update the employee count in the DOM
+                    $('#employeeCount').text(response.totalEmp);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching employee count: ", error);
+                }
+            });
+        }
+        
     });
 </script>
 

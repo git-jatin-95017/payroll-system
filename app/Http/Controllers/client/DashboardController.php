@@ -64,6 +64,27 @@ class DashboardController extends Controller
         return response()->json($events);
     }
 
+	public function getApprovedEmployeesCount(Request $request)
+	{
+		// Assuming you have an Employee model with an `approved_at` field
+		$startDate = $request->get('start_date');
+		$endDate = $request->get('end_date');
+		
+		// Fetch the count of approved employees within the date range
+
+		$totalEmp = PayrollSheet::join('users', function ($join) {
+			$join->on('users.id', '=', 'payroll_sheets.emp_id')
+				 ->where('status', 1);
+		})
+		->whereBetween('payroll_date', [$startDate, $endDate])
+		->where('approval_status', 1)
+		->distinct('payroll_sheets.emp_id')
+		->where('payroll_sheets.created_by', auth()->user()->id)
+		->count('payroll_sheets.emp_id');
+		
+		return response()->json(['totalEmp' => $totalEmp]);
+	}
+
 	/**
 	 * Show the application dashboard.
 	 *
@@ -91,7 +112,7 @@ class DashboardController extends Controller
 			$join->on('users.id', '=', 'payroll_sheets.emp_id')
 				 ->where('status', 1);
 		})
-		// ->whereBetween('payroll_date', [$startD, $endD])
+		->whereBetween('payroll_date', [$startD, $endD])
 		->where('approval_status', 1)
 		->distinct('payroll_sheets.emp_id')
 		->where('payroll_sheets.created_by', auth()->user()->id)
