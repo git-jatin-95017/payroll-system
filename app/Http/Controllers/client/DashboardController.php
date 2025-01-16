@@ -168,7 +168,7 @@ class DashboardController extends Controller
 			})
 			->where('payroll_amounts.status', 1)
 			->where('payroll_amounts.created_by', $userID)
-			->whereBetween('pa.start_date', ['2025-01-01', '2025-12-31'])
+			->whereBetween('payroll_amounts.start_date', ['2025-01-01', '2025-12-31'])
 			->orderByDesc('payroll_amounts.start_date')
 			->get();
 
