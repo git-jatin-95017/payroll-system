@@ -144,50 +144,51 @@ class DashboardController extends Controller
     {
         $settings = Setting::find(1);
 
-		// $payrollRecords = PayrollAmount::whereIn('status', [1])->where('created_by', auth()->user()->id)
-		// 	->latest()
-		// 	->take(3)
-		// 	->groupBy('start_date')
-		// 	->get();
-
-		$userID = auth()->user()->id;
-
-		$latest_dates = DB::table('payroll_amounts')
-			->select(DB::raw('MAX(created_at) as latest_created_at'), 'start_date')
+		$latestStartDates = DB::table('payroll_amounts')
+			->selectRaw('MAX(start_date) as start_date')
 			->where('status', 1)
-			->where('created_by', $userID)
-			->whereBetween('start_date', ['2025-01-01', '2025-12-31'])
+			->where('created_by', auth()->user()->id)
 			->groupBy('start_date')
-			->orderByDesc('latest_created_at')
-			->limit(3);
-		
-		$payrollRecords = PayrollAmount::query()
-			->joinSub($latest_dates, 'latest_dates', function ($join) use($userID) {
-				$join->on('payroll_amounts.start_date', '=', 'latest_dates.start_date')
-					 ->on('payroll_amounts.created_at', '=', 'latest_dates.latest_created_at');
-			})
-			->where('payroll_amounts.status', 1)
-			->where('payroll_amounts.created_by', $userID)
-			->whereBetween('payroll_amounts.start_date', ['2025-01-01', '2025-12-31'])
-			->orderByDesc('payroll_amounts.start_date')
+			->orderByDesc('start_date')
+			->limit(3)
 			->get();
 
-		// $payrollRecords = PayrollAmount
-		// 	->joinSub($latest_dates, 'latest_dates', function ($join) use($userID) {
-		// 		$join->on('pa.start_date', '=', 'latest_dates.start_date')
-		// 			->on('pa.created_at', '=', 'latest_dates.latest_created_at');
-		// 	})
-		// 	->where('pa.status', 1)
-		// 	->where('pa.created_by', $userID)
-		// 	// ->with('additionalEarnings', 'additionalPaids', 'additionalUnpaids', 'user')
-		// 	->orderByDesc('pa.created_at')
-		// 	->get();
-
 		$totalRows = [];
-		foreach($payrollRecords as $row) {
-			$totalRows[] = $this->calculateRowTotals($row, $settings);
+		foreach ($latestStartDates as $date) {
+			// Get payroll records for the current start_date
+			$payrollRecords = PayrollAmount::whereIn('status', [1])
+				->where('created_by', auth()->user()->id)
+				->where('start_date', $date->start_date)
+				->get();
+			
+			// Loop through payroll records and calculate totals
+			foreach ($payrollRecords as $row) {
+				$totals = $this->calculateRowTotals($row, $settings);
+		
+				// Check if the month and dateRange already exist in the result array
+				$existingRowIndex = null;
+				foreach ($totalRows as $index => $existingRow) {
+					if ($existingRow['month'] == $totals['month']) {
+						$existingRowIndex = $index;
+						break;
+					}
+				}
+		
+				if ($existingRowIndex !== null) {
+					// If the month and dateRange already exist, add the total_amount to the existing entry
+					$totalRows[$existingRowIndex]['total_amount'] += $totals['total_amount'];
+				} else {
+					// Otherwise, create a new entry for the unique month and dateRange
+					$totalRows[] = [
+						'total_amount' => $totals['total_amount'],
+						'month' => $totals['month'],
+						'dateRange' => $totals['dateRange'],
+					];
+				}
+			}
 		}
-
+				
+		
 		// $payrolls = [
 		// 	[
 		// 		'month' => 'January',
