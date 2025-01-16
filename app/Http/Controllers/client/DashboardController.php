@@ -156,6 +156,7 @@ class DashboardController extends Controller
 			->select(DB::raw('MAX(created_at) as latest_created_at'), 'start_date')
 			->where('status', 1)
 			->where('created_by', $userID)
+			->whereBetween('start_date', ['2025-01-01', '2025-12-31'])
 			->groupBy('start_date')
 			->orderByDesc('latest_created_at')
 			->limit(3);
@@ -167,6 +168,7 @@ class DashboardController extends Controller
 			})
 			->where('payroll_amounts.status', 1)
 			->where('payroll_amounts.created_by', $userID)
+			->whereBetween('pa.start_date', ['2025-01-01', '2025-12-31'])
 			->orderByDesc('payroll_amounts.start_date')
 			->get();
 
