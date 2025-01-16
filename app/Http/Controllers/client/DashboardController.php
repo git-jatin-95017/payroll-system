@@ -146,7 +146,7 @@ class DashboardController extends Controller
 
 		$payrollRecords = PayrollAmount::whereIn('status', [1])
 			->latest()
-			->take(2)
+			->take(3)
 			->groupBy('start_date')
 			->get();
 
@@ -284,7 +284,7 @@ class DashboardController extends Controller
 		$dateRange = date('M j, Y', strtotime($row->start_date)) . ' - ' . date('M j, Y', strtotime($row->end_date));
 		
 		// Get month from start_date
-		$month = date('F Y', strtotime($row->start_date));
+		$month = date('F jS Y', strtotime($row->start_date));
 
 		// Return final array with totals
 		return [

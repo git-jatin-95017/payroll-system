@@ -24,11 +24,11 @@
     </div>
     <div class="d-flex gap-5 justify-content-center widget-container-main">
         <div class="widget-container">
-            <a href="{{ route('employee.create') }}" class="d-flex flex-column align-items-center">
+            <a href="{{ route('employee.index') }}" class="d-flex flex-column align-items-center">
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-user class="w-24 h-24" />
                 </div>
-                <p>Add Employee</p>
+                <p>Employee</p>
             </a>
         </div>
         <div class="widget-container">
@@ -36,7 +36,7 @@
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-donate-heart class="w-24 h-24" />
                 </div>
-                <p>Add Leave Policy</p>
+                <p>Leave Policy</p>
             </a>
         </div>
         <div class="widget-container">
@@ -44,7 +44,7 @@
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-dollar-circle class="w-24 h-24" />
                 </div>
-                <p>Add Pay Label</p>
+                <p>Pay Label</p>
             </a>
         </div>
         <div class="widget-container">
@@ -52,7 +52,7 @@
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-map class="w-24 h-24" />
                 </div>
-                <p>Add Location</p>
+                <p>Location</p>
             </a>
         </div>
     </div>
@@ -113,6 +113,9 @@
             </div>
             <div class="col-4 mb-4">
                 <div class="db-container p-4 shadow-sm bg-white h-100">
+                    <div class="heading-db-container mb-4">
+                        <h3>Recent Payrolls</h3>
+                    </div>
                     <canvas id="payrollChart" width="300" height="300" style="max-width: 100%;"></canvas>
                     <div class="pay-period-container mt-2">
                         <span id="pay-period"></span>
@@ -131,7 +134,7 @@
                                     <x-bx-envelope class="w-20 h-20" />
                                 </div>
                                 <div>
-                                    <p x-text="notice.message"></p>
+                                    <p x-text="truncateMessage(notice.message)"></p>
                                     <span x-text="timeAgo(notice.created_at)"></span>
                                 </div>
                             </div>
@@ -145,7 +148,7 @@
         </div>
         <div class="row">
             <div class="col-4 mb-5">
-                <div class="db-container p-4 shadow-sm bg-white" style="height: 104%!important;">
+                <div class="db-container p-4 shadow-sm bg-white">
                     <div class="heading-db-container mb-4">
                         <h3>Manage your business</h3>
                     </div>
@@ -326,7 +329,7 @@
                 headerToolbar: {
                     right: 'prev,next',
                     left: 'title',
-                    center: 'dayGridWeek,dayGridDay,dayGridMonth,dayGridYear' // user can switch between the two
+                    center: '' // user can switch between the two
                 },
                 // headerToolbar: {
                 //     left: 'prev',
@@ -551,6 +554,9 @@
                 if (diff < 60) return `${diff} minutes ago`;
                 const hours = Math.floor(diff / 60);
                 return hours === 1 ? `1 hour ago` : `${hours} hours ago`;
+            },
+            truncateMessage(message) {
+                return message.length > 60 ? message.substring(0, 60) + '...' : message;
             }
         }));
     });
@@ -587,6 +593,9 @@
                 if (diff < 60) return `${diff} minutes ago`;
                 const hours = Math.floor(diff / 60);
                 return hours === 1 ? `1 hour ago` : `${hours} hours ago`;
+            },
+            truncateMessage(message) {
+                return message.length > 60 ? message.substring(0, 60) + '...' : message;
             }
         }));
     });
