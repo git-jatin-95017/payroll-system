@@ -447,6 +447,7 @@
                 scales: {
                     y: {
                         beginAtZero: true,
+                        suggestedMax: 1000,
                         ticks: {
                             // Format Y-axis labels with $
                             callback: function (value) {
