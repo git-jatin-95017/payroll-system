@@ -144,7 +144,7 @@ class DashboardController extends Controller
     {
         $settings = Setting::find(1);
 
-		$payrollRecords = PayrollAmount::whereIn('status', [1])
+		$payrollRecords = PayrollAmount::whereIn('status', [1])->where('created_by', auth()->user()->id)
 			->latest()
 			->take(3)
 			->groupBy('start_date')

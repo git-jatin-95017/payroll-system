@@ -110,7 +110,8 @@ class RunPayrollController extends Controller
 						'social_security' => $social_security_amt,
 						'social_security_employer' => $social_security_employer_amt,
 						'education_levy' => $education_levy_amt,
-						'education_levy_amt_5' => $education_levy_amt_5
+						'education_levy_amt_5' => $education_levy_amt_5,
+						'created_by' => auth()->user()->id
 					]);
 				} else {
 					$medical_less_60_amt = $v['medical_less_60_amt'] ?? $settings->medical_less_60_amt;
@@ -144,7 +145,8 @@ class RunPayrollController extends Controller
 						'social_security' => $social_security_amt,
 						'social_security_employer' => $social_security_employer_amt,
 						'education_levy' => $education_levy_amt,
-						'education_levy_amt_5' => $education_levy_amt_5
+						'education_levy_amt_5' => $education_levy_amt_5,
+						'created_by' => auth()->user()->id
 					]);
 				}
 
@@ -395,7 +397,7 @@ class RunPayrollController extends Controller
 		if (count($ids) > 0) {
 			foreach($ids as $id) {
 				$payroll = PayrollAmount::findOrFail($id);
-				$payroll->update(['status' => 1]);
+				$payroll->update([ 'status' => 1, 'created_by' => auth()->user()->id ]);
 			}
 		}
 

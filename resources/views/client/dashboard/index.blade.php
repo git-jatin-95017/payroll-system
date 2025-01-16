@@ -131,7 +131,7 @@
                         <template x-for="notice in notices" :key="notice.id">
                             <div class="d-flex gap-3 align-items-center border-bottom pb-3 mb-3">
                                 <div class="notice-icon shadow-sm">
-                                    <x-bx-envelope class="w-20 h-20" />
+                                <a href="{{ route('notice.index') }}"><x-bx-envelope class="w-20 h-20" /></a>
                                 </div>
                                 <div>
                                     <p x-text="truncateMessage(notice.message)"></p>
@@ -447,7 +447,7 @@
                 scales: {
                     y: {
                         beginAtZero: true,
-                        suggestedMax: 1000,
+                        suggestedMax: 500,
                         ticks: {
                             // Format Y-axis labels with $
                             callback: function (value) {
@@ -596,7 +596,7 @@
                 return hours === 1 ? `1 hour ago` : `${hours} hours ago`;
             },
             truncateMessage(message) {
-                return message.length > 60 ? message.substring(0, 60) + '...' : message;
+                return message.length > 120 ? message.substring(0, 120) + '...' : message;
             }
         }));
     });

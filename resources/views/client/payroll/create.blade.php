@@ -48,6 +48,10 @@
 .tt-suggestion p {
     margin: 0;
 }
+
+.db-text-success {
+    color: #33ba5d !important;
+ }
 </style>
 <div class="row page-titles">
     <div class="col-md-5 align-self-center">
