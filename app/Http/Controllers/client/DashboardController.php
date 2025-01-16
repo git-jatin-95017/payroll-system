@@ -169,7 +169,6 @@ class DashboardController extends Controller
 			->where('payroll_amounts.created_by', $userID)
 			->orderByDesc('payroll_amounts.start_date')
 			->get();
-			dd($payrollRecords);
 
 		// $payrollRecords = PayrollAmount
 		// 	->joinSub($latest_dates, 'latest_dates', function ($join) use($userID) {
