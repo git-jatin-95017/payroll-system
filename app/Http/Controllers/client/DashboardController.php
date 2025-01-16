@@ -167,7 +167,7 @@ class DashboardController extends Controller
 			})
 			->where('payroll_amounts.status', 1)
 			->where('payroll_amounts.created_by', $userID)
-			// ->orderByDesc('payroll_amounts.created_at')
+			->orderByDesc('payroll_amounts.start_date')
 			->get();
 
 		// $payrollRecords = PayrollAmount
