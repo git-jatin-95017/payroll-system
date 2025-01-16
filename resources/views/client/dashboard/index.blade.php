@@ -28,7 +28,7 @@
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-user class="w-24 h-24" />
                 </div>
-                <p>Employee</p>
+                <p>Employees</p>
             </a>
         </div>
         <div class="widget-container">
@@ -36,7 +36,7 @@
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-donate-heart class="w-24 h-24" />
                 </div>
-                <p>Leave Policy</p>
+                <p>Leave Policies</p>
             </a>
         </div>
         <div class="widget-container">
@@ -44,7 +44,7 @@
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-dollar-circle class="w-24 h-24" />
                 </div>
-                <p>Pay Label</p>
+                <p>Pay Labels</p>
             </a>
         </div>
         <div class="widget-container">
@@ -52,7 +52,7 @@
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-map class="w-24 h-24" />
                 </div>
-                <p>Location</p>
+                <p>Locations</p>
             </a>
         </div>
     </div>
