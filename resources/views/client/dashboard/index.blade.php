@@ -495,9 +495,22 @@
 
                     // Assuming data contains pay period and amount info
                     const payPeriod1 = data[0].dateRange; // e.g., "December 13, 2024"
-                    const payPeriod2 = data[1].dateRange;
                     const amount1 = data[0].total_amount; // e.g., "December 20, 2024"
-                    const amount2 = data[1].total_amount; // e.g., "December 20, 2024"
+
+                    const payPeriod2 = '';
+                    const amount2 = 0;
+                    const html = '';
+                    if (data[1]) {
+                        payPeriod2 = data[1].dateRange;
+                        amount2 = data[1].total_amount; // e.g., "December 20, 2024"
+                        html = `
+                            <div class="d-flex justify-content-between align-items-center gap-3">
+                                <span class="pay-period-time">${payPeriod2}</span>
+                                <span class="pay-period-amount">${formatter.format(amount2)}</span>
+                            </div>`;
+                    }
+                    // const payPeriod2 = data[1].dateRange;
+                    // const amount2 = data[1].total_amount; // e.g., "December 20, 2024"
 
 
                     // Update the span with the pay period and amount
@@ -508,10 +521,7 @@
                                 <span class="pay-period-time">${payPeriod1}</span>
                                 <span class="pay-period-amount">${formatter.format(amount1)}</span>
                             </div>
-                            <div class="d-flex justify-content-between align-items-center gap-3">
-                                <span class="pay-period-time">${payPeriod2}</span>
-                                <span class="pay-period-amount">${formatter.format(amount2)}</span>
-                            </div>
+                            ${html}
                         </div>
                     `);
                 })
