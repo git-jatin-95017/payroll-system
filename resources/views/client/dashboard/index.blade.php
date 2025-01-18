@@ -495,6 +495,10 @@
 
                     console.log(data);
                     
+                     // Sort the data in descending order of the original index
+                    data.reverse();
+
+
                     // Dynamically create HTML for pay periods
                     let html = '<div class="pay-container mt-3"><h3>Pay - Period</h3>';
 
