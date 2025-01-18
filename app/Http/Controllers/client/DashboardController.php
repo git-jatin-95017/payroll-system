@@ -149,7 +149,7 @@ class DashboardController extends Controller
 			->where('status', 1)
 			->where('created_by', auth()->user()->id)
 			->groupBy('start_date')
-			->orderByDesc('start_date')
+			->orderBy('start_date', 'ASC')
 			->limit(3)
 			->get();
 

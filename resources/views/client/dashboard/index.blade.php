@@ -493,37 +493,30 @@
                     payrollChart.data.datasets[0].data = amounts;
                     payrollChart.update();
 
-                    // Assuming data contains pay period and amount info
-                    const payPeriod1 = data[0].dateRange; // e.g., "December 13, 2024"
-                    const amount1 = data[0].total_amount; // e.g., "December 20, 2024"
+                    console.log(data);
+                    
+                    // Dynamically create HTML for pay periods
+                    let html = '<div class="pay-container mt-3"><h3>Pay - Period</h3>';
 
-                    const payPeriod2 = '';
-                    const amount2 = 0;
-                    const html = '';
-                    if (data[1]) {
-                        payPeriod2 = data[1].dateRange;
-                        amount2 = data[1].total_amount; // e.g., "December 20, 2024"
-                        html = `
-                            <div class="d-flex justify-content-between align-items-center gap-3">
-                                <span class="pay-period-time">${payPeriod2}</span>
-                                <span class="pay-period-amount">${formatter.format(amount2)}</span>
-                            </div>`;
+                    if (data.length > 0) {
+                        data.forEach(item => {
+                            if (item.dateRange && item.total_amount !== undefined) {
+                                html += `
+                                    <div class="d-flex justify-content-between align-items-center gap-3">
+                                        <span class="pay-period-time">${item.dateRange}</span>
+                                        <span class="pay-period-amount">${formatter.format(item.total_amount)}</span>
+                                    </div>
+                                `;
+                            }
+                        });
+                    } else {
+                        html += '<p>No payroll data available.</p>';
                     }
-                    // const payPeriod2 = data[1].dateRange;
-                    // const amount2 = data[1].total_amount; // e.g., "December 20, 2024"
 
+                    html += '</div>';
 
-                    // Update the span with the pay period and amount
-                    $('#pay-period').html(`
-                        <div class="pay-container mt-3">
-                            <h3>Pay - Period</h3>
-                            <div class="d-flex justify-content-between align-items-center gap-3">
-                                <span class="pay-period-time">${payPeriod1}</span>
-                                <span class="pay-period-amount">${formatter.format(amount1)}</span>
-                            </div>
-                            ${html}
-                        </div>
-                    `);
+                    // Update the span with the dynamically generated HTML
+                    $('#pay-period').html(html);
                 })
                 .catch(error => {
                     console.error('Error fetching payroll data:', error);
