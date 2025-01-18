@@ -21,7 +21,7 @@
         <link href=" {{ asset('css/siteCss/site.css') }}" rel="stylesheet">
     <style>
         body {
-            background: #fff;
+            background: #F6F6F4;
         }
     </style>
 </head>
