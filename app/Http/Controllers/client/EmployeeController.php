@@ -43,7 +43,42 @@ class EmployeeController extends Controller
 		$payheadList = Payhead::get();
 		$locations = Department::get();
 		$leavePolicies = LeaveType::get();
-		return view('client.employee.index', compact('payheadList', 'leavePolicies', 'locations'));
+
+		// Search input
+		$searchValue = $request->input('search', '');
+
+		// Fetching data with search and pagination
+		$employees = User::orderBy('users.id', 'desc')
+			->join('employee_profile', function ($join) {
+				$join->on('users.id', '=', 'employee_profile.user_id');
+			})
+			->where('users.created_by', auth()->user()->id)
+			->where(function ($query) use ($searchValue) {
+				$query->where(DB::raw("CONCAT(employee_profile.first_name, ' ', employee_profile.last_name)"), 'like', '%' . $searchValue . '%')
+					->orWhere('users.user_code', 'like', '%' . $searchValue . '%')
+					->orWhere('employee_profile.phone_number', 'like', '%' . $searchValue . '%')
+					->orWhere('employee_profile.pan_number', 'like', '%' . $searchValue . '%')
+					->orWhere('employee_profile.ifsc_code', 'like', '%' . $searchValue . '%')
+					->orWhere('employee_profile.designation', 'like', '%' . $searchValue . '%')
+					->orWhere('employee_profile.pay_rate', 'like', '%' . $searchValue . '%');
+			})
+			->select(
+				'users.id',
+				'users.user_code',
+				DB::raw("CONCAT(employee_profile.first_name, ' ', employee_profile.last_name) AS name"),
+				'employee_profile.file',
+				DB::raw('DATE_FORMAT(employee_profile.dob, "%m/%d/%Y") as date_of_birth'),
+				DB::raw('DATE_FORMAT(employee_profile.doj, "%m/%d/%Y") as start_date'),
+				'employee_profile.phone_number',
+				'employee_profile.pan_number',
+				'employee_profile.ifsc_code',
+				'employee_profile.designation',
+				'employee_profile.pay_rate'
+			)
+			->paginate(10);
+
+			
+		return view('client.employee.index', compact('payheadList', 'leavePolicies', 'locations', 'employees'));
 	}
 
 	public function getData(Request $request)

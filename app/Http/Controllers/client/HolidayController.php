@@ -27,7 +27,7 @@ class HolidayController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index(Builder $builder)
+	public function index(Request $request)
 	{
 		if (request()->ajax()) {
 			$holidayQuery = Holiday::query();
@@ -66,7 +66,30 @@ class HolidayController extends Controller
 					->make(true);
 		}
 
-		return view('holidays.index');
+		// Search input
+		$searchValue = $request->input('search', '');
+
+		// Fetching data with search and pagination
+		$holidays = Holiday::orderBy('holidays.id', 'desc')
+			->where('holidays.created_by', auth()->user()->id)
+			->where(function ($query) use ($searchValue) {
+				$query
+					->where(function ($query) use ($searchValue) {
+						$query->where('holidays.title', 'like', '%' . $searchValue . '%')
+							->orWhere('holidays.description', 'like', '%' . $searchValue . '%')
+							->orWhereRaw("DATE_FORMAT(holidays.holiday_date, '%Y-%m-%d') LIKE ?", ['%' . $searchValue . '%'])
+							->orWhereRaw("
+								CASE 
+									WHEN holidays.type = 1 THEN 'Public Holiday'
+									WHEN holidays.type = 2 THEN 'National Day'
+									WHEN holidays.type = 3 THEN 'Voluntary'
+								END LIKE ?", ['%' . $searchValue . '%']);
+					});
+
+			})
+			->paginate(10);
+
+		return view('holidays.index', compact('holidays'));
 	}
 
 	/**
