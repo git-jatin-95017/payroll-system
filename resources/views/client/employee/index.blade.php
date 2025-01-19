@@ -76,7 +76,7 @@
                                         if (!empty($employee->employeeProfile->file)) {
                                             $file = 'files/'. $employee->employeeProfile->file;
                                         } else {
-                                            $file = '/img/people.png';
+                                            $file = '/img/user2-160x160.jpg';
                                         }
 
                                         $empId = $employee->id;
