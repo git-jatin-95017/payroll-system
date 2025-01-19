@@ -1,119 +1,101 @@
 @extends('layouts.new_layout')
 
 @section('content')
-<div class="row page-titles">
-	<div class="col-md-5 align-self-center">
-		<h3 class="text-themecolor">
-			<i class="fa fa-braille" style="color:#1976d2"></i>
-			Run Payroll
-		</h3>
-	</div>
-	<div class="col-md-7 align-self-center">
-		<ol class="breadcrumb">
-			<li class="breadcrumb-item">
-				<a href="javascript:void(0)">Home</a>
-			</li>
-			<li class="breadcrumb-item active">Pending Payroll</li>
-			<li class="breadcrumb-item active">/</li>
-		</ol>
-	</div>
+<div>
+    <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
+		<div>
+			<h3>Run Payroll</h3>
+			<p class="mb-0">Track and manage your Pending payroll here</p>
+		</div>
+    </div>
+    <div class="d-flex gap-3 align-items-center justify-content-between mb-4">
+   </div>
+   	@if (session('message'))
+		<div class="row">
+			<div class="col-md-12">
+				<div class="alert alert-success alert-dismissible">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					{{ session('message') }}
+				</div>
+			</div>
+		</div>
+	@elseif (session('error'))
+		<div class="row">
+			<div class="col-md-12">
+				<div class="alert alert-danger alert-dismissible">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					{{ session('error') }}
+				</div>
+			</div>
+		</div>
+	@endif
+   <div class="bg-white p-4">
+        <div class="table-responsive">
+            <table class="table db-custom-table">
+                <thead>
+					<tr>
+						<th scope="col">No.</th>	
+						<th scope="col"></th>								      
+						<th scope="col">Name</th>								      
+						<th scope="col">Payroll Period</th>								      
+						<th scope="col">Status</th>
+						<th scope="col">Action</th>
+						<th scope="col">Action</th>
+					</tr>
+                </thead>
+                <tbody>
+					<?php $i = 1; ?>
+					@foreach($results as $k =>$result)
+					<?php
+
+						$arr = explode(' - ', $result[0]['date_range']);
+
+						$startDate = date('Y-m-d', strtotime($arr[0]));
+
+						$endDate = date('Y-m-d', strtotime($arr[1]));
+
+						$empIds = collect($result)->pluck('emp_id');
+
+						$isGreen = \App\Models\PayrollAmount::where('start_date', '>=', $startDate)->where('end_date', '<=', $endDate)->where('status', 1)->whereIn('user_id', $empIds)->count();
+					?>
+					<tr class="row-tr-js tr-main">									      
+						<td>{{ $i }}</td>
+						<td><a href="javascript:void(0);" id="atag-{{$k}}" onblur="toggleInput(this, '{{$k}}');">Edit</a></td>
+						<td>
+							<input type="text" name="payroll_name" data-id="{{$result[0]['appoval_number']}}" class="payroll_name input-sm form-control" value="{{$result[0]['payroll_name']}}" id="input-{{$k}}" onblur="saveData(this, '<?php echo $k; ?>')" readonly>
+						</td>
+						<td class="">
+							<b>{{ $startDate}} - {{$endDate}}</b>
+						</td>
+						<td class="">
+							@if($isGreen) <span class="badge bg-success">Approved</span> @else Timecard Approved @endif
+						</td>
+						<td class="">
+							@if($isGreen)
+							<a href="{{ route('payroll.confirmation', [
+								'start_date' => $startDate, 
+								'end_date' => $endDate, 
+								'appoval_number' => $result[0]['appoval_number'],
+								'is_green' => true
+							]) }}">Submitted</a>
+							@else
+							<a href="{{ route('list.step1', [
+							'start_date' => $startDate, 
+							'end_date' => $endDate, 
+							'number' => $result[0]['appoval_number']]) }}">Click here to process</a>
+							@endif										
+						</td>
+						<td>
+							<a href="{{ route('delete.payroll',  ['appoval_number' => $result[0]['appoval_number'] ]) }}"class="" onclick="return confirm('Are you sure? Once you delete the payroll then you have to approve the timesheet hours again for the same date range and employees.')" title="Delete" style="color:#dc3545;"><x-heroicon-o-trash class="w-16 h-16" /></a>
+						</td>
+					</tr>			
+					<?php $i++; ?>					
+					@endforeach	    
+				</tbody>
+            </table>
+        </div>
+   </div>
 </div>
-<section class="content">
-	<div class="container-fluid">		
-		<div class="tab-content" id="myTabContent">
-			<div class="container-fluid">
-			@if (session('message'))
-				<div class="row">
-					<div class="col-md-12">
-						<div class="alert alert-success alert-dismissible">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-							{{ session('message') }}
-						</div>
-					</div>
-				</div>
-			@elseif (session('error'))
-				<div class="row">
-					<div class="col-md-12">
-						<div class="alert alert-danger alert-dismissible">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-							{{ session('error') }}
-						</div>
-					</div>
-				</div>
-			@endif
-			<div class="row">
-				<div class="col-sm-12">	
-					<div class="card">			
-						<div class="card-body">
-							<table class="table custom-table-run">
-								<thead>
-									<tr>
-									  <th scope="col">No.</th>								      
-									  <th scope="col">Name</th>								      
-									  <th scope="col">Payroll Period</th>								      
-									  <th scope="col">Status</th>
-									  <th scope="col">Action</th>
-									  <th scope="col"></th>
-									</tr>
-								</thead>
-								<tbody>
-									<?php $i = 1; ?>
-									@foreach($results as $k =>$result)
-									<?php
-
-										$arr = explode(' - ', $result[0]['date_range']);
-
-										$startDate = date('Y-m-d', strtotime($arr[0]));
-
-										$endDate = date('Y-m-d', strtotime($arr[1]));
-
-										$empIds = collect($result)->pluck('emp_id');
-
-										$isGreen = \App\Models\PayrollAmount::where('start_date', '>=', $startDate)->where('end_date', '<=', $endDate)->where('status', 1)->whereIn('user_id', $empIds)->count();
-									?>
-									<tr class="row-tr-js tr-main">									      
-										<td>{{ $i }}</td>
-										<td>
-											<a href="javascript:void(0);" id="atag-{{$k}}" onblur="toggleInput(this, '{{$k}}');">Edit</a>
-											<input type="text" name="payroll_name" data-id="{{$result[0]['appoval_number']}}" class="payroll_name input-sm form-control" value="{{$result[0]['payroll_name']}}" id="input-{{$k}}" onblur="saveData(this, '<?php echo $k; ?>')" readonly>
-										</td>
-										<td class="col-sm-3">
-											<b>{{ $startDate}} - {{$endDate}}</b>
-										</td>
-										<td class="col-sm-3">
-											@if($isGreen) <span class="badge badge-sm badge-success" style="color:green !important;">Approved</span> @else Timecard Approved @endif
-										</td>
-										<td class="col-sm-3">
-											@if($isGreen)
-											<a href="{{ route('payroll.confirmation', [
-												'start_date' => $startDate, 
-												'end_date' => $endDate, 
-												'appoval_number' => $result[0]['appoval_number'],
-												'is_green' => true
-											]) }}">Submitted</a>
-											@else
-											<a href="{{ route('list.step1', [
-											'start_date' => $startDate, 
-											'end_date' => $endDate, 
-											'number' => $result[0]['appoval_number']]) }}">Click here to process</a>
-											@endif										
-										</td>
-										<td>
-											<a href="{{ route('delete.payroll',  ['appoval_number' => $result[0]['appoval_number'] ]) }}"class="btn btn-sm btn-danger" onclick="return confirm('Are you sure? Once you delete the payroll then you have to approve the timesheet hours again for the same date range and employees.')" style="color:#fff;" title="Delete"><i class='fa fa-trash'></i></a>
-										</td>
-									</tr>			
-									<?php $i++; ?>					
-									@endforeach	    
-								</tbody>
-							</table>
-						</div>				
-					</div>
-				</div>
-			</div>
-			</div>
-		</div>
-		</div>
-</section>
 @endsection
 @push('page_scripts')
 	<script>

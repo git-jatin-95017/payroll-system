@@ -6,17 +6,28 @@
 @endpush
 @section('content')
 <div>
-   <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-4">
+    <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 		<div>
 			<h3>Leave Policies</h3>
-			<p class="mb-0">Track and manage leave policies here</p>
+			<p class="mb-0">Track and manage your leave policies here</p>
 		</div>
-		<div>
-			<!-- <a href="{{ route('holidays.create' )}}" class="d-flex justify-content-center gap-2 primary-add ">
-				<x-heroicon-o-plus width="16" />
-				<span>Add Holiday</span>
-			</a> -->
-		</div>
+    </div>
+    <div class="d-flex gap-3 align-items-center justify-content-between mb-4">
+        <form method="GET" action="{{ route('pay-head.index') }}" class="d-flex gap-3 align-items-center justify-content-between mb-4">
+            <div class="search-container">
+                <div class="d-flex align-items-center gap-3">
+                    <p class="mb-0 position-relative search-input-container">
+                        <x-heroicon-o-magnifying-glass class="search-icon" />
+                        <input type="search" class="form-control" name="search" placeholder="Type here" value="{{request()->search ?? ''}}">
+                    </p>
+                    <button type="submit" class="btn search-btn">
+                        <x-bx-filter class="w-20 h-20"/>
+                        Search
+                    </button>
+                </div>
+            </div>
+        </form>
+
    </div>
    @if (session('message'))
    <div>
@@ -33,17 +44,45 @@
       </div>
    </div>
    @endif
-   <div class="bg-white table-custom">
-	   <table id="dataTableBuilder" class="table table-hover responsive nowrap" style="width:100%">
-		 	<thead>
-				<tr>
-					<th>Id</th>
-					<th>Leave Type</th>										
-					<th>No. of days</th>										
-					<th>Action</th>	
-				</tr>
-		 	</thead>
-	   </table>
+   <div class="bg-white p-4">
+        <div class="table-responsive">
+            <table class="table db-custom-table">
+                <thead>
+                    <tr>
+						<th>Id</th>
+						<th>Leave Type</th>										
+						<th>No. of days</th>										
+						<th>Action</th>	
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($leavTypes as $row)
+						@php $id = $row->id @endphp
+                        <tr>
+                            <td>{{ $row->id }}
+							</td>
+                            <td>{!! $row->name  !!}</td>
+							<td>{{ $row->leave_day  }}</td>
+	
+                            <td>
+								<a href="{{ route('leave-type.edit', $row->id) }}" style="text-decoration:none;" class="">
+									<x-bx-edit-alt class="w-20 h-20" />
+								</a>
+								<a class="delete" href="javascript:void(0);" data-href="{{ route('leave-type.destroy', $row->id) }}" style="color:#dc3545;">
+									<x-heroicon-o-trash class="w-20 h-20" />
+								</a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3" class="text-center">No record found</td>
+                        </tr>
+                    @endforelse
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        {{ $leavTypes->links('vendor.pagination.custom') }}
    </div>
 </div>
 @endsection
@@ -87,7 +126,8 @@
 					},
 					dataType:'JSON',
 					success:(result)=>{
-						$('#dataTableBuilder').DataTable().draw(true);		           
+						location.reload();
+						// $('#dataTableBuilder').DataTable().draw(true);		           
 					}
 				});
 			  }

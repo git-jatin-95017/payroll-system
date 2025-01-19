@@ -33,7 +33,56 @@ class LeavesController extends Controller
 	 */
 	public function index(Request $request)
 	{		
-		return view('client.leaves.index');
+        // Search input
+		$searchValue = $request->input('search', '');
+
+		// Fetching data with search and pagination
+		$leaves = Leave::orderBy('leaves.id', 'desc')
+            ->join('users', function($join) {
+                $join->on('users.id', '=', 'leaves.user_id')
+                    ->where('users.created_by', auth()->user()->id);
+            })         
+            ->join('employee_profile', function($join) {
+                $join->on('users.id', '=', 'employee_profile.user_id');
+            })   
+            ->join('leave_types', function($join) {
+                $join->on('leave_types.id', '=', 'leaves.type_id');
+            })   
+			->where(function ($query) use ($searchValue) {
+				$query
+					->where(function ($query) use ($searchValue) {
+						$query
+                            ->where('users.user_code', 'like', '%' . $searchValue . '%')
+                            ->orWhere('users.name', 'like', '%' . $searchValue . '%')
+                            ->orWhere('leaves.leave_subject', 'like', '%' . $searchValue . '%')
+                            ->orWhere('leaves.leave_message', 'like', '%' . $searchValue . '%')
+                            ->orWhere('leaves.leave_type', 'like', '%' . $searchValue . '%')
+                            ->orWhere('leaves.leave_status', 'like', '%' . $searchValue . '%')
+                            ->orWhere('leaves.apply_date', 'like', '%' . $searchValue . '%')
+                            ->orWhere('leaves.start_date', 'like', '%' . $searchValue . '%')
+                            ->orWhere('leave_types.name', 'like', '%' . $searchValue . '%')
+                            ->orWhere('leaves.end_date', 'like', '%' . $searchValue . '%');
+					});
+
+			})
+            ->select(
+                'leaves.id',
+                'leaves.user_id',
+                'leaves.type_id',
+                'users.name',                   
+                'leaves.start_date',
+                'leaves.end_date',
+                'leave_types.name as leave_name',
+                'leaves.leave_subject',
+                'leaves.leave_message',
+                'leaves.leave_type',
+                'leaves.leave_status',
+                'leaves.leave_duration',
+                'leaves.apply_date'
+            )
+			->paginate(10);
+
+		return view('client.leaves.index', compact('leaves'));
 	}
 
 	public function getData(Request $request)
@@ -155,16 +204,14 @@ class LeavesController extends Controller
 	{
 		if (request()->ajax()) {
             $data = $request->all();
-
-            $employeeId = $data['employeeId'];
-            $id       = $data['lid'];
-            $value    = $data['lvalue'];
-            $duration = $data['duration'];
-            $type     = $data['type'];
-
             $leave = Leave::find($id);
 
             if ($request->action == 'approve') {
+                $employeeId = $data['employeeId'];
+                $id       = $data['lid'];
+                $value    = $data['lvalue'];
+                $duration = $data['duration'];
+                $type     = $data['type'];
                 //Update leave status
                 $leave->leave_status = 'approved';
                 $leave->save();

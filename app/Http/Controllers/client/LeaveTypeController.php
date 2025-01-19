@@ -30,7 +30,23 @@ class LeaveTypeController extends Controller
 	 */
 	public function index(Request $request)
 	{		
-		return view('client.leave-type.index');
+		// Search input
+		$searchValue = $request->input('search', '');
+
+		// Fetching data with search and pagination
+		$leavTypes = LeaveType::orderBy('leave_types.id', 'desc')
+			->where('leave_types.created_by', auth()->user()->id)
+			->where(function ($query) use ($searchValue) {
+				$query
+					->where(function ($query) use ($searchValue) {
+						$query->where('leave_types.name', 'like', '%' . $searchValue . '%')
+							->orWhere('leave_types.leave_day', 'like', '%' . $searchValue . '%');
+					});
+
+			})
+			->paginate(10);
+
+		return view('client.leave-type.index', compact('leavTypes'));
 	}
 
 	public function getData(Request $request)

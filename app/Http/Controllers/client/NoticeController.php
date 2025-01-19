@@ -29,7 +29,7 @@ class NoticeController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index(Builder $builder)
+	public function index(Request $request)
 	{
 		if (request()->ajax()) {
 			$holidayQuery = Notice::query();
@@ -52,7 +52,23 @@ class NoticeController extends Controller
 					->make(true);
 		}
 
-		return view('notice.index');
+		// Search input
+		$searchValue = $request->input('search', '');
+
+		// Fetching data with search and pagination
+		$notices = Notice::orderBy('notices.id', 'desc')
+			->where('notices.created_by', auth()->user()->id)
+			->where(function ($query) use ($searchValue) {
+				$query
+					->where(function ($query) use ($searchValue) {
+						$query->where('notices.message', 'like', '%' . $searchValue . '%')
+							->orWhereRaw("DATE_FORMAT(notices.created_at, '%Y-%m-%d') LIKE ?", ['%' . $searchValue . '%']);
+					});
+
+			})
+			->paginate(10);
+
+		return view('notice.index', compact('notices'));
 	}
 
 	/**

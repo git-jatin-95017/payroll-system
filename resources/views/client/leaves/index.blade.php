@@ -5,17 +5,27 @@
 @endpush
 @section('content')
 <div>
-   <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-4">
+    <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 		<div>
 			<h3>Leaves</h3>
-			<p class="mb-0">Track and manage leaves here</p>
+			<p class="mb-0">Track and manage your leaves here</p>
 		</div>
-		<div>
-			<!-- <a href="{{ route('holidays.create' )}}" class="d-flex justify-content-center gap-2 primary-add ">
-				<x-heroicon-o-plus width="16" />
-				<span>Add Holiday</span>
-			</a> -->
-		</div>
+    </div>
+    <div class="d-flex gap-3 align-items-center justify-content-between mb-4">
+        <form method="GET" action="{{ route('leaves.index') }}" class="d-flex gap-3 align-items-center justify-content-between mb-4">
+            <div class="search-container">
+                <div class="d-flex align-items-center gap-3">
+                    <p class="mb-0 position-relative search-input-container">
+                        <x-heroicon-o-magnifying-glass class="search-icon" />
+                        <input type="search" class="form-control" name="search" placeholder="Type here" value="{{request()->search ?? ''}}">
+                    </p>
+                    <button type="submit" class="btn search-btn">
+                        <x-bx-filter class="w-20 h-20"/>
+                        Search
+                    </button>
+                </div>
+            </div>
+        </form>
    </div>
    @if (session('message'))
    <div>
@@ -32,23 +42,73 @@
       </div>
    </div>
    @endif
-   <div class="bg-white table-custom">
-	   <table id="dataTableBuilder" class="table table-hover responsive nowrap" style="width:100%">
-		 	<thead>
-				<tr>
-					<th>Id</th>
-					<th>Employee</th>
-					<th>Subject</th>
-					<th>Start Date</th>
-					<th>End Date</th>
-					<th>Message</th>
-					<th>Leave</th>
-					<th>Type</th>
-					<th>Status</th>
-					<th>Action</th>	
-				</tr>
-		 	</thead>
-	   </table>
+   <div class="bg-white p-4">
+        <div class="table-responsive">
+            <table class="table db-custom-table">
+                <thead>
+                    <tr>
+						<th>Id</th>
+						<th>Employee</th>
+						<th>Subject</th>
+						<th>Start Date</th>
+						<th>End Date</th>
+						<th>Message</th>
+						<th>Leave</th>
+						<th>Type</th>
+						<th>Status</th>
+						<th>Action</th>	
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($leaves as $row)
+                        <tr>
+                            <td>{{ $row->id }}
+							</td>
+                            <td>{{ $row->name }}</td>
+                            <td>{{ $row->leave_subject }}</td>
+                            <td>{{ date('m/d/Y', strtotime($row->start_date)) }}</td>
+							<td>{{ date('m/d/Y', strtotime($row->end_date)) }}</td>
+							<td>{{ $row->leave_message }}</td>
+							<td>{{ $row->leave_name }}</td>
+							<td>{{ $row->leave_type }}</td>
+                            <td>
+								<?php 
+									$type = '<span class="badge bg-warning">Pending</span>';
+									if ($row->leave_status == 'pending') {
+										$type = '<span class="badge bg-warning">Pending</span>';
+									} elseif ($row->leave_status == 'approved') {
+										$type = '<span class="badge bg-success">Approved</span>';
+									} elseif ($row->leave_status == 'rejected') {
+										$type = '<span class="badge bg-danger">Rejected</span>';
+									}
+								?>
+								{!! $type !!}
+							</td>
+                            <td>
+								<?php 
+									$id = $row->id;
+									$userid = $row->user_id;
+									$duration = $row->leave_duration;
+									$typeid = $row->type_id;
+								?>
+									@if ($row->leave_status == 'pending') 
+										<a data-href="{{$id}}" data-employeeid="{{$userid}}" data-value="Approve" data-duration="{{$duration}}" data-type="{{$typeid}}" class="btn btn-sm btn-success approve mt-1" style="color:#fff;" title="Approve"><x-bx-user-check class="w-16 h-16" /></a>
+										<a data-href="{{$id}}" class="btn btn-sm btn-danger reject mt-1" style="color:#fff;" title="Reject"><x-bx-map-alt class="w-16 h-16" /></a>
+									@endif
+									<a href="/client/edit-leave/{{$id}}/{{$userid}}" class="btn btn-sm btn-primary mt-1" title="Edit" ><x-bx-edit-alt class="w-16 h-16" /></a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="9" class="text-center">No record found</td>
+                        </tr>
+                    @endforelse
+                    
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        {{ $leaves->links('vendor.pagination.custom') }}
    </div>
 </div>
 @endsection
@@ -62,7 +122,7 @@
 		//single record move to delete
 		$(document).on('click','a.approve',function() {
 			id = $(this).data('href');
-		    employeeId = $(this).attr('data-employeeId');
+		    employeeId = $(this).attr('data-employeeid');
 	        lid = id;
 	        lvalue = $(this).attr('data-value');
 	        duration = $(this).attr('data-duration');
@@ -103,7 +163,8 @@
 	             	},
 		          	dataType:'JSON',
 		          	success:(result)=>{
-		            	$('#dataTableBuilder').DataTable().draw(true);
+						location.reload();
+		            	// $('#dataTableBuilder').DataTable().draw(true);
 		          	}
 		        });
 		      }
@@ -131,7 +192,8 @@
 	             	},
 		          	dataType:'JSON',
 		          	success:(result)=>{
-		            	$('#dataTableBuilder').DataTable().draw(true);
+						location.reload();
+		            	// $('#dataTableBuilder').DataTable().draw(true);
 		          	}
 		        });
 		      }

@@ -30,7 +30,29 @@ class PayheadController extends Controller
 	 */
 	public function index(Request $request)
 	{		
-		return view('client.payhead.index');
+		// Search input
+		$searchValue = $request->input('search', '');
+
+		// Fetching data with search and pagination
+		$payheads = Payhead::orderBy('payheads.id', 'desc')
+			->where('payheads.created_by', auth()->user()->id)
+			->where(function ($query) use ($searchValue) {
+				$query
+					->where(function ($query) use ($searchValue) {
+						$query->where('payheads.name', 'like', '%' . $searchValue . '%')
+							->orWhere('payheads.description', 'like', '%' . $searchValue . '%')
+							->orWhereRaw("
+								CASE 
+									WHEN payheads.pay_type = 'nothing' THEN 'Addition to Net Pay'
+									WHEN payheads.pay_type = 'deductions' THEN 'Deduction to Net Pay'
+									WHEN payheads.pay_type = 'earnings' THEN 'Addition to Gross Pay'
+								END LIKE ?", ['%' . $searchValue . '%']);
+					});
+
+			})
+			->paginate(10);
+
+		return view('client.payhead.index', compact('payheads'));
 	}
 
 	public function getData(Request $request)
