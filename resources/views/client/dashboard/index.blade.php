@@ -87,26 +87,28 @@
                         </div>
                         <form class="" method="GET" action="{{ route('payroll.create') }}" id="filter-timesheet">
 
-                        <div class="col-12">
-                            <div class="db-data-container time-card py-2 px-3">
-                                <label>Time sheet</label>
-                                <?php
+                            <div class="col-12">
+                                <div class="db-data-container time-card py-2 px-3">
+                                    <label>Time sheet</label>
+                                    <?php
                                 $requestData['start_date'] = date('Y-m-d', strtotime('-1 week'));
 
                                 $requestData['end_date'] = date('Y-m-d');
                                 ?>
-                                <div class="custom-calender">
-                                    <input type="text" class="form-control" name="daterange"
-                                        value="{{date('m/d/Y', strtotime($requestData['start_date'])).' - '.date('m/d/Y', strtotime($requestData['end_date']))}}" />
+                                    <div class="custom-calender">
+                                        <input type="text" class="form-control" name="daterange"
+                                            value="{{date('m/d/Y', strtotime($requestData['start_date'])).' - '.date('m/d/Y', strtotime($requestData['end_date']))}}" />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-12 mt-4">
-                            <div>
-                                <button type="submit" class="btn d-block btn-db mb-3 w-100">Approved Employees</button>
-                                <a href="{{ route('list.payroll') }}" class="btn d-block btn-db w-100">Run Payroll</a>
+                            <div class="col-12 mt-4">
+                                <div>
+                                    <button type="submit" class="btn d-block btn-db mb-3 w-100">Approved
+                                        Employees</button>
+                                    <a href="{{ route('list.payroll') }}" class="btn d-block btn-db w-100">Run
+                                        Payroll</a>
+                                </div>
                             </div>
-                        </div>
                         </form>
                     </div>
                 </div>
@@ -131,7 +133,7 @@
                         <template x-for="notice in notices" :key="notice.id">
                             <div class="d-flex gap-3 align-items-center border-bottom pb-3 mb-3">
                                 <div class="notice-icon shadow-sm">
-                                <a href="{{ route('notice.index') }}"><x-bx-envelope class="w-20 h-20" /></a>
+                                    <a href="{{ route('notice.index') }}"><x-bx-envelope class="w-20 h-20" /></a>
                                 </div>
                                 <div>
                                     <p x-text="truncateMessage(notice.message)"></p>
@@ -305,16 +307,16 @@
                     start_date: startDate,
                     end_date: endDate
                 },
-                success: function(response) {
+                success: function (response) {
                     // Update the employee count in the DOM
                     $('#employeeCount').text(response.totalEmp);
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.error("Error fetching employee count: ", error);
                 }
             });
         }
-        
+
     });
 </script>
 
@@ -494,8 +496,8 @@
                     payrollChart.update();
 
                     console.log(data);
-                    
-                     // Sort the data in descending order of the original index
+
+                    // Sort the data in descending order of the original index
                     data.reverse();
 
 
