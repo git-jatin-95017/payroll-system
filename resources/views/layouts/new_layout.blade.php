@@ -77,6 +77,7 @@
     </div>
     </div>
     <script src="{{asset('js/sitejs/libs/jquery.min.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="{{asset('js/sitejs/datepicker/moment.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/sitejs/datepicker/daterangepicker.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/sitejs/main.js')}}"></script>

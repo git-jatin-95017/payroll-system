@@ -802,6 +802,106 @@ a:hover {
     background-color: #5E5ADB;
 }
 
+.white-container{
+    border-radius: 15px;
+}
+
+.db-custom-tabs .nav-item .nav-link {
+    color: #595959;
+    font-size: 16px;
+    border-bottom: 3px solid transparent;
+    border-radius: 0;
+    background-color: transparent;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.db-custom-tabs .nav-item .nav-link:hover{
+    color: #5E5ADB;
+}
+
+.db-custom-tabs .nav-item .active.nav-link {
+    border-bottom-color: #5E5ADB;
+    color: #5E5ADB;
+}
+
+.db-custom-input{
+    padding-left: 15px;
+    font-size: 14px;
+    height: 42px;
+    border: 1px solid #C2C2C2;
+    border-radius: 8px;
+}
+
+.db-custom-input:focus{
+    box-shadow: none;
+    border-color: #A0A0A0;
+}
+
+.max-w-md{
+    max-width: 860px;
+    width: 100%;
+}
+
+.db-label{
+    font-size: 14px;
+    color: #252525;
+    font-weight: 500;
+}
+.submit-btn{
+    height: 44px;
+    width: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+.sub-text-heading h3 {
+    font-size: 20px;
+    color: #2C368A;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.sub-text-heading p{
+    font-size: 14px;
+    color: #595959;
+    margin-bottom: 0;
+}
+.continer-h-full {
+    min-height: 650px;
+}
+.tb-img-view {
+    width: 90px;
+    height: 90px;
+    border-radius: 100em;
+    overflow: hidden;
+    position: relative;
+}
+
+.tb-img-view img#tb-image {
+    width: 90px;
+    height: 90px;
+    border-radius: 100em;
+    object-fit: cover;
+}
+
+.tb-container input {
+    display: none;
+}
+
+.tb-container label {
+    background: #E4E3FF;
+    color: #5e5adb;
+    font-size: 14px;
+    text-transform: capitalize;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    padding: 12px 15px;
+}
+
+  
 @media only screen and (max-width: 992px) {
     #left-menu,
     #logo {
