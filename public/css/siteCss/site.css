@@ -649,7 +649,7 @@ a:hover {
     border: 1px solid #C2C2C2;
 }
 
-.db-custom-table th{
+.db-custom-table th {
     color: #252525;
     font-size: 17px;
     vertical-align: middle;
@@ -657,9 +657,9 @@ a:hover {
     border-bottom: none;
     padding-left: 15px;
     padding-right: 15px;
-   
+    padding-top: 18px;
+    padding-bottom: 18px;
 }
-
 .db-custom-table thead{
     background-color: #F3F3F3;
 }
