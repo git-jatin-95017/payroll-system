@@ -73,8 +73,8 @@
                             <td>
                                 <div class="people-img">
                                     <?php
-                                        if (!empty($employee->empProfile->file)) {
-                                            $file = 'files/'. $employee->empProfile->file;
+                                        if (!empty($employee->employeeProfile->file)) {
+                                            $file = 'files/'. $employee->employeeProfile->file;
                                         } else {
                                             $file = '/img/people.png';
                                         }
