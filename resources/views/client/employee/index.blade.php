@@ -47,130 +47,132 @@
    </div>
    @endif
    <div class="bg-white p-4">
-        <table class="table db-custom-table">
-            <thead>
-                <tr>
-                    <th>
-                        Employee <br/> Photos
-                    </th>
-                    <th>
-                        Employee <br/> Name
-                    </th>
-                    <th>
-                        Contact <br/>
-                        Number
-                    </th>										
-                    <th>Social <br/> Security</th>										
-                    <th>Medical <br/> Benefit</th>										
-                    <th>Position</th>										
-                    <th>Start Date</th>										
-                    <th>Pay</th>										
-                    <th>Action</th>	
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="people-img">
-                            <img src="{{ asset('img/people.png') }}" alt="people">
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#" class="people-view">Molly Robel</a>
-                    </td>
-                    <td>992-670-9886</td>
-                    <td>B111111</td>
-                    <td>IFSC00011</td>
-                    <td>Account Executive</td>
-                    <td>Fri Jan 10 2025 </td>
-                    <td>$ 900.00</td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn action-dropdown-toggle dropdown-toggle" type="button" id="dropdownMenuButton${row.id}" data-bs-toggle="dropdown" aria-expanded="false">
-                                <x-bx-dots-horizontal-rounded class="w-20 h-20" />
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${row.id}">
-                                <li>
-                                    <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#ManageModal" class="dropdown-item" onclick="updateEmpCode(${row.id})">
-                                        <x-bx-dollar-circle class="w-16 h-16" /> Assign Pay Head
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#LeavePolicyModal" class="dropdown-item" onclick="updateLeaveAssign(${row.id})">
-                                        <x-bx-user-check class="w-16 h-16" /> Assign Leave Policy
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#LocationModal" class="dropdown-item" onclick="updateLocationAssign(${row.id})">
-                                        <x-bx-map-alt class="w-16 h-16" /> Assign Location
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="${editRoute}" class="dropdown-item">
-                                        <x-bx-edit-alt class="w-16 h-16" /> Edit
-                                    </a>
-                                </li>
-                                <li>
-                                    <a data-href="${destrRoute}" class="dropdown-item delete" style="color:#dc3545;">
-                                         <x-heroicon-o-trash class="w-16 h-16" /> Delete
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="people-img">
-                            <img src="{{ asset('img/people.png') }}" alt="people">
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#" class="people-view">Molly Robel</a>
-                    </td>
-                    <td>992-670-9886</td>
-                    <td>B111111</td>
-                    <td>IFSC00011</td>
-                    <td>Account Executive</td>
-                    <td>Fri Jan 10 2025 </td>
-                    <td>$ 900.00</td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn action-dropdown-toggle dropdown-toggle" type="button" id="dropdownMenuButton${row.id}" data-bs-toggle="dropdown" aria-expanded="false">
-                                <x-bx-dots-horizontal-rounded class="w-20 h-20" />
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${row.id}">
-                                <li>
-                                    <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#ManageModal" class="dropdown-item" onclick="updateEmpCode(${row.id})">
-                                        <x-bx-dollar-circle class="w-16 h-16" /> Assign Pay Head
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#LeavePolicyModal" class="dropdown-item" onclick="updateLeaveAssign(${row.id})">
-                                        <x-bx-user-check class="w-16 h-16" /> Assign Leave Policy
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#LocationModal" class="dropdown-item" onclick="updateLocationAssign(${row.id})">
-                                        <x-bx-map-alt class="w-16 h-16" /> Assign Location
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="${editRoute}" class="dropdown-item">
-                                        <x-bx-edit-alt class="w-16 h-16" /> Edit
-                                    </a>
-                                </li>
-                                <li>
-                                    <a data-href="${destrRoute}" class="dropdown-item delete" style="color:#dc3545;">
-                                         <x-heroicon-o-trash class="w-16 h-16" /> Delete
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table db-custom-table">
+                <thead>
+                    <tr>
+                        <th>
+                            Employee <br/> Photos
+                        </th>
+                        <th>
+                            Employee <br/> Name
+                        </th>
+                        <th>
+                            Contact <br/>
+                            Number
+                        </th>										
+                        <th>Social <br/> Security</th>										
+                        <th>Medical <br/> Benefit</th>										
+                        <th>Position</th>										
+                        <th>Start Date</th>										
+                        <th>Pay</th>										
+                        <th>Action</th>	
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="people-img">
+                                <img src="{{ asset('img/people.png') }}" alt="people">
+                            </div>
+                        </td>
+                        <td>
+                            <a href="#" class="people-view">Molly Robel</a>
+                        </td>
+                        <td>992-670-9886</td>
+                        <td>B111111</td>
+                        <td>IFSC00011</td>
+                        <td>Account Executive</td>
+                        <td>Fri Jan 10 2025 </td>
+                        <td>$ 900.00</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn action-dropdown-toggle dropdown-toggle" type="button" id="dropdownMenuButton${row.id}" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <x-bx-dots-horizontal-rounded class="w-20 h-20" />
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${row.id}">
+                                    <li>
+                                        <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#ManageModal" class="dropdown-item" onclick="updateEmpCode(${row.id})">
+                                            <x-bx-dollar-circle class="w-16 h-16" /> Assign Pay Head
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#LeavePolicyModal" class="dropdown-item" onclick="updateLeaveAssign(${row.id})">
+                                            <x-bx-user-check class="w-16 h-16" /> Assign Leave Policy
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#LocationModal" class="dropdown-item" onclick="updateLocationAssign(${row.id})">
+                                            <x-bx-map-alt class="w-16 h-16" /> Assign Location
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="${editRoute}" class="dropdown-item">
+                                            <x-bx-edit-alt class="w-16 h-16" /> Edit
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a data-href="${destrRoute}" class="dropdown-item delete" style="color:#dc3545;">
+                                            <x-heroicon-o-trash class="w-16 h-16" /> Delete
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="people-img">
+                                <img src="{{ asset('img/people.png') }}" alt="people">
+                            </div>
+                        </td>
+                        <td>
+                            <a href="#" class="people-view">Molly Robel</a>
+                        </td>
+                        <td>992-670-9886</td>
+                        <td>B111111</td>
+                        <td>IFSC00011</td>
+                        <td>Account Executive</td>
+                        <td>Fri Jan 10 2025 </td>
+                        <td>$ 900.00</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn action-dropdown-toggle dropdown-toggle" type="button" id="dropdownMenuButton${row.id}" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <x-bx-dots-horizontal-rounded class="w-20 h-20" />
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${row.id}">
+                                    <li>
+                                        <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#ManageModal" class="dropdown-item" onclick="updateEmpCode(${row.id})">
+                                            <x-bx-dollar-circle class="w-16 h-16" /> Assign Pay Head
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#LeavePolicyModal" class="dropdown-item" onclick="updateLeaveAssign(${row.id})">
+                                            <x-bx-user-check class="w-16 h-16" /> Assign Leave Policy
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#LocationModal" class="dropdown-item" onclick="updateLocationAssign(${row.id})">
+                                            <x-bx-map-alt class="w-16 h-16" /> Assign Location
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="${editRoute}" class="dropdown-item">
+                                            <x-bx-edit-alt class="w-16 h-16" /> Edit
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a data-href="${destrRoute}" class="dropdown-item delete" style="color:#dc3545;">
+                                            <x-heroicon-o-trash class="w-16 h-16" /> Delete
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <nav aria-label="Page navigation" class="custom-pagination">
             <ul class="pagination justify-content-end">
               <li class="page-item">
