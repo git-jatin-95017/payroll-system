@@ -46,7 +46,7 @@ Route::get('sample-download/{file}', [App\Http\Controllers\admin\DashboardContro
 
 Route::prefix('admin')->group(function () {
 	//Dashboard
-	Route::get('dashboard', [App\Http\Controllers\admin\DashboardController::class, 'index'])->name('admin.dashboard');	
+	Route::get('dashboard', [App\Http\Controllers\admin\DashboardController::class, 'index'])->name('admin.dashboard');
 	Route::post('login-as-client', [ClientController::class, 'loginAs'])->name('login-as-client');
 	Route::resource('client', ClientController::class);
 
@@ -72,7 +72,7 @@ Route::prefix('admin')->group(function () {
 
 Route::prefix('client')->group(function () {
 	//Dashboard
-	Route::get('dashboard', [App\Http\Controllers\client\DashboardController::class, 'index'])->name('client.dashboard');	
+	Route::get('dashboard', [App\Http\Controllers\client\DashboardController::class, 'index'])->name('client.dashboard');
 
 	Route::get('fetch-calendar-data', [App\Http\Controllers\client\DashboardController::class, 'fetchCalendarData']);
 	Route::get('recent-payroll', [App\Http\Controllers\client\DashboardController::class, 'getRecentPayroll']);
@@ -81,18 +81,18 @@ Route::prefix('client')->group(function () {
 
 
 	Route::get('employee/getData/', [EmployeeController::class, 'getData'])->name('employee.getData');
-	Route::resource('employee', EmployeeController::class);	
+	Route::resource('employee', EmployeeController::class);
 	Route::get('leaves/getData/', [LeavesController::class, 'getData'])->name('leaves.getData');
 	Route::get('edit-leave/{id}/{emp_id}', [LeavesController::class, 'edit']);
 	Route::put('edit-leave/{id}', [LeavesController::class, 'updateLeave'])->name('edit-leave.save');
-	Route::resource('leaves', LeavesController::class);	
+	Route::resource('leaves', LeavesController::class);
 
 	Route::get('fetch/emp-data', [EMPLEAVE::class, 'create'])->name('emp-my-leaves.create');
 
-	Route::resource('holidays', HolidayController::class);	
+	Route::resource('holidays', HolidayController::class);
 
 	Route::get('attendance/getData/', [AttendanceController::class, 'getData'])->name('attendance.getData');
-	Route::resource('attendance', AttendanceController::class);	
+	Route::resource('attendance', AttendanceController::class);
 	Route::get('register-entry', [PayrollController::class, 'registerEntry']);
 	Route::get('autocomplete', [PayrollController::class, 'search'])->name('search.autocomplete');
 	Route::resource('payroll', PayrollController::class);
@@ -100,7 +100,7 @@ Route::prefix('client')->group(function () {
 	Route::get('department/getData/', [DepartmentController::class, 'getData'])->name('department.getData');
 	Route::post('location-assign', [DepartmentController::class, 'assign'])->name('assign.locations');
 	Route::get('get-locations-assigned', [DepartmentController::class, 'assignedPayhead'])->name('assigned.locations');
-	Route::resource('department', DepartmentController::class);		
+	Route::resource('department', DepartmentController::class);
 
 	Route::get('leave-type/getData/', [LeaveTypeController::class, 'getData'])->name('leave-type.getData');
 	Route::post('leave-type-assign', [LeaveTypeController::class, 'assign'])->name('assign.leave.policies');
@@ -111,7 +111,7 @@ Route::prefix('client')->group(function () {
 	Route::post('pay-head-assign', [PayheadController::class, 'assign'])->name('assign.payhead');
 	Route::get('get-pay-head-assigned', [PayheadController::class, 'assignedPayhead'])->name('assigned.payhead');
 	Route::resource('pay-head', PayheadController::class);
-	
+
 	Route::get('get-pending-payroll-list', [RunPayrollController::class, 'listPayroll'])->name('list.payroll');
 	Route::get('run-payroll/step-1', [RunPayrollController::class, 'stepOne'])->name('list.step1');
 	Route::post('run-payroll/step-1', [RunPayrollController::class, 'storeStepOne'])->name('store.Step1');
@@ -144,12 +144,12 @@ Route::prefix('client')->group(function () {
 
 Route::prefix('employee')->group(function () {
 	//Dashboard
-	Route::get('dashboard', [App\Http\Controllers\employee\DashboardController::class, 'index'])->name('dashboard');	
+	Route::get('dashboard', [App\Http\Controllers\employee\DashboardController::class, 'index'])->name('dashboard');
 
 	Route::get('my-leaves/getData/', [LeaveController::class, 'getData'])->name('my.leaves.getData');//->middleware([CheckPunchin::class]);
-	Route::resource('my-leaves', LeaveController::class);//->middleware([CheckPunchin::class]);	
-	
-	Route::resource('holidays', HolidayController::class);//->middleware([CheckPunchin::class]);	
+	Route::resource('my-leaves', LeaveController::class);//->middleware([CheckPunchin::class]);
+
+	Route::resource('holidays', HolidayController::class);//->middleware([CheckPunchin::class]);
 
 	Route::resource('emp-my-profile', MyProfileController::class);//->middleware([CheckPunchin::class]);
 
@@ -176,8 +176,8 @@ Route::get('/employee/logout', function() {
             ->where('action_name', 'punchin')
             ->count();
 
-        if ($isPunchInCount == 0) {        
-     	   return redirect()->route('dashboard')->with('error','Please punch in/out first!');   
+        if ($isPunchInCount == 0) {
+     	   return redirect()->route('dashboard')->with('error','Please punch in/out first!');
         }
 
         $isPunchOutCount = Attendance::where('user_id', auth()->user()->id)
@@ -185,21 +185,21 @@ Route::get('/employee/logout', function() {
             ->where('action_name', 'punchout')
             ->count();
 
-        if ($isPunchOutCount == 0) {        
-     	   return redirect()->route('dashboard')->with('error','Please punch out first!');   
+        if ($isPunchOutCount == 0) {
+     	   return redirect()->route('dashboard')->with('error','Please punch out first!');
         }
 	}
-	
+
 	*/
 	//logout user
     auth()->logout();
-    
+
     // redirect to homepage
     return redirect('/');
 });
 
 Route::get('/logout', function() {
-	
+
 	/*
 	if (auth()->user()->role_id == 3) {
 		$attendanceDate = date('Y-m-d');
@@ -209,8 +209,8 @@ Route::get('/logout', function() {
             ->where('action_name', 'punchin')
             ->count();
 
-        if ($isPunchInCount == 0) {        
-     	   return redirect()->route('dashboard')->with('error','Please punch in/out first!');   
+        if ($isPunchInCount == 0) {
+     	   return redirect()->route('dashboard')->with('error','Please punch in/out first!');
         }
 
         $isPunchOutCount = Attendance::where('user_id', auth()->user()->id)
@@ -218,15 +218,15 @@ Route::get('/logout', function() {
             ->where('action_name', 'punchout')
             ->count();
 
-        if ($isPunchOutCount == 0) {        
-     	   return redirect()->route('dashboard')->with('error','Please punch out first!');   
+        if ($isPunchOutCount == 0) {
+     	   return redirect()->route('dashboard')->with('error','Please punch out first!');
         }
 	}
-	
+
 	*/
 	//logout user
     auth()->logout();
-    
+
     // redirect to homepage
     return redirect('/');
 })->name('logout');
@@ -239,4 +239,8 @@ Route::get('client/step-4', function () {
 
 Route::get('report', function(){
     return view('pages.r_five_form');
+});
+
+Route::get('employee_profile', function(){
+    return view('pages.employee_profile');
 });

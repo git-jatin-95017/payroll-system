@@ -50,7 +50,7 @@
 					</div>
 				</div>
 			@endif
-			<div class="row">				
+			<div class="row">
 				<div class="col-md-12">
 					<div class="card">
 						<div class="card-header p-2">
@@ -67,45 +67,22 @@
 									@csrf
 									{{ method_field('PUT') }}
 										<input type="hidden" name="update_request" value="personal">
-										<!-- <div class="form-row mb-3">
-											<div class="col-md-4">
-												<label for="name" >Upload Image</label>
-												<input id="imgInp" type="file" class="form-control {{ $errors->has('file') ? ' is-invalid' : '' }}" name="file" value="{{ old('file', '') }}">
-
-												@if ($errors->has('file'))
-													<span class="text-danger">
-														{{ $errors->first('file') }}
-													</span>
-												@endif
-
-											</div>
-											<div class="col-md-4">											
-												@if(!empty($company->companyProfile->file))
-												<img id="blah" src="/files/{{$company->companyProfile->file}}" class="img-thumbnail"
-												style="object-fit: contain;width: 150px; height: 80px;" />
-												@else
-													<img id="blah" src="#" alt="image" class="img-thumbnail d-none" style="object-fit: contain;width: 150px; height: 80px;" />
-												@endif								
-											</div>													
-										</div> -->
 										<div class="form-row mb-3">
 											<div class="col-md-4">
 												<label for="name" >Upload Logo</label>
 												<input id="file2" type="file" class="form-control {{ $errors->has('logo') ? ' is-invalid' : '' }}" name="logo" value="{{ old('logo', '') }}" >
-
 												@if ($errors->has('logo'))
 													<span class="text-danger">
 														{{ $errors->first('logo') }}
 													</span>
 												@endif
-
 											</div>
 											<div class="col-md-4">
 												@if(!empty($company->companyProfile->logo))
 												<img src="/files/{{$company->companyProfile->logo}}" class="img-thumbnail"
 												style="object-fit: contain;width: 150px; height: 80px;" />
 												@endif
-											</div>													
+											</div>
 										</div>
 										<hr>
 										<div class="form-row mb-3">
@@ -138,7 +115,7 @@
 														{{ $errors->first('city') }}
 													</span>
 												@endif
-											</div>					
+											</div>
 										</div>
 										<div class="form-row mb-3">
 											<div class="col-md-12">
@@ -162,7 +139,7 @@
 														{{ $errors->first('phone_number') }}
 													</span>
 												@endif
-											</div>	
+											</div>
 											<div class="col-md-4">
 												<label for="email" >Email address</label>
 												<input id="email" type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ $company->email }}" >
@@ -205,20 +182,20 @@
 													</span>
 												@endif
 											</div>
-										</div>										
+										</div>
 										<div class="form-group row ">
 											<div class="col-12">
 												<button type="submit" class="btn btn-primary">Submit</button>
 											</div>
 										</div>
 									</form>
-								</div>								
+								</div>
 								<div class="tab-pane" id="payment-method">
 									<form class="form-horizontal" method="POST" action="{{ route('client.update', $company->id) }}">
 									@csrf
 									{{ method_field('PUT') }}
-									
-									<input type="hidden" name="update_request" value="payment">								
+
+									<input type="hidden" name="update_request" value="payment">
 									<div class="form-row mb-3">
 										<div class="col-md-4">
 											<label for="name" >Payment Method</label>
@@ -233,8 +210,8 @@
 												</span>
 											@endif
 										</div>
-										<div class="col-md-4 
-											@if(empty($company->paymentProfile->routing_number)) d-none @endif" 												
+										<div class="col-md-4
+											@if(empty($company->paymentProfile->routing_number)) d-none @endif"
 											id="routing_number_div"
 										>
 											<div class="col-md-12">
@@ -247,8 +224,8 @@
 												@endif
 											</div>
 										</div>
-										<div class="col-md-4 
-											@if(empty($company->paymentProfile->account_number)) d-none @endif" 
+										<div class="col-md-4
+											@if(empty($company->paymentProfile->account_number)) d-none @endif"
 											id="account_number_div">
 											<div class="col-md-12">
 												<label for="account_number">Account Number</label>
@@ -262,7 +239,7 @@
 										</div>
 									</div>
 									<div class="form-row mb-3
-										@if(empty($company->paymentProfile->account_type)) d-none @endif" 
+										@if(empty($company->paymentProfile->account_type)) d-none @endif"
 										id="account_type_div">
 										<div class="col-md-4">
 											<label for="name" >Account Type</label>
@@ -306,7 +283,7 @@
 											<button type="submit" class="btn btn-primary">Submit</button>
 										</div>
 									</div>
-								</form>									
+								</form>
 								</div>
 								<div class="tab-pane" id="settings">
 									<form class="form-horizontal" method="POST" action="{{ route('client.update', $company->id) }}">
@@ -389,7 +366,7 @@
 												<button type="submit" class="btn btn-primary">Submit</button>
 											</div>
 										</div>
-									</form>		
+									</form>
 								</div>
 							</div>
 						</div>
@@ -428,7 +405,7 @@
 	                '       <input type="password" class="form-control" name="password_confirmation[]">' +
 	                '   </div>' +
 	                '</div>';
-            
+
             	$("#dynamicRowsContainer").append(newRow);
             } else {
                 alert('You cannot add more than ' + maxRows + ' admins.');

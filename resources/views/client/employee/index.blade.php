@@ -1,7 +1,7 @@
 @extends('layouts.new_layout')
 @push('page_css')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css">
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css"> -->
 @endpush
 @section('content')
 <div>
@@ -12,7 +12,7 @@
 		</div>
     </div>
     <div class="d-flex gap-3 align-items-center justify-content-between mb-4">
-        <form method="GET" action="{{ route('employee.index') }}" class="d-flex gap-3 align-items-center justify-content-between mb-4">
+        <form method="GET" action="{{ route('employee.index') }}" class="d-flex gap-3 align-items-center justify-content-between">
             <div class="search-container">
                 <div class="d-flex align-items-center gap-3">
                     <p class="mb-0 position-relative search-input-container">
@@ -80,7 +80,7 @@
                                         }
 
                                         $empId = $employee->id;
-                                        
+
                                     ?>
                                     <img src="{{ asset($file) }}" alt="people" width='70' height='70'>
                                 </div>
@@ -132,7 +132,7 @@
                             <td colspan="9" class="text-center">No employees found</td>
                         </tr>
                     @endforelse
-                    
+
                     </tr>
                 </tbody>
             </table>
@@ -266,7 +266,6 @@
 @endsection
 @push('page_scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.js"></script>
 <!-- <script src="{{ asset('js/dataTables.buttons.min.js') }}"></script> -->
@@ -351,7 +350,7 @@
                                 align: "right"
                             },
                             z_index: 9999,
-                        });                        
+                        });
                     } else {
                         $.notify({
                             icon: 'glyphicon glyphicon-remove-circle',
@@ -408,7 +407,7 @@
             });
             moveItemsLocations('#selected_locations', '#all_locations');
         });
-        /* End of Script */     
+        /* End of Script */
 </script>
 	<script>
 	function updateLeaveAssign(empId) {
@@ -423,9 +422,9 @@
 	        success  : function(result) {
 	            $('#selected_leave_policies').html('');
 	            $('#all_leave_policies').html('');
-	            
+
 	            console.log(result.result,result.code, result.leavePolicies);
-	            
+
 	            if ( result.code == 0 ) {
 	            	for ( var j in result.leavePolicies ) {
 	                    $('#all_leave_policies').append($("<option></option>")
@@ -492,7 +491,7 @@
                                 align: "right"
                             },
                             z_index: 9999,
-                        });                        
+                        });
                     } else {
                         $.notify({
                             icon: 'glyphicon glyphicon-remove-circle',
@@ -550,7 +549,7 @@
             });
             moveItemsLeavePolicy('#selected_leave_policies', '#all_leave_policies');
         });
-        /* End of Script */		
+        /* End of Script */
 </script>
 
 	<script>
@@ -581,7 +580,7 @@
                                 align: "right"
                             },
                             z_index: 9999,
-                        });                        
+                        });
                     } else {
                         $.notify({
                             icon: 'glyphicon glyphicon-remove-circle',
@@ -639,8 +638,8 @@
             moveItems('#selected_payheads', '#all_payheads');
         });
         /* End of Script */
-		$('#delete-all').on('click', function (e) { 
-			e.preventDefault();		     
+		$('#delete-all').on('click', function (e) {
+			e.preventDefault();
 			// Confirm alert
 			var confirmdelete = confirm("Do you really want to delete all records?");
 
@@ -655,12 +654,12 @@
 				      'Records deleted successfully!',
 				      'success'
 				    )
-				    
+
 				    // tabelD.ajax.reload();
 				    $('#dataTableBuilder').DataTable().draw(true);
 				   }
 				});
-			} 
+			}
 		});
 	</script>
 
@@ -671,7 +670,7 @@
 		    moveToDelete(trashRecordUrl);
 		});
 
-		// move to Delete single record by just pass the url of 
+		// move to Delete single record by just pass the url of
 		function moveToDelete(trashRecordUrl) {
 		  Swal.fire({
 		      text: "You Want to Delete?",
@@ -693,7 +692,7 @@
 		          	dataType:'JSON',
 		          	success:(result)=> {
                         location.reload();
-		            	// $('#dataTableBuilder').DataTable().draw(true);		           
+		            	// $('#dataTableBuilder').DataTable().draw(true);
 		          	}
 		        });
 		      }
@@ -732,8 +731,8 @@
 			           	// {data: 'action', name: 'Action', orderable: false, searchable: false},
 						// {data:'user_code'},
 						{
-							data:'file', 
-							orderable: false, 
+							data:'file',
+							orderable: false,
 							searchable: false,
 							render: function(data, type, row, meta) {
 			                	if(row.file) {
@@ -745,16 +744,16 @@
 			                }
 						},
 						{
-							data:'name', 
+							data:'name',
 							// orderable: true
 						},
-						{data:'phone_number'},						
+						{data:'phone_number'},
 						{
                             data: 'pan_number',
                             render: function (data, type, row, meta) {
                                 return `<span class="text-primary">${data}</span>`;
                             }
-                        },						
+                        },
 						{data:'ifsc_code'},
                         {
                             data: 'start_date',
@@ -766,8 +765,8 @@
                                     <path d="M5.25 9.5H8.75" stroke="#5E5ADB" stroke-width="1.5" stroke-linecap="round"/>
                                     </svg><span class="ms-2">${data}</span>`;
                                 }
-                        },						
-						{data:'designation'},						
+                        },
+						{data:'designation'},
 						{data:'pay_rate'},
 						{
 			                data: 'actions',
@@ -819,10 +818,10 @@
 			        ],
 			        orderCellsTop: true,
         			// fixedHeader: true,
-			       
+
 			  	});
 		   	});
-		 	
+
 		 	function jsUcfirst(string) {
 			    return string.charAt(0).toUpperCase() + string.slice(1);
 			}
@@ -885,7 +884,7 @@
 				$('#dataTableBuilder').DataTable().draw(true);
 		  	});
 
-		  	// Check all 
+		  	// Check all
 		   $('#checkall').click(function(){
 		      if($(this).is(':checked')){
 		         $('.delete_check').prop('checked', true);
@@ -916,5 +915,5 @@
 			   }
 			}
 
-	</script>			
+	</script>
 @endpush

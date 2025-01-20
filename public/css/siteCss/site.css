@@ -649,7 +649,7 @@ a:hover {
     border: 1px solid #C2C2C2;
 }
 
-.db-custom-table th{
+.db-custom-table th {
     color: #252525;
     font-size: 17px;
     vertical-align: middle;
@@ -657,9 +657,9 @@ a:hover {
     border-bottom: none;
     padding-left: 15px;
     padding-right: 15px;
-   
+    padding-top: 18px;
+    padding-bottom: 18px;
 }
-
 .db-custom-table thead{
     background-color: #F3F3F3;
 }
@@ -901,7 +901,89 @@ a:hover {
     padding: 12px 15px;
 }
 
-  
+.bg-cover-container{
+    border-radius: 12px;
+    background: rgb(50,48,136);
+    background: linear-gradient(0deg, rgba(50,48,136,1) 0%, rgba(22,20,91,1) 100%);
+}
+.profile-name-container h3{
+    margin-bottom: 2px;
+    font-size: 36px;
+    font-weight: 700;
+    color: #F0F2F4;
+}
+
+.profile-name-container p{
+    color: #F0F2F4;
+    margin-bottom: 0;
+}
+
+.db-custom-tabs button:focus-visible{
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.employee-tabs.db-custom-tabs .nav-item .nav-link{
+    color: #BFBED4;
+}
+.employee-tabs.db-custom-tabs .nav-item .active.nav-link {
+    border-bottom-color: #fff;
+    color: #fff;
+}
+.employee-tabs{
+    border: none;
+}
+
+.employee-profile-left{
+    max-width: 250px;
+    width: 100%;
+    border-radius: 15px;
+}
+
+.border-radius-15{
+    border-radius: 15px;
+}
+.custom-radio-btn .form-check-input{
+    width: 20px;
+    height: 20px;
+    border: 1px solid #C2C2C2 !important;
+}
+
+.custom-radio-btn .form-check-input:checked{
+    background-color: #5E5ADB !important;
+    border-color: #5E5ADB !important;
+}
+.custom-radio-btn label {
+    font-size: 14px;
+    color: #252525;
+    margin-left: 5px;
+    margin-top: 4px;
+}
+.employee-info svg{
+    color: #595959;
+}
+.employee-info p{
+    font-size: 14px;
+    color: #595959;
+}
+
+.employee-social-media li{
+    list-style: none;
+}
+.employee-social-media li a{
+    color: #454E97;
+}
+.emp-proifle-picture{
+    position: relative;
+    top: 40px;
+}
+.select-drop-down-arrow {
+    background: url('/img/arrow-down.svg');
+    background-repeat: no-repeat;
+    background-position: calc(100% - 10px) center;
+}
+
 @media only screen and (max-width: 992px) {
     #left-menu,
     #logo {
