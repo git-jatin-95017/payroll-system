@@ -74,13 +74,13 @@
 								<div class="col-md-4">
 									<label for="name" >Upload Logo</label>
 									<input id="file2" type="file" class="form-control  {{ $errors->has('logo') ? ' is-invalid' : '' }}" name="logo" value="{{ old('logo', '') }}" >
-	
+
 									@if ($errors->has('logo'))
 										<span class="text-danger">
 											{{ $errors->first('logo') }}
 										</span>
 									@endif
-	
+
 								</div> -->
 						<!-- <div class="col-md-4">
 							@if(!empty($company->companyProfile->logo))
@@ -272,7 +272,7 @@
 								<div class="form-group">
 									<label class="db-label" for="name">Payment Method</label>
 									<select
-										class="form-control db-custom-input{{ $errors->has('payment_method') ? ' is-invalid' : '' }}"
+										class="form-control select-drop-down-arrow db-custom-input{{ $errors->has('payment_method') ? ' is-invalid' : '' }}"
 										id="payment_method" name="payment_method" onchange="showDiv(this)">
 										<option value="" selected disabled>Please Select</option>
 										<option @if(!empty($company->paymentProfile->payment_method) &&
@@ -307,7 +307,7 @@
 								</div>
 							</div>
 							<div class="col-6 mb-3">
-								<div class="form-group 
+								<div class="form-group
 									@if(empty($company->paymentProfile->account_number)) d-none @endif" id="account_number_div">
 									<label class="db-label" for="account_number">Account Number</label>
 									<input id="account_number" type="account_number"
@@ -326,7 +326,7 @@
 									@if(empty($company->paymentProfile->account_type)) d-none @endif" id="account_type_div">
 									<label class="db-label" for="name">Account Type</label>
 									<select
-										class="form-control db-custom-input {{ $errors->has('account_type') ? ' is-invalid' : '' }}"
+										class="form-control select-drop-down-arrow db-custom-input {{ $errors->has('account_type') ? ' is-invalid' : '' }}"
 										id="account_type" name="account_type">
 										<option value="" disabled>Please Select</option>
 										<option @if(!empty($company->paymentProfile->account_type) &&
