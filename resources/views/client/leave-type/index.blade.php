@@ -65,12 +65,23 @@
 							<td>{{ $row->leave_day  }}</td>
 	
                             <td>
-								<a href="{{ route('leave-type.edit', $row->id) }}" style="text-decoration:none;" class="">
-									<x-bx-edit-alt class="w-20 h-20" />
-								</a>
-								<a class="delete" href="javascript:void(0);" data-href="{{ route('leave-type.destroy', $row->id) }}" style="color:#dc3545;">
-									<x-heroicon-o-trash class="w-20 h-20" />
-								</a>
+								<div class="dropdown">
+                                    <button class="btn action-dropdown-toggle dropdown-toggle" type="button" id="dropdownMenuButton{$id}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <x-bx-dots-horizontal-rounded class="w-20 h-20" />
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{$id}">
+                                        <li>
+                                            <a href="{{ route('leave-type.edit', $row->id) }}" class="dropdown-item">
+                                                <x-bx-edit-alt class="w-16 h-16" /> Edit
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" data-href="{{ route('leave-type.destroy', $row->id) }}" class="dropdown-item delete" style="color:#dc3545;">
+                                                <x-heroicon-o-trash class="w-16 h-16" /> Delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </td>
                         </tr>
                     @empty
@@ -93,7 +104,7 @@
 
 @push('page_scripts')
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
 	<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 	<script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.js"></script>
 	<script src="{{ asset('js/datepicker/bootstrap-datepicker.js') }}"></script>

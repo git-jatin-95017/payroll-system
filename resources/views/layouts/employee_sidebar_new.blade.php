@@ -1,10 +1,10 @@
 <div>
 	<div class="sb-menu-h">
-		<span>Menu</span>
+		<span>Employee Menu</span>
 	</div>
 	<ul>
 		<li class="active">
-			<a href="{{ route('client.dashboard') }}">
+			<a href="{{ route('dashboard') }}">
 				<x-bxs-home-alt-2 class="w-20 h-20" />
 				<span>Dashboard</span>
 			</a>
@@ -25,6 +25,12 @@
 			<a href="{{ route('my.payslip') }}">
 				<x-heroicon-s-users class="w-20 h-20" />
 				<span>Pay Slip</span>
+			</a>
+		</li>
+		<li>
+			<a href="{{ route('notice.index') }}">
+				<x-bxs-plane-take-off class="w-20 h-20"/>
+				<span>Notices</span>
 			</a>
 		</li>
 		<li>

@@ -145,6 +145,13 @@ Route::prefix('client')->group(function () {
 Route::prefix('employee')->group(function () {
 	//Dashboard
 	Route::get('dashboard', [App\Http\Controllers\employee\DashboardController::class, 'index'])->name('dashboard');
+	//New
+	Route::get('emp-fetch-calendar-data', [App\Http\Controllers\employee\DashboardController::class, 'fetchCalendarData']);
+	Route::get('emp-recent-payroll', [App\Http\Controllers\employee\DashboardController::class, 'getRecentPayroll']);
+	Route::get('emp-get-approved-employees-count', [App\Http\Controllers\employee\DashboardController::class, 'getApprovedEmployeesCount'])->name('emp-getApprovedEmployeesCount');
+	Route::get('emp-notices', [NoticeController::class, 'fetchNotices']);
+	Route::resource('emp-notice', NoticeController::class);
+
 
 	Route::get('my-leaves/getData/', [LeaveController::class, 'getData'])->name('my.leaves.getData');//->middleware([CheckPunchin::class]);
 	Route::resource('my-leaves', LeaveController::class);//->middleware([CheckPunchin::class]);

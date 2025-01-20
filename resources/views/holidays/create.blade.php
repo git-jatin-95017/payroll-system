@@ -1,6 +1,6 @@
 @php
    if(auth()->user()->role_id == 3) {
-      $layoutDirectory = 'layouts.employee';
+      $layoutDirectory = 'layouts.new_layout';
    } else {
       $layoutDirectory = 'layouts.new_layout';
    }
