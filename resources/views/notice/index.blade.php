@@ -67,7 +67,7 @@
             <table class="table db-custom-table">
                 <thead>
                     <tr>
-						<th>Id</th>
+						<!-- <th>Id</th> -->
 						<th>Message</th>
 						@if(auth()->user()->role_id == 2)
 						<th>Action</th>			
@@ -78,7 +78,7 @@
                     @forelse ($notices as $row)
 					@php $id = $row->id @endphp 
                         <tr>
-                            <td>{{ $row->id }}
+                            <!-- <td>{{ $row->id }} -->
 							</td>
                             <td>{!! $row->message  !!}</td>
 							@if(auth()->user()->role_id == 2)

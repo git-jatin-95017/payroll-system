@@ -67,7 +67,7 @@
             <table class="table db-custom-table">
                 <thead>
                     <tr>
-						<th>Holiday Id</th>
+						<!-- <th>Holiday Id</th> -->
 						<th>Holiday Title</th>
 						<th>Holiday Description</th>
 						<th>Holiday Date</th>										
@@ -81,7 +81,7 @@
                     @forelse ($holidays as $row) 
 					@php $id = $row->id @endphp
                         <tr>
-                            <td>{{ $row->id }}
+                            <!-- <td>{{ $row->id }} -->
 							</td>
                             <td>{{ $row->title }}</td>
                             <td>{{ $row->description }}</td>

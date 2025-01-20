@@ -48,7 +48,7 @@
             <table class="table db-custom-table">
                 <thead>
                     <tr>
-						<th>Id</th>
+						<!-- <th>Id</th> -->
 						<th>Head Name</th>										
 						<th>Head Description</th>										
 						<th>Head Type</th>										
@@ -59,7 +59,7 @@
                     @forelse ($payheads as $row)
 						@php $id = $row->id @endphp
                         <tr>
-                            <td>{{ $row->id }}
+                            <!-- <td>{{ $row->id }} -->
 							</td>
                             <td>{!! $row->name  !!}</td>
 							<td>{!! $row->description  !!}</td>

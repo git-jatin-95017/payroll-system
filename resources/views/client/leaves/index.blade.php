@@ -47,7 +47,7 @@
             <table class="table db-custom-table">
                 <thead>
                     <tr>
-						<th>Id</th>
+						<!-- <th>Id</th> -->
 						<th>Employee</th>
 						<th>Subject</th>
 						<th>Start Date</th>
@@ -62,8 +62,8 @@
                 <tbody>
                     @forelse ($leaves as $row)
                         <tr>
-                            <td>{{ $row->id }}
-							</td>
+                            <!-- <td>{{ $row->id }}
+							</td> -->
                             <td>{{ $row->name }}</td>
                             <td>{{ $row->leave_subject }}</td>
                             <td>{{ date('m/d/Y', strtotime($row->start_date)) }}</td>

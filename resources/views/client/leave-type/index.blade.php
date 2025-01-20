@@ -49,7 +49,7 @@
             <table class="table db-custom-table">
                 <thead>
                     <tr>
-						<th>Id</th>
+						<!-- <th>Id</th> -->
 						<th>Leave Type</th>										
 						<th>No. of days</th>										
 						<th>Action</th>	
@@ -59,8 +59,8 @@
                     @forelse ($leavTypes as $row)
 						@php $id = $row->id @endphp
                         <tr>
-                            <td>{{ $row->id }}
-							</td>
+                            <!-- <td>{{ $row->id }}
+							</td> -->
                             <td>{!! $row->name  !!}</td>
 							<td>{{ $row->leave_day  }}</td>
 	
