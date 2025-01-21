@@ -1,4 +1,4 @@
-@extends('layouts.employee')
+@extends('layouts.new_layout')
 
 @section('content')
 <div class="row page-titles">

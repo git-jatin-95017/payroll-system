@@ -5,7 +5,7 @@
 <div>
 	<div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 		<div>
-			<h3>Settings</h3>
+			<h3>My Profile</h3>
 			<p class="mb-0">Track and manage client profile here</p>
 		</div>
 	</div>
@@ -53,10 +53,10 @@
 				<button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button"
 					role="tab" aria-controls="admin" aria-selected="false">Administrators</button>
 			</li>
-			<li class="nav-item" role="presentation">
+			<!-- <li class="nav-item" role="presentation">
 				<button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password" type="button"
 					role="tab" aria-controls="password" aria-selected="false">Password</button>
-			</li>
+			</li> -->
 		</ul>
 		<div class="tab-content px-4 pt-4" id="myTabContent">
 			<div class="tab-pane fade show active" id="company" role="tabpanel" aria-labelledby="company-tab">
@@ -69,6 +69,7 @@
 						action="{{ route('my-profile.update', auth()->user()->id) }}" enctype="multipart/form-data">
 						@csrf
 						{{ method_field('PUT') }}
+						<input type="hidden" name="update_request" value="personal">
 						<!-- <input type="hidden" name="update_request" value="personal">
 							<div class="form-row mb-3">
 								<div class="col-md-4">
@@ -93,7 +94,12 @@
 								<div class="tb-container d-flex gap-4 align-items-center">
 									<div class="tb-img-view">
 										<!-- Default SVG Avatar -->
-										<img id="tb-image" src="" style="display:none;" alt="Uploaded Image" />
+										@if(!empty($company->companyProfile->logo))
+											<img id="tb-image" src="/files/{{$company->companyProfile->logo}}" style="object-fit: contain;"/>
+										@else
+											<img id="tb-image" src="" style="display:none;" alt="Uploaded Image" />
+										@endif
+										
 										<svg id="tb-avatar" class="w-64 h-64" xmlns="http://www.w3.org/2000/svg"
 											viewBox="0 0 32 32" fill="currentColor">
 											<path id="_inner-path_" data-name="<inner-path>" class="cls-1"
@@ -110,7 +116,7 @@
 										Upload Image
 										<x-bx-upload class="w-20 g-20 ms-1"></x-bx-upload>
 									</label>
-									<input type="file" id="tb-file-upload" accept="image/*"
+									<input type="file" name="logo" id="tb-file-upload" accept="image/*"
 										onchange="fileUpload(event);" />
 								</div>
 
@@ -254,6 +260,7 @@
 								<button type="submit" class="btn btn-primary submit-btn">Submit</button>
 							</div>
 						</div>
+					</form>
 				</div>
 			</div>
 			<div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
@@ -454,7 +461,7 @@
 					</form>
 				</div>
 			</div>
-			<div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
+			<!-- <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
 				<div class="max-w-md max-auto">
 					<div class="sub-text-heading pb-4">
 						<h3 class="mb-1">Change Password</h3>
@@ -491,7 +498,7 @@
 						</div>
 					</form>
 				</div>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </div>
@@ -551,12 +558,12 @@
 </script>
 <script>
 
-	imgInp.onchange = evt => {
-		const [file] = imgInp.files
-		if (file) {
-			blah.src = URL.createObjectURL(file)
-		}
-	}
+	// imgInp.onchange = evt => {
+	// 	const [file] = imgInp.files
+	// 	if (file) {
+	// 		blah.src = URL.createObjectURL(file)
+	// 	}
+	// }
 </script>
 <script>
 	const fileUpload = (event) => {

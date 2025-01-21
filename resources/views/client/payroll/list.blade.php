@@ -29,7 +29,7 @@
 			</div>
 		</div>
 	@endif
-   <div class="bg-white p-4">
+	<div class="bg-white p-4">
         <div class="table-responsive">
             <table class="table db-custom-table">
                 <thead>
@@ -39,7 +39,6 @@
 						<th scope="col">Name</th>								      
 						<th scope="col">Payroll Period</th>								      
 						<th scope="col">Status</th>
-						<th scope="col">Action</th>
 						<th scope="col">Action</th>
 					</tr>
                 </thead>
@@ -60,7 +59,7 @@
 					?>
 					<tr class="row-tr-js tr-main">									      
 						<td>{{ $i }}</td>
-						<td><a href="javascript:void(0);" id="atag-{{$k}}" onblur="toggleInput(this, '{{$k}}');">Edit</a></td>
+						<td><small><a href="javascript:void(0);" id="atag-{{$k}}" onblur="toggleInput(this, '{{$k}}');">Edit</a></small></td>
 						<td>
 							<input type="text" name="payroll_name" data-id="{{$result[0]['appoval_number']}}" class="payroll_name input-sm form-control" value="{{$result[0]['payroll_name']}}" id="input-{{$k}}" onblur="saveData(this, '<?php echo $k; ?>')" readonly>
 						</td>
@@ -70,23 +69,38 @@
 						<td class="">
 							@if($isGreen) <span class="badge bg-success">Approved</span> @else Timecard Approved @endif
 						</td>
-						<td class="">
-							@if($isGreen)
-							<a href="{{ route('payroll.confirmation', [
-								'start_date' => $startDate, 
-								'end_date' => $endDate, 
-								'appoval_number' => $result[0]['appoval_number'],
-								'is_green' => true
-							]) }}">Submitted</a>
-							@else
-							<a href="{{ route('list.step1', [
-							'start_date' => $startDate, 
-							'end_date' => $endDate, 
-							'number' => $result[0]['appoval_number']]) }}">Click here to process</a>
-							@endif										
-						</td>
 						<td>
-							<a href="{{ route('delete.payroll',  ['appoval_number' => $result[0]['appoval_number'] ]) }}"class="" onclick="return confirm('Are you sure? Once you delete the payroll then you have to approve the timesheet hours again for the same date range and employees.')" title="Delete" style="color:#dc3545;"><x-heroicon-o-trash class="w-16 h-16" /></a>
+							<div class="dropdown">
+								<button class="btn action-dropdown-toggle dropdown-toggle" type="button" id="dropdownMenuButton{$k}" data-bs-toggle="dropdown" aria-expanded="false">
+									<x-bx-dots-horizontal-rounded class="w-20 h-20" />
+								</button>
+								<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{$k}">
+									@if($isGreen)
+										<li>
+											<a href="{{ route('payroll.confirmation', [
+												'start_date' => $startDate, 
+												'end_date' => $endDate, 
+												'appoval_number' => $result[0]['appoval_number'],
+												'is_green' => true
+											]) }}" class="dropdown-item">
+											<x-bx-user-check class="w-16 h-16" /> Submitted
+											</a>
+										</li>
+									@else
+										<li>
+											<a href="{{ route('list.step1', [
+												'start_date' => $startDate, 
+												'end_date' => $endDate, 
+												'number' => $result[0]['appoval_number']]) }}" class="dropdown-item"> 
+												<x-bx-edit-alt class="w-16 h-16" /> Process
+											</a>
+										</li>
+									@endif
+									<li>
+										<a href="{{ route('delete.payroll',  ['appoval_number' => $result[0]['appoval_number'] ]) }}" class="dropdown-item" onclick="return confirm('Are you sure? Once you delete the payroll then you have to approve the timesheet hours again for the same date range and employees.')" title="Delete" style="color:#dc3545;"><x-heroicon-o-trash class="w-16 h-16" /> Delete</a>
+									</li>
+								</ul>
+							</div>
 						</td>
 					</tr>			
 					<?php $i++; ?>					

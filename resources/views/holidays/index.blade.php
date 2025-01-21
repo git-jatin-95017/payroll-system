@@ -1,6 +1,6 @@
 @php
    if(auth()->user()->role_id == 3) {
-      $layoutDirectory = 'layouts.employee';
+      $layoutDirectory = 'layouts.new_layout';
    } else {
       $layoutDirectory = 'layouts.new_layout';
    }
@@ -36,6 +36,7 @@
             </div>
         </form>
 
+		@if(auth()->user()->role_id == 2)
         <div>
             <form action="{{ route('holidays.create') }}" method="GET" class="m-0 p-0">
                 <button type="submit" class="d-flex justify-content-center gap-2 primary-add">
@@ -44,6 +45,7 @@
                 </button>
             </form>
         </div>
+		@endif
    </div>
    @if (session('message'))
    <div>
@@ -65,7 +67,7 @@
             <table class="table db-custom-table">
                 <thead>
                     <tr>
-						<th>Holiday Id</th>
+						<!-- <th>Holiday Id</th> -->
 						<th>Holiday Title</th>
 						<th>Holiday Description</th>
 						<th>Holiday Date</th>										
@@ -76,9 +78,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($holidays as $row)
+                    @forelse ($holidays as $row) 
+					@php $id = $row->id @endphp
                         <tr>
-                            <td>{{ $row->id }}
+                            <!-- <td>{{ $row->id }} -->
 							</td>
                             <td>{{ $row->title }}</td>
                             <td>{{ $row->description }}</td>
@@ -95,16 +98,27 @@
 								?>
 								{{ $type }}
 							</td>
+							@if(auth()->user()->role_id == 2)
                             <td>
-								@if(auth()->user()->role_id == 2)
-									<a href="{{ route('holidays.edit', $row->id) }}" style="text-decoration:none;">
-										<x-bx-edit-alt class="w-20 h-20" />
-									</a>
-									<a class="delete" href="javascript:void(0);" data-href="{{ route('holidays.destroy', $row->id) }}" style="color:#dc3545;">
-										<x-heroicon-o-trash class="w-20 h-20" />
-									</a>
-								@endif
+								<div class="dropdown">
+                                    <button class="btn action-dropdown-toggle dropdown-toggle" type="button" id="dropdownMenuButton{$id}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <x-bx-dots-horizontal-rounded class="w-20 h-20" />
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{$id}">
+                                        <li>
+                                            <a href="{{ route('holidays.edit', $row->id) }}" class="dropdown-item">
+                                                <x-bx-edit-alt class="w-16 h-16" /> Edit
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" data-href="{{ route('holidays.destroy', $row->id) }}" class="dropdown-item delete" style="color:#dc3545;">
+                                                <x-heroicon-o-trash class="w-16 h-16" /> Delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </td>
+							@endif
                         </tr>
                     @empty
                         <tr>
@@ -124,7 +138,7 @@
 @push('page_scripts')
 	<!-- <script src="https://cdn.datatables.net/fixedheader/3.2.3/css/fixedHeader.dataTables.min.css"></script> -->
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
 	<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 	<script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.js"></script>
 	<script type="text/javascript">

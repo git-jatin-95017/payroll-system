@@ -4,7 +4,7 @@
 
     <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 		<div>
-			<h3>Settings</h3>
+			<h3>Employee My Profile</h3>
 			<p class="mb-0">Track and manage employee profile here</p>
 		</div>
     </div>

@@ -48,7 +48,7 @@
             <table class="table db-custom-table">
                 <thead>
                     <tr>
-						<th>Id</th>
+						<!-- <th>Id</th> -->
 						<th>Head Name</th>										
 						<th>Head Description</th>										
 						<th>Head Type</th>										
@@ -59,7 +59,7 @@
                     @forelse ($payheads as $row)
 						@php $id = $row->id @endphp
                         <tr>
-                            <td>{{ $row->id }}
+                            <!-- <td>{{ $row->id }} -->
 							</td>
                             <td>{!! $row->name  !!}</td>
 							<td>{!! $row->description  !!}</td>
@@ -73,12 +73,23 @@
 								@endif
 							</td>
                             <td>
-								<a href="/client/pay-head/{{$id}}/edit" style="text-decoration:none;" class="">
-									<x-bx-edit-alt class="w-20 h-20" />
-								</a>
-								<a class="delete" href="javascript:void(0);" data-href="/client/pay-head/{{$id}}" style="color:#dc3545;">
-									<x-heroicon-o-trash class="w-20 h-20" />
-								</a>
+								<div class="dropdown">
+                                    <button class="btn action-dropdown-toggle dropdown-toggle" type="button" id="dropdownMenuButton{$id}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <x-bx-dots-horizontal-rounded class="w-20 h-20" />
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{$id}">
+                                        <li>
+                                            <a href="/client/pay-head/{{$id}}/edit" class="dropdown-item">
+                                                <x-bx-edit-alt class="w-16 h-16" /> Edit
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" data-href="/client/pay-head/{{$id}}" class="dropdown-item delete" style="color:#dc3545;">
+                                                <x-heroicon-o-trash class="w-16 h-16" /> Delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </td>
                         </tr>
                     @empty
@@ -100,7 +111,7 @@
 
 @push('page_scripts')
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
 	<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 	<script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.js"></script>
 	<script type="text/javascript">

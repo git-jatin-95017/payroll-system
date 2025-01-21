@@ -47,7 +47,7 @@
             <table class="table db-custom-table">
                 <thead>
                     <tr>
-						<th>Id</th>
+						<!-- <th>Id</th> -->
 						<th>Employee</th>
 						<th>Subject</th>
 						<th>Start Date</th>
@@ -62,8 +62,8 @@
                 <tbody>
                     @forelse ($leaves as $row)
                         <tr>
-                            <td>{{ $row->id }}
-							</td>
+                            <!-- <td>{{ $row->id }}
+							</td> -->
                             <td>{{ $row->name }}</td>
                             <td>{{ $row->leave_subject }}</td>
                             <td>{{ date('m/d/Y', strtotime($row->start_date)) }}</td>
@@ -92,10 +92,32 @@
 									$typeid = $row->type_id;
 								?>
 									@if ($row->leave_status == 'pending') 
-										<a data-href="{{$id}}" data-employeeid="{{$userid}}" data-value="Approve" data-duration="{{$duration}}" data-type="{{$typeid}}" class="btn btn-sm btn-success approve mt-1" style="color:#fff;" title="Approve"><x-bx-user-check class="w-16 h-16" /></a>
-										<a data-href="{{$id}}" class="btn btn-sm btn-danger reject mt-1" style="color:#fff;" title="Reject"><x-bx-map-alt class="w-16 h-16" /></a>
 									@endif
-									<a href="/client/edit-leave/{{$id}}/{{$userid}}" class="btn btn-sm btn-primary mt-1" title="Edit" ><x-bx-edit-alt class="w-16 h-16" /></a>
+
+									<div class="dropdown">
+										<button class="btn action-dropdown-toggle dropdown-toggle" type="button" id="dropdownMenuButton{$id}" data-bs-toggle="dropdown" aria-expanded="false">
+											<x-bx-dots-horizontal-rounded class="w-20 h-20" />
+										</button>
+										<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{$id}">
+											@if ($row->leave_status == 'pending') 
+												<li>
+													<a data-href="{{$id}}" data-employeeid="{{$userid}}" data-value="Approve" data-duration="{{$duration}}" data-type="{{$typeid}}" class="dropdown-item approve" title="Approve">
+														<x-bx-user-check class="w-16 h-16" /> Approve
+													</a>
+												</li>
+												<li>
+													<a data-href="{{$id}}" class="dropdown-item reject mt-1" title="Reject">
+														<x-bx-map-alt class="w-16 h-16" /> Reject
+													</a>
+												</li>
+											@endif
+											<li>
+												<a href="/client/edit-leave/{{$id}}/{{$userid}}" class="dropdown-item" title="Edit" >
+													<x-bx-edit-alt class="w-16 h-16" /> Edit
+												</a>
+											</li>
+										</ul>
+									</div>
                             </td>
                         </tr>
                     @empty
@@ -115,7 +137,7 @@
 
 @push('page_scripts')
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
 	<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 	<script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.js"></script>
 	<script type="text/javascript">

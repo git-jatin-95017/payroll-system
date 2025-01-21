@@ -57,7 +57,7 @@ class NoticeController extends Controller
 
 		// Fetching data with search and pagination
 		$notices = Notice::orderBy('notices.id', 'desc')
-			->where('notices.created_by', auth()->user()->id)
+			->where('notices.created_by', auth()->user()->role_id == 3 ? auth()->user()->created_by : auth()->user()->id)
 			->where(function ($query) use ($searchValue) {
 				$query
 					->where(function ($query) use ($searchValue) {
@@ -149,7 +149,7 @@ class NoticeController extends Controller
     {
         $notices = DB::table('notices')
             ->orderBy('created_at', 'desc')
-			->where('notices.created_by', auth()->user()->id)
+			->where('notices.created_by', auth()->user()->role_id == 3 ? auth()->user()->created_by : auth()->user()->id)
             ->limit(3)
             ->get();
 

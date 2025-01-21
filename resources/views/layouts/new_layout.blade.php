@@ -57,7 +57,7 @@
                 <div>
                     <ul class="d-flex m-0 p-0 gap-3 align-items-center top-right-bar">
                         <li>
-                            <x-bxs-bell class="w-20 h-20" />
+                            <!-- <x-bxs-bell class="w-20 h-20" /> -->
                         </li>
                         <li>
                             <x-bxs-help-circle class="w-20 h-20" />
