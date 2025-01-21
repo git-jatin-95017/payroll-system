@@ -384,7 +384,6 @@
 							<h3 class="mb-1">Administrators</h3>
 							<p>Change administrators password here</p>
 						</div>
-
 					</div>
 					<form class="form-horizontal" method="POST"
 						action="{{ route('my-profile.update', auth()->user()->id) }}">
