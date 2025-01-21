@@ -99,7 +99,7 @@
 										@else
 											<img id="tb-image" src="" style="display:none;" alt="Uploaded Image" />
 										@endif
-										
+
 										<svg id="tb-avatar" class="w-64 h-64" xmlns="http://www.w3.org/2000/svg"
 											viewBox="0 0 32 32" fill="currentColor">
 											<path id="_inner-path_" data-name="<inner-path>" class="cls-1"
@@ -588,7 +588,5 @@
 			avatarElement.style.display = "block";
 		}
 	};
-
-
 </script>
 @endpush

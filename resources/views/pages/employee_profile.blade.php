@@ -1,7 +1,6 @@
 @extends('layouts.new_layout')
 @section('content')
 <section>
-
     <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 		<div>
 			<h3>Employee My Profile</h3>
