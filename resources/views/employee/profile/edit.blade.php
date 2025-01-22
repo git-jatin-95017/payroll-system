@@ -7,6 +7,34 @@
 			<p class="mb-0">Track and manage employee profile here</p>
 		</div>
     </div>
+	@if ($errors->any())
+		<div class="alert alert-danger">
+			<ul class="m-0">
+				@foreach ($errors->all() as $error)
+				<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
+		@endif
+		@if (session('message'))
+		<div class="row">
+			<div class="col-md-12">
+				<div class="alert alert-success alert-dismissible">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					{{ session('message') }}
+				</div>
+			</div>
+		</div>
+		@elseif (session('error'))
+		<div class="row">
+			<div class="col-md-12">
+				<div class="alert alert-danger alert-dismissible">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					{{ session('error') }}
+				</div>
+			</div>
+		</div>
+		@endif
     <div class="bg-cover-container d-flex gap-5 px-4 pb-3 mb-5">
         <div class="emp-proifle-picture">
             <img src="/files/{{$employee->employeeProfile->file}}" width="225"  height="225" style="object-fit:contain !important;" alt="profile">
@@ -25,11 +53,11 @@
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button"
-                                role="tab" aria-controls="payment" aria-selected="false">Payment Method</button>
+                                role="tab" aria-controls="payment" aria-selected="false">Employee Details</button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button"
-                                role="tab" aria-controls="admin" aria-selected="false">Administrators</button>
+                                role="tab" aria-controls="admin" aria-selected="false">Payment Method</button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password" type="button"
