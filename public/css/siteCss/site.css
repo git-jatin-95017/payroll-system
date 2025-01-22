@@ -659,6 +659,7 @@ a:hover {
     padding-right: 15px;
     padding-top: 18px;
     padding-bottom: 18px;
+    white-space:nowrap;
 }
 .db-custom-table thead{
     background-color: #F3F3F3;
@@ -982,6 +983,10 @@ a:hover {
     background: url('/img/arrow-down.svg');
     background-repeat: no-repeat;
     background-position: calc(100% - 10px) center;
+}
+
+.bg-success {
+    background-color: #38b446 !important;
 }
 
 @media only screen and (max-width: 992px) {
