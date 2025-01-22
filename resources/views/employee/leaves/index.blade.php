@@ -14,95 +14,117 @@
 	<link rel="stylesheet" href="{{ asset('css/responsive.bootstrap4.min.css') }}">
 @endpush
 @section('content')
-	<!-- <div class="content-header">
-		<div class="container-fluid">
-			<div class="row mb-2">
-				<div class="col-sm-6">
-					<h1 class="m-0">Leaves</h1>
-				</div>
-				<div class="col-sm-6">
-					<ol class="breadcrumb float-sm-right">
-						<li class="breadcrumb-item"><a href="#">Home</a></li>
-						<li class="breadcrumb-item active">Leaves</li>
-					</ol>
-				</div>
-			</div>
+<div>
+    <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
+		<div>
+			<h3>My Leaves</h3>
+			<p class="mb-0">Track and manage your leaves here</p>
 		</div>
-	</div> -->
-	<div class="row page-titles">
-        <div class="col-md-5 align-self-center">
-            <h3 class="text-themecolor"><i class="mdi mdi-rocket" style="color:#1976d2"></i> My Leaves</h3>
-        </div>
-        <div class="col-md-7 align-self-center">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
-                <li class="breadcrumb-item active">My Leaves</li>
-            </ol>
-        </div>
     </div>
-	<section class="content">
-		<div class="container-fluid">
-			@if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="m-0">
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+    <div class="d-flex gap-3 align-items-center justify-content-between mb-4">
+        <form method="GET" action="{{ route('my-leaves.index') }}" class="d-flex gap-3 align-items-center justify-content-between mb-4">
+            <div class="search-container">
+                <div class="d-flex align-items-center gap-3">
+                    <p class="mb-0 position-relative search-input-container">
+                        <x-heroicon-o-magnifying-glass class="search-icon" />
+                        <input type="search" class="form-control" name="search" placeholder="Type here" value="{{request()->search ?? ''}}">
+                    </p>
+                    <button type="submit" class="btn search-btn">
+                        <x-bx-filter class="w-20 h-20"/>
+                        Search
+                    </button>
+                </div>
             </div>
-            @endif
-			@if (session('message'))
-				<div class="row">
-					<div class="col-md-12">
-						<div class="alert alert-success alert-dismissible">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-							{{ session('message') }}
-						</div>
-					</div>
-				</div>
-			@elseif (session('error'))
-				<div class="row">
-					<div class="col-md-12">
-						<div class="alert alert-danger alert-dismissible">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-							{{ session('error') }}
-						</div>
-					</div>
-				</div>
-			@endif
-			<div class="row">					
-				<div class="col-lg-12">					
-					<div class="card">
-						<div class="card-header d-flex justify-content-between">
-							<h3 class="card-title">My Leaves</h3>
-							<div class="card-tools">
-								<div class="input-group input-group-sm">
-									<a href="{{ route('my-leaves.create' )}}" class="btn btn-primary">Apply For Leave</a>
-								</div>
-							</div>
-						</div>					
-						<div class="card-body">							
-							<table class="table table-bordered table-hover wrap" id="dataTableBuilder">
-								<thead>
-									<tr>										
-										<th>Id</th>
-										<th>Leave</th>
-										<th>Subject</th>
-										<th>Start Date</th>
-										<th>End Date</th>
-										<th>Message</th>										
-										<th>Type</th>										
-										<th>Status</th>								
-										<th>Action</th>								
-									</tr>
-								</thead>
-							</table>
-						</div>
-					 </div>
-				</div>
-			</div>
-		</div>		
-	</section>    
+        </form>
+        <div>
+            <form action="{{ route('my-leaves.create') }}" method="GET" class="m-0 p-0">
+                <button type="submit" class="d-flex justify-content-center gap-2 primary-add">
+                    <x-heroicon-o-plus width="16" />
+                    <span>Apply For Leave</span>
+                </button>
+            </form>
+        </div>
+   </div>
+   @if (session('message'))
+   <div>
+      <div class="alert alert-success alert-dismissible">
+         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+         {{ session('message') }}
+      </div>
+   </div>
+   @elseif (session('error'))
+   <div class="col-md-12">
+      <div class="alert alert-danger alert-dismissible">
+         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+         {{ session('error') }}
+      </div>
+   </div>
+   @endif
+   <div class="bg-white p-4">
+        <div class="table-responsive">
+            <table class="table db-custom-table">
+                <thead>
+                    <tr>
+						<!-- <th>Id</th> -->
+						<th>Leave</th>
+						<th>Subject</th>
+						<th>Start Date</th>
+						<th>End Date</th>
+						<th>Message</th>										
+						<th>Type</th>										
+						<th>Status</th>								
+						<th>Action</th>		
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($myLeaves as $row)
+					@php $id = $row->id @endphp 
+                        <tr>
+							<!-- <td>{{ $id }}</td> -->
+							<td>{{ $row->name }}</td>
+                            <td>{!! $row->leave_subject  !!}</td>
+							<td>{{ date('m/d/Y', strtotime($row->start_date)) }}</td>
+							<td>{{ date('m/d/Y', strtotime($row->end_date)) }}</td>
+							<td>{{ $row->leave_message }}</td>
+							<td>{{ $row->leave_type }}</td>
+							<td>
+								<?php 
+									$type = '<span class="badge bg-warning">Pending</span>';
+									if ($row->leave_status == 'pending') {
+										$type = '<span class="badge bg-warning">Pending</span>';
+									} elseif ($row->leave_status == 'approved') {
+										$type = '<span class="badge bg-success">Approved</span>';
+									} elseif ($row->leave_status == 'rejected') {
+										$type = '<span class="badge bg-danger">Rejected</span>';
+									}
+								?>
+								{!! $type !!}
+							</td>
+                            <td>
+								<div class="dropdown">
+                                    <button class="btn action-dropdown-toggle dropdown-toggle" type="button" id="dropdownMenuButton{$id}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <x-bx-dots-horizontal-rounded class="w-20 h-20" />
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{$id}">
+										<a href="/employee/my-leaves/{{$id}}/edit" class="dropdown-item" title="Edit" >
+											<x-bx-edit-alt class="w-16 h-16" /> Edit
+										</a>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="8" class="text-center">No record found</td>
+                        </tr>
+                    @endforelse
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        {{ $myLeaves->links('vendor.pagination.custom') }}
+   </div>
+</div>  
 @endsection
 @push('page_css')
 	<link rel="stylesheet" href="{{ asset('js/datepicker/datepicker3.css') }}">

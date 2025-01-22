@@ -31,8 +31,50 @@ class LeaveController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		$leavetypes = LeaveType::where('status', 1)->get();		
-		return view('employee.leaves.index', compact('leavetypes'));
+		$leavetypes = LeaveType::where('status', 1)->get();
+        
+        // Get records, also we have included search filter as well
+		$searchValue = $request->input('search', '');
+
+        $myLeaves = Leave::orderBy('leaves.id', 'desc')                
+        ->join('users', function($join) {
+            $join->on('users.id', '=', 'leaves.user_id');
+        })         
+        ->join('employee_profile', function($join) {
+            $join->on('users.id', '=', 'employee_profile.user_id');
+        })
+        ->join('leave_types', function($join) {
+            $join->on('leave_types.id', '=', 'leaves.type_id');
+        })
+        ->where(function ($query) use($searchValue) {
+            $query->where('users.user_code', 'like', '%' . $searchValue . '%')
+                    ->orWhere('leaves.leave_subject', 'like', '%' . $searchValue . '%')
+                    ->orWhere('leaves.leave_message', 'like', '%' . $searchValue . '%')
+                    ->orWhere('leaves.leave_type', 'like', '%' . $searchValue . '%')
+                    ->orWhere('leaves.leave_status', 'like', '%' . $searchValue . '%')
+                    ->orWhere('leaves.apply_date', 'like', '%' . $searchValue . '%')
+                    ->orWhere('leave_types.name', 'like', '%' . $searchValue . '%')
+                    ->orWhere('leaves.start_date', 'like', '%' . $searchValue . '%')
+                    ->orWhere('leaves.end_date', 'like', '%' . $searchValue . '%');
+        })
+        ->where(function ($query) {
+            $query->where('leaves.user_id', auth()->user()->id);
+        })                  
+        ->select(
+            'leaves.id',
+            'users.user_code',                   
+            'leaves.start_date',
+            'leaves.end_date',
+            'leaves.leave_subject',
+            'leaves.leave_message',
+            'leaves.leave_type',
+            'leaves.leave_status',
+            'leaves.apply_date',
+            'leave_types.name'
+        )
+        ->paginate(10);
+
+		return view('employee.leaves.index', compact('leavetypes', 'myLeaves'));
 	}
 
 	public function getData(Request $request)

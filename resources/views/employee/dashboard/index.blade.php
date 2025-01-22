@@ -23,7 +23,6 @@
         </div>
     </div>
     <div class="d-flex gap-5 justify-content-center widget-container-main">
-        
         <div class="widget-container">
             <a href="{{ route('my-leaves.index') }}" class="d-flex flex-column align-items-center">
                 <div class="widget-icon d-flex justify-content-center align-items-center">
@@ -46,6 +45,14 @@
                     <x-bxs-map class="w-24 h-24" />
                 </div>
                 <p>Holidays</p>
+            </a>
+        </div>
+        <div class="widget-container">
+            <a href="{{ route('emp-my-profile.edit', auth()->user()->id) }}" class="d-flex flex-column align-items-center">
+                <div class="widget-icon d-flex justify-content-center align-items-center">
+                    <x-bxs-user class="w-24 h-24" />
+                </div>
+                <p>Profile</p>
             </a>
         </div>
     </div>

@@ -78,8 +78,8 @@
                     @forelse ($notices as $row)
 					@php $id = $row->id @endphp 
                         <tr>
-                            <!-- <td>{{ $row->id }} -->
-							</td>
+                            <!-- <td>{{ $row->id }}
+							</td> -->
                             <td>{!! $row->message  !!}</td>
 							@if(auth()->user()->role_id == 2)
                             <td>
