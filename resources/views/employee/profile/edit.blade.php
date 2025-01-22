@@ -9,7 +9,7 @@
     </div>
     <div class="bg-cover-container d-flex gap-5 px-4 pb-3 mb-5">
         <div class="emp-proifle-picture">
-            <img src="/files/{{$employee->employeeProfile->file}}" alt="profile">
+            <img src="/files/{{$employee->employeeProfile->file}}" width="225"  height="225" style="object-fit:contain !important;" alt="profile">
         </div>
         <div>
             <div class="d-flex flex-column justify-content-between h-100">
