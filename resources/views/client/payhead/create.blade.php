@@ -15,81 +15,71 @@
 @endpush
 @section('content')
 
-
-<div class="row page-titles">
-    <div class="col-md-5 align-self-center">
-        <h3 class="text-themecolor">
-            <i class="fa fa-braille" style="color:#1976d2"></i>
-            Pay Head
-        </h3>
-    </div>
-
-    <div class="col-md-7 align-self-center">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a href="javascript:void(0)">Home</a>
-            </li>
-            <li class="breadcrumb-item active">Pay Head</li>
-        </ol>
-    </div>
-</div>
-
-
-	<section class="content">
-		<div class="container-fluid">
-			@if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="m-0">
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
-			@if (session('message'))
-				<div class="row">
-					<div class="col-md-12">
-						<div class="alert alert-success alert-dismissible">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-							{{ session('message') }}
-						</div>
-					</div>
+<div>
+	<div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
+		<div>
+			<h3>Manage Pay Head</h3>
+		</div>
+	</div>
+	<div class="container-fluid">
+		@if ($errors->any())
+		<div class="alert alert-danger">
+			<ul class="m-0">
+				@foreach ($errors->all() as $error)
+				<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
+		@endif
+		@if (session('message'))
+		<div class="row">
+			<div class="col-md-12">
+				<div class="alert alert-success alert-dismissible">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					{{ session('message') }}
 				</div>
-			@elseif (session('error'))
-				<div class="row">
-					<div class="col-md-12">
-						<div class="alert alert-danger alert-dismissible">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-							{{ session('error') }}
-						</div>
-					</div>
+			</div>
+		</div>
+		@elseif (session('error'))
+		<div class="row">
+			<div class="col-md-12">
+				<div class="alert alert-danger alert-dismissible">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					{{ session('error') }}
 				</div>
-			@endif
-			<div class="row">            	
-				<div class="col-sm-7">
-					<div class="card">
-						<div class="card-header">
-							<h3 class="card-title">Pay Head</h3>
+			</div>
+		</div>
+		@endif
+	</div>
+	<div class="bg-white white-container py-4 px-4 pt-4continer-h-full">
+		<div class="row">            	
+				<div class="col-sm-12">
+					<div class="max-w-md max-auto">
+						<div class="sub-text-heading pb-4">
+							<h3 class="mb-1">Pay Head</h3>
+							<p>Add your pay head information here</p>
 						</div>
 						<form class="form-horizontal" method="POST" action="{{ route('pay-head.store') }}">
 							@csrf
-							<div class="card-body">								
-								<div class="form-group">
-									<label for="name" class="col-md-8 control-label">Pay Head Name</label>
-									<div class="col-md-12">
-										<input id="name" type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name', '') }}">
-
+							<div class="row">
+								<div class="col-8 mb-3">
+									<div class="form-group">
+										<label for="title" class="db-label">Pay Head Name</label>
+										<input id="name" type="text" class="form-control  db-custom-input {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name', '') }}">
 										@if ($errors->has('name'))
 											<span class="text-danger">
 												{{ $errors->first('name') }}
 											</span>
 										@endif
 									</div>
-								</div>							
-								<div class="form-group">
-									<label for="pay_type" class="col-md-8 control-label">Pay Head Type</label>
-									<div class="col-md-12">
-										<select class="form-control" id="pay_type" name="pay_type">
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-8 mb-3">
+									<div class="form-group">
+										<label for="description" class="db-label">Pay Head Type</label>
+										<select class="form-control db-custom-input" id="pay_type" name="pay_type">
 											<option @if(old('pay_type', '') == "earnings") selected @endif value="earnings">Addition to Gross Pay</option>
 											<option @if(old('pay_type', '') == "deductions") selected @endif value="deductions">Deduction from Net Pay</option>
 											<option @if(old('pay_type', '') == "nothing") selected @endif value="nothing">Addition to Net Pay</option>
@@ -101,10 +91,13 @@
 										@endif
 									</div>
 								</div>
-								<div class="form-group">
-									<label for="description" class="col-md-8 control-label">Pay Head Description</label>
-									<div class="col-md-12">
-										<input id="description" type="text" class="form-control {{ $errors->has('description') ? ' is-invalid' : '' }}" name="description" value="{{ old('description', '') }}">
+							</div>
+   							
+							<div class="row">
+								<div class="col-8 mb-3">
+									<div class="form-group">
+										<label for="holiday_date" class="db-label">Pay Head Description</label>
+										<input id="description" type="text" class="form-control db-custom-input {{ $errors->has('description') ? ' is-invalid' : '' }}" name="description" value="{{ old('description', '') }}">
 
 										@if ($errors->has('description'))
 											<span class="text-danger">
@@ -112,16 +105,16 @@
 											</span>
 										@endif
 									</div>
-								</div>								
+								</div>
 							</div>
 							<div class="card-footer">
 								<button type="submit" class="btn btn-primary">Save</button>
-								<a href="{{ route('pay-head.index' )}}" class="btn btn-info">Back</a>
 							</div>
 						</form>
 					</div>
-				</div>						
+				</div>
 			</div>
-		</div>		
-	</section>    
+		</div>
+	</div>
+</div>   
 @endsection

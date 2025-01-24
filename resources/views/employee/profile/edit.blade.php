@@ -37,8 +37,12 @@
 		@endif
     <div class="bg-cover-container d-flex gap-5 px-4 pb-3 mb-5">
         <div class="emp-proifle-picture">
-            <img src="/files/{{$employee->employeeProfile->file}}" width="225"  height="225" style="object-fit:contain !important;" alt="profile">
-        </div>
+			@if(!empty($employee->employeeProfile->file))
+				<img id="tb-image" src="/files/{{$employee->employeeProfile->file}}" width="225"  height="225" style="object-fit:contain !important;" alt="profile" />
+			@else
+				<img id="tb-image" src="{{ asset('img/no_img.jpg') }}"  alt="Uploaded Image" width="225"  height="225" style="object-fit:contain !important;" alt="profile" />
+			@endif        
+		</div>
         <div>
             <div class="d-flex flex-column justify-content-between h-100">
                 <div class="profile-name-container pt-5">
@@ -128,16 +132,10 @@
 							@csrf
 							{{ method_field('PUT') }}
 							<input type="hidden" name="update_request" value="personal">
-							<!-- <div class="row">
+							<div class="row">
 								<div class="col-12 mb-3">
 									<div class="tb-container d-flex gap-4 align-items-center">
-										<div class="tb-img-view">
-											@if(!empty($employee->employeeProfile->file))
-												<img id="tb-image" src="/files/{{$employee->employeeProfile->file}}" style="object-fit: contain;"/>
-											@else
-												<img id="tb-image" src="" style="display:none;" alt="Uploaded Image" />
-											@endif
-
+										<!-- <div class="tb-img-view">
 											<svg id="tb-avatar" class="w-64 h-64" xmlns="http://www.w3.org/2000/svg"
 												viewBox="0 0 32 32" fill="currentColor">
 												<path id="_inner-path_" data-name="<inner-path>" class="cls-1"
@@ -149,7 +147,7 @@
 												<rect id="_Transparent_Rectangle_" data-name="<Transparent Rectangle>"
 													class="cls-1" width="32" height="32" style="fill: none"></rect>
 											</svg>
-										</div>
+										</div> -->
 										<label for="tb-file-upload">
 											Upload Image
 											<x-bx-upload class="w-20 g-20 ms-1"></x-bx-upload>
@@ -158,7 +156,7 @@
 											onchange="fileUpload(event);" />
 									</div>
 								</div>
-							</div> -->
+							</div>
 							<div class="row">
 								<div class="col-6 mb-3">
 									<div class="form-group">
@@ -184,15 +182,15 @@
 								</div>
 								<div class="col-12 mb-3">
                                     <div class="form-check form-check-inline custom-radio-btn">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Male" @if($employee->employeeProfile->gender == "Male") selected @endif>
+                                        <input class="form-check-input" type="radio" name="gender" id="inlineRadio1" value="Male" @if($employee->employeeProfile->gender == "Male") checked @endif>
                                         <label class="form-check-label" for="inlineRadio1">Male</label>
                                     </div>
                                     <div class="form-check form-check-inline custom-radio-btn">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="Female" @if($employee->employeeProfile->gender == "Female") selected @endif>
+                                        <input class="form-check-input" type="radio" name="gender" id="inlineRadio2" value="Female" @if($employee->employeeProfile->gender == "Female") checked @endif>
                                         <label class="form-check-label" for="inlineRadio2">Female</label>
                                     </div>
 									<div class="form-check form-check-inline custom-radio-btn">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="Other" @if($employee->employeeProfile->gender == "Other") selected @endif>
+                                        <input class="form-check-input" type="radio" name="gender" id="inlineRadio3" value="Other" @if($employee->employeeProfile->gender == "Other") checked @endif>
                                         <label class="form-check-label" for="inlineRadio3">Other</label>
                                     </div>
 
@@ -435,9 +433,12 @@
 										<label class="db-label" for="name">Pay Type</label>
 										<select class="form-control db-custom-input {{ $errors->has('pay_type') ? ' is-invalid' : '' }}" id="pay_type" name="pay_type" @if($disabledDrop) style="pointer-events: none;" @endif>
 											<option selected value disabled>Please Select</option>
-											<option @if($employee->employeeProfile->pay_type == "salary") selected @endif value="salary">Salary</option>
 											<option @if($employee->employeeProfile->pay_type == "hourly") selected @endif value="hourly">Hourly</option>
-										</select>									
+											<option @if($employee->employeeProfile->pay_type == "daily") selected @endif value="daily">Daily</option>
+											<option @if($employee->employeeProfile->pay_type == "weekly") selected @endif value="weekly">Weekly</option>
+											<option @if($employee->employeeProfile->pay_type == "monthly") selected @endif value="monthly">Monthly</option>
+											<option @if($employee->employeeProfile->pay_type == "yearly") selected @endif value="yearly">Yearly</option>
+										</select>										
 										@if ($errors->has('pay_type'))
 										<span class="text-danger">
 											{{ $errors->first('pay_type') }}
@@ -456,7 +457,7 @@
 										@endif
 									</div>
 								</div>
-								<div class="col-6 mb-3">
+								<!-- <div class="col-6 mb-3">
 									<div class="form-group">
 										<label class="db-label" for="name">Rate</label>
 										<select class="form-control db-custom-input  {{ $errors->has('rate') ? ' is-invalid' : '' }}" id="rate" name="rate" @if($disabledDrop) style="pointer-events: none;" @endif>
@@ -473,7 +474,7 @@
 										</span>
 										@endif
 									</div>
-								</div>
+								</div> -->
 								<div class="col-12 text-end">
 									<button type="submit" class="btn btn-primary submit-btn">Submit</button>
 								</div>

@@ -1,65 +1,57 @@
 @extends('layouts.new_layout')
 
 @section('content')
-	<div class="content-header">
-		<div class="container-fluid">
-			<div class="row mb-2">
-				<div class="col-sm-6">
-					<h1 class="m-0">My Leaves</h1>
-				</div>
-				<div class="col-sm-6">
-					<ol class="breadcrumb float-sm-right">
-						<li class="breadcrumb-item"><a href="#">Home</a></li>
-						<li class="breadcrumb-item active">Leaves</li>
-						<li class="breadcrumb-item active">Apply For Leaves</li>
-					</ol>
+<div>
+	<div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
+		<div>
+			<h3>My Leaves</h3>
+		</div>
+	</div>
+	<div class="container-fluid">
+		@if ($errors->any())
+		<div class="alert alert-danger">
+			<ul class="m-0">
+				@foreach ($errors->all() as $error)
+				<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
+		@endif
+		@if (session('message'))
+		<div class="row">
+			<div class="col-md-12">
+				<div class="alert alert-success alert-dismissible">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					{{ session('message') }}
 				</div>
 			</div>
 		</div>
+		@elseif (session('error'))
+		<div class="row">
+			<div class="col-md-12">
+				<div class="alert alert-danger alert-dismissible">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					{{ session('error') }}
+				</div>
+			</div>
+		</div>
+		@endif
 	</div>
-	<section class="content">
-		<div class="container-fluid">
-			@if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="m-0">
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
-			@if (session('message'))
-				<div class="row">
-					<div class="col-md-6">
-						<div class="alert alert-success alert-dismissible">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-							{{ session('message') }}
-						</div>
-					</div>
-				</div>
-			@elseif (session('error'))
-				<div class="row">
-					<div class="col-md-6">
-						<div class="alert alert-danger alert-dismissible">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-							{{ session('error') }}
-						</div>
-					</div>
-				</div>
-			@endif
-			<div class="row">            	
-				<div class="col-sm-6">
-					<div class="card">
-						<div class="card-header">
-							<h3 class="card-title">Apply Leaves</h3>
+	<div class="bg-white white-container py-4 px-4 pt-4continer-h-full">
+		<div class="row">            	
+				<div class="col-sm-12">
+					<div class="max-w-md max-auto">
+						<div class="sub-text-heading pb-4">
+							<h3 class="mb-1">Apply For Leaves</h3>
+							<p>Enter your leave information here</p>
 						</div>
 						<form class="form-horizontal" id="leaveapply" method="POST" action="{{ route('my-leaves.store') }}">
 							@csrf
-							<div class="card-body">								
-								<div class="form-group">
-									<label for="leave_subject" class="col-md-8 control-label">Subject</label>
-									<div class="col-md-12">
-										<input id="leave_subject" type="text" class="form-control {{ $errors->has('leave_subject') ? ' is-invalid' : '' }}" name="leave_subject" value="{{ old('leave_subject', '') }}">
+							<div class="row">
+								<div class="col-8 mb-3">
+									<div class="form-group">
+										<label for="leave_subject" class="db-label">Subject</label>
+										<input id="leave_subject" type="text" class="form-control db-custom-input {{ $errors->has('leave_subject') ? ' is-invalid' : '' }}" name="leave_subject" value="{{ old('leave_subject', '') }}">
 
 										@if ($errors->has('leave_subject'))
 											<span class="text-danger">
@@ -68,10 +60,13 @@
 										@endif
 									</div>
 								</div>
-								<div class="form-group">
-									<div class="col-md-12">
-	                                	<label>Leave Type</label>
-		                                <select class="form-control custom-select assignleave" name="typeid" id="leavetype">
+							</div>
+
+							<div class="row">
+								<div class="col-8 mb-3">
+									<div class="form-group">
+										<label for="leave_subject" class="db-label">Leave Type</label>
+										<select class="form-control select-drop-down-arrow db-custom-input custom-select assignleave" name="typeid" id="leavetype">
 		                                    <option value="">Select Here..</option>
 		                                    <?php foreach($leavetypes as $value): ?>
 
@@ -79,80 +74,106 @@
 
 		                                    <?php endforeach; ?>
 		                                </select>
+										@if ($errors->has('typeid'))
+											<span class="text-danger">
+												{{ $errors->first('typeid') }}
+											</span>
+										@endif
 									</div>
-	                            </div>
-	                            <div class="form-group">
-	                            	<div class="col-md-12">
-		                                <span style="color:red" id="total"></span>
-		                                <div class="span pull-right">
-		                                    <button class="btn btn-info fetchLeaveTotal">Fetch Total Leave</button>
-		                                </div>
-	                                	<br>
-	                                </div>
-	                            </div>
-	                            <div class="form-group">
-	                            	<div class="col-md-12">
-		                                <label class="control-label d-block w-100">Leave Duration</label>
-		                                <div class="d-flex">
-											<div class="mr-2">
-												<input name="type" type="radio" id="radio_1" data-value="Half" class="duration" value="Half Day" checked="">
-												<label for="radio_1">Hourly</label>
-											</div>
-											<div class="mr-2">
-												<input name="type" type="radio" id="radio_2" data-value="Full" class="type" value="Full Day">
-												<label for="radio_2">Full Day</label>
-											</div>
-											<div>
-												<input name="type" type="radio" class="with-gap duration" id="radio_3" data-value="More" value="More than One day">
-												<label for="radio_3">Above a Day</label>
-											</div>
+								</div>
+								<div class="col-4 mt-4">
+									<div class="span pull-right">
+										<button class="btn btn-primary fetchLeaveTotal">Fetch Total Leave</button>
+									</div>
+									<span style="color:red" id="total"></span>
+									
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-8 mb-3">
+									<div class="form-group">
+										<label for="leave_subject" class="db-label">Leave Duration</label>
+										<div class="form-check form-check-inline custom-radio-btn">
+											<input name="type" type="radio" id="radio_1" data-value="Half" class="form-check-input duration" value="Half Day" checked>
+											<label class="form-check-label" for="inlineRadio1">Hourly</label>
 										</div>
-		                            </div>
-	                            </div>
-	                            <div class="form-group">
-	                            	<div class="col-md-12">
-	                                	<label class="control-label" id="hourlyFix">Date</label>
-	                                	<input type="date" name="startdate" class="form-control" id="recipient-name1" >
-	                                </div>
-	                            </div>
-	                            <div class="form-group" id="enddate">
-	                            	<div class="col-md-12">
-	                                <label class="control-label">End Date</label>
-	                                <input type="date" name="enddate" class="form-control" id="recipient-name1">
-	                               	</div>
-	                            </div>
+										<div class="form-check form-check-inline custom-radio-btn">
+											<input name="type" type="radio" id="radio_2" data-value="Full" class="form-check-input type" value="Full Day">
+											<label class="form-check-label" for="inlineRadio2">Full Day</label>
+										</div>
+										<div class="form-check form-check-inline custom-radio-btn">
+											<input name="type" type="radio" class="form-check-input with-gap duration" id="radio_3" data-value="More" value="More than One day">
+											<label class="form-check-label" for="inlineRadio3">Above a Day</label>
+										</div>
+										@if ($errors->has('type'))
+											<span class="text-danger">
+												{{ $errors->first('type') }}
+											</span>
+										@endif
+									</div>
+								</div>
+							</div>
 
-	                            <div class="form-group" id="hourAmount">
-	                            	<div class="col-md-12">
-	                                <label>Length</label>
-	                                <select id="hourAmountVal" class=" form-control custom-select" name="hourAmount" >
-	                                    <option value="">Select Hour</option>
-	                                    <option value="1">One hour</option>
-	                                    <option value="2">Two hour</option>
-	                                    <option value="3">Three hour</option>
-	                                    <option value="4">Four hour</option>
-	                                    <option value="5">Five hour</option>
-	                                    <option value="6">Six hour</option>
-	                                    <option value="7">Seven hour</option>
-	                                    <option value="8">Eight hour</option>
-	                                </select>
-	                            	</div>
-	                            </div>						
+							<div class="row">
+								<div class="col-8 mb-3">
+									<div class="form-group">
+										<label for="startdate" class="db-label" id="hourlyFix">Date</label>
+	                                	<input type="date" name="startdate" class="form-control db-custom-input" id="recipient-name1">
 
-								<div class="form-group">
-									<label for="leave_message" class="col-md-8 control-label">Reason</label>
-									<div class="col-md-12">
-										<textarea name="leave_message" id="leave_message" class="form-control {{ $errors->has('leave_message') ? ' is-invalid' : '' }}" rows="4">{{ old('leave_message', '') }}</textarea>
+										@if ($errors->has('startdate'))
+											<span class="text-danger">
+												{{ $errors->first('startdate') }}
+											</span>
+										@endif
+									</div>
+								</div>
+							</div>
 
+							<div class="row" id="enddate">
+								<div class="col-8 mb-3">
+									<div class="form-group">
+										<label for="enddate" class="db-label">End Date</label>
+										<input type="date" name="enddate" class="form-control db-custom-input" id="recipient-name2">
+
+										@if ($errors->has('enddate'))
+											<span class="text-danger">
+												{{ $errors->first('enddate') }}
+											</span>
+										@endif
+									</div>
+								</div>
+							</div>
+
+							<div class="row" id="hourAmount">
+								<div class="col-8 mb-3">
+									<div class="form-group">
+										<label for="hourAmount" class="db-label">Length</label>
+										<input id="hourAmount" type="text" id="hourAmountVal" class="form-control db-custom-input {{ $errors->has('hourAmount') ? ' is-invalid' : '' }}" name="hourAmount">
+
+										@if ($errors->has('hourAmount'))
+											<span class="text-danger">
+												{{ $errors->first('hourAmount') }}
+											</span>
+										@endif
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-8 mb-3">
+									<div class="form-group">
+										<label for="leave_message" class="db-label">Reason</label>
+										<textarea name="leave_message" id="leave_message" class="form-control db-custom-input {{ $errors->has('leave_message') ? ' is-invalid' : '' }}" rows="4"></textarea>
 										@if ($errors->has('leave_message'))
 											<span class="text-danger">
 												{{ $errors->first('leave_message') }}
 											</span>
 										@endif
 									</div>
-								</div>					
-
+								</div>
 							</div>
+
 							<div class="card-footer">
 								<button type="submit" class="btn btn-primary">Apply for Leave</button>
 							</div>
@@ -161,7 +182,8 @@
 				</div>
 			</div>
 		</div>
-	</section>
+	</div>
+</div>
 @endsection
 @push('page_css')
 	<link rel="stylesheet" href="{{ asset('js/datepicker/datepicker3.css') }}">

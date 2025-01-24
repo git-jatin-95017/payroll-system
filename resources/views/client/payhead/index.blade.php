@@ -27,6 +27,17 @@
             </div>
         </form>
 
+		@if(auth()->user()->role_id == 2)
+        <div>
+            <form action="{{ route('pay-head.create') }}" method="GET" class="m-0 p-0">
+                <button type="submit" class="d-flex justify-content-center gap-2 primary-add">
+                    <x-heroicon-o-plus width="16" />
+                    <span>Add Pay Head</span>
+                </button>
+            </form>
+        </div>
+		@endif
+
    </div>
    @if (session('message'))
    <div>

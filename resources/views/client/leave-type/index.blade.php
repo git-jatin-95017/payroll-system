@@ -13,7 +13,7 @@
 		</div>
     </div>
     <div class="d-flex gap-3 align-items-center justify-content-between mb-4">
-        <form method="GET" action="{{ route('pay-head.index') }}" class="d-flex gap-3 align-items-center justify-content-between mb-4">
+        <form method="GET" action="{{ route('leave-type.index') }}" class="d-flex gap-3 align-items-center justify-content-between mb-4">
             <div class="search-container">
                 <div class="d-flex align-items-center gap-3">
                     <p class="mb-0 position-relative search-input-container">
@@ -27,7 +27,16 @@
                 </div>
             </div>
         </form>
-
+		@if(auth()->user()->role_id == 2)
+        <div>
+            <form action="{{ route('leave-type.create') }}" method="GET" class="m-0 p-0">
+                <button type="submit" class="d-flex justify-content-center gap-2 primary-add">
+                    <x-heroicon-o-plus width="16" />
+                    <span>Add Leave Type</span>
+                </button>
+            </form>
+        </div>
+		@endif
    </div>
    @if (session('message'))
    <div>

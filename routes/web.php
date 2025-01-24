@@ -47,6 +47,15 @@ Route::get('sample-download/{file}', [App\Http\Controllers\admin\DashboardContro
 Route::prefix('admin')->group(function () {
 	//Dashboard
 	Route::get('dashboard', [App\Http\Controllers\admin\DashboardController::class, 'index'])->name('admin.dashboard');
+
+	//New
+	Route::get('fetch-calendar-data', [App\Http\Controllers\admin\DashboardController::class, 'fetchCalendarData']);
+	Route::get('recent-payroll', [App\Http\Controllers\admin\DashboardController::class, 'getRecentPayroll']);
+	Route::get('get-approved-employees-count', [App\Http\Controllers\admin\DashboardController::class, 'getApprovedEmployeesCount'])->name('getApprovedEmployeesCount');
+	Route::get('notices', [NoticeController::class, 'fetchNotices']);
+	Route::resource('notice', NoticeController::class);
+
+
 	Route::post('login-as-client', [ClientController::class, 'loginAs'])->name('login-as-client');
 	Route::resource('client', ClientController::class);
 

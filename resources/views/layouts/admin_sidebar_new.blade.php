@@ -1,23 +1,13 @@
 <div>
-	<div class="sb-menu-h pt-2 pb-3">
-		<span>Menu</span>
+	<div class="sb-menu-h pb-3">
+		<span>Admin Menu</span>
 	</div>
-	<ul>
+	<ul class="list-unstyled main-navigation">
 		<li class="active">
 			<a href="{{ route('admin.dashboard') }}">
 				<x-bxs-home-alt-2 class="w-20 h-20" />
 				<span>Dashboard</span>
 			</a>
-		</li>
-		<li class="has-sub">
-			<a href="#">
-				<x-bxs-user class="w-20 h-20"/>
-				<span>Clients</span>
-			</a>
-			<ul>
-				<li><a href="{{ route('client.create') }}">Add New Client</a></li>
-				<li><a href="{{ route('client.index') }}">List Of Client</a></li>
-			</ul>
 		</li>
 		<li>
 			<a href="{{ route('settings.create', auth()->user()->id) }}">
@@ -30,6 +20,16 @@
 				<x-bxs-file-doc class="w-20 h-20"/>
 				<span>Profile</span>
 			</a>
+		</li>
+		<li class="has-sub">
+			<a href="#">
+				<x-bxs-user class="w-20 h-20"/>
+				<span>Clients</span>
+			</a>
+			<ul class="list-unstyled">
+				<li><a href="{{ route('client.create') }}">Add New Client</a></li>
+				<li><a href="{{ route('client.index') }}">List Of Client</a></li>
+			</ul>
 		</li>
 	</ul>
 </div>

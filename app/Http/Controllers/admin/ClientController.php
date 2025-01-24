@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Models\CompanyProfile;
 use App\Models\PaymentDetail;
+use Illuminate\Support\Facades\DB;
 
 class ClientController extends Controller
 {
@@ -30,7 +31,7 @@ class ClientController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index(Builder $builder)
+	public function index(Request $request)
 	{
 		if (request()->ajax()) {
 			$usersQuery = User::query();
@@ -74,7 +75,26 @@ class ClientController extends Controller
 					->make(true);
 		}
 
-		return view('admin.client.index');
+		// Search input
+		$searchValue = $request->input('search', '');
+
+		// Fetching data with search and pagination
+		$clients = User::orderBy('users.id', 'desc')
+			->where('role_id', 2)
+			->where(function ($query) use ($searchValue) {
+				$query->Where('users.name', 'like', '%' . $searchValue . '%')
+					->orWhere('users.email', 'like', '%' . $searchValue . '%');
+			})
+			->select(
+				'users.id',
+				'users.name',
+				'users.email',
+				DB::raw('DATE_FORMAT(users.created_at, "%m/%d/%Y") as created_at'),
+				DB::raw('DATE_FORMAT(users.updated_at, "%m/%d/%Y") as updated_at')
+			)
+			->paginate(10);
+
+		return view('admin.client.index', compact('clients'));
 	}
 
 	/**

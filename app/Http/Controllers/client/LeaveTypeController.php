@@ -108,7 +108,8 @@ class LeaveTypeController extends Controller
 		$data = $request->all();
 
 		$request->validate([
-			'name' => 'required|max:255'
+			'name' => 'required|max:255',
+			'no_of_day' => 'required'
 		]);
 
 		LeaveType::create([
