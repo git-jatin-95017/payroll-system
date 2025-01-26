@@ -58,7 +58,7 @@
 						<!-- <th><input type="checkbox" class='checkall' id='checkall'>
 							<input type="button" class="btn btn-sm btn-danger" id='delete_record' value='Delete' >
 						</th> -->
-						<th>Id</th>
+						<!-- <th>Id</th> -->
 						<th>Name</th>
 						<th>Email</th>										
 						<th>Created At</th>
@@ -71,7 +71,7 @@
 					@forelse ($clients as $row)
 					@php $id = $row->id  @endphp
 						<tr>
-							<td>{{$id}}</td>
+							<!-- <td>{{$id}}</td> -->
 							<td>{{ $row->name }}</td>
 							<td>{{ $row->email }}</td>
 							<td>{{ $row->created_at }}</td>

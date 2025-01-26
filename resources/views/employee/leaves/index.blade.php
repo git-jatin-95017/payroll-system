@@ -17,7 +17,7 @@
 <div>
     <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 		<div>
-			<h3>My Leaves</h3>
+			<h3>Leaves</h3>
 			<p class="mb-0">Track and manage your leaves here</p>
 		</div>
     </div>

@@ -4,7 +4,7 @@
 <div>
 	<div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 		<div>
-			<h3>My Leaves</h3>
+			<h3>Leaves</h3>
 		</div>
 	</div>
 	<div class="container-fluid">

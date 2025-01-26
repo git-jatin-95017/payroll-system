@@ -12,7 +12,7 @@
 		<li>
 			<a href="{{ route('settings.create', auth()->user()->id) }}">
 				<x-heroicon-s-users class="w-20 h-20" />
-				<span>Settings</span>
+				<span>Calculations</span>
 			</a>
 		</li>
 		<li>

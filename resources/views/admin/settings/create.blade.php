@@ -12,7 +12,7 @@
 <div>
 	<div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 		<div>
-			<h3>Settings</h3>
+			<h3>Calculations</h3>
 		</div>
 	</div>
 	<div class="container-fluid">
@@ -50,8 +50,8 @@
 				<div class="col-sm-12">
 					<div class="max-w-md max-auto">
 						<div class="sub-text-heading pb-4">
-							<h3 class="mb-1">Settings</h3>
-							<p>Enter your information here</p>
+							<h3 class="mb-1">Calculations</h3>
+							<!-- <p>Enter your information here</p> -->
 						</div>
 						<form class="form-horizontal" method="POST" action="{{ route('settings.update') }}" enctype="multipart/form-data">
 							@csrf
@@ -128,7 +128,7 @@
 									<div class="form-group">
 										<label for="education_levy" class="db-label">Education Levy</label>
 											<!-- <div class="col-md-6"> -->
-											<input id="education_levy" type="text" class="form-control {{ $errors->has('education_levy') ? ' is-invalid' : '' }}" name="education_levy" value="{{ $settings->education_levy }}">
+											<input id="education_levy" type="text" class="form-control db-custom-input {{ $errors->has('education_levy') ? ' is-invalid' : '' }}" name="education_levy" value="{{ $settings->education_levy }}">
 
 											@if ($errors->has('education_levy'))
 												<span class="text-danger">
@@ -145,7 +145,7 @@
 									<div class="form-group">
 										<label for="education_levy_amt_5" class="db-label">Education Levy</label>
 										<!-- <div class="col-md-6"> -->
-											<input id="education_levy_amt_5" type="text" class="form-control {{ $errors->has('education_levy_amt_5') ? ' is-invalid' : '' }}" name="education_levy_amt_5" value="{{ $settings->education_levy_amt_5 }}">
+											<input id="education_levy_amt_5" type="text" class="form-control db-custom-input {{ $errors->has('education_levy_amt_5') ? ' is-invalid' : '' }}" name="education_levy_amt_5" value="{{ $settings->education_levy_amt_5 }}">
 
 											@if ($errors->has('education_levy_amt_5'))
 												<span class="text-danger">

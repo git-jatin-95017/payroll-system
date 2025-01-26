@@ -33,7 +33,11 @@
                 <x-heroicon-m-bars-3 />
             </button>
             <a href="">
-                <img src="{{ asset('img/paywiz-logo.png') }}" alt="logo">
+                @if(!empty(auth()->user()->companyProfile->logo))
+                    <img src="/files/{{auth()->user()->companyProfile->logo}}" style="widht:150px; height:31px;" alt="logo">
+                @else
+                    <img src="{{ asset('img/paywiz-logo.png') }}" alt="logo">
+                @endif
             </a>
             <span class="small-logo">Pay</span>
         </div>

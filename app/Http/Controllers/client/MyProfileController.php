@@ -109,6 +109,20 @@ class MyProfileController extends Controller
 			
 			$company->save();
 			*/
+		}  else if ($data['update_request'] == 'changepwdown') {
+			$request->validate([
+				'old_password' => ['required'],
+				'password' => ['required', 'string', 'min:8', 'confirmed'],
+				'password_confirmation' => 'required_with:password',
+			], [], [
+				'old_password' => 'current password'
+			]);
+
+			unset($data['update_request']);
+
+			$company->password = Hash::make($data['password_confirmation']);
+			
+			$company->save();
 		} else {
 			$request->validate([
 				'company_name' => ['required'],

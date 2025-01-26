@@ -12,7 +12,7 @@
 <div>
 	<div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 		<div>
-			<h3>My Profile</h3>
+			<h3>Profile</h3>
 		</div>
 	</div>
 	<div class="container-fluid">
@@ -50,8 +50,8 @@
 				<div class="col-sm-12">
 					<div class="max-w-md max-auto">
 						<div class="sub-text-heading pb-4">
-							<h3 class="mb-1">My Profile</h3>
-							<p>Enter your information here</p>
+							<h3 class="mb-1">Profile</h3>
+							<!-- <p>Enter your information here</p> -->
 						</div>
 						<form class="form-horizontal" method="POST" action="{{ route('edit-my-profile.update', auth()->user()->id) }}" enctype="multipart/form-data">
 						@csrf

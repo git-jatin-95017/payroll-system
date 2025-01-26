@@ -12,7 +12,7 @@
 		<li>
 			<a href="{{ route('my-leaves.index') }}">
 				<x-bxs-file-doc class="w-20 h-20"/>
-				<span>My Leaves</span>
+				<span>Leaves</span>
 			</a>
 		</li>
 		<li>
@@ -24,7 +24,7 @@
 		<li>
 			<a href="{{ route('my.payslip') }}">
 				<x-heroicon-s-users class="w-20 h-20" />
-				<span>Pay Slip</span>
+				<span>Payslip</span>
 			</a>
 		</li>
 		<li>

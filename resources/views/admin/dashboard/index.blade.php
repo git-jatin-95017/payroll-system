@@ -22,7 +22,7 @@
             <h2>Hello, {{ ucwords(Auth::user()->name) }}</h2>
         </div>
     </div>
-    <div class="d-flex gap-5 justify-content-center widget-container-main">
+    <div class="d-flex gap-5 mt-4 justify-content-center widget-container-main">
         <div class="widget-container">
             <a href="{{ route('client.index') }}" class="d-flex flex-column align-items-center">
                 <div class="widget-icon d-flex justify-content-center align-items-center">
@@ -55,10 +55,83 @@
                 <p>Logout</p>
             </a>
         </div>
+        
     </div>
 </section>
-<section class="px-2 db-main-container">
+<section style="background: #0D0B45 !important;" class="px-2">
     <div class="container-fluid">
+        <div class="row">
+            <p style=""></p>
+            <p style=""></p>
+            <p style=""></p>
+
+            <p style=""></p>
+            <p style=""></p>
+            <p style=""></p>
+        </div>
+        <div class="row">
+            <p style=""></p>
+            <p style=""></p>
+            <p style=""></p>
+
+            <p style=""></p>
+            <p style=""></p>
+            <p style=""></p>
+        </div>
+        <div class="row">
+            <p style=""></p>
+            <p style=""></p>
+            <p style=""></p>
+
+            <p style=""></p>
+            <p style=""></p>
+            <p style=""></p>
+        </div>
+        <div class="row">
+            <p style=""></p>
+            <p style=""></p>
+            <p style=""></p>
+
+            <p style=""></p>
+            <p style=""></p>
+            <p style=""></p>
+        </div>
+        <div class="row">
+            <p style=""></p>
+            <p style=""></p>
+            <p style=""></p>
+
+            <p style=""></p>
+            <p style=""></p>
+            <p style=""></p>
+        </div>
+        <div class="row">
+            <p style=""></p>
+            <p style=""></p>
+            <p style=""></p>
+
+            <p style=""></p>
+            <p style=""></p>
+            <p style=""></p>
+        </div>
+        <div class="row">
+            <p style=""></p>
+            <p style=""></p>
+            <p style=""></p>
+
+            <p style=""></p>
+            <p style=""></p>
+            <p style=""></p>
+        </div>
+        <div class="row">
+            <p style=""></p>
+            <p style=""></p>
+            <p style=""></p>
+
+            <p style=""></p>
+            <p style=""></p>
+            <p style=""></p>
+        </div>
         <!-- <div class="row">
             <div class="col-4 mb-4">
                 <div class="db-container p-4 shadow-sm bg-white h-100">
@@ -146,7 +219,7 @@
                 </div>
             </div>
         </div> -->
-        <div class="row">
+        <div class="row d-none">
             <!-- <div class="col-4 mb-5">
                 <div class="db-container p-4 shadow-sm bg-white">
                     <div class="heading-db-container mb-4">
@@ -211,7 +284,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </section>
@@ -426,110 +498,110 @@
         maximumFractionDigits: 2
     });
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // Chart instance
-        const ctx = document.getElementById('payrollChart').getContext('2d');
-        // Create the bar chart
-        const payrollChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: [], // Labels will be populated via AJAX
-                datasets: [{
-                    label: '',
-                    data: [], // Data will be populated via AJAX
-                    backgroundColor: ['#5E5ADB', '#5E5ADB'],
-                    borderColor: ['#5E5ADB', '#5E5ADB'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        suggestedMax: 500,
-                        ticks: {
-                            // Format Y-axis labels with $
-                            callback: function (value) {
-                                return formatter.format(value);
-                            }
-                        },
-                        font: {
-                            size: 10 // Smaller Y-axis font size
-                        }
-                    },
-                    x: {
-                        ticks: {
-                            font: {
-                                size: 10 // Smaller X-axis font size
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function (tooltipItem) {
-                                return 'Total: ' + formatter.format(tooltipItem.raw);
-                            }
-                        }
-                    },
-                    legend: {
-                        display: false
-                    }
-                }
-            }
-        });
-        // AJAX request to fetch recent payroll data
-        function loadPayrollData() {
-            fetch('/client/recent-payroll')
-                .then(response => response.json())
-                .then(data => {
-                    const labels = data.map(item => item.month);
-                    const amounts = data.map(item => item.total_amount);
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     // Chart instance
+    //     const ctx = document.getElementById('payrollChart').getContext('2d');
+    //     // Create the bar chart
+    //     const payrollChart = new Chart(ctx, {
+    //         type: 'bar',
+    //         data: {
+    //             labels: [], // Labels will be populated via AJAX
+    //             datasets: [{
+    //                 label: '',
+    //                 data: [], // Data will be populated via AJAX
+    //                 backgroundColor: ['#5E5ADB', '#5E5ADB'],
+    //                 borderColor: ['#5E5ADB', '#5E5ADB'],
+    //                 borderWidth: 1
+    //             }]
+    //         },
+    //         options: {
+    //             responsive: true,
+    //             scales: {
+    //                 y: {
+    //                     beginAtZero: true,
+    //                     suggestedMax: 500,
+    //                     ticks: {
+    //                         // Format Y-axis labels with $
+    //                         callback: function (value) {
+    //                             return formatter.format(value);
+    //                         }
+    //                     },
+    //                     font: {
+    //                         size: 10 // Smaller Y-axis font size
+    //                     }
+    //                 },
+    //                 x: {
+    //                     ticks: {
+    //                         font: {
+    //                             size: 10 // Smaller X-axis font size
+    //                         }
+    //                     }
+    //                 }
+    //             },
+    //             plugins: {
+    //                 tooltip: {
+    //                     callbacks: {
+    //                         label: function (tooltipItem) {
+    //                             return 'Total: ' + formatter.format(tooltipItem.raw);
+    //                         }
+    //                     }
+    //                 },
+    //                 legend: {
+    //                     display: false
+    //                 }
+    //             }
+    //         }
+    //     });
+    //     // AJAX request to fetch recent payroll data
+    //     function loadPayrollData() {
+    //         fetch('/client/recent-payroll')
+    //             .then(response => response.json())
+    //             .then(data => {
+    //                 const labels = data.map(item => item.month);
+    //                 const amounts = data.map(item => item.total_amount);
 
-                    // Update the chart with new data
-                    payrollChart.data.labels = labels;
-                    payrollChart.data.datasets[0].data = amounts;
-                    payrollChart.update();
+    //                 // Update the chart with new data
+    //                 payrollChart.data.labels = labels;
+    //                 payrollChart.data.datasets[0].data = amounts;
+    //                 payrollChart.update();
 
-                    console.log(data);
+    //                 console.log(data);
 
-                    // Sort the data in descending order of the original index
-                    data.reverse();
+    //                 // Sort the data in descending order of the original index
+    //                 data.reverse();
 
 
-                    // Dynamically create HTML for pay periods
-                    let html = '<div class="pay-container mt-3"><h3>Pay - Period</h3>';
+    //                 // Dynamically create HTML for pay periods
+    //                 let html = '<div class="pay-container mt-3"><h3>Pay - Period</h3>';
 
-                    if (data.length > 0) {
-                        data.forEach(item => {
-                            if (item.dateRange && item.total_amount !== undefined) {
-                                html += `
-                                    <div class="d-flex justify-content-between align-items-center gap-3">
-                                        <span class="pay-period-time">${item.dateRange}</span>
-                                        <span class="pay-period-amount">${formatter.format(item.total_amount)}</span>
-                                    </div>
-                                `;
-                            }
-                        });
-                    } else {
-                        html += '<p>No payroll data available.</p>';
-                    }
+    //                 if (data.length > 0) {
+    //                     data.forEach(item => {
+    //                         if (item.dateRange && item.total_amount !== undefined) {
+    //                             html += `
+    //                                 <div class="d-flex justify-content-between align-items-center gap-3">
+    //                                     <span class="pay-period-time">${item.dateRange}</span>
+    //                                     <span class="pay-period-amount">${formatter.format(item.total_amount)}</span>
+    //                                 </div>
+    //                             `;
+    //                         }
+    //                     });
+    //                 } else {
+    //                     html += '<p>No payroll data available.</p>';
+    //                 }
 
-                    html += '</div>';
+    //                 html += '</div>';
 
-                    // Update the span with the dynamically generated HTML
-                    $('#pay-period').html(html);
-                })
-                .catch(error => {
-                    console.error('Error fetching payroll data:', error);
-                });
-        }
+    //                 // Update the span with the dynamically generated HTML
+    //                 $('#pay-period').html(html);
+    //             })
+    //             .catch(error => {
+    //                 console.error('Error fetching payroll data:', error);
+    //             });
+    //     }
 
-        // Load data on page load
-        loadPayrollData();
-    });
+    //     // Load data on page load
+    //     loadPayrollData();
+    // });
 </script>
 <script>
     document.addEventListener('alpine:init', () => {

@@ -4,8 +4,8 @@
 <div>
     <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 		<div>
-			<h3>Salary Slips</h3>
-			<p class="mb-0">Track and manage your salary slips here</p>
+			<h3>Payslips</h3>
+			<p class="mb-0">Track and manage your payslips here</p>
 		</div>
     </div>
     <div class="d-flex gap-3 align-items-center justify-content-between mb-4">

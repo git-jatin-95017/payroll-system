@@ -100,7 +100,7 @@
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{$empId}">
                                         <li>
                                             <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#ManageModal" class="dropdown-item" onclick="updateEmpCode({$empId})">
-                                                <x-bx-dollar-circle class="w-16 h-16" /> Assign Pay Head
+                                                <x-bx-dollar-circle class="w-16 h-16" /> Assign Pay Label
                                             </a>
                                         </li>
                                         <li>
@@ -147,14 +147,14 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title text-center">Add Payheads to Employee</h4>
+            <h4 class="modal-title text-center">Add Pay Labels to Employee</h4>
          </div>
          <form method="post" role="form" data-toggle="validator" id="assign-payhead-form">
             @csrf
             <div class="modal-body">
                <div class="row">
                   <div class="col-sm-6">
-                     <label for="all_payheads">List of Pay Heads</label>
+                     <label for="all_payheads">List of Pay Labels</label>
                      <button type="button" id="selectHeads" class="btn btn-success btn-xs pull-right"><i class="fa fa-arrow-circle-right"></i></button>
                      <select class="form-control" id="all_payheads" name="all_payheads[]" multiple size="10">
                         @foreach($payheadList as $k => $v)
@@ -163,9 +163,9 @@
                      </select>
                   </div>
                   <div class="col-sm-6">
-                     <label for="selected_payheads">Selected Pay Heads</label>
+                     <label for="selected_payheads">Selected Pay Labels</label>
                      <button type="button" id="removeHeads" class="btn btn-danger btn-xs pull-right"><i class="fa fa-arrow-circle-left"></i></button>
-                     <select class="form-control" id="selected_payheads" name="selected_payheads[]" data-error="Pay Heads is required" multiple size="10" required></select>
+                     <select class="form-control" id="selected_payheads" name="selected_payheads[]" data-error="Pay Labels is required" multiple size="10" required></select>
                   </div>
                   <!-- <div class="col-sm-4">
                      <label for="selected_payamount">Enter Payhead Amount</label>
@@ -175,7 +175,7 @@
             </div>
             <div class="modal-footer">
                <input type="hidden" name="empcode" id="empcode" />
-               <button type="submit" name="submit" class="btn btn-primary">Add Pay Heads to Employee</button>
+               <button type="submit" name="submit" class="btn btn-primary">Add Pay Labels to Employee</button>
             </div>
          </form>
       </div>
