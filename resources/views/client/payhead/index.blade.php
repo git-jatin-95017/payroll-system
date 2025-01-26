@@ -7,8 +7,8 @@
 <div>
     <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 		<div>
-			<h3>Pay Heads</h3>
-			<p class="mb-0">Track and manage your pay heads here</p>
+			<h3>Pay Labels</h3>
+			<p class="mb-0">Track and manage your pay label here</p>
 		</div>
     </div>
     <div class="d-flex gap-3 align-items-center justify-content-between mb-4">
@@ -32,7 +32,7 @@
             <form action="{{ route('pay-head.create') }}" method="GET" class="m-0 p-0">
                 <button type="submit" class="d-flex justify-content-center gap-2 primary-add">
                     <x-heroicon-o-plus width="16" />
-                    <span>Add Pay Head</span>
+                    <span>Add Pay Label</span>
                 </button>
             </form>
         </div>
@@ -60,9 +60,9 @@
                 <thead>
                     <tr>
 						<!-- <th>Id</th> -->
-						<th>Head Name</th>										
-						<th>Head Description</th>										
-						<th>Head Type</th>										
+						<th>Name</th>										
+						<th>Description</th>										
+						<th>Type</th>										
 						<th>Action</th>	
                     </tr>
                 </thead>

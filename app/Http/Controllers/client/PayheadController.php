@@ -168,7 +168,7 @@ class PayheadController extends Controller
 			'pay_type' => $data['pay_type']
 		]);		
 	
-		return redirect()->route('pay-head.index')->with('message', 'Payhead updated successfully.');	
+		return redirect()->route('pay-head.index')->with('message', 'Pay label updated successfully.');	
 	}   
 
 	protected function permanentDelete($id){
@@ -214,7 +214,7 @@ class PayheadController extends Controller
 								'default_salary' => 0
 							]);
 						}
-						$result['result'] = 'Payheads are successfully assigned to employee.';
+						$result['result'] = 'Paylabels are successfully assigned to employee.';
 						$result['code'] = 0;
 					} else {
 						Paystructure::where('user_id', $emp_code)->delete();						
@@ -225,11 +225,11 @@ class PayheadController extends Controller
 								'default_salary' => 0
 							]);
 						}
-						$result['result'] = 'Payheads are successfully re-assigned to employee.';
+						$result['result'] = 'Paylabels are successfully re-assigned to employee.';
 						$result['code'] = 0;
 					}
 				} else {
-					$result['result'] = 'Please select payheads and employee to assign.';
+					$result['result'] = 'Please select paylabels and employee to assign.';
 					$result['code'] = 2;
 				}
 			// } else {
