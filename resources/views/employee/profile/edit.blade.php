@@ -3,8 +3,8 @@
 <section>
     <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 		<div>
-			<h3>Employee My Profile</h3>
-			<p class="mb-0">Track and manage employee profile here</p>
+			<!-- <h3>Employee My Profile</h3> -->
+			<!-- <p class="mb-0">Track and manage employee profile here</p> -->
 		</div>
     </div>
 	@if ($errors->any())
@@ -53,7 +53,7 @@
                     <ul class="nav nav-tabs nav-pills db-custom-tabs gap-5 employee-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="company-tab" data-bs-toggle="tab" data-bs-target="#company"
-                                type="button" role="tab" aria-controls="company" aria-selected="true">Personal Information</button>
+                                type="button" role="tab" aria-controls="company" aria-selected="true">Personal</button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button"

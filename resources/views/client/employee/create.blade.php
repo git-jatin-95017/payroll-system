@@ -49,15 +49,15 @@
                      <ul class="nav nav-tabs nav-pills db-custom-tabs gap-5 employee-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="company-tab" data-bs-toggle="tab" data-bs-target="#company"
-                                type="button" role="tab" aria-controls="company" aria-selected="true">Personal Information</button>
+                                type="button" role="tab" aria-controls="company" aria-selected="true">Personal</button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button"
-                                role="tab" aria-controls="payment" aria-selected="false">Employment Details</button>
+                                role="tab" aria-controls="payment" aria-selected="false">Employment</button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button"
-                                role="tab" aria-controls="admin" aria-selected="false">Payment Method</button>
+                                role="tab" aria-controls="admin" aria-selected="false">Payment</button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password" type="button"
@@ -122,7 +122,7 @@
                 <div class="tab-pane fade show active" id="company" role="tabpanel" aria-labelledby="company-tab">
                     <div class="max-w-md max-auto">
                         <div class="sub-text-heading pb-4">
-                            <h3 class="mb-1">Company Information</h3>
+                            <h3 class="mb-1">Personal Information</h3>
                             <p>Type your information</p>
                         </div>
 							<form class="form-horizontal" method="POST" action="{{ route('employee.store') }}" enctype="multipart/form-data">
@@ -362,7 +362,7 @@
                 <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
 					<div class="max-w-md max-auto">
 						<div class="sub-text-heading pb-4">
-							<h3 class="mb-1">Employee Details</h3>
+							<h3 class="mb-1">Employment Information</h3>
 							<p>Type your employee details here</p>
 						</div>
 						<div class="row">
@@ -480,7 +480,7 @@
                 <div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
 					<div class="max-w-md max-auto">
 						<div class="sub-text-heading pb-4">
-							<h3 class="mb-1">Payment Method</h3>
+							<h3 class="mb-1">Payment Information</h3>
 							<p>Add your payment method here</p>
 						</div>
 							<div class="row">

@@ -3,7 +3,7 @@
 <section>
     <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 		<div>
-			<h3>Profile</h3>
+			<!-- <h3>Profile</h3> -->
 			<!-- <p class="mb-0">Track and manage profile here</p> -->
 		</div>
     </div>
@@ -53,7 +53,7 @@
                     <ul class="nav nav-tabs nav-pills db-custom-tabs gap-5 employee-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="company-tab" data-bs-toggle="tab" data-bs-target="#company"
-                                type="button" role="tab" aria-controls="company" aria-selected="true">Personal</button>
+                                type="button" role="tab" aria-controls="company" aria-selected="true">Company</button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button"
@@ -124,7 +124,7 @@
                 <div class="tab-pane fade show active" id="company" role="tabpanel" aria-labelledby="company-tab">
                     <div class="max-w-md max-auto">
                         <div class="sub-text-heading pb-4">
-                            <h3 class="mb-1">Personal Information</h3>
+                            <h3 class="mb-1">Company Information</h3>
                             <!-- <p>Type your information</p> -->
                         </div>
 						<form class="form-horizontal" method="POST"
@@ -342,36 +342,7 @@
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-6 mb-3">
-									<div class="form-group
-										@if(empty($company->paymentProfile->routing_number)) d-none @endif" id="routing_number_div">
-										<label class="db-label" for="routing_number">Routing Number</label>
-										<input id="routing_number" type="routing_number"
-											class="form-control db-custom-input {{ $errors->has('routing_number') ? ' is-invalid' : '' }}"
-											name="routing_number"
-											value="{{ $company->paymentProfile->routing_number?? '' }}">
-										@if ($errors->has('routing_number'))
-										<span class="text-danger">
-											{{ $errors->first('routing_number') }}
-										</span>
-										@endif
-									</div>
-								</div>
-								<div class="col-6 mb-3">
-									<div class="form-group
-										@if(empty($company->paymentProfile->account_number)) d-none @endif" id="account_number_div">
-										<label class="db-label" for="account_number">Account Number</label>
-										<input id="account_number" type="account_number"
-											class="form-control db-custom-input {{ $errors->has('account_number') ? ' is-invalid' : '' }}"
-											name="account_number"
-											value="{{ $company->paymentProfile->account_number ?? '' }}">
-										@if ($errors->has('account_number'))
-										<span class="text-danger">
-											{{ $errors->first('account_number') }}
-										</span>
-										@endif
-									</div>
-								</div>
+								
 								<div class="col-6 mb-3">
 									<div class="form-group
 										@if(empty($company->paymentProfile->account_type)) d-none @endif" id="account_type_div">
@@ -395,6 +366,22 @@
 									</div>
 								</div>
 								<div class="col-6 mb-3">
+									<div class="form-group
+										@if(empty($company->paymentProfile->account_number)) d-none @endif" id="account_number_div">
+										<label class="db-label" for="account_number">Account Number</label>
+										<input id="account_number" type="account_number"
+											class="form-control db-custom-input {{ $errors->has('account_number') ? ' is-invalid' : '' }}"
+											name="account_number"
+											value="{{ $company->paymentProfile->account_number ?? '' }}">
+										@if ($errors->has('account_number'))
+										<span class="text-danger">
+											{{ $errors->first('account_number') }}
+										</span>
+										@endif
+									</div>
+								</div>
+								
+								<div class="col-6 mb-3">
 									<div class="form-group">
 										<label class="db-label" for="bank_name">Bank Name</label>
 										<input id="bank_name" type="bank_name"
@@ -403,6 +390,21 @@
 										@if ($errors->has('bank_name'))
 										<span class="text-danger">
 											{{ $errors->first('bank_name') }}
+										</span>
+										@endif
+									</div>
+								</div>
+								<div class="col-6 mb-3">
+									<div class="form-group
+										@if(empty($company->paymentProfile->routing_number)) d-none @endif" id="routing_number_div">
+										<label class="db-label" for="routing_number">Routing Number</label>
+										<input id="routing_number" type="routing_number"
+											class="form-control db-custom-input {{ $errors->has('routing_number') ? ' is-invalid' : '' }}"
+											name="routing_number"
+											value="{{ $company->paymentProfile->routing_number?? '' }}">
+										@if ($errors->has('routing_number'))
+										<span class="text-danger">
+											{{ $errors->first('routing_number') }}
 										</span>
 										@endif
 									</div>
@@ -611,8 +613,8 @@
 		console.log(obj.value);
 		if (obj.value == 'check') {
 			$('#routing_number_div').addClass('d-none');
-			$('#account_number_div').addClass('d-none');
-			$('#account_type_div').addClass('d-none');
+			//$('#account_number_div').addClass('d-none');
+			// $('#account_type_div').addClass('d-none');
 		}
 
 		if (obj.value == 'Direct Deposit') {

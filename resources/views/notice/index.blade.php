@@ -80,7 +80,7 @@
                         <tr>
                             <!-- <td>{{ $row->id }}
 							</td> -->
-                            <td>{!! $row->message  !!}</td>
+                            <td class="col-sm-9" style="word-wrap: break-word; white-space: normal;">{!! $row->message  !!}</td>
 							@if(auth()->user()->role_id == 2)
                             <td>
 								<div class="dropdown">

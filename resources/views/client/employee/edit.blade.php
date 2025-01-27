@@ -3,8 +3,8 @@
 <section>
     <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 		<div>
-			<h3>Edit Employee Profile</h3>
-			<p class="mb-0">Edit employee profile here</p>
+			<!-- <h3>Edit Employee Profile</h3> -->
+			<!-- <p class="mb-0">Edit employee profile here</p> -->
 		</div>
     </div>
 	@if ($errors->any())

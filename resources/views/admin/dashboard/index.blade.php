@@ -36,7 +36,7 @@
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-wrench class="w-24 h-24" />
                 </div>
-                <p>Settings</p>
+                <p>Calculations</p>
             </a>
         </div>
         <div class="widget-container">
@@ -60,78 +60,7 @@
 </section>
 <section style="background: #0D0B45 !important;" class="px-2">
     <div class="container-fluid">
-        <div class="row">
-            <p style=""></p>
-            <p style=""></p>
-            <p style=""></p>
-
-            <p style=""></p>
-            <p style=""></p>
-            <p style=""></p>
-        </div>
-        <div class="row">
-            <p style=""></p>
-            <p style=""></p>
-            <p style=""></p>
-
-            <p style=""></p>
-            <p style=""></p>
-            <p style=""></p>
-        </div>
-        <div class="row">
-            <p style=""></p>
-            <p style=""></p>
-            <p style=""></p>
-
-            <p style=""></p>
-            <p style=""></p>
-            <p style=""></p>
-        </div>
-        <div class="row">
-            <p style=""></p>
-            <p style=""></p>
-            <p style=""></p>
-
-            <p style=""></p>
-            <p style=""></p>
-            <p style=""></p>
-        </div>
-        <div class="row">
-            <p style=""></p>
-            <p style=""></p>
-            <p style=""></p>
-
-            <p style=""></p>
-            <p style=""></p>
-            <p style=""></p>
-        </div>
-        <div class="row">
-            <p style=""></p>
-            <p style=""></p>
-            <p style=""></p>
-
-            <p style=""></p>
-            <p style=""></p>
-            <p style=""></p>
-        </div>
-        <div class="row">
-            <p style=""></p>
-            <p style=""></p>
-            <p style=""></p>
-
-            <p style=""></p>
-            <p style=""></p>
-            <p style=""></p>
-        </div>
-        <div class="row">
-            <p style=""></p>
-            <p style=""></p>
-            <p style=""></p>
-
-            <p style=""></p>
-            <p style=""></p>
-            <p style=""></p>
-        </div>
+        
         <!-- <div class="row">
             <div class="col-4 mb-4">
                 <div class="db-container p-4 shadow-sm bg-white h-100">
