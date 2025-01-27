@@ -140,94 +140,121 @@
         {{ $employees->links('vendor.pagination.custom') }}
    </div>
 </div>
-<div class="modal fade" id="ManageModal" tabindex="-1" role="dialog">
-   <div class="modal-dialog modal-lg modal-dialog-centered">
+
+<div class="modal fade db-custom-modal" id="ManageModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-            <h4 class="modal-title text-center">Add Pay Labels to Employee</h4>
-         </div>
-         <form method="post" role="form" data-toggle="validator" id="assign-payhead-form">
-            @csrf
-            <div class="modal-body">
-               <div class="row">
-                  <div class="col-sm-6">
-                     <label for="all_payheads">List of Pay Labels</label>
-                     <button type="button" id="selectHeads" class="btn btn-success btn-xs pull-right"><i class="fa fa-arrow-circle-right"></i></button>
-                     <select class="form-control" id="all_payheads" name="all_payheads[]" multiple size="10">
-                        @foreach($payheadList as $k => $v)
-                        <option value="{{$v->id}}" class="{{$v->pay_type=='earnings'?'text-success':'text-danger'}}">{{$v->name}}</option>
-                        @endforeach
-                     </select>
-                  </div>
-                  <div class="col-sm-6">
-                     <label for="selected_payheads">Selected Pay Labels</label>
-                     <button type="button" id="removeHeads" class="btn btn-danger btn-xs pull-right"><i class="fa fa-arrow-circle-left"></i></button>
-                     <select class="form-control" id="selected_payheads" name="selected_payheads[]" data-error="Pay Labels is required" multiple size="10" required></select>
-                  </div>
-                  <!-- <div class="col-sm-4">
-                     <label for="selected_payamount">Enter Payhead Amount</label>
-                     <div id="selected_payamount"></div>
-                     </div> -->
-               </div>
-            </div>
-            <div class="modal-footer">
-               <input type="hidden" name="empcode" id="empcode" />
-               <button type="submit" name="submit" class="btn btn-primary">Add Pay Labels to Employee</button>
-            </div>
-         </form>
+          <div class="modal-header">
+              <h1 class="modal-title" id="exampleModalToggleLabel">Add Pay Labels to Employee</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form method="post" role="form" data-toggle="validator" id="assign-payhead-form">
+                @csrf
+                <div class="modal-body">
+                   <div class="row">
+                      <div class="col-12 mb-3">
+                         <div class="form-group">
+                            <div class="d-flex mb-2 justify-content-between align-items-center">
+                                <label class="db-label" for="all_payheads">List of Pay Labels</label>
+                                <button type="button" id="selectHeads" class="btn btn-arrow-dwn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-20 h-20" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <select style="min-height: 100px;" class="form-control db-custom-input" id="all_payheads" name="all_payheads[]" multiple size="10">
+                                @foreach($payheadList as $k => $v)
+                                <option value="{{$v->id}}" class="{{$v->pay_type=='earnings'?'text-success':'text-danger'}}">{{$v->name}}</option>
+                                @endforeach
+                            </select>
+                         </div>
+                      </div>
+                      <div class="col-12 mb-3">
+                        <div class="form-group">
+                            <div class="d-flex mb-2 justify-content-between align-items-center">
+                                <label class="db-label" for="selected_payheads">Selected Pay Labels</label>
+                                <button type="button" id="removeHeads" class="btn btn-arrow-up">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-20 h-20" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <select style="min-height: 100px;" class="form-control db-custom-input" id="selected_payheads" name="selected_payheads[]" data-error="Pay Labels is required" multiple size="10" required></select>
+                        </div>
+                      </div>
+                   </div>
+                </div>
+             </form>
+          </div>
+          <div class="px-3 pb-3">
+            <input type="hidden" name="empcode" id="empcode" />
+            <button type="submit" name="submit" class="btn btn-primary submit-btn w-100">Add Pay Labels to Employee</button>
+          </div>
       </div>
-   </div>
+    </div>
 </div>
-<div class="modal fade" id="LeavePolicyModal" tabindex="-1" role="dialog">
+
+
+
+<div class="modal fade db-custom-modal" id="LeavePolicyModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title" id="exampleModalToggleLabel">Add Leave Policy to Employee</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form method="post" role="form" data-toggle="validator" id="assign-leave-policy-form">
+                @csrf
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <div class="form-group">
+                           <div class="d-flex mb-2 justify-content-between align-items-center">
+                                <label class="db-label" for="all_leave_policies">List of Leave Policies</label>
+                                <button type="button" id="selectHeadsLeavePolicy" class="btn btn-arrow-dwn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-20 h-20" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                    </svg>
+                                </button>
+                           </div>
+                            <select class="form-control db-custom-input" id="all_leave_policies" name="all_leave_policies[]" multiple size="10" style="min-height: 100px;">
+                                @foreach($leavePolicies as $k => $v)
+                                <option value="{{$v->id}}" class="">{{$v->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <div class="d-flex mb-2 justify-content-between align-items-center">
+                                <label class="db-label" for="selected_leave_policies">Selected Leave Policy</label>
+                                <button type="button" id="removeHeadsLeavePolicy" class="btn btn-arrow-up">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-20 h-20" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <select style="min-height: 100px;" class="form-control db-custom-input" id="selected_leave_policies" name="selected_leave_policies[]" data-error="Leave Policy is required"  multiple size="10"  required></select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="px-3 pb-3">
+            <input type="hidden" name="empcodepolicy" id="empcodepolicy" />
+            <button type="submit" name="submit" class="btn btn-primary submit-btn w-100">Add Leave Policy to Employee</button>
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade " id="LocationModal" tabindex="-1" role="dialog">
    <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
          <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-            <h4 class="modal-title text-center">Add Leave Policy to Employee</h4>
-         </div>
-         <form method="post" role="form" data-toggle="validator" id="assign-leave-policy-form">
-            @csrf
-            <div class="modal-body">
-               <div class="row">
-                  <div class="col-sm-6">
-                     <label for="all_leave_policies">List of Leave Policies</label>
-                     <button type="button" id="selectHeadsLeavePolicy" class="btn btn-success btn-xs pull-right"><i class="fa fa-arrow-circle-right"></i></button>
-                     <select class="form-control" id="all_leave_policies" name="all_leave_policies[]" multiple size="10">
-                        @foreach($leavePolicies as $k => $v)
-                        <option value="{{$v->id}}" class="">{{$v->name}}</option>
-                        @endforeach
-                     </select>
-                  </div>
-                  <div class="col-sm-6">
-                     <label for="selected_leave_policies">Selected Leave Policy</label>
-                     <button type="button" id="removeHeadsLeavePolicy" class="btn btn-danger btn-xs pull-right"><i class="fa fa-arrow-circle-left"></i></button>
-                     <select class="form-control" id="selected_leave_policies" name="selected_leave_policies[]" data-error="Leave Policy is required" multiple size="10" required></select>
-                  </div>
-                  <!-- <div class="col-sm-4">
-                     <label for="selected_payamount">Enter Payhead Amount</label>
-                     <div id="selected_payamount"></div>
-                     </div> -->
-               </div>
-            </div>
-            <div class="modal-footer">
-               <input type="hidden" name="empcodepolicy" id="empcodepolicy" />
-               <button type="submit" name="submit" class="btn btn-primary">Add Leave Policy to Employee</button>
-            </div>
-         </form>
-      </div>
-   </div>
-</div>
-<div class="modal fade" id="LocationModal" tabindex="-1" role="dialog">
-   <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content">
-         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+                <span aria-hidden="true">&times;</span>
             </button>
             <h4 class="modal-title text-center">Add Location to Employee</h4>
          </div>

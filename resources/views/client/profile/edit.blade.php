@@ -41,7 +41,7 @@
 				<img id="tb-image" src="/files/{{$company->companyProfile->logo}}" width="225"  height="225" style="object-fit:contain !important;" alt="profile" />
 			@else
 				<img id="tb-image" src="{{ asset('img/no_img.jpg') }}"  alt="Uploaded Image" width="225"  height="225" style="object-fit:contain !important;" alt="profile" />
-			@endif        
+			@endif
 		</div>
         <div>
             <div class="d-flex flex-column justify-content-between h-100">
@@ -546,7 +546,7 @@
 										<div class="form-group">
 											<label for="password" class="db-label">Confirm Password</label>
 											<input id="password-confirm" type="password" class="form-control" name="password_confirmation">
-											
+
 											@if ($errors->has('password_confirmation'))
 											<span class="text-danger">
 												{{ $errors->first('password_confirmation') }}
