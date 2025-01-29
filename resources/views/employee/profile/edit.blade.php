@@ -41,7 +41,7 @@
 				<img id="tb-image" src="/files/{{$employee->employeeProfile->file}}" width="225"  height="225" style="object-fit:contain !important;" alt="profile" />
 			@else
 				<img id="tb-image" src="{{ asset('img/no_img.jpg') }}"  alt="Uploaded Image" width="225"  height="225" style="object-fit:contain !important;" alt="profile" />
-			@endif        
+			@endif
 		</div>
         <div>
             <div class="d-flex flex-column justify-content-between h-100">
@@ -331,7 +331,7 @@
 										@endif
 									</div>
 								</div>
-								
+
 								<div class="col-12 text-end">
 									<button type="submit" class="btn btn-primary submit-btn">Submit</button>
 								</div>
@@ -350,7 +350,7 @@
 							@csrf
 							{{ method_field('PUT') }}
 							<input type="hidden" name="update_request" value="empprofile">
-							
+
 							<div class="row">
 								<div class="col-4 mb-3">
 									<div class="form-group">
@@ -417,7 +417,7 @@
 											<option selected value disabled>Please Select</option>
 											<option @if($employee->employeeProfile->emp_type == "part-time") selected @endif value="part-time">Part Time</option>
 											<option @if($employee->employeeProfile->emp_type == "full-time") selected @endif value="full-time">Full Time</option>
-										</select>									
+										</select>
 										@if ($errors->has('emp_type'))
 											<span class="text-danger">
 												{{ $errors->first('emp_type') }}
@@ -438,7 +438,7 @@
 											<option @if($employee->employeeProfile->pay_type == "weekly") selected @endif value="weekly">Weekly</option>
 											<option @if($employee->employeeProfile->pay_type == "monthly") selected @endif value="monthly">Monthly</option>
 											<option @if($employee->employeeProfile->pay_type == "yearly") selected @endif value="yearly">Yearly</option>
-										</select>										
+										</select>
 										@if ($errors->has('pay_type'))
 										<span class="text-danger">
 											{{ $errors->first('pay_type') }}
@@ -467,7 +467,7 @@
 											<option @if($employee->employeeProfile->rate == "weekly") selected @endif value="weekly">Weekly</option>
 											<option @if($employee->employeeProfile->rate == "monthly") selected @endif value="monthly">Monthly</option>
 											<option @if($employee->employeeProfile->rate == "yearly") selected @endif value="yearly">Yearly</option>
-										</select>									
+										</select>
 										@if ($errors->has('rate'))
 										<span class="text-danger">
 											{{ $errors->first('rate') }}
@@ -519,7 +519,7 @@
 											</span>
 										@endif
 									</div>
-								</div>									
+								</div>
 								<div class="col-4 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="account_number_div">
 									<label for="account_number" class="db-label">Account Number</label>
 									<div class="form-group mb-0">
@@ -532,7 +532,7 @@
 									</div>
 								</div>
 							</div>
-							
+
 							<div class="row">
 								<div class="row mb-3 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="account_type_div">
 									<div class="col-md-4 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="bank_div">
@@ -615,7 +615,7 @@
 										<div class="form-group">
 											<label for="password" class="db-label">Confirm Password</label>
 											<input id="password-confirm" type="password" class="form-control" name="password_confirmation">
-											
+
 											@if ($errors->has('password_confirmation'))
 											<span class="text-danger">
 												{{ $errors->first('password_confirmation') }}

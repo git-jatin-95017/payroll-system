@@ -53,246 +53,234 @@
     color: #33ba5d !important;
  }
 </style>
-<div class="row page-titles">
-    <div class="col-md-5 align-self-center">
-        <h3 class="text-themecolor">
-            <i class="fa fa-braille" style="color:#1976d2"></i>
-            Payroll
-        </h3>
-    </div>
-    <div class="col-md-7 align-self-center">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a href="javascript:void(0)">Home</a>
-            </li>
-            <li class="breadcrumb-item active">Payroll</li>
-			<li class="breadcrumb-item active">Create</li>
-        </ol>
-    </div>
+<div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
+	<div>
+		<h3>Payroll</h3>
+		<p class="mb-0">Track and manage your timesheet</p>
+	</div>
 </div>
-<section class="content">
-	<div class="container-fluid">
-		<div class="px-3">
-			<ul class="nav nav-tabs custom-ts-tabs mb-4" id="myTab" role="tablist">
-				<li class="nav-item" role="presentation">
-					<button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab"
-						aria-controls="home" aria-selected="true">
-						TimeSheet
-					</button>
-				</li>
-				<!-- <li class="nav-item" role="presentation">
-					<button class="nav-link" id="profile-tab" data-toggle="tab" data-target="#profile" type="button"
-						role="tab" aria-controls="profile" aria-selected="false">
-						Approvals
-					</button>
-				</li> -->
-			</ul>
-		</div>
-		<div class="tab-content" id="myTabContent">
-			<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-				<div class="container-fluid">
-					<?php
+<ul class="nav nav-tabs nav-pills db-custom-tabs db-custom-tabs-theme gap-5 employee-tabs mb-4" id="myTab" role="tablist">
+	<li class="nav-item" role="presentation">
+		<button class="nav-link active" id="company-tab" data-bs-toggle="tab" data-bs-target="#company"
+			type="button" role="tab" aria-controls="company" aria-selected="true">Personal</button>
+	</li>
+	<li class="nav-item" role="presentation">
+		<button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button"
+			role="tab" aria-controls="payment" aria-selected="false">Approvals</button>
+	</li>
+</ul>
 
-					/*@if ($errors->any())
-					<div class="alert alert-danger">
-						<ul class="m-0">
-							@foreach ($errors->all() as $error)
-							<li>{{ $error }}</li>
-							@endforeach
-						</ul>
-					</div>
-					@endif
-					*/
-						?>
-			@if (session('message'))
-				<div class="row">
-					<div class="col-md-12">
-						<div class="alert alert-success alert-dismissible">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-							{{ session('message') }}
-						</div>
-					</div>
+<div class="bg-white w-100 border-radius-15 p-4">
+	<div class="tab-content" id="myTabContent">
+		<div class="tab-pane fade show active" id="company" role="tabpanel" aria-labelledby="company-tab">
+			<div>
+				<?php
+
+				/*@if ($errors->any())
+				<div class="alert alert-danger">
+					<ul class="m-0">
+						@foreach ($errors->all() as $error)
+						<li>{{ $error }}</li>
+						@endforeach
+					</ul>
 				</div>
-			@elseif (session('error'))
-				<div class="row">
-					<div class="col-md-12">
-						<div class="alert alert-danger alert-dismissible">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-							{{ session('error') }}
-						</div>
-					</div>
-				</div>
-			@endif
+				@endif
+				*/
+					?>
+		@if (session('message'))
 			<div class="row">
-				<div class="col-sm-12">
-					<div class="card" style="min-height: 400px">
-						<div class="card-header">							
-							<form class="" method="GET" action="{{ route('payroll.create') }}" id="filter-timesheet">
-								<div class="row">
-									<div class="col-sm-2">
-										<div class="form-group">
-											<input type="text" name="daterange" id="daterange" class="form-control" value="{{date('m/d/Y', strtotime($request->start_date)).' - '.date('m/d/Y', strtotime($request->end_date))}}">
-										</div>
+				<div class="col-md-12">
+					<div class="alert alert-success alert-dismissible">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+						{{ session('message') }}
+					</div>
+				</div>
+			</div>
+		@elseif (session('error'))
+			<div class="row">
+				<div class="col-md-12">
+					<div class="alert alert-danger alert-dismissible">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+						{{ session('error') }}
+					</div>
+				</div>
+			</div>
+		@endif
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="time-sheet-container" style="min-height: 400px">
+					<div>
+						<form class="" method="GET" action="{{ route('payroll.create') }}" id="filter-timesheet">
+							<div class="row">
+								<div class="col-xl-3 col-4">
+									<div class="form-group">
+										<p class="mb-0 position-relative daterange-container">
+											<input type="text" name="daterange" id="daterange" class="form-control db-custom-input" value="{{date('m/d/Y', strtotime($request->start_date)).' - '.date('m/d/Y', strtotime($request->end_date))}}">
+											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+												<path stroke-linecap="round" stroke-linejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" />
+											</svg>
+										</p>
 									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-											<button type="submit" id="submit-button" class="btn btn-primary">Go</button>
-										</div>
+								</div>
+								<div class="col ps-0">
+									<div class="form-group">
+										<button type="submit" id="submit-button" class="btn btn-primary btn-search">Search</button>
 									</div>
-									<?php									
+								</div>
+									<?php
 										$fdate = $request->start_date;
 										$tdate = $request->end_date;
 										$startDate = new \DateTime($fdate);
 										$endDate = new \DateTime($tdate);
-
 										$diff = $endDate->diff($startDate);
-										$weekday = $diff->format('%a');										
+										$weekday = $diff->format('%a');
 										$week = floor($diff->days / 7);
 									?>
-								</div>
-							</form>
-						</div>
-						<form class="form-horizontal" method="GET" action="{{ route('payroll.create') }}" id="fom-timesheet">
-							@csrf
-							<input type="hidden" name="daterangehidden" id="daterange-hidden" class="form-control" value="{{date('Y-m-d', strtotime($request->start_date)).' - '.date('Y-m-d', strtotime($request->end_date))}}">
-							<?php								
-								$y = date('Y', strtotime($request->start_date));
-								$first_date = $request->start_date;								
-							?>
-							<div class="card-body p-0">
-							<div class="table-responsive">
-								<table class="table table-bordered ts-custom-table border-0 responsive">
-								<thead>
-									<tr class="ts-date-row">
-										<th></th>
-										<th scope="col" colspan=""></th>
-											<?php
-											for ($i=0;$i<=$weekday;$i++) {
-											?>
-												<th scope="col">{{ strtoupper(date("D", strtotime("+$i day", strtotime($first_date)))) }}</th>
-											<?php								
-												}
-											?>
-										<th>Total</th>
-									</tr>
-									<tr class="ts-day-row">
-										<th>
-											<div class="form- mb-0">									
-												<input type="checkbox" id="select_all" class="form-check-input" />
-												<label class="form-check-label d-block" style="font-size:12px;" for="select_all">Select All</label>
-											</div>
-										</th>
-										<th scope="col" colspan="">
-											<p class="custom-search-ts">
-												<svg class="w-64 h-64" width="20px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-													<path fill-rule="evenodd" d="M14.53 15.59a8.25 8.25 0 111.06-1.06l5.69 5.69a.75.75 0 11-1.06 1.06l-5.69-5.69zM2.5 9.25a6.75 6.75 0 1111.74 4.547.746.746 0 00-.443.442A6.75 6.75 0 012.5 9.25z"></path>
-												</svg>
-												<!-- <form action="#" onsubmit="handle"> -->
-													<!-- <input type="text" name="txt" /> -->
-													<input type="text" name="search"  onkeypress="handle(event)" value="{{$request->search}}" placeholder="search">
-													<input type="hidden" name="week_search" value="{{$request->week_search ??1}}">
-												<!-- </form> -->
-											</p>
-										</th>
-									<!-- <th scope="col">Start Date</th>
-									<th scope="col">Address</th>
-									<th scope="col">Pay/h</th> -->
-									<?php
-
-									for ($i=0;$i<=$weekday;$i++) {
-									?>
-										<th scope="col">{{ date("d", strtotime("+$i day", strtotime($first_date))) }}</th>
-								<?php
-										// $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
-									}
-									?>
-									<th>-</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach($employees as $k => $v)
-										<tr class="ts-data-row">
-										{{-- <th scope="row">{{ $k+1 }}</th> --}}
-										<th>
-											<div class="form-check mb-0">
-												<input class="form-check-input checkbox" name="check[{{$v->id}}]" type="checkbox" value="1" id="flexCheckDefault{{$k}}">
-												<label class="form-check-label" for="flexCheckDefault{{$k}}"></label>
-											</div>
-											<!-- <button class="approval_btn">Approval</button> -->
-										</th>
-										<td>
-											<div class="d-flex">
-												<div class="ts-img d-flex justify-content-center align-items-center">
-													@if(!empty($v->employeeProfile->file))
-														<img src="/files/{{$v->employeeProfile->file}}"
-														style="width: 40px; height: 40px; border-radius: 100em;" />
-													@else
-														<img src='/img/user2-160x160.jpg' style="width: 40px; height: 40px; border-radius: 100em;">
-													@endif		
-												</div>
-												<div class="col-auto">
-													<p class="ts-user-name mb-0">{{ $v->name }}</p>
-													<p class="ts-designation mb-0">{{ !empty($v->employeeProfile) ? $v->employeeProfile->designation : ''}}</p>
-												</div>
-											</div>
-
-										</td>
-
-										
-										<?php
-										$sum = 0;
-										for ($i=0;$i<=$weekday;$i++) {
-											$dateToday = date("Y-m-d", strtotime("+$i day", strtotime($first_date)));
-											$xcellData = NULL;
-											$result = $tempDatesArr[$v->id];
-											$class = NULL;
-											if (array_key_exists($dateToday, $result)) {
-
-												$xcellData = $result[$dateToday]['hrs'];
-
-												if (is_numeric($result[$dateToday]['hrs'])) {
-													$sum += $result[$dateToday]['hrs'];
-												}
-
-												$class = $result[$dateToday]['approval_status'] == 1 ? 'db-text-success' : null;
-											}
-										?>
-													<th scope="col">
-														<div id="the-basics">
-														<input type="text" name="dates[{{$v->id}}][{{ $dateToday }}]" class="form-control typeahead payroll_date_cell {{$class}}" placeholder="-"
-														data-date="{{ $dateToday }}"
-														data-empid="{{ $v->id }}"
-														value="{{ $xcellData ?? 0 }}"
-														data-inputid="payroll_input_{{$v->id}}"
-														data-id="{{$v->id}}" style="font-size: 12px !important;"
-														></div>
-													</th>
-											<?php
-													// $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
-												}
-											?>
-											<td class="total" @if($sum > 0) style="color:#33ba5d !important;" @endif>{{ $sum }}</td>
-										</tr>
-									@endforeach
-								</tbody>
-								</table>
-							</div>
-							</div>
-							<div class="card-footer">
-								<button type="submit" data-url="{{ route('payroll.store') }}" id="approve-button" class="btn btn-primary">Approve</button>
 							</div>
 						</form>
 					</div>
+					<form class="form-horizontal" method="GET" action="{{ route('payroll.create') }}" id="fom-timesheet">
+						@csrf
+						<input type="hidden" name="daterangehidden" id="daterange-hidden" class="form-control" value="{{date('Y-m-d', strtotime($request->start_date)).' - '.date('Y-m-d', strtotime($request->end_date))}}">
+							<?php
+								$y = date('Y', strtotime($request->start_date));
+								$first_date = $request->start_date;
+							?>
+							<div class="p-0">
+								<div class="table-responsive">
+									<table class="table table-bordered ts-custom-table border-0 responsive">
+										<thead>
+											<tr class="ts-date-row">
+												<th></th>
+												<th scope="col" colspan=""></th>
+													<?php
+													for ($i=0;$i<=$weekday;$i++) {
+													?>
+														<th scope="col">{{ strtoupper(date("D", strtotime("+$i day", strtotime($first_date)))) }}</th>
+													<?php
+														}
+													?>
+												<th>Total</th>
+											</tr>
+											<tr class="ts-day-row">
+												<th>
+													<div class="form- mb-0">
+														<input type="checkbox" id="select_all" class="form-check-input" />
+														<label class="form-check-label d-block db-label"  style="font-size: 11px;" for="select_all">All</label>
+													</div>
+												</th>
+												<th scope="col" colspan="">
+													<p class="db-table-search position-relative mb-0">
+														<svg width="20px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+															<path fill-rule="evenodd" d="M14.53 15.59a8.25 8.25 0 111.06-1.06l5.69 5.69a.75.75 0 11-1.06 1.06l-5.69-5.69zM2.5 9.25a6.75 6.75 0 1111.74 4.547.746.746 0 00-.443.442A6.75 6.75 0 012.5 9.25z"></path>
+														</svg>
+														<!-- <form action="#" onsubmit="handle"> -->
+															<!-- <input type="text" name="txt" /> -->
+															<input type="text" name="search"  onkeypress="handle(event)" value="{{$request->search}}" placeholder="search">
+															<input type="hidden" name="week_search" value="{{$request->week_search ??1}}">
+														<!-- </form> -->
+													</p>
+												</th>
+											<!-- <th scope="col">Start Date</th>
+											<th scope="col">Address</th>
+											<th scope="col">Pay/h</th> -->
+											<?php
+
+											for ($i=0;$i<=$weekday;$i++) {
+											?>
+												<th scope="col">{{ date("d", strtotime("+$i day", strtotime($first_date))) }}</th>
+										<?php
+												// $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
+											}
+											?>
+											<th>-</th>
+											</tr>
+										</thead>
+										<tbody>
+											@foreach($employees as $k => $v)
+												<tr class="ts-data-row">
+												{{-- <th scope="row">{{ $k+1 }}</th> --}}
+												<th>
+													<div class="form-check mb-0">
+														<input class="form-check-input checkbox" name="check[{{$v->id}}]" type="checkbox" value="1" id="flexCheckDefault{{$k}}">
+														<label class="form-check-label" for="flexCheckDefault{{$k}}"></label>
+													</div>
+													<!-- <button class="approval_btn">Approval</button> -->
+												</th>
+												<td>
+													<div class="d-flex">
+														<div class="ts-img d-flex justify-content-center align-items-center">
+															@if(!empty($v->employeeProfile->file))
+																<img src="/files/{{$v->employeeProfile->file}}"
+																style="width: 40px; height: 40px; border-radius: 100em;" />
+															@else
+																<img src='/img/user2-160x160.jpg' style="width: 40px; height: 40px; border-radius: 100em;">
+															@endif
+														</div>
+														<div class="col-auto ps-2">
+															<p class="ts-user-name mb-0">{{ $v->name }}</p>
+															<p class="ts-designation mb-0">{{ !empty($v->employeeProfile) ? $v->employeeProfile->designation : ''}}</p>
+														</div>
+													</div>
+
+												</td>
+
+
+												<?php
+												$sum = 0;
+												for ($i=0;$i<=$weekday;$i++) {
+													$dateToday = date("Y-m-d", strtotime("+$i day", strtotime($first_date)));
+													$xcellData = NULL;
+													$result = $tempDatesArr[$v->id];
+													$class = NULL;
+													if (array_key_exists($dateToday, $result)) {
+
+														$xcellData = $result[$dateToday]['hrs'];
+
+														if (is_numeric($result[$dateToday]['hrs'])) {
+															$sum += $result[$dateToday]['hrs'];
+														}
+
+														$class = $result[$dateToday]['approval_status'] == 1 ? 'db-text-success' : null;
+													}
+												?>
+															<th scope="col">
+																<div id="the-basics">
+																<input type="text" name="dates[{{$v->id}}][{{ $dateToday }}]" class="form-control typeahead payroll_date_cell {{$class}}" placeholder="-"
+																data-date="{{ $dateToday }}"
+																data-empid="{{ $v->id }}"
+																value="{{ $xcellData ?? 0 }}"
+																data-inputid="payroll_input_{{$v->id}}"
+																data-id="{{$v->id}}" style="font-size: 12px !important;"
+																></div>
+															</th>
+													<?php
+															// $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
+														}
+													?>
+													<td class="total" @if($sum > 0) style="color:#33ba5d !important;" @endif>{{ $sum }}</td>
+												</tr>
+											@endforeach
+										</tbody>
+									</table>
+								</div>
+							</div>
+						<div class="text-end">
+							<button type="submit" data-url="{{ route('payroll.store') }}" id="approve-button" class="btn btn-primary submit-btn">Approve</button>
+						</div>
+					</form>
 				</div>
 			</div>
-			</div>
-			</div>
-			<div class="tab-pane fade" id="profile" role="tabpanel"aria-labelledby="profile-tab">
-				<h3 align="center">This Section is coming soon.</h3>
+		</div>
 			</div>
 		</div>
+		<div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+			<div class="sub-text-heading pb-4">
+				<h3 class="mb-1">This Section is coming soon</h3>
+			</div>
 		</div>
-</section>
+	</div>
+</div>
 @endsection
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 @push('page_scripts')
@@ -303,14 +291,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/bloodhound.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.min.js"></script>
 <script>
-	var today = new Date(); 
-    var dd = today.getDate(); 
-    var mm = today.getMonth()+1; //January is 0! 
-    var yyyy = today.getFullYear(); 
-    if(dd<10){ dd='0'+dd } 
-    if(mm<10){ mm='0'+mm } 
+	var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+    if(dd<10){ dd='0'+dd }
+    if(mm<10){ mm='0'+mm }
     var today1 = mm+'/'+dd+'/'+yyyy;
-	
+
 	$('#daterange').daterangepicker({
 
              maxDate:today1
@@ -378,7 +366,7 @@ $(document).ready(function(){
             });
         }
     });
-    
+
     $('.checkbox').on('click',function(){
         if($('.checkbox:checked').length == $('.checkbox').length){
             $('#select_all').prop('checked',true);
@@ -398,19 +386,19 @@ $(document).ready(function(){
 
 		function calc_total(obj) {
 			var focusedRow = obj.closest('tr');
-			
+
 			console.log(focusedRow);
-		  	
+
 		  	var sum = 0;
 		  	focusedRow.find(".payroll_date_cell").each(function(){
 		  		if ($.isNumeric(this.value)) {
 		  			sum += parseFloat(this.value);
 		  		}
 		  	});
-		  	
+
 		  	console.log(sum);
 
-		  	focusedRow.find('td.total').html(sum);	 
+		  	focusedRow.find('td.total').html(sum);
 		}
 	});
 </script>
@@ -469,7 +457,7 @@ $(document).ready(function(){
 			header: '<h3 class="league-name">Select Leaves</h3>',
 			suggestion: function (data) {
 				return `<div class="man-section">
-					<p>${data.full_name}</p>						
+					<p>${data.full_name}</p>
 				</div>`;
 			}
 		}
@@ -489,7 +477,7 @@ $(document).ready(function(){
             success: function (data) {
                 // alert('Record Saved Successfully.');
             }
-        });    
+        });
 	});
 </script>
 

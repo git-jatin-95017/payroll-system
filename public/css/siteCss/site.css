@@ -1012,6 +1012,99 @@ a:hover {
     font-size: 18px;
     color: #0D0B45;
 }
+.employee-tabs.db-custom-tabs.db-custom-tabs-theme .nav-item .nav-link {
+    color: #252525;
+    font-weight: 500;
+}
+.employee-tabs.db-custom-tabs.db-custom-tabs-theme .nav-item .active.nav-link {
+    border-bottom-color: #5e5adb ;
+    color: #5e5adb ;
+    font-weight: 600;
+}
+.btn-search {
+    height: 42px;
+    border: none !important;
+    padding-left: 16px;
+    padding-right: 16px;
+    border-radius: 6px;
+}
+.db-table-search input {
+    height: 30px;
+    border-radius: 4px;
+    border: 1px solid #C2C2C2;
+    padding: 0 14px;
+    color: #252525;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+.db-table-search input::placeholder{
+    color: rgb(83, 83, 83) !important;
+}
+.db-table-search svg {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    color: #4e4e4e;
+    width: 16px;
+}
+.ts-user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #5e5adb;
+    text-transform: capitalize;
+}
+.ts-designation {
+    font-size: 12px;
+    color: #595959;
+    font-weight: 400;
+}
+
+.time-sheet-container .ts-custom-table tr td,
+.time-sheet-container .ts-custom-table tr th{
+    vertical-align: middle;
+    border:1px solid #C2C2C2 !important;
+}
+.time-sheet-container .ts-custom-table tr th {
+    font-size: 13px;
+    text-align: center;
+    color: #252525;
+}
+
+.time-sheet-container .ts-custom-table input[type="text"]{
+    text-align: center;
+    border: 1px solid #C2C2C2;
+    border-radius: 6px;
+    font-weight: 600;
+}
+.time-sheet-container .ts-custom-table input[name="search"]{
+    text-align: left;
+}
+
+
+.time-sheet-container .ts-custom-table input[type="text"]:focus {
+    box-shadow: none;
+    border-color: #5e5adb ;
+}
+.daterange-container svg {
+    position: absolute;
+    top: 12px;
+    width: 20px;
+    right: 9px;
+}
+
+.time-sheet-container .ts-custom-table thead tr:first-child th {
+    background-color: #f3f3f3;
+}
+td.total {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+}
+.start-date{
+ background-color: #5e5adb !important;
+}
+
 
 @media only screen and (max-width: 992px) {
     #left-menu,

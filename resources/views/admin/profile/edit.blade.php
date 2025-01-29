@@ -46,7 +46,7 @@
 		@endif
 	</div>
 	<div class="bg-white white-container py-4 px-4 pt-4continer-h-full">
-		<div class="row">            	
+		<div class="row">
 				<div class="col-sm-12">
 					<div class="max-w-md max-auto">
 						<div class="sub-text-heading pb-4">
@@ -101,7 +101,7 @@
 									</div>
 								</div>
 							</div>
-   							
+
 							<div class="row">
 								<div class="col-8 mb-3">
 									<div class="form-group">
