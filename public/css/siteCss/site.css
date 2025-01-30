@@ -231,6 +231,7 @@ a:hover {
     width: 100%;
     z-index: 3;
     line-height: 60px;
+    box-shadow: 0 0 8px 2px #ededed;
 }
 
 #main-content {
@@ -1104,7 +1105,39 @@ td.total {
 .start-date{
  background-color: #5e5adb !important;
 }
+.alert-success {
+    --bs-alert-color: #18851c;
+    --bs-alert-bg: #ebfbf6;
+    --bs-alert-border-color: #4caf50;
+    font-size: 14px;
+    font-weight: 400;
+    border-radius: 10px;
+}
 
+.alert-success.alert button.close,
+.alert-danger.alert button.close {
+    width: 27px;
+    height: 27px;
+    padding: 0;
+    border-radius: 100em;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    font-weight: 600;
+}
+
+.alert-danger.alert button.close{
+    background-color: #d50000;
+}
+
+.alert-danger {
+    --bs-alert-color: #d50000;
+    --bs-alert-bg: #ffe8ea;
+    --bs-alert-border-color: #d50000;
+    font-size: 14px;
+    font-weight: 400;
+    border-radius: 10px;
+}
 
 @media only screen and (max-width: 992px) {
     #left-menu,

@@ -19,7 +19,7 @@
     </div>
 </div>
 <section class="content">
-	<div class="container-fluid">		
+	<div class="container-fluid">
 		<div class="tab-content" id="myTabContent">
 			<div class="container-fluid">
 			@if (session('message'))
@@ -46,7 +46,7 @@
 					<div class="card">
 						<div class="payroll-top pt-4 text-center">
 							<h4>Payroll is being processed from {{ date('F dS Y', strtotime($from))}} to {{ date('F dS Y', strtotime($to))}}</h4>
-						</div>							
+						</div>
 						<form class="form-horizontal" method="POST" action="{{ route('store.Step2', ['start_date' => $from, 'end_date' => $to, 'appoval_number'=> $appoval_number]) }}" id="fom-timesheet">
 							@csrf
 							<div class="card-body">
@@ -55,11 +55,11 @@
 									    <tr>
 									      <th class="col-4" scope="col">Employees</th>
 									      <th class="col-4" scope="col">Paid Time Off</th>
-									      <th class="col-4" scope="col">Unpaid Time Off</th>									      								
+									      <th class="col-4" scope="col">Unpaid Time Off</th>
 									    </tr>
 									</thead>
 									<tbody>
-										<?php 
+										<?php
 											$total = 0;
 										?>
 										@foreach($employees as $k =>$employee)
@@ -67,7 +67,7 @@
 											// $from = date('Y-m-01'); //date('m-01-Y');
 											// $to = date('Y-m-t'); //date('m-t-Y');
 
-											$timeCardData = \App\Models\PayrollSheet::whereBetween('payroll_date', [$from, $to])->where('approval_status', 1)->where('appoval_number', $appoval_number)->where('emp_id', $employee->id)->get();										
+											$timeCardData = \App\Models\PayrollSheet::whereBetween('payroll_date', [$from, $to])->where('approval_status', 1)->where('appoval_number', $appoval_number)->where('emp_id', $employee->id)->get();
 
 											if ($timeCardData->count() == 0) {
 												continue;
@@ -88,7 +88,7 @@
 											$id = $isDataExist->id;
 											$sick_hrs = $isDataExist->sick_hrs;
 											$vacation_hrs = $isDataExist->vacation_hrs;
-											
+
 
 											$salary = 0;
 											if (!empty($isDataExist)) {
@@ -98,12 +98,12 @@
 										?>
 
 										<input type="hidden" value="{{$id}}" name="input[{{$employee->id}}][id]">
-									    <tr class="row-tr-js">									      
+									    <tr class="row-tr-js">
 									      	<td class="col-sm-4">
 												<table>
 													<tr>
 														<td class="employee-name">
-															
+
 															<div class="d-flex">
 																<div class="ts-img d-flex justify-content-center align-items-center">
 																	@if(!empty($employee->employeeProfile->file))
@@ -111,7 +111,7 @@
 																		style="width: 40px; height: 40px; border-radius: 100em;" />
 																	@else
 																		<img src='/img/user2-160x160.jpg' style="width: 40px; height: 40px; border-radius: 100em;">
-																	@endif		
+																	@endif
 																</div>
 																<div class="col-auto">
 																	{{ $employee->name }} <span class="badge badge-primary">{{ strtoupper($employee->employeeProfile->pay_type) }}</span>
@@ -137,7 +137,7 @@
 																//               ->whereNotBetween('end_date', [$from, $to]);
 																//     })
 															    //     ->orderBy('id', 'DESC')
-															    //     ->first();															        
+															    //     ->first();
 															?>
 															@foreach($empLeavesPaid as $key =>$value)
 																<?php
@@ -148,11 +148,11 @@
 																	$carryOverAmount = $value->leave->carry_over_amount * 8 ?? 0;
 
 														            $year = date('Y');
-														            
+
 														            $daysTaken = \App\Models\AssignLeave::where('emp_id', $employeeID)->where('type_id', $leaveID)->where('dateyear', $year)->first();
 
 														            // $daysTaken = $this->getEmpAssignLeaveType($employeeID, $leaveID, $year);
-														            
+
 														            $leavetypes = \App\Models\LeaveType::findOrFail($leaveID);
 
 														            if (empty($daysTaken->hour)) {
@@ -168,7 +168,7 @@
 														                //$totalday   = $leavetypes->leave_day . '/' . ($daysTaken/8);
 														                $totalday = (float)$leavetypes->leave_day - (float)$daysTakenval;
 														            }
-														            
+
 														            /*
 																	$pastLeaveBalancer = 0;
 														            if (!empty($isLastPayroll)) {
@@ -192,7 +192,7 @@
 																	if (date('m-d') == '08-29') {
 																		// $amountPaidOff  += 	$leavetypes->carry_over_amount;
 																	}
-																	
+
 																	/*
 																	if (empty($amountPaidOff)) {
 																		if ($pastLeaveBalancer > 0) {
@@ -211,7 +211,7 @@
 																		<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007bff" aria-hidden="true">
 																			<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
 																		</svg>
-																		{{$value->leave->name}} 
+																		{{$value->leave->name}}
 																	</label>
 																	<p class="collapse" id="bonus{{$employee->id}}{{$key}}">
 																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_type_id]">
@@ -238,7 +238,7 @@
 																				}
 																			} else {
 																				$statusTitle = 'Probation';
-																			} 
+																			}
 																		?>
 																		<small class="badge badge-info">Status: </small> <small>{{$statusTitle}}</small><br><br>
 
@@ -249,9 +249,9 @@
 															<small class="badge badge-info">Paid Time Off:</small>
 															$<small class="total" id="payoff-{{$employee->id}}">0</small>
 														</td>
-													</tr>											
+													</tr>
 												</table>
-									      	</td>									      
+									      	</td>
 									      	<td class="col-sm-4">
 												<table>
 													<tr>
@@ -265,11 +265,11 @@
 																	$carryOverAmount = $value->leave->carry_over_amount * 8 ?? 0;
 
 														            $year = date('Y');
-														            
+
 														            $daysTaken = \App\Models\AssignLeave::where('emp_id', $employeeID)->where('type_id', $leaveID)->where('dateyear', $year)->first();
 
 														            // $daysTaken = $this->getEmpAssignLeaveType($employeeID, $leaveID, $year);
-														            
+
 														            $leavetypes = \App\Models\LeaveType::findOrFail($leaveID);
 
 														            if (empty($daysTaken->hour)) {
@@ -305,7 +305,7 @@
 																		<svg width="20px" class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007bff" aria-hidden="true">
 																			<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clip-rule="evenodd"></path>
 																		</svg>
-																		{{$value->leave->name}} 
+																		{{$value->leave->name}}
 																	</label>
 																	<p class="collapse" id="unpaid{{$employee->id}}{{$key}}">
 																		<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings_unpaid][{{$key }}][leave_type_id_unpaid]">
@@ -317,17 +317,17 @@
 																		<br>
 																		Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) + $carryOverAmount : 0}}</b><br>
 
-																		Leave Balance | <b class="leave-balance-all-unpaids" id="balanceunpaid-{{$employee->id}}-{{$value->leave->id}}">{{$totaldayunpaid* 8}}</b>hrs<br><br>																
+																		Leave Balance | <b class="leave-balance-all-unpaids" id="balanceunpaid-{{$employee->id}}-{{$value->leave->id}}">{{$totaldayunpaid* 8}}</b>hrs<br><br>
 																	</p>
 																</p>
 															@endforeach
 														</td>
 													</tr>
 													</tr>
-												</table>	
+												</table>
 									      	</td>
-									    </tr>								
-									    @endforeach	    
+									    </tr>
+									    @endforeach
 									</tbody>
 								</table>
 								<div class="confirm-container">
@@ -378,7 +378,7 @@
 
 	function calculateOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary, leave_day_terms, leave_id, leave_balance, carry_over_amount) {
 		// console.log(obj.value, emp_id, pay_type, row_key, rate_per_hour, salary);
-		
+
 		let initial_enter_val = obj.value;
 
 		let final_balance = (leave_balance - initial_enter_val ) + Number(carry_over_amount);
@@ -387,7 +387,7 @@
 
 		let entered_leave_hrs = 0;
 
-		focusedRow.find(".leave-hrs").each(function() {	  		
+		focusedRow.find(".leave-hrs").each(function() {
 	  		if ($.isNumeric(this.value)) {
 	  			entered_leave_hrs += parseFloat(this.value);
 	  		}
@@ -402,7 +402,7 @@
 		}  else if (pay_type == 'weekly') {
 			paid_time_off = rate_per_hour *  hrs_inputted;
 		}  else if (pay_type == 'bi-weekly') {
-			paid_time_off = (((rate_per_hour * 26)/52)/40)*hrs_inputted;			
+			paid_time_off = (((rate_per_hour * 26)/52)/40)*hrs_inputted;
 		}  else if (pay_type == 'semi-monthly') {
 			paid_time_off = (((rate_per_hour * 24)/52)/40)*hrs_inputted;
 		}  else if (pay_type == 'monthly') {
@@ -416,8 +416,8 @@
 		focusedRow.find(`[id="paid-leave-balnce-${emp_id}-${leave_id}"]`).val(final_balance);
 
 		total_balance = 0;
-		focusedRow.find(".leave-balance-all").each(function() {	 
-		console.log(paid_time_off); 		
+		focusedRow.find(".leave-balance-all").each(function() {
+		console.log(paid_time_off);
 	  		if ($.isNumeric($(this).html())) {
 	  			total_balance += parseFloat($(this).html());
 	  		}
@@ -433,7 +433,7 @@
 	  		}
 	  	});
 
-	  	$(document).find('.total_amount_confirm').html(formatter.format(total_confimr_amt + Number(totalConfimrAmtStep1)));	  
+	  	$(document).find('.total_amount_confirm').html(formatter.format(total_confimr_amt + Number(totalConfimrAmtStep1)));
 	}
 
 	$("#approve-button").click(function(e) {
@@ -446,7 +446,7 @@
 		form.submit();
 	});
 
-	function calculateUnpaidOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary, leave_day_terms, leave_id, leave_balance, carry_ovr_amnt) {		
+	function calculateUnpaidOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary, leave_day_terms, leave_id, leave_balance, carry_ovr_amnt) {
 		let initial_enter_val = obj.value;
 		let final_balance = (leave_balance - initial_enter_val) + Number(carry_ovr_amnt);
 
@@ -454,7 +454,7 @@
 
 		// let entered_leave_hrs = 0;
 
-		// focusedRow.find(".leave-hrs-unpaid").each(function() {	  		
+		// focusedRow.find(".leave-hrs-unpaid").each(function() {
 	  	// 	if ($.isNumeric(this.value)) {
 	  	// 		entered_leave_hrs += parseFloat(this.value);
 	  	// 	}
@@ -469,7 +469,7 @@
 		// }  else if (pay_type == 'weekly') {
 		// 	paid_time_off = rate_per_hour *  hrs_inputted;
 		// }  else if (pay_type == 'bi-weekly') {
-		// 	paid_time_off = (((rate_per_hour * 26)/52)/40)*hrs_inputted;			
+		// 	paid_time_off = (((rate_per_hour * 26)/52)/40)*hrs_inputted;
 		// }  else if (pay_type == 'semi-monthly') {
 		// 	paid_time_off = (((rate_per_hour * 24)/52)/40)*hrs_inputted;
 		// }  else if (pay_type == 'monthly') {
@@ -534,7 +534,7 @@ $(document).ready(function(){
             });
         }
     });
-    
+
     $('.checkbox').on('click',function(){
         if($('.checkbox:checked').length == $('.checkbox').length){
             $('#select_all').prop('checked',true);
@@ -554,19 +554,19 @@ $(document).ready(function(){
 
 		function calc_total(obj) {
 			var focusedRow = obj.closest('tr');
-			
+
 			console.log(focusedRow);
-		  	
+
 		  	var sum = 0;
 		  	focusedRow.find(".payroll_date_cell").each(function(){
 		  		if ($.isNumeric(this.value)) {
 		  			sum += parseFloat(this.value);
 		  		}
 		  	});
-		  	
+
 		  	console.log(sum);
 
-		  	focusedRow.find('td.total').html(sum);	 
+		  	focusedRow.find('td.total').html(sum);
 		}
 	});
 </script>
@@ -625,7 +625,7 @@ $(document).ready(function(){
 			header: '<h3 class="league-name">Select Leaves</h3>',
 			suggestion: function (data) {
 				return `<div class="man-section">
-					<p>${data.full_name}</p>						
+					<p>${data.full_name}</p>
 				</div>`;
 			}
 		}
@@ -645,7 +645,7 @@ $(document).ready(function(){
             success: function (data) {
                 // alert('Record Saved Successfully.');
             }
-        });    
+        });
 	});
 </script>
 

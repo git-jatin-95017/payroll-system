@@ -90,18 +90,18 @@
 		@if (session('message'))
 			<div class="row">
 				<div class="col-md-12">
-					<div class="alert alert-success alert-dismissible">
+					<div class="alert alert-success alert-dismissible py-2 d-flex justify-content-between align-items-center px-3">
+						<p class="mb-0">{{ session('message') }}</p>
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						{{ session('message') }}
 					</div>
 				</div>
 			</div>
 		@elseif (session('error'))
 			<div class="row">
 				<div class="col-md-12">
-					<div class="alert alert-danger alert-dismissible">
+					<div class="alert alert-danger alert-dismissible py-2 d-flex justify-content-between align-items-center px-3">
+						<p class="mb-0">{{ session('error') }}</p>
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						{{ session('error') }}
 					</div>
 				</div>
 			</div>
