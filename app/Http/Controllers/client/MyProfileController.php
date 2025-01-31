@@ -111,7 +111,7 @@ class MyProfileController extends Controller
 			*/
 		}  else if ($data['update_request'] == 'changepwdown') {
 			$request->validate([
-				'old_password' => ['required'],
+				// 'old_password' => ['required'],
 				'password' => ['required', 'string', 'min:8', 'confirmed'],
 				'password_confirmation' => 'required_with:password',
 			], [], [

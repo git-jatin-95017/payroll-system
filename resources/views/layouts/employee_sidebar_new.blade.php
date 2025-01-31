@@ -24,7 +24,7 @@
 		<li>
 			<a href="{{ route('my.payslip') }}">
 				<x-heroicon-s-users class="w-20 h-20" />
-				<span>Payslip</span>
+				<span>Payslips</span>
 			</a>
 		</li>
 		<li>

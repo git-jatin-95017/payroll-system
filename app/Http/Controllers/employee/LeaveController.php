@@ -206,7 +206,7 @@ class LeaveController extends Controller
             echo $daysTaken['0']->day;
             echo $leavetypes->leave_day;*/
 		} else {
-			$leavetypes = LeaveType::where('status', 1)->get();		
+			$leavetypes = LeaveType::where('status', 1)->where('created_by', auth()->user()->id)->get();		
 	   		return view('employee.leaves.create', compact('leavetypes'));
 		}
 	}
@@ -238,7 +238,7 @@ class LeaveController extends Controller
         $type         = $data['type'];
         // $duration     = $this->input->post('duration');
 
-        if($type == 'Half Day') {
+        if($type == 'Hourly') {
             $duration = $hourAmount;
         } else if($type == 'Full Day') { 
             $duration = 8;
@@ -311,7 +311,7 @@ class LeaveController extends Controller
         $type         = $data['type'];
         // $duration     = $this->input->post('duration');
 
-        if($type == 'Half Day') {
+        if($type == 'Hourly') {
             $duration = $hourAmount;
         } else if($type == 'Full Day') { 
             $duration = 8;

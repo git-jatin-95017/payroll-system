@@ -95,7 +95,7 @@
 									<div class="form-group">
 										<label for="leave_subject" class="db-label">Leave Duration</label>
 										<div class="form-check form-check-inline custom-radio-btn">
-											<input name="type" type="radio" id="radio_1" data-value="Half" class="form-check-input duration" value="Half Day" checked>
+											<input name="type" type="radio" id="radio_1" data-value="Hourly" class="form-check-input duration" value="Hourly" checked>
 											<label class="form-check-label" for="inlineRadio1">Hourly</label>
 										</div>
 										<div class="form-check form-check-inline custom-radio-btn">
@@ -148,7 +148,7 @@
 							<div class="row" id="hourAmount">
 								<div class="col-8 mb-3">
 									<div class="form-group">
-										<label for="hourAmount" class="db-label">Length</label>
+										<label for="hourAmount" class="db-label">Duration</label>
 										<input id="hourAmount" type="text" id="hourAmountVal" class="form-control db-custom-input {{ $errors->has('hourAmount') ? ' is-invalid' : '' }}" name="hourAmount">
 
 										@if ($errors->has('hourAmount'))

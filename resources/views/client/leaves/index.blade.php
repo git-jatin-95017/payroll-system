@@ -54,7 +54,7 @@
 						<th>End Date</th>
 						<th>Message</th>
 						<th>Leave</th>
-						<th>Type</th>
+						<th>Duration</th>
 						<th>Status</th>
 						<th>Action</th>	
                     </tr>

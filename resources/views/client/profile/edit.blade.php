@@ -494,15 +494,17 @@
 												name="password_confirmation[]">
 										</div>
 									</div>
-									<div class="col-md-12 text-end">
-										<button type="button" id="addNewRow" class="btn btn-primary submit-btn">
-											Add New
-										</button>
-										<button type="submit" class="btn btn-primary submit-btn">Submit</button>
-									</div>
+									
 								</div>
 							</div>
+							<div class="col-md-12 text-end">
+								<button type="button" id="addNewRow" class="btn btn-primary submit-btn">
+									Add New
+								</button>
+								<button type="submit" class="btn btn-primary submit-btn">Submit</button>
+							</div>
 						</form>
+						
 					</div>
                 </div>
                 <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
@@ -520,7 +522,7 @@
 							<input type="hidden" name="update_request" value="changepwdown">
 							<div id="dynamicRowsContainer">
 								<div class="row">
-									<div class="col-6 mb-3">
+									<!-- <div class="col-6 mb-3">
 										<div class="form-group">
 											<label for="name" class="db-label">Current Password</label>
 											<div class="col-md-12">
@@ -532,7 +534,7 @@
 												@endif
 											</div>
 										</div>
-									</div>
+									</div> -->
 									<div class="col-6 mb-3">
 										<div class="form-group">
 											<label for="email" class="db-label">New Password</label>

@@ -97,7 +97,7 @@
 										<label for="leave_subject" class="db-label">Leave Duration</label>
 										
 										<div class="form-check form-check-inline custom-radio-btn">
-											<input name="type" type="radio" id="radio_1" data-value="Half" class="form-check-input duration" value="Half Day" @if($leave->leave_type =='Half Day') checked="" @endif>
+											<input name="type" type="radio" id="radio_1" data-value="Hourly" class="form-check-input duration" value="Hourly" @if($leave->leave_type =='Hourly') checked="" @endif>
 											<label class="form-check-label" for="inlineRadio1">Hourly</label>
 										</div>
 										<div class="form-check form-check-inline custom-radio-btn">

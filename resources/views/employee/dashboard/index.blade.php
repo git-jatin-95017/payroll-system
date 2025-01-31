@@ -36,7 +36,7 @@
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-dollar-circle class="w-24 h-24" />
                 </div>
-                <p>Payslip</p>
+                <p>Payslips</p>
             </a>
         </div>
         <div class="widget-container">

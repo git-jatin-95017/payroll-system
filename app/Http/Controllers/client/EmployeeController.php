@@ -248,7 +248,9 @@ class EmployeeController extends Controller
 			'bank_name' => $request->bank_name,
 			'bank_acc_number' => $request->bank_acc_number,
 			'ifsc_code' => $request->ifsc_code,
-			'pf_account_number' => $request->pf_account_number
+			'pf_account_number' => $request->pf_account_number,
+			'manager_position' => $request->manager_position,
+			'hire_date' => $request->hire_date,
 		];
 
 		if ($request->file('file')) {			
@@ -386,6 +388,8 @@ class EmployeeController extends Controller
 			'bank_acc_number' => $request->bank_acc_number,
 			'ifsc_code' => $request->ifsc_code,
 			'pf_account_number' => $request->pf_account_number,
+			'manager_position' => $request->manager_position,
+			'hire_date' => $request->hire_date,
 		];
 
 		if ($request->file('file')) {

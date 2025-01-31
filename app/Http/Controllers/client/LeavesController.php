@@ -306,7 +306,7 @@ class LeavesController extends Controller
         $type         = $data['type'];
         // $duration     = $this->input->post('duration');
 
-        if($type == 'Half Day') {
+        if($type == 'Hourly') {
             $duration = $hourAmount;
         } else if($type == 'Full Day') { 
             $duration = 8;
