@@ -1060,9 +1060,11 @@ a:hover {
     color: #595959;
     font-weight: 400;
 }
-
-.time-sheet-container .ts-custom-table tr td,
 .time-sheet-container .ts-custom-table tr th{
+    vertical-align: middle;
+}
+
+.time-sheet-container .ts-custom-table tr td{
     vertical-align: middle;
     border:1px solid #C2C2C2 !important;
 }
@@ -1095,8 +1097,25 @@ a:hover {
 }
 
 .time-sheet-container .ts-custom-table thead tr:first-child th {
-    background-color: #f3f3f3;
+    background-color: #3F51B5;
+    color: #ffff;
 }
+.time-sheet-container .ts-custom-table thead tr:nth-child(2) th:first-child{
+    border-left: 1px solid #C2C2C2;
+}
+
+.time-sheet-container .ts-custom-table thead tr:nth-child(2) th:last-child{
+    border-right: 1px solid #C2C2C2;
+}
+
+.time-sheet-container .ts-custom-table thead tr:nth-child(1) th:first-child{
+    border-left: 1px solid #3F51B5;
+}
+.time-sheet-container .ts-custom-table thead tr:nth-child(1) th:last-child{
+    border-right: 1px solid #3F51B5;
+}
+
+
 td.total {
     text-align: center;
     font-size: 12px;

@@ -148,7 +148,7 @@
 							?>
 							<div class="p-0">
 								<div class="table-responsive">
-									<table class="table table-bordered ts-custom-table border-0 responsive">
+									<table class="table  ts-custom-table border-0 responsive">
 										<thead>
 											<tr class="ts-date-row">
 												<th></th>
@@ -199,14 +199,14 @@
 										<tbody>
 											@foreach($employees as $k => $v)
 												<tr class="ts-data-row">
-												{{-- <th scope="row">{{ $k+1 }}</th> --}}
-												<th>
+												{{-- <td scope="row">{{ $k+1 }}</td> --}}
+												<td>
 													<div class="form-check mb-0">
 														<input class="form-check-input checkbox" name="check[{{$v->id}}]" type="checkbox" value="1" id="flexCheckDefault{{$k}}">
 														<label class="form-check-label" for="flexCheckDefault{{$k}}"></label>
 													</div>
 													<!-- <button class="approval_btn">Approval</button> -->
-												</th>
+												</td>
 												<td>
 													<div class="d-flex">
 														<div class="ts-img d-flex justify-content-center align-items-center">
@@ -244,7 +244,7 @@
 														$class = $result[$dateToday]['approval_status'] == 1 ? 'db-text-success' : null;
 													}
 												?>
-															<th scope="col">
+															<td scope="col">
 																<div id="the-basics">
 																<input type="text" name="dates[{{$v->id}}][{{ $dateToday }}]" class="form-control typeahead payroll_date_cell {{$class}}" placeholder="-"
 																data-date="{{ $dateToday }}"
@@ -253,7 +253,7 @@
 																data-inputid="payroll_input_{{$v->id}}"
 																data-id="{{$v->id}}" style="font-size: 12px !important;"
 																></div>
-															</th>
+														</td>
 													<?php
 															// $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
 														}
