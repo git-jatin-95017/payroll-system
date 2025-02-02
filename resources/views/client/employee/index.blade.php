@@ -142,52 +142,55 @@
 </div>
 
 <div class="modal fade db-custom-modal" id="ManageModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-          <div class="modal-header">
+    <div class="modal-dialog modal-dialog-centered modal-lg justify-content-center">
+      <div class="modal-content ">
+          <div class="modal-header p-4">
               <h1 class="modal-title" id="exampleModalToggleLabel">Add Pay Labels to Employee</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body px-4 py-2">
             <form method="post" role="form" data-toggle="validator" id="assign-payhead-form">
                 @csrf
                 <div class="row">
-                   <div class="col-12 mb-3">
+                   <div class="col-6 mb-3">
                       <div class="form-group">
                          <div class="d-flex mb-2 justify-content-between align-items-center">
-                             <label class="db-label" for="all_payheads">List of Pay Labels</label>
-                             <button type="button" id="selectHeads" class="btn btn-arrow-dwn">
-                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-20 h-20" stroke="currentColor">
-                                     <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                                 </svg>
+                             <label class="db-label" for="all_payheads">Labels List</label>
+                             <button type="button" id="selectHeads" class="btn btn-arrow-left">
+                                 Add
+                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                                </svg>
                              </button>
                          </div>
-                         <select style="min-height: 100px;" class="form-control db-custom-input" id="all_payheads" name="all_payheads[]" multiple size="10">
+                         <select style="min-height: 150px;" class="form-control db-custom-input px-2" id="all_payheads" name="all_payheads[]" multiple size="10">
                              @foreach($payheadList as $k => $v)
-                             <option value="{{$v->id}}" class="{{$v->pay_type=='earnings'?'text-success':'text-danger'}}">{{$v->name}}</option>
+                                <option value="{{$v->id}}" class="{{$v->pay_type=='earnings'?'text-success':'text-danger'}}">{{$v->name}}</option>
                              @endforeach
                          </select>
                       </div>
                    </div>
-                   <div class="col-12 mb-3">
+                   <div class="col-6 mb-3">
                      <div class="form-group">
                          <div class="d-flex mb-2 justify-content-between align-items-center">
-                             <label class="db-label" for="selected_payheads">Selected Pay Labels</label>
-                             <button type="button" id="removeHeads" class="btn btn-arrow-up">
-                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-20 h-20" stroke="currentColor">
-                                     <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+                             <label class="db-label" for="selected_payheads">Selected Labels</label>
+                             <button type="button" id="removeHeads" class="btn btn-arrow-right">
+                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
+                                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
                                  </svg>
+                                Remove
                              </button>
                          </div>
-                         <select style="min-height: 100px;" class="form-control db-custom-input" id="selected_payheads" name="selected_payheads[]" data-error="Pay Labels is required" multiple size="10" required></select>
+                         <select style="min-height: 150px;" class="form-control db-custom-input px-2" id="selected_payheads" name="selected_payheads[]" data-error="Pay Labels is required" multiple size="10" required></select>
                      </div>
                    </div>
                 </div>
              </form>
           </div>
-          <div class="px-3 pb-3">
+          <div class="px-3 pb-4 d-flex gap-3 justify-content-end">
+            <button  data-bs-dismiss="modal" aria-label="Close" class="btn submit-cencel">Cancel</button>
             <input type="hidden" name="empcode" id="empcode" />
-            <button type="submit" name="submit" class="btn btn-primary submit-btn w-100">Add Pay Labels to Employee</button>
+            <button type="submit" name="submit" class="btn btn-primary submit-btn w-auto">Add Pay Labels</button>
           </div>
       </div>
     </div>

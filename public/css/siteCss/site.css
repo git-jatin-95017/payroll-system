@@ -708,7 +708,7 @@ a:hover {
 }
 
 #payrollChart{
-    height: 285px !important;
+    height: 245px !important;
     width: 100% !important;
     border: 1px solid #E6EDFF;
     border-radius: 10px;
@@ -840,11 +840,29 @@ a:hover {
     border-color: #A0A0A0;
 }
 
+.db-custom-input option {
+    padding: 4px 7px;
+    border-radius: 6px;
+    margin-bottom: 4px;
+}
+
+.db-custom-input option:checked{
+    background-color: #ECECEC;
+}
 .max-w-md{
     max-width: 860px;
     width: 100%;
 }
-
+.submit-cencel, .submit-cencel:hover {
+    height: 44px;
+    border: 1px solid #CECECE;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6D6D6D;
+    padding-left: 16px;
+    padding-right: 16px;
+}
 .db-label{
     font-size: 14px;
     color: #252525;
@@ -989,29 +1007,39 @@ a:hover {
 .bg-success {
     background-color: #38b446 !important;
 }
-.btn-arrow-dwn, .btn-arrow-dwn:hover {
-    background-color: #d4ffd6;
-    border-color: #4CAF50;
-    color: #4CAF50;
-    width: 38px;
-    height: 38px;
-    padding: 0;
+.btn-arrow-left, .btn-arrow-left:hover {
+    background-color: #1FA333;
+    border-color: #1FA333;
+    color: #fff;
+    display: flex;
+    padding: 3px 10px;
     border-radius: 100em;
+    font-size: 12px;
+    gap: 5px;
+    font-weight: 500;
 }
 
-.btn-arrow-up, .btn-arrow-up:hover {
-    background-color: #ffdcd9;
-    border-color: #F44336;
-    color: #f44336;
-    width: 38px;
-    height: 38px;
-    padding: 0;
-    border-radius: 100em;
+.btn-arrow-left svg, .btn-arrow-right svg{
+    width: 16px;
 }
-
-.db-custom-modal .modal-header h1{
-    font-size: 18px;
-    color: #0D0B45;
+.btn-arrow-right, .btn-arrow-right:hover {
+    display: flex;
+    background-color: #DF0707;
+    border-color: #DF0707;
+    justify-content: center;
+    padding: 3px 10px;
+    flex: none;
+    border-radius: 100em;
+    align-items: center;
+    font-size: 12px;
+    gap: 5px;
+    font-weight: 500;
+    color: #fff;
+}
+.db-custom-modal .modal-header h1 {
+    font-size: 20px;
+    color: #252525;
+    font-weight: 700;
 }
 .employee-tabs.db-custom-tabs.db-custom-tabs-theme .nav-item .nav-link {
     color: #252525;
@@ -1158,6 +1186,15 @@ td.total {
     border-radius: 10px;
 }
 
+.db-custom-modal .modal-header{
+    border: none;
+}
+.db-custom-modal .modal-content {
+    max-width: 660px;
+    border-radius: 20px;
+    width: 100%;
+}
+
 @media only screen and (max-width: 992px) {
     #left-menu,
     #logo {
@@ -1177,23 +1214,25 @@ td.total {
 
 @media only screen and (min-width: 992px) {
     #left-menu li.has-sub::after {
-        font-family: "Ionicons";
-        content: "\f3d3";
+        background: url('/img/down-arrow.png') no-repeat center;
+        content: "";
         position: absolute;
-        top: 10px;
-        right: 10px;
+        top: 15px;
+        right: 15px;
         cursor: pointer;
         transform: rotate(0deg);
         -webkit-transition: all 0.3s ease;
         -o-transition: all 0.3s ease;
         transition: all 0.3s ease;
+        height: 17px;
+        width: 17px;
     }
 
-    #left-menu li.has-sub.rotate:after {
-        -webkit-transform: rotate(90deg);
-        -ms-transform: rotate(90deg);
-        -o-transform: rotate(90deg);
-        transform: rotate(90deg);
+    #left-menu li.has-sub.open:after {
+        -webkit-transform: rotate(-180deg);
+        -ms-transform: rotate(-180deg);
+        -o-transform: rotate(-180deg);
+        transform: rotate(-180deg);
     }
 
     .small-logo {
