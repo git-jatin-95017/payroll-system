@@ -1,16 +1,14 @@
 @extends('layouts.new_layout')
 
 @section('content')
-
-<div>
-	<div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
+<section>
+    <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 		<div>
-			<h3>Manage Clients</h3>
-			<p class="mb-0">Track and manage client profile here</p>
+			<!-- <h3>Profile</h3> -->
+			<!-- <p class="mb-0">Track and manage profile here</p> -->
 		</div>
-	</div>
-	<div class="container-fluid">
-		@if ($errors->any())
+    </div>
+	@if ($errors->any())
 		<div class="alert alert-danger">
 			<ul class="m-0">
 				@foreach ($errors->all() as $error)
@@ -38,56 +36,85 @@
 			</div>
 		</div>
 		@endif
-	</div>
-	<div class="bg-white white-container py-4 continer-h-full">
-		<ul class="nav nav-tabs nav-pills px-4 db-custom-tabs gap-4" id="myTab" role="tablist">
-			<li class="nav-item" role="presentation">
-				<button class="nav-link active" id="company-tab" data-bs-toggle="tab" data-bs-target="#company"
-					type="button" role="tab" aria-controls="company" aria-selected="true">Company Information</button>
-			</li>
-			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button"
-					role="tab" aria-controls="payment" aria-selected="false">Payment Method</button>
-			</li>
-			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button"
-					role="tab" aria-controls="admin" aria-selected="false">Administrators</button>
-			</li>
-			<!-- <li class="nav-item" role="presentation">
-				<button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password" type="button"
-					role="tab" aria-controls="password" aria-selected="false">Password</button>
-			</li> -->
-		</ul>
-		<div class="tab-content px-4 pt-4" id="myTabContent">
-			<div class="tab-pane fade show active" id="company" role="tabpanel" aria-labelledby="company-tab">
-				<div class="max-w-md max-auto">
-					<div class="sub-text-heading pb-4">
-						<h3 class="mb-1">Company Information</h3>
-						<p>Type your client information here</p>
-					</div>
-					<form class="form-horizontal" method="POST" action="{{ route('client.store') }}" enctype="multipart/form-data">
-						@csrf
-				
+    <div class="bg-cover-container d-flex gap-5 px-4 pb-3 mb-5">
+        <div class="emp-proifle-picture">
+			
+				<img id="tb-image" src="{{ asset('img/no_img.jpg') }}"  alt="Uploaded Image" width="225"  height="225" style="object-fit:contain !important;" alt="profile" />
+		</div>
+        <div>
+            <div class="d-flex flex-column justify-content-between h-100">
+                <div class="profile-name-container pt-5">
+                    <h3>{{ ucwords(auth()->user()->name) }}</h3>
+                    <!-- <p class="mt-4"></p> -->
+                </div>
+                <div>
+                    <ul class="nav nav-tabs nav-pills db-custom-tabs gap-5 employee-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="company-tab" data-bs-toggle="tab" data-bs-target="#company"
+                                type="button" role="tab" aria-controls="company" aria-selected="true">Company</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button"
+                                role="tab" aria-controls="payment" aria-selected="false">Payment</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button"
+                                role="tab" aria-controls="admin" aria-selected="false">Administrators</button>
+                        </li>
+                        <!-- <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password" type="button"
+                                role="tab" aria-controls="password" aria-selected="false">Password</button>
+                        </li> -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex gap-4">
+        <div class="employee-profile-left">
+            <div class="bg-white p-4 border-radius-15">
+                <ul class="mb-0 p-0 d-flex align-items-center gap-3 employee-social-media">
+                    <li>
+                        <a href="#">
+                            <x-bxl-facebook-square class="w-24 h-24" />
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <x-bxl-linkedin-square class="w-24 h-24" />
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <svg width="22" height="22" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_353_4505)">
+                                    <path d="M15.7508 0.960938H18.8175L12.1175 8.61927L20 19.0384H13.8283L8.995 12.7184L3.46333 19.0384H0.395L7.56167 10.8468L0 0.961771H6.32833L10.6975 6.73844L15.7508 0.960938ZM14.675 17.2034H16.3742L5.405 2.7001H3.58167L14.675 17.2034Z" fill="#454E97"/>
+                                </g>
+                                <defs>
+                                <clipPath id="clip0_353_4505">
+                                    <rect width="22" height="22" fill="white"/>
+                                </clipPath>
+                                </defs>
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="bg-white w-100 border-radius-15 p-4">
+			<form class="form-horizontal" method="POST" action="{{ route('client.store') }}" enctype="multipart/form-data">
+			@csrf
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="company" role="tabpanel" aria-labelledby="company-tab">
+                    <div class="max-w-md max-auto">
+                        <div class="sub-text-heading pb-4">
+                            <h3 class="mb-1">Company Information</h3>
+                            <!-- <p>Type your information</p> -->
+                        </div>
 						<div class="row">
 							<div class="col-12 mb-3">
 								<div class="tb-container d-flex gap-4 align-items-center">
-									<div class="tb-img-view">
-										<!-- Default SVG Avatar -->
-										
-										<img id="tb-image" src="" style="display:none;" alt="Uploaded Image" />
-
-										<svg id="tb-avatar" class="w-64 h-64" xmlns="http://www.w3.org/2000/svg"
-											viewBox="0 0 32 32" fill="currentColor">
-											<path id="_inner-path_" data-name="<inner-path>" class="cls-1"
-												d="M8.0071,24.93A4.9958,4.9958,0,0,1,13,20h6a4.9959,4.9959,0,0,1,4.9929,4.93,11.94,11.94,0,0,1-15.9858,0ZM20.5,12.5A4.5,4.5,0,1,1,16,8,4.5,4.5,0,0,1,20.5,12.5Z"
-												style="fill: none"></path>
-											<path
-												d="M26.7489,24.93A13.9893,13.9893,0,1,0,2,16a13.899,13.899,0,0,0,3.2511,8.93l-.02.0166c.07.0845.15.1567.2222.2392.09.1036.1864.2.28.3008.28.3033.5674.5952.87.87.0915.0831.1864.1612.28.2417.32.2759.6484.5372.99.7813.0441.0312.0832.0693.1276.1006v-.0127a13.9011,13.9011,0,0,0,16,0V27.48c.0444-.0313.0835-.0694.1276-.1006.3412-.2441.67-.5054.99-.7813.0936-.08.1885-.1586.28-.2417.3025-.2749.59-.5668.87-.87.0933-.1006.1894-.1972.28-.3008.0719-.0825.1522-.1547.2222-.2392ZM16,8a4.5,4.5,0,1,1-4.5,4.5A4.5,4.5,0,0,1,16,8ZM8.0071,24.93A4.9957,4.9957,0,0,1,13,20h6a4.9958,4.9958,0,0,1,4.9929,4.93,11.94,11.94,0,0,1-15.9858,0Z">
-											</path>
-											<rect id="_Transparent_Rectangle_" data-name="<Transparent Rectangle>"
-												class="cls-1" width="32" height="32" style="fill: none"></rect>
-										</svg>
-									</div>
+									
 									<label for="tb-file-upload">
 										Upload Image
 										<x-bx-upload class="w-20 g-20 ms-1"></x-bx-upload>
@@ -247,14 +274,16 @@
 								<button type="submit" class="btn btn-primary submit-btn">Submit</button>
 							</div>
 						</div>
-				</div>
-			</div>
-			<div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
-				<div class="max-w-md max-auto">
-					<div class="sub-text-heading pb-4">
-						<h3 class="mb-1">Payment Method</h3>
-						<p>Add your payment method here</p>
-					</div>
+						
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+					<div class="max-w-md max-auto">
+						<div class="sub-text-heading pb-4">
+							<h3 class="mb-1">Payment Information</h3>
+							<!-- <p>Type your employee details here</p> -->
+						</div>
+
 						<div class="row">
 							<div class="col-8 mb-3">
 								<div class="form-group">
@@ -356,17 +385,13 @@
 								<button type="submit" class="btn btn-primary submit-btn">Submit</button>
 							</div>
 						</div>
-				</div>
-			</div>
-			<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
-				<div class="max-w-md max-auto">
-					<div class="sub-text-heading pb-4 d-flex justify-content-between">
-						<div>
-							<h3 class="mb-1">Administrators</h3>
-							<p>Change administrators password here</p>
-						</div>
 					</div>
-	
+                </div>
+                <div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
+					<div class="max-w-md max-auto">
+						<div class="sub-text-heading pb-4">
+							<h3 class="mb-1">Administrators</h3>
+						</div>
 						<div id="dynamicRowsContainer">
 							<div class="row">
 								<div class="col-6 mb-3">
@@ -420,20 +445,32 @@
 											name="password_confirmation[]">
 									</div>
 								</div>
-								<div class="col-md-12 text-end">
-									<button type="button" id="addNewRow" class="btn btn-primary submit-btn">
-										Add New
-									</button>
-									<button type="submit" class="btn btn-primary submit-btn">Submit</button>
-								</div>
+								
 							</div>
 						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+						<div class="col-md-12 text-end">
+							<button type="button" id="addNewRow" class="btn btn-primary submit-btn">
+								Add New
+							</button>
+							<button type="submit" class="btn btn-primary submit-btn">Submit</button>
+						</div>
+					</div>
+                </div>
+                <!-- <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
+					<div class="max-w-md max-auto">
+						<div class="sub-text-heading pb-4 d-flex justify-content-between">
+							<div>
+								<h3 class="mb-1">Password</h3>
+							</div>
+						</div>
+					</div>
+                </div> -->
+
+            </div>
+			</form>
+        </div>
+    </div>
+</section>
 @endsection
 @push('page_scripts')
 <script>

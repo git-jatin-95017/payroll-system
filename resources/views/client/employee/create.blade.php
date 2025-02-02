@@ -352,6 +352,18 @@
 										</span>
 									@endif
 								</div>
+
+								<div class="col-6 mb-3">
+									<div class="form-group">
+										<label class="db-label" for="name">Hire Date</label>
+										<input id="hire_date" type="date" class="form-control db-custom-input {{ $errors->has('hire_date') ? ' is-invalid' : '' }}" name="hire_date">
+										@if ($errors->has('hire_date'))
+											<span class="text-danger">
+												{{ $errors->first('hire_date') }}
+											</span>
+										@endif
+									</div>
+								</div>
 								
 								<div class="col-12 text-end">
 									<button type="submit" class="btn btn-primary submit-btn">Submit</button>
@@ -468,6 +480,17 @@
 										<span class="text-danger">
 											{{ $errors->first('pay_rate') }}
 										</span>
+										@endif
+									</div>
+								</div>
+								<div class="col-4 mb-3">
+									<div class="form-group">
+										<label class="db-label" for="name">Manager Position</label>
+										<input id="manager_position" type="text" class="form-control db-custom-input {{ $errors->has('manager_position') ? ' is-invalid' : '' }}" name="manager_position" >
+										@if ($errors->has('	'))
+											<span class="text-danger">
+												{{ $errors->first('manager_position') }}
+											</span>
 										@endif
 									</div>
 								</div>

@@ -177,6 +177,7 @@ class ClientController extends Controller
 
 		//Logo
 		if ($request->file('logo')) {
+			dd($request->all);
 			$oldLogo = $user->companyProfile->logo;
 			if (\File::exists(public_path('files/'.$oldLogo))) {
 				\File::delete(public_path('files/'.$oldLogo));
@@ -457,9 +458,11 @@ class ClientController extends Controller
 
 			//Logo
 			if ($request->file('logo')) {
-				$oldLogo = $company->companyProfile->logo;
-				if (\File::exists(public_path('files/'.$oldLogo))) {
-					\File::delete(public_path('files/'.$oldLogo));
+				if (!empty($company->companyProfile->logo)) {
+					$oldLogo = $company->companyProfile->logo;
+					if (\File::exists(public_path('files/'.$oldLogo))) {
+						\File::delete(public_path('files/'.$oldLogo));
+					}
 				}
 
 				$file2 = $request->file('logo');

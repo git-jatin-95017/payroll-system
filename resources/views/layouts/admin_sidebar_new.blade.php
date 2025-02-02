@@ -11,7 +11,7 @@
 		</li>
 		<li>
 			<a href="{{ route('settings.create', auth()->user()->id) }}">
-				<x-heroicon-s-users class="w-20 h-20" />
+				<x-bxs-wrench class="w-20 h-20" />
 				<span>Calculations</span>
 			</a>
 		</li>

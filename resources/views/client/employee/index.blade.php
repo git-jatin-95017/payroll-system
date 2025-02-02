@@ -145,7 +145,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg justify-content-center">
       <div class="modal-content ">
           <div class="modal-header p-4">
-              <h1 class="modal-title" id="exampleModalToggleLabel">Add Pay Labels to Employee</h1>
+              <h1 class="modal-title" id="exampleModalToggleLabel">Add Pay Labels to Employees</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body px-4 py-2">
@@ -155,7 +155,7 @@
                    <div class="col-6 mb-3">
                       <div class="form-group">
                          <div class="d-flex mb-2 justify-content-between align-items-center">
-                             <label class="db-label" for="all_payheads">Labels List</label>
+                             <label class="db-label" for="all_payheads"></label>
                              <button type="button" id="selectHeads" class="btn btn-arrow-left">
                                  Add
                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
@@ -173,7 +173,7 @@
                    <div class="col-6 mb-3">
                      <div class="form-group">
                          <div class="d-flex mb-2 justify-content-between align-items-center">
-                             <label class="db-label" for="selected_payheads">Selected Labels</label>
+                             <label class="db-label" for="selected_payheads"></label>
                              <button type="button" id="removeHeads" class="btn btn-arrow-right">
                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
                                      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
@@ -202,7 +202,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
         <div class="modal-header">
-            <h1 class="modal-title" id="exampleModalToggleLabel">Add Leave Policy to Employee</h1>
+            <h1 class="modal-title" id="exampleModalToggleLabel">Add Leave Policy to Employees</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -212,7 +212,7 @@
                     <div class="col-12 mb-3">
                         <div class="form-group">
                            <div class="d-flex mb-2 justify-content-between align-items-center">
-                                <label class="db-label" for="all_leave_policies">List of Leave Policies</label>
+                                <label class="db-label" for="all_leave_policies"></label>
                                 <button type="button" id="selectHeadsLeavePolicy" class="btn btn-arrow-dwn">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-20 h-20" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -229,7 +229,7 @@
                     <div class="col-12">
                         <div class="form-group">
                             <div class="d-flex mb-2 justify-content-between align-items-center">
-                                <label class="db-label" for="selected_leave_policies">Selected Leave Policy</label>
+                                <label class="db-label" for="selected_leave_policies"></label>
                                 <button type="button" id="removeHeadsLeavePolicy" class="btn btn-arrow-up">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-20 h-20" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
