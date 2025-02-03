@@ -342,7 +342,7 @@
 								</div>
 							</div>
 							<div class="row">
-								
+
 								<div class="col-6 mb-3">
 									<div class="form-group
 										@if(empty($company->paymentProfile->account_type)) d-none @endif" id="account_type_div">
@@ -380,7 +380,7 @@
 										@endif
 									</div>
 								</div>
-								
+
 								<div class="col-6 mb-3">
 									<div class="form-group">
 										<label class="db-label" for="bank_name">Bank Name</label>
@@ -494,7 +494,7 @@
 												name="password_confirmation[]">
 										</div>
 									</div>
-									
+
 								</div>
 							</div>
 							<div class="col-md-12 text-end">
@@ -504,7 +504,7 @@
 								<button type="submit" class="btn btn-primary submit-btn">Submit</button>
 							</div>
 						</form>
-						
+
 					</div>
                 </div>
                 <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">

@@ -8,6 +8,7 @@
         "php": "^8.0.2",
         "barryvdh/laravel-snappy": "^1.0",
         "blade-ui-kit/blade-heroicons": "^2.5",
+        "davidhsianturi/blade-bootstrap-icons": "^1.5",
         "guzzlehttp/guzzle": "^7.2",
         "h4cc/wkhtmltopdf-amd64": "0.12.x",
         "laravel/framework": "^9.19",

@@ -1041,6 +1041,14 @@ a:hover {
     color: #252525;
     font-weight: 700;
 }
+
+.db-custom-modal .modal-header p{
+    font-size: 14px;
+    color: #6D6D6D;
+    margin-bottom: 0;
+    font-weight: 400;
+}
+
 .employee-tabs.db-custom-tabs.db-custom-tabs-theme .nav-item .nav-link {
     color: #252525;
     font-weight: 500;
@@ -1193,6 +1201,27 @@ td.total {
     max-width: 660px;
     border-radius: 20px;
     width: 100%;
+}
+
+/* width */
+.db-custom-input::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Track */
+.db-custom-input::-webkit-scrollbar-track {
+background: #f1f1f1;
+}
+
+/* Handle */
+.db-custom-input::-webkit-scrollbar-thumb {
+background: #adadad;
+border-radius: 8px;
+}
+
+/* Handle on hover */
+.db-custom-input::-webkit-scrollbar-thumb:hover {
+background: #6b6b6b;
 }
 
 @media only screen and (max-width: 992px) {

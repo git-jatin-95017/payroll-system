@@ -364,7 +364,7 @@
 										@endif
 									</div>
 								</div>
-								
+
 								<div class="col-12 text-end">
 									<button type="submit" class="btn btn-primary submit-btn">Submit</button>
 								</div>
@@ -443,7 +443,7 @@
 											<option selected value disabled>Please Select</option>
 											<option value="part-time">Part Time</option>
 											<option value="full-time">Full Time</option>
-										</select>									
+										</select>
 										@if ($errors->has('emp_type'))
 											<span class="text-danger">
 												{{ $errors->first('emp_type') }}
@@ -464,7 +464,7 @@
 											<option value="weekly">Weekly</option>
 											<option value="monthly">Monthly</option>
 											<option value="yearly">Yearly</option>
-										</select>										
+										</select>
 										@if ($errors->has('pay_type'))
 										<span class="text-danger">
 											{{ $errors->first('pay_type') }}
@@ -532,7 +532,7 @@
 											</span>
 										@endif
 									</div>
-								</div>									
+								</div>
 								<div class="col-4 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="account_number_div">
 									<label for="account_number" class="db-label">Account Number</label>
 									<div class="form-group mb-0">
@@ -545,7 +545,7 @@
 									</div>
 								</div>
 							</div>
-							
+
 							<div class="row">
 								<div class="row mb-3 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="account_type_div">
 									<div class="col-md-4 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="bank_div">
@@ -592,7 +592,7 @@
 								<p>Change password here</p>
 							</div>
 						</div>
-		
+
 							<div id="dynamicRowsContainer">
 								<div class="row">
 									<div class="col-6 mb-3">
@@ -623,7 +623,7 @@
 										<div class="form-group">
 											<label for="password" class="db-label">Confirm Password</label>
 											<input id="password-confirm" type="password" class="form-control" name="password_confirmation">
-											
+
 											@if ($errors->has('password_confirmation'))
 											<span class="text-danger">
 												{{ $errors->first('password_confirmation') }}

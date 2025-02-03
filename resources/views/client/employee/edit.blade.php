@@ -41,7 +41,7 @@
 				<img id="tb-image" src="/files/{{$employee->employeeProfile->file}}" width="225"  height="225" style="object-fit:contain !important;" alt="profile" />
 			@else
 				<img id="tb-image" src="{{asset('img/no_img.jpg')}}" width="225"  height="225" style="object-fit:contain !important;" alt="profile" />
-			@endif        
+			@endif
 		</div>
         <div>
             <div class="d-flex flex-column justify-content-between h-100">
@@ -74,19 +74,19 @@
     </div>
     <div class="d-flex gap-4">
         <div class="employee-profile-left">
-            <div class="bg-white p-4 border-radius-15">
+            <div class="bg-white py-4 px-3 border-radius-15">
 				<div class="d-flex gap-2 employee-info align-items-center mb-3">
                     <div>
-                        <x-heroicon-o-envelope class="w-20 h-20" />
+						<x-bx-phone class="w-20 h-20" />
                     </div>
                     <div>
                         <p class="mb-0">{{ $employee->phone_number }}</p>
                     </div>
                 </div>
-                
+
 				<div class="d-flex gap-2 employee-info align-items-center mb-3">
                     <div>
-                        <x-heroicon-o-envelope class="w-20 h-20" />
+						<x-bx-envelope class="w-20 h-20" />
                     </div>
                     <div>
                         <p class="mb-0">{{ $employee->email }}</p>
@@ -95,7 +95,7 @@
 
 				<div class="d-flex gap-2 employee-info align-items-center mb-2">
                     <div>
-                        <x-heroicon-o-map-pin class="w-20 h-20" />
+                        <x-bx-map class="w-20 h-20" />
                     </div>
                     <div>
                         <p class="mb-0">{{$employee->employeeProfile->address}}</p>
@@ -104,7 +104,7 @@
 
 				<div class="d-flex gap-2 employee-info align-items-center mb-2">
                     <div>
-                        <x-heroicon-o-map-pin class="w-20 h-20" />
+						<x-bx-briefcase-alt class="w-20 h-20" />
                     </div>
                     <div>
                         <p class="mb-0">{{$employee->employeeProfile->designation}}</p>
@@ -113,7 +113,7 @@
 
 				<div class="d-flex gap-2 employee-info align-items-center mb-2">
                     <div>
-                        <x-heroicon-o-map-pin class="w-20 h-20" />
+                        <x-bx-building class="w-20 h-20" />
                     </div>
                     <div>
                         <p class="mb-0">{{$employee->employeeProfile->department}}</p>
@@ -122,7 +122,7 @@
 
 				<div class="d-flex gap-2 employee-info align-items-center mb-2">
                     <div>
-                        <x-heroicon-o-map-pin class="w-20 h-20" />
+                        <x-bx-dock-left class="w-20 h-20" />
                     </div>
                     <div>
                         <p class="mb-0">{{ ucwords($employee->employeeProfile->emp_type) }}</p>
@@ -131,17 +131,15 @@
 
 				<div class="d-flex gap-2 employee-info align-items-center mb-2">
                     <div>
-                        <x-heroicon-o-map-pin class="w-20 h-20" />
+                        <x-bx-calendar class="w-20 h-20" />
                     </div>
                     <div>
                         <p class="mb-0">{{ ucwords($employee->employeeProfile->hire_date) }}</p>
                     </div>
                 </div>
-
-
 				<div class="d-flex gap-2 employee-info align-items-center mb-2">
                     <div>
-                        <x-heroicon-o-map-pin class="w-20 h-20" />
+                        <x-bx-user class="w-20 h-20" />
                     </div>
                     <div>
                         <p class="mb-0">{{ ucwords($employee->employeeProfile->manager) }}</p>
@@ -150,7 +148,7 @@
 
 				<div class="d-flex gap-2 employee-info align-items-center mb-2">
                     <div>
-                        <x-heroicon-o-map-pin class="w-20 h-20" />
+                        <x-bx-user-pin class="w-20 h-20" />
                     </div>
                     <div>
                         <p class="mb-0">{{ ucwords($employee->employeeProfile->manager_position) }}</p>
@@ -268,7 +266,7 @@
 								<div class="col-6 mb-3">
 									<div class="form-group">
 										<label class="db-label"  for="name">Marital Status</label>
-										<select class="form-control db-custom-input" id="marital_status" name="marital_status" @if($disabledDrop) style="pointer-events: none;" @endif>
+										<select class="form-control db-custom-input select-drop-down-arrow" id="marital_status" name="marital_status" @if($disabledDrop) style="pointer-events: none;" @endif>
 											<option selected value disabled>Please Select</option>
 											<option @if($employee->employeeProfile->marital_status == "single") selected @endif value="single">Single</option>
 											<option @if($employee->employeeProfile->marital_status == "married") selected @endif value="married">Married</option>
@@ -356,7 +354,7 @@
 								<div class="col-6 mb-3">
 									<div class="form-group">
 										<label class="db-label" for="name">Identity Document</label>
-										<select class="form-control db-custom-input {{ $errors->has('identity_document') ? ' is-invalid' : '' }}" id="identity_document" name="identity_document" @if($disabledDrop) style="pointer-events: none;" @endif>
+										<select class="form-control db-custom-input select-drop-down-arrow {{ $errors->has('identity_document') ? ' is-invalid' : '' }}" id="identity_document" name="identity_document" @if($disabledDrop) style="pointer-events: none;" @endif>
 											<option selected value disabled>Please Select</option>
 											<option @if($employee->employeeProfile->identity_document == "Voter Id") selected @endif value="Voter Id">Voter Id</option>
 											<option @if($employee->employeeProfile->identity_document == "Aadhar Card") selected @endif value="Aadhar Card">Aadhar Card</option>
@@ -385,7 +383,7 @@
 
 								<div class="col-6 mb-3">
 										<label for="name" class="db-label">Employee Status</label>
-										<select class="form-control db-custom-input" id="status" name="status">
+										<select class="form-control db-custom-input select-drop-down-arrow" id="status" name="status">
 											<option selected value disabled>Please Select</option>
 											<option value="1" @if($employee->status == "1") selected @endif >Active</option>
 											<option value="0" @if($employee->status == "0") selected @endif>Inactive</option>
@@ -398,7 +396,7 @@
 									</div>
 									<div class="col-6 mb-3">
 										<label for="name" class="db-label">Profile Lock?</label>
-										<select class="form-control db-custom-input" id="is_proifle_edit_access" name="is_proifle_edit_access">
+										<select class="form-control db-custom-input select-drop-down-arrow" id="is_proifle_edit_access" name="is_proifle_edit_access">
 											<option value="0" @if($employee->is_proifle_edit_access == "0") selected @endif >No</option>
 											<option value="1" @if($employee->is_proifle_edit_access == "1") selected @endif >Yes</option>
 										</select>
@@ -420,7 +418,7 @@
 											@endif
 										</div>
 									</div>
-									
+
 									<div class="col-12 text-end">
 										<button type="submit" class="btn btn-primary submit-btn">Submit</button>
 									</div>
@@ -433,197 +431,180 @@
 							<h3 class="mb-1">Employee Details</h3>
 							<p>Type your employee details here</p>
 						</div>
-								
-							<div class="row">
-								<div class="col-4 mb-3">
-									<div class="form-group">
-										<label class="db-label"  for="name">Start Date</label>
-										<input id="doj" type="date" class="form-control db-custom-input {{ $errors->has('doj') ? ' is-invalid' : '' }}" name="doj" value="{{ $employee->employeeProfile->doj }}" {{$disabled}}>
-										@if ($errors->has('doj'))
-											<span class="text-danger">
-												{{ $errors->first('doj') }}
-											</span>
-										@endif
-									</div>
-								</div>
-								<div class="col-4 mb-3">
-									<div class="form-group">
-										<label class="db-label"  for="name">Position</label>
-										<input id="designation" type="text" class="form-control db-custom-input {{ $errors->has('designation') ? ' is-invalid' : '' }}" name="designation" value="{{ $employee->employeeProfile->designation }}" {{$disabled}}>
-										@if ($errors->has('designation'))
-											<span class="text-danger">
-												{{ $errors->first('designation') }}
-											</span>
-										@endif
-									</div>
-								</div>
-								<div class="col-4 mb-3">
-									<div class="form-group">
-										<label class="db-label"  for="name">Department</label>
-										<input id="department" type="text" class="form-control db-custom-input {{ $errors->has('department') ? ' is-invalid' : '' }}" name="department" value="{{ $employee->employeeProfile->department }}" {{$disabled}}>
-										@if ($errors->has('department'))
-											<span class="text-danger">
-												{{ $errors->first('department') }}
-											</span>
-										@endif
+						<div class="row">
+							<div class="col-12  mb-3">
+								<div class="row">
+									<div class="col-5">
+										<div class="form-group">
+											<label class="db-label"  for="name">Start Date</label>
+											<input id="doj" type="date" class="form-control db-custom-input {{ $errors->has('doj') ? ' is-invalid' : '' }}" name="doj" value="{{ $employee->employeeProfile->doj }}" {{$disabled}}>
+											@if ($errors->has('doj'))
+												<span class="text-danger">
+													{{ $errors->first('doj') }}
+												</span>
+											@endif
+										</div>
 									</div>
 								</div>
 							</div>
-
-							<div class="row">
-								<div class="col-4 mb-3">
-									<div class="form-group">
-										<label class="db-label"  for="name">Social Security Number</label>
-										<input id="pan_number" type="text" class="form-control db-custom-input {{ $errors->has('pan_number') ? ' is-invalid' : '' }}" name="pan_number" value="{{ $employee->employeeProfile->pan_number }}" {{$disabled}}>
-										@if ($errors->has('pan_number'))
-											<span class="text-danger">
-												{{ $errors->first('pan_number') }}
-											</span>
-										@endif
-									</div>
-								</div>
-								<div class="col-4 mb-3">
-									<div class="form-group">
-										<label class="db-label"  for="name">Medical Benefits Number</label>
-										<input id="ifsc_code" type="text" class="form-control db-custom-input {{ $errors->has('ifsc_code') ? ' is-invalid' : '' }}" name="ifsc_code" value="{{ $employee->employeeProfile->ifsc_code }}" {{$disabled}}>
-										@if ($errors->has('ifsc_code'))
-											<span class="text-danger">
-												{{ $errors->first('ifsc_code') }}
-											</span>
-										@endif
-									</div>
-								</div>
-								<div class="col-4 mb-3">
-									<div class="form-group">
-										<label class="db-label"  for="name">Employee Type</label>
-										<select class="form-control db-custom-input {{ $errors->has('emp_type') ? ' is-invalid' : '' }}" id="emp_type" name="emp_type" @if($disabledDrop) style="pointer-events: none;" @endif>
-											<option selected value disabled>Please Select</option>
-											<option @if($employee->employeeProfile->emp_type == "part-time") selected @endif value="part-time">Part Time</option>
-											<option @if($employee->employeeProfile->emp_type == "full-time") selected @endif value="full-time">Full Time</option>
-										</select>									
-										@if ($errors->has('emp_type'))
-											<span class="text-danger">
-												{{ $errors->first('emp_type') }}
-											</span>
-										@endif
-									</div>
+							<div class="col-6 mb-3">
+								<div class="form-group">
+									<label class="db-label"  for="name">Position</label>
+									<input id="designation" type="text" class="form-control db-custom-input {{ $errors->has('designation') ? ' is-invalid' : '' }}" name="designation" value="{{ $employee->employeeProfile->designation }}" {{$disabled}}>
+									@if ($errors->has('designation'))
+										<span class="text-danger">
+											{{ $errors->first('designation') }}
+										</span>
+									@endif
 								</div>
 							</div>
-
-							<div class="row">
-								<div class="col-4 mb-3">
-									<div class="form-group">
-										<label class="db-label" for="name">Pay Type</label>
-										<select class="form-control db-custom-input {{ $errors->has('pay_type') ? ' is-invalid' : '' }}" id="pay_type" name="pay_type" @if($disabledDrop) style="pointer-events: none;" @endif>
-											<option selected value disabled>Please Select</option>
-											<option @if($employee->employeeProfile->pay_type == "hourly") selected @endif value="hourly">Hourly</option>
-											<option @if($employee->employeeProfile->pay_type == "daily") selected @endif value="daily">Daily</option>
-											<option @if($employee->employeeProfile->pay_type == "weekly") selected @endif value="weekly">Weekly</option>
-											<option @if($employee->employeeProfile->pay_type == "monthly") selected @endif value="monthly">Monthly</option>
-											<option @if($employee->employeeProfile->pay_type == "yearly") selected @endif value="yearly">Yearly</option>
-										</select>										
-										@if ($errors->has('pay_type'))
+							<div class="col-6 mb-3">
+								<div class="form-group">
+									<label class="db-label"  for="name">Department</label>
+									<input id="department" type="text" class="form-control db-custom-input {{ $errors->has('department') ? ' is-invalid' : '' }}" name="department" value="{{ $employee->employeeProfile->department }}" {{$disabled}}>
+									@if ($errors->has('department'))
 										<span class="text-danger">
-											{{ $errors->first('pay_type') }}
+											{{ $errors->first('department') }}
 										</span>
-										@endif
-									</div>
-								</div>
-								<div class="col-4 mb-3">
-									<div class="form-group">
-										<label class="db-label" for="name">Amount</label>
-										<input id="pay_rate" type="number" class="form-control db-custom-input {{ $errors->has('pay_rate') ? ' is-invalid' : '' }}" name="pay_rate" value="{{ $employee->employeeProfile->pay_rate }}" {{$disabled}}>
-										@if ($errors->has('pay_rate'))
-										<span class="text-danger">
-											{{ $errors->first('pay_rate') }}
-										</span>
-										@endif
-									</div>
-								</div>
-								<div class="col-4 mb-3">
-									<div class="form-group">
-										<label class="db-label" for="name">Manager Position</label>
-										<input id="manager_position" type="text" class="form-control db-custom-input {{ $errors->has('manager_position') ? ' is-invalid' : '' }}" name="manager_position" value="{{ $employee->employeeProfile->manager_position }}" {{$disabled}}>
-										@if ($errors->has('	'))
-											<span class="text-danger">
-												{{ $errors->first('manager_position') }}
-											</span>
-										@endif
-									</div>
-								</div>
-								<!-- <div class="col-6 mb-3">
-									<div class="form-group">
-										<label class="db-label" for="name">Rate</label>
-										<select class="form-control db-custom-input  {{ $errors->has('rate') ? ' is-invalid' : '' }}" id="rate" name="rate" @if($disabledDrop) style="pointer-events: none;" @endif>
-											<option selected value disabled>Please Select</option>
-											<option @if($employee->employeeProfile->rate == "hourly") selected @endif value="hourly">Hourly</option>
-											<option @if($employee->employeeProfile->rate == "daily") selected @endif value="daily">Daily</option>
-											<option @if($employee->employeeProfile->rate == "weekly") selected @endif value="weekly">Weekly</option>
-											<option @if($employee->employeeProfile->rate == "monthly") selected @endif value="monthly">Monthly</option>
-											<option @if($employee->employeeProfile->rate == "yearly") selected @endif value="yearly">Yearly</option>
-										</select>									
-										@if ($errors->has('rate'))
-										<span class="text-danger">
-											{{ $errors->first('rate') }}
-										</span>
-										@endif
-									</div>
-								</div> -->
-								<div class="col-12 text-end">
-									<button type="submit" class="btn btn-primary submit-btn">Submit</button>
+									@endif
 								</div>
 							</div>
+							<div class="col-6 mb-3">
+								<div class="form-group">
+									<label class="db-label"  for="name">Social Security Number</label>
+									<input id="pan_number" type="text" class="form-control db-custom-input {{ $errors->has('pan_number') ? ' is-invalid' : '' }}" name="pan_number" value="{{ $employee->employeeProfile->pan_number }}" {{$disabled}}>
+									@if ($errors->has('pan_number'))
+										<span class="text-danger">
+											{{ $errors->first('pan_number') }}
+										</span>
+									@endif
+								</div>
+							</div>
+							<div class="col-6 mb-3">
+								<div class="form-group">
+									<label class="db-label"  for="name">Medical Benefits Number</label>
+									<input id="ifsc_code" type="text" class="form-control db-custom-input {{ $errors->has('ifsc_code') ? ' is-invalid' : '' }}" name="ifsc_code" value="{{ $employee->employeeProfile->ifsc_code }}" {{$disabled}}>
+									@if ($errors->has('ifsc_code'))
+										<span class="text-danger">
+											{{ $errors->first('ifsc_code') }}
+										</span>
+									@endif
+								</div>
+							</div>
+							<div class="col-6 mb-3">
+								<div class="form-group">
+									<label class="db-label"  for="name">Employee Type</label>
+									<select class="form-control db-custom-input select-drop-down-arrow  {{ $errors->has('emp_type') ? ' is-invalid' : '' }}" id="emp_type" name="emp_type" @if($disabledDrop) style="pointer-events: none;" @endif>
+										<option selected value disabled>Please Select</option>
+										<option @if($employee->employeeProfile->emp_type == "part-time") selected @endif value="part-time">Part Time</option>
+										<option @if($employee->employeeProfile->emp_type == "full-time") selected @endif value="full-time">Full Time</option>
+									</select>
+									@if ($errors->has('emp_type'))
+										<span class="text-danger">
+											{{ $errors->first('emp_type') }}
+										</span>
+									@endif
+								</div>
+							</div>
+							<div class="col-6 mb-3">
+								<div class="form-group">
+									<label class="db-label" for="name">Pay Type</label>
+									<select class="form-control db-custom-input select-drop-down-arrow  {{ $errors->has('pay_type') ? ' is-invalid' : '' }}" id="pay_type" name="pay_type" @if($disabledDrop) style="pointer-events: none;" @endif>
+										<option selected value disabled>Please Select</option>
+										<option @if($employee->employeeProfile->pay_type == "hourly") selected @endif value="hourly">Hourly</option>
+										<option @if($employee->employeeProfile->pay_type == "daily") selected @endif value="daily">Daily</option>
+										<option @if($employee->employeeProfile->pay_type == "weekly") selected @endif value="weekly">Weekly</option>
+										<option @if($employee->employeeProfile->pay_type == "monthly") selected @endif value="monthly">Monthly</option>
+										<option @if($employee->employeeProfile->pay_type == "yearly") selected @endif value="yearly">Yearly</option>
+									</select>
+									@if ($errors->has('pay_type'))
+									<span class="text-danger">
+										{{ $errors->first('pay_type') }}
+									</span>
+									@endif
+								</div>
+							</div>
+							<div class="col-6 mb-3">
+								<div class="form-group">
+									<label class="db-label" for="name">Amount</label>
+									<input id="pay_rate" type="number" class="form-control db-custom-input {{ $errors->has('pay_rate') ? ' is-invalid' : '' }}" name="pay_rate" value="{{ $employee->employeeProfile->pay_rate }}" {{$disabled}}>
+									@if ($errors->has('pay_rate'))
+									<span class="text-danger">
+										{{ $errors->first('pay_rate') }}
+									</span>
+									@endif
+								</div>
+							</div>
+							<div class="col-6 mb-3">
+								<div class="form-group">
+									<label class="db-label" for="name">Manager Position</label>
+									<input id="manager_position" type="text" class="form-control db-custom-input {{ $errors->has('manager_position') ? ' is-invalid' : '' }}" name="manager_position" value="{{ $employee->employeeProfile->manager_position }}" {{$disabled}}>
+									@if ($errors->has('	'))
+										<span class="text-danger">
+											{{ $errors->first('manager_position') }}
+										</span>
+									@endif
+								</div>
+							</div>
+							<div class="col-12 text-end">
+								<button type="submit" class="btn btn-primary submit-btn">Submit</button>
+							</div>
+						</div>
 					</div>
-                </div>
+				</div>
                 <div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
 					<div class="max-w-md max-auto">
 						<div class="sub-text-heading pb-4">
 							<h3 class="mb-1">Payment Method</h3>
 							<p>Add your payment method here</p>
 						</div>
-							<div class="row">
-								<div class="col-4 mb-3">
-									<div class="form-group">
-										<label class="db-label" for="name">Payment Method</label>
-										<select class="form-control select-drop-down-arrow db-custom-input {{ $errors->has('payment_method') ? ' is-invalid' : '' }}" id="payment_method" name="payment_method" @if($disabledDrop) style="pointer-events: none;" @endif onchange="showDiv(this)">
-											<option value="" selected disabled>Please Select</option>
-											<option @if(!empty($employee->paymentProfile->payment_method) && $employee->paymentProfile->payment_method == "check") selected @endif value="check">Cheque</option>
-											<option @if(!empty($employee->paymentProfile->payment_method) && $employee->paymentProfile->payment_method == "deposit") selected @endif value="deposit">Direct Deposit</option>
-										</select>
-										@if ($errors->has('payment_method'))
-										<span class="text-danger">
-											{{ $errors->first('payment_method') }}
-										</span>
-										@endif
-									</div>
-								</div>
-								<div class="col-4 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="routing_number_div">
-									<label for="routing_number" class="db-label">Routing Number</label>
-									<div class="form-group mb-0">
-										<input id="routing_number" type="routing_number" class="form-control db-custom-input {{ $errors->has('routing_number') ? ' is-invalid' : '' }}" name="routing_number" value="{{ !empty($employee->paymentProfile->routing_number) ? $employee->paymentProfile->routing_number : '' }}" {{$disabled}}>
-										@if ($errors->has('routing_number'))
+						<div class="row">
+							<div class="col-12 mb-3">
+								<div class="row">
+									<div class="col-4 ">
+										<div class="form-group">
+											<label class="db-label" for="name">Payment Method</label>
+											<select class="form-control select-drop-down-arrow db-custom-input {{ $errors->has('payment_method') ? ' is-invalid' : '' }}" id="payment_method" name="payment_method" @if($disabledDrop) style="pointer-events: none;" @endif onchange="showDiv(this)">
+												<option value="" selected disabled>Please Select</option>
+												<option @if(!empty($employee->paymentProfile->payment_method) && $employee->paymentProfile->payment_method == "check") selected @endif value="check">Cheque</option>
+												<option @if(!empty($employee->paymentProfile->payment_method) && $employee->paymentProfile->payment_method == "deposit") selected @endif value="deposit">Direct Deposit</option>
+											</select>
+											@if ($errors->has('payment_method'))
 											<span class="text-danger">
-												{{ $errors->first('routing_number') }}
+												{{ $errors->first('payment_method') }}
 											</span>
-										@endif
-									</div>
-								</div>									
-								<div class="col-4 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="account_number_div">
-									<label for="account_number" class="db-label">Account Number</label>
-									<div class="form-group mb-0">
-										<input id="account_number" type="account_number" class="form-control db-custom-input {{ $errors->has('account_number') ? ' is-invalid' : '' }}" value="{{ !empty($employee->paymentProfile->account_number) ? $employee->paymentProfile->account_number:'' }}" name="account_number" {{$disabled}}>
-										@if ($errors->has('account_number'))
-											<span class="text-danger">
-												{{ $errors->first('account_number') }}
-											</span>
-										@endif
+											@endif
+										</div>
 									</div>
 								</div>
 							</div>
-							
-							<div class="row">
-								<div class="row mb-3 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="account_type_div">
-									<div class="col-md-4 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="bank_div">
+							<div class="col-6 mb-3 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="routing_number_div">
+								<label for="routing_number" class="db-label">Routing Number</label>
+								<div class="form-group mb-0">
+									<input id="routing_number" type="routing_number" class="form-control db-custom-input {{ $errors->has('routing_number') ? ' is-invalid' : '' }}" name="routing_number" value="{{ !empty($employee->paymentProfile->routing_number) ? $employee->paymentProfile->routing_number : '' }}" {{$disabled}}>
+									@if ($errors->has('routing_number'))
+										<span class="text-danger">
+											{{ $errors->first('routing_number') }}
+										</span>
+									@endif
+								</div>
+							</div>
+							<div class="col-6 mb-3 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="account_number_div">
+								<label for="account_number" class="db-label">Account Number</label>
+								<div class="form-group mb-0">
+									<input id="account_number" type="account_number" class="form-control db-custom-input {{ $errors->has('account_number') ? ' is-invalid' : '' }}" value="{{ !empty($employee->paymentProfile->account_number) ? $employee->paymentProfile->account_number:'' }}" name="account_number" {{$disabled}}>
+									@if ($errors->has('account_number'))
+										<span class="text-danger">
+											{{ $errors->first('account_number') }}
+										</span>
+									@endif
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12 mb-3 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="account_type_div">
+								<div class="row">
+									<div class="col-md-6 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="bank_div">
 										<label for="bank_name" class="db-label">Bank Name</label>
 										<div class="form-group mb-0">
 											<input id="bank_name" type="bank_name" class="form-control db-custom-input {{ $errors->has('bank_name') ? ' is-invalid' : '' }}" value="{{ !empty($employee->paymentProfile->bank_name) ? $employee->paymentProfile->bank_name:'' }}" name="bank_name" {{$disabled}}>
@@ -635,9 +616,9 @@
 											@endif
 										</div>
 									</div>
-									<div class="col-md-4">
+									<div class="col-md-6">
 										<div class="form-group">
-											<label for="name" >Account Type</label>
+											<label for="name" class="db-label" >Account Type</label>
 											<select class="form-control select-drop-down-arrow  db-custom-input {{ $errors->has('account_type') ? ' is-invalid' : '' }}" id="account_type" name="account_type" @if($disabledDrop) style="pointer-events: none;" @endif>
 												<option value="" disabled>Please Select</option>
 												<option @if(!empty($employee->paymentProfile->account_type) && $employee->paymentProfile->account_type == "checking") selected @endif value="checking">Chequing</option>
@@ -652,11 +633,12 @@
 									</div>
 								</div>
 							</div>
-							<div class="row">
-								<div class="col-md-12 text-end">
-									<button type="submit" class="btn btn-primary submit-btn">Submit</button>
-								</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 text-end">
+								<button type="submit" class="btn btn-primary submit-btn">Submit</button>
 							</div>
+						</div>
 					</div>
                 </div>
                 <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
@@ -667,7 +649,6 @@
 								<p>Change password here</p>
 							</div>
 						</div>
-
 							<div id="dynamicRowsContainer">
 								<div class="row">
 									<div class="col-6 mb-3">
@@ -686,7 +667,7 @@
 									<div class="col-6 mb-3">
 										<div class="form-group">
 											<label for="email" class="db-label">New Password</label>
-											<input id="password" type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password">
+											<input id="password" type="password" class="form-control db-custom-input {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password">
 											@if ($errors->has('password'))
 											<span class="text-danger">
 												{{ $errors->first('password') }}
@@ -697,8 +678,8 @@
 									<div class="col-6 mb-3">
 										<div class="form-group">
 											<label for="password" class="db-label">Confirm Password</label>
-											<input id="password-confirm" type="password" class="form-control" name="password_confirmation">
-											
+											<input id="password-confirm" type="password" class="form-control db-custom-input" name="password_confirmation">
+
 											@if ($errors->has('password_confirmation'))
 											<span class="text-danger">
 												{{ $errors->first('password_confirmation') }}
