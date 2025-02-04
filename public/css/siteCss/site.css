@@ -1096,34 +1096,22 @@ a:hover {
     color: #595959;
     font-weight: 400;
 }
-.time-sheet-container .ts-custom-table tr th{
-    vertical-align: middle;
-}
-
-.time-sheet-container .ts-custom-table tr td{
-    vertical-align: middle;
-    border:1px solid #C2C2C2 !important;
-}
-.time-sheet-container .ts-custom-table tr th {
-    font-size: 13px;
+.time-sheet-container .ts-custom-table input[type="text"] {
     text-align: center;
-    color: #252525;
-}
-
-.time-sheet-container .ts-custom-table input[type="text"]{
-    text-align: center;
-    border: 1px solid #C2C2C2;
+    border: transparent;
     border-radius: 6px;
     font-weight: 600;
 }
 .time-sheet-container .ts-custom-table input[name="search"]{
     text-align: left;
+    border:1px solid transparent;
 }
 
 
 .time-sheet-container .ts-custom-table input[type="text"]:focus {
     box-shadow: none;
-    border-color: #5e5adb ;
+    border:1px solid #5e5adb ;
+    outline: none;
 }
 .daterange-container svg {
     position: absolute;
@@ -1131,25 +1119,32 @@ a:hover {
     width: 20px;
     right: 9px;
 }
-
-.time-sheet-container .ts-custom-table thead tr:first-child th {
-    background-color: #3F51B5;
-    color: #ffff;
-}
-.time-sheet-container .ts-custom-table thead tr:nth-child(2) th:first-child{
-    border-left: 1px solid #C2C2C2;
+.time-sheet-container .ts-custom-table td {
+    vertical-align: middle;
+    border-bottom-width: 3px;
+    border-color: #f3f3ff;
 }
 
-.time-sheet-container .ts-custom-table thead tr:nth-child(2) th:last-child{
-    border-right: 1px solid #C2C2C2;
+.ts-custom-table thead {
+    background-color: #f3f3ff;
+}
+.ts-custom-table thead tr th {
+    font-size: 12px;
+    border: none;
+    vertical-align: middle;
+    text-align: center;
+    font-weight: 500;
+}
+.daterange-container-main{
+    max-width: 260px;
+    width: 100%;
 }
 
-.time-sheet-container .ts-custom-table thead tr:nth-child(1) th:first-child{
-    border-left: 1px solid #3F51B5;
+.time-sheet-container .ts-custom-table tr td div input[type="text"]:focus{
+    border: transparent;
 }
-.time-sheet-container .ts-custom-table thead tr:nth-child(1) th:last-child{
-    border-right: 1px solid #3F51B5;
-}
+
+
 .db-radio-btn label {
     border: 2px solid transparent;
     width: 100%;
