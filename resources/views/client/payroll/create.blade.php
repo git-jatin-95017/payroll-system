@@ -172,7 +172,8 @@
 															<input style="width: 16px; height: 16px;" type="checkbox"
 																id="select_all" class="form-check-input mt-0" />
 															<label class="form-check-label d-block db-label mt-1"
-																style="font-size: 11px;" for="select_all">All</label>
+																style="font-size: 11px; color: #fff;"
+																for="select_all">All</label>
 														</div>
 													</th>
 													<th scope="col" rowspan="2">

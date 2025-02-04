@@ -1126,7 +1126,7 @@ a:hover {
 }
 
 .ts-custom-table thead {
-    background-color: #f3f3ff;
+    background-color: #5e5adb;
 }
 .ts-custom-table thead tr th {
     font-size: 12px;
@@ -1134,6 +1134,7 @@ a:hover {
     vertical-align: middle;
     text-align: center;
     font-weight: 500;
+    color: #fff;
 }
 .daterange-container-main{
     max-width: 260px;
