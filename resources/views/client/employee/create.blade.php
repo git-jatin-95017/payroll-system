@@ -100,7 +100,7 @@
                             <x-bxl-linkedin-square class="w-24 h-24" />
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="#">
                             <svg width="22" height="22" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g clip-path="url(#clip0_353_4505)">
@@ -113,7 +113,7 @@
                                 </defs>
                             </svg>
                         </a>
-                    </li>
+                    </li> -->
                	</ul>
             </div>
         </div>
@@ -355,11 +355,46 @@
 
 								<div class="col-6 mb-3">
 									<div class="form-group">
-										<label class="db-label" for="name">Hire Date</label>
-										<input id="hire_date" type="date" class="form-control db-custom-input {{ $errors->has('hire_date') ? ' is-invalid' : '' }}" name="hire_date">
-										@if ($errors->has('hire_date'))
+										<label class="db-label" for="name">Emergency Contact Name</label>
+										<input id="em_name" type="text" class="form-control db-custom-input {{ $errors->has('em_name') ? ' is-invalid' : '' }}" name="em_name">
+										@if ($errors->has('em_name'))
 											<span class="text-danger">
-												{{ $errors->first('hire_date') }}
+												{{ $errors->first('em_name') }}
+											</span>
+										@endif
+									</div>
+								</div>
+
+								<div class="col-6 mb-3">
+									<div class="form-group">
+										<label class="db-label" for="name">Emergency Contact Number</label>
+										<input id="em_number" type="text" class="form-control db-custom-input {{ $errors->has('em_number') ? ' is-invalid' : '' }}" name="em_number" >
+										@if ($errors->has('em_number'))
+											<span class="text-danger">
+												{{ $errors->first('em_number') }}
+											</span>
+										@endif
+									</div>
+								</div>
+
+								<div class="col-6 mb-3">
+									<div class="form-group">
+										<label class="db-label" for="name">Facebook URL</label>
+										<input id="fb_url" type="text" class="form-control db-custom-input {{ $errors->has('fb_url') ? ' is-invalid' : '' }}" name="fb_url"  >
+										@if ($errors->has('fb_url'))
+											<span class="text-danger">
+												{{ $errors->first('fb_url') }}
+											</span>
+										@endif
+									</div>
+								</div>
+								<div class="col-6 mb-3">
+									<div class="form-group">
+										<label class="db-label" for="name">Linkedin URL</label>
+										<input id="linkden_url" type="text" class="form-control db-custom-input {{ $errors->has('linkden_url') ? ' is-invalid' : '' }}" name="linkden_url" >
+										@if ($errors->has('linkden_url'))
+											<span class="text-danger">
+												{{ $errors->first('linkden_url') }}
 											</span>
 										@endif
 									</div>
@@ -380,7 +415,7 @@
 						<div class="row">
 								<div class="col-4 mb-3">
 									<div class="form-group">
-										<label class="db-label"  for="name">Start Date</label>
+										<label class="db-label"  for="name">Hire Date</label>
 										<input id="doj" type="date" class="form-control db-custom-input {{ $errors->has('doj') ? ' is-invalid' : '' }}" name="doj" >
 										@if ($errors->has('doj'))
 											<span class="text-danger">
@@ -480,6 +515,17 @@
 										<span class="text-danger">
 											{{ $errors->first('pay_rate') }}
 										</span>
+										@endif
+									</div>
+								</div>
+								<div class="col-4 mb-3">
+									<div class="form-group">
+										<label class="db-label" for="name">Manager Name</label>
+										<input id="manager" type="text" class="form-control db-custom-input {{ $errors->has('manager') ? ' is-invalid' : '' }}" name="manager" >
+										@if ($errors->has('manager'))
+											<span class="text-danger">
+												{{ $errors->first('manager') }}
+											</span>
 										@endif
 									</div>
 								</div>

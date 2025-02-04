@@ -53,15 +53,15 @@
                     <ul class="nav nav-tabs nav-pills db-custom-tabs gap-5 employee-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="company-tab" data-bs-toggle="tab" data-bs-target="#company"
-                                type="button" role="tab" aria-controls="company" aria-selected="true">Company Information</button>
+                                type="button" role="tab" aria-controls="company" aria-selected="true">Personal								</button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button"
-                                role="tab" aria-controls="payment" aria-selected="false">Employee Details</button>
+                                role="tab" aria-controls="payment" aria-selected="false">Employment</button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button"
-                                role="tab" aria-controls="admin" aria-selected="false">Payment Method</button>
+                                role="tab" aria-controls="admin" aria-selected="false">Payment</button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password" type="button"
@@ -81,6 +81,15 @@
                     </div>
                     <div>
                         <p class="mb-0">{{ $employee->phone_number }}</p>
+                    </div>
+                </div>
+
+				<div class="d-flex gap-2 employee-info align-items-center mb-3">
+                    <div>
+						<x-bx-phone class="w-20 h-20"  style="color: #d76060 !important;" />
+                    </div>
+                    <div>
+                        <p class="mb-0">{{ $employee->employeeProfile->em_name }} {{ $employee->employeeProfile->em_number }}</p>
                     </div>
                 </div>
 
@@ -134,7 +143,7 @@
                         <x-bx-calendar class="w-20 h-20" />
                     </div>
                     <div>
-                        <p class="mb-0">{{ ucwords($employee->employeeProfile->hire_date) }}</p>
+                        <p class="mb-0">{{ $employee->employeeProfile->doj }}</p>
                     </div>
                 </div>
 				<div class="d-flex gap-2 employee-info align-items-center mb-2">
@@ -157,16 +166,16 @@
 
                 <ul class="mb-0 p-0 d-flex align-items-center gap-3 employee-social-media">
                     <li>
-                        <a href="#">
+                        <a href="{{$employee->employeeProfile->fb_url}}" target="_blank">
                             <x-bxl-facebook-square class="w-24 h-24" />
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{{$employee->employeeProfile->linkden_url}}"  target="_blank">
                             <x-bxl-linkedin-square class="w-24 h-24" />
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="#">
                             <svg width="22" height="22" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g clip-path="url(#clip0_353_4505)">
@@ -179,7 +188,7 @@
                                 </defs>
                             </svg>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>
@@ -188,7 +197,7 @@
                 <div class="tab-pane fade show active" id="company" role="tabpanel" aria-labelledby="company-tab">
                     <div class="max-w-md max-auto">
                         <div class="sub-text-heading pb-4">
-                            <h3 class="mb-1">My Profile Information</h3>
+                            <h3 class="mb-1">Personal Information</h3>
                             <p>Type your information</p>
                         </div>
 						<form class="form-horizontal" method="POST" action="{{ route('employee.update', $employee->id) }}" enctype="multipart/form-data">
@@ -409,6 +418,53 @@
 
 									<div class="col-6 mb-3">
 										<div class="form-group">
+											<label class="db-label" for="name">Emergency Contact Name</label>
+											<input id="em_name" type="text" class="form-control db-custom-input {{ $errors->has('em_name') ? ' is-invalid' : '' }}" name="em_name" value="{{ $employee->employeeProfile->em_name }}" {{$disabled}}>
+											@if ($errors->has('em_name'))
+												<span class="text-danger">
+													{{ $errors->first('em_name') }}
+												</span>
+											@endif
+										</div>
+									</div>
+
+									<div class="col-6 mb-3">
+										<div class="form-group">
+											<label class="db-label" for="name">Emergency Contact Number</label>
+											<input id="em_number" type="text" class="form-control db-custom-input {{ $errors->has('em_number') ? ' is-invalid' : '' }}" name="em_number" value="{{ $employee->employeeProfile->em_number }}" {{$disabled}}>
+											@if ($errors->has('em_number'))
+												<span class="text-danger">
+													{{ $errors->first('em_number') }}
+												</span>
+											@endif
+										</div>
+									</div>
+
+									<div class="col-6 mb-3">
+										<div class="form-group">
+											<label class="db-label" for="name">Facebook URL</label>
+											<input id="fb_url" type="text" class="form-control db-custom-input {{ $errors->has('fb_url') ? ' is-invalid' : '' }}" name="fb_url" value="{{ $employee->employeeProfile->fb_url }}"  >
+											@if ($errors->has('fb_url'))
+												<span class="text-danger">
+													{{ $errors->first('fb_url') }}
+												</span>
+											@endif
+										</div>
+									</div>
+									<div class="col-6 mb-3">
+										<div class="form-group">
+											<label class="db-label" for="name">Linkedin URL</label>
+											<input id="linkden_url" type="text" class="form-control db-custom-input {{ $errors->has('linkden_url') ? ' is-invalid' : '' }}" name="linkden_url" value="{{ $employee->employeeProfile->linkden_url }}" {{$disabled}}>
+											@if ($errors->has('linkden_url'))
+												<span class="text-danger">
+													{{ $errors->first('linkden_url') }}
+												</span>
+											@endif
+										</div>
+									</div>
+
+									<!-- <div class="col-6 mb-3">
+										<div class="form-group">
 											<label class="db-label" for="name">Hire Date</label>
 											<input id="hire_date" type="date" class="form-control db-custom-input {{ $errors->has('hire_date') ? ' is-invalid' : '' }}" name="hire_date" value="{{ $employee->employeeProfile->hire_date }}" {{$disabled}}>
 											@if ($errors->has('hire_date'))
@@ -417,7 +473,7 @@
 												</span>
 											@endif
 										</div>
-									</div>
+									</div> -->
 
 									<div class="col-12 text-end">
 										<button type="submit" class="btn btn-primary submit-btn">Submit</button>
@@ -428,7 +484,7 @@
                 <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
 					<div class="max-w-md max-auto">
 						<div class="sub-text-heading pb-4">
-							<h3 class="mb-1">Employee Details</h3>
+							<h3 class="mb-1">Employment Information</h3>
 							<p>Type your employee details here</p>
 						</div>
 						<div class="row">
@@ -436,7 +492,7 @@
 								<div class="row">
 									<div class="col-5">
 										<div class="form-group">
-											<label class="db-label"  for="name">Start Date</label>
+											<label class="db-label"  for="name">Hire Date</label>
 											<input id="doj" type="date" class="form-control db-custom-input {{ $errors->has('doj') ? ' is-invalid' : '' }}" name="doj" value="{{ $employee->employeeProfile->doj }}" {{$disabled}}>
 											@if ($errors->has('doj'))
 												<span class="text-danger">
@@ -535,6 +591,17 @@
 									@endif
 								</div>
 							</div>
+							<div class="col-4 mb-3">
+								<div class="form-group">
+									<label class="db-label" for="name">Manager Name</label>
+									<input id="manager" type="text" class="form-control db-custom-input {{ $errors->has('manager') ? ' is-invalid' : '' }}" name="manager" value="{{ $employee->employeeProfile->manager }}"  >
+									@if ($errors->has('manager'))
+										<span class="text-danger">
+											{{ $errors->first('manager') }}
+										</span>
+									@endif
+								</div>
+							</div>
 							<div class="col-6 mb-3">
 								<div class="form-group">
 									<label class="db-label" for="name">Manager Position</label>
@@ -555,7 +622,7 @@
                 <div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
 					<div class="max-w-md max-auto">
 						<div class="sub-text-heading pb-4">
-							<h3 class="mb-1">Payment Method</h3>
+							<h3 class="mb-1">Payment Information</h3>
 							<p>Add your payment method here</p>
 						</div>
 						<div class="row">
