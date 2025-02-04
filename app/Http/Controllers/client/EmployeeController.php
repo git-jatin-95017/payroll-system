@@ -250,7 +250,11 @@ class EmployeeController extends Controller
 			'ifsc_code' => $request->ifsc_code,
 			'pf_account_number' => $request->pf_account_number,
 			'manager_position' => $request->manager_position,
-			'hire_date' => $request->hire_date,
+			'manager' => $request->manager,
+			'em_name' => $request->em_name,
+			'em_number' => $request->em_number,
+			'fb_url' => $request->fb_url,
+			'linkden_url' => $request->linkden_url,
 		];
 
 		if ($request->file('file')) {			
@@ -389,7 +393,11 @@ class EmployeeController extends Controller
 			'ifsc_code' => $request->ifsc_code,
 			'pf_account_number' => $request->pf_account_number,
 			'manager_position' => $request->manager_position,
-			'hire_date' => $request->hire_date,
+			'manager' => $request->manager,
+			'em_name' => $request->em_name,
+			'em_number' => $request->em_number,
+			'fb_url' => $request->fb_url,
+			'linkden_url' => $request->linkden_url,
 		];
 
 		if ($request->file('file')) {
@@ -447,7 +455,7 @@ class EmployeeController extends Controller
 		return redirect()->route('employee.index')->with('message', 'Employee updated successfully.');	
 	}   
 
-	protected function permanentDelete($id){
+	protected function permanentDelete($id) {
         $trash = User::find($id);
 
         if (!empty($trash->employeeProfile->file)) {
