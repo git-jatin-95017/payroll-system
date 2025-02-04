@@ -1096,34 +1096,22 @@ a:hover {
     color: #595959;
     font-weight: 400;
 }
-.time-sheet-container .ts-custom-table tr th{
-    vertical-align: middle;
-}
-
-.time-sheet-container .ts-custom-table tr td{
-    vertical-align: middle;
-    border:1px solid #C2C2C2 !important;
-}
-.time-sheet-container .ts-custom-table tr th {
-    font-size: 13px;
+.time-sheet-container .ts-custom-table input[type="text"] {
     text-align: center;
-    color: #252525;
-}
-
-.time-sheet-container .ts-custom-table input[type="text"]{
-    text-align: center;
-    border: 1px solid #C2C2C2;
+    border: transparent;
     border-radius: 6px;
     font-weight: 600;
 }
 .time-sheet-container .ts-custom-table input[name="search"]{
     text-align: left;
+    border:1px solid transparent;
 }
 
 
 .time-sheet-container .ts-custom-table input[type="text"]:focus {
     box-shadow: none;
-    border-color: #5e5adb ;
+    border:1px solid #5e5adb ;
+    outline: none;
 }
 .daterange-container svg {
     position: absolute;
@@ -1131,26 +1119,99 @@ a:hover {
     width: 20px;
     right: 9px;
 }
-
-.time-sheet-container .ts-custom-table thead tr:first-child th {
-    background-color: #3F51B5;
-    color: #ffff;
-}
-.time-sheet-container .ts-custom-table thead tr:nth-child(2) th:first-child{
-    border-left: 1px solid #C2C2C2;
+.time-sheet-container .ts-custom-table td {
+    vertical-align: middle;
+    border-bottom-width: 3px;
+    border-color: #f3f3ff;
 }
 
-.time-sheet-container .ts-custom-table thead tr:nth-child(2) th:last-child{
-    border-right: 1px solid #C2C2C2;
+.ts-custom-table thead {
+    background-color: #f3f3ff;
+}
+.ts-custom-table thead tr th {
+    font-size: 12px;
+    border: none;
+    vertical-align: middle;
+    text-align: center;
+    font-weight: 500;
+}
+.daterange-container-main{
+    max-width: 260px;
+    width: 100%;
 }
 
-.time-sheet-container .ts-custom-table thead tr:nth-child(1) th:first-child{
-    border-left: 1px solid #3F51B5;
-}
-.time-sheet-container .ts-custom-table thead tr:nth-child(1) th:last-child{
-    border-right: 1px solid #3F51B5;
+.time-sheet-container .ts-custom-table tr td div input[type="text"]:focus{
+    border: transparent;
 }
 
+
+.db-radio-btn label {
+    border: 2px solid transparent;
+    width: 100%;
+    text-align: center;
+    border-radius: 8px;
+    -webkit-box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.1);
+    padding: 15px 10px;
+}
+.db-radio-btn label img {
+    width: 42px;
+}
+
+.db-radio-btn {
+   width: 160px;
+}
+
+.db-radio-btn input[type="radio"] {
+    position: absolute;
+    left: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.db-radio-btn input[type="radio"]:checked ~ label{
+    border-color: #3F51B5;
+}
+.db-radio-btn input[type="radio"]:checked ~ label h3{
+    color: #3F51B5;
+    font-weight: 500;
+}
+
+.db-radio-btn label h3 {
+    font-size: 14px;
+    font-weight: 500;
+    color: #252525;
+    margin: 0;
+}
+.emp-proifle-picture img {
+    border-radius: 10px;
+}
+.btn-delete {
+    background-color: #ff3f56 !important;
+    padding-left: 25px !important;
+    padding-right: 25px !important;
+    font-size: 16px !important;
+}
+.btn-cancel {
+    font-size: 16px !important;
+    background-color: #ededed !important;
+    color: #252525 !important;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+.delete-container .swal2-icon.swal2-error{
+    color: #ff3f56;
+    border-color: #ff3f56;
+}
+
+.delete-container .swal2-icon.swal2-error [class^=swal2-x-mark-line]{
+    background-color: #ff3f56;
+}
 
 td.total {
     text-align: center;

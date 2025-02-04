@@ -725,6 +725,7 @@
 		// move to Delete single record by just pass the url of
 		function moveToDelete(trashRecordUrl) {
 		  Swal.fire({
+              icon: "error",
 		      text: "You Want to Delete?",
 		      showCancelButton: true,
 		      confirmButtonText: 'Permanent Delete!',
@@ -732,6 +733,11 @@
 		      reverseButtons: true,
 		      showCloseButton : true,
 		      allowOutsideClick:false,
+              customClass: {
+                container: "delete-container",  // Custom class for the outer container
+                confirmButton: 'btn-delete',
+                cancelButton: 'btn-cancel',
+                 }
 		    }).then((result)=>{
 		      var action = 'delete';
 		      if(result.value == true){
