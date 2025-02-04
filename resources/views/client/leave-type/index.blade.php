@@ -59,9 +59,9 @@
                 <thead>
                     <tr>
 						<!-- <th>Id</th> -->
-						<th>Leave Type</th>										
-						<th>No. of days</th>										
-						<th>Action</th>	
+						<th>Leave Type</th>
+						<th>No. of days</th>
+						<th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -72,7 +72,7 @@
 							</td> -->
                             <td>{!! $row->name  !!}</td>
 							<td>{{ $row->leave_day  }}</td>
-	
+
                             <td>
 								<div class="dropdown">
                                     <button class="btn action-dropdown-toggle dropdown-toggle" type="button" id="dropdownMenuButton{$id}" data-bs-toggle="dropdown" aria-expanded="false">
@@ -125,7 +125,7 @@
 			moveToDelete(trashRecordUrl);
 		});
 
-		// move to Delete single record by just pass the url of 
+		// move to Delete single record by just pass the url of
 		function moveToDelete(trashRecordUrl) {
 		  Swal.fire({
 			  text: "You Want to Delete?",
@@ -147,7 +147,7 @@
 					dataType:'JSON',
 					success:(result)=>{
 						location.reload();
-						// $('#dataTableBuilder').DataTable().draw(true);		           
+						// $('#dataTableBuilder').DataTable().draw(true);
 					}
 				});
 			  }
@@ -184,13 +184,13 @@
 						}
 					},
 					columns: [
-						{data:'id'},						
+						{data:'id'},
 						{
-							data:'name', 
+							data:'name',
 							// orderable: true
 						},
 						{
-							data:'leave_day', 
+							data:'leave_day',
 							// orderable: true
 						},
 						{
@@ -198,12 +198,12 @@
 							orderable : false,
 							searchable : false,
 							render: function(data, type, row, meta) {
-								
+
 								var id = row.id;
-							
+
 								var action = `<div class="table-actions">`;
 									//action += `<a data-href="/client/leave-type/${id}" class="btn btn-sm btn-info approve"><i class='fas fa-pen'></i></a>`;
-									action += ` <a href="/client/leave-type/${id}/edit" class="btn btn-sm btn-primary"><i class='fas fa-pen'></i></a>`;			
+									action += ` <a href="/client/leave-type/${id}/edit" class="btn btn-sm btn-primary"><i class='fas fa-pen'></i></a>`;
 									action += ` <a data-href="/client/leave-type/${id}" class="btn btn-sm btn-danger delete" style="color:#fff;"><i class='fas fa-trash'></i></a>`;
 									action += `</div>`;
 								return action;
@@ -212,9 +212,9 @@
 					],
 					orderCellsTop: true,
 					// fixedHeader: true,
-				   
-				});
-		   });		  	
 
-	</script>		
+				});
+		   });
+
+	</script>
 @endpush

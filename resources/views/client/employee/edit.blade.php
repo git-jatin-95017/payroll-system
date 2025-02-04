@@ -560,7 +560,7 @@
 						</div>
 						<div class="row">
 							<div class="col-12 mb-3">
-								<div class="row">
+								<!-- <div class="row">
 									<div class="col-4 ">
 										<div class="form-group">
 											<label class="db-label" for="name">Payment Method</label>
@@ -576,8 +576,36 @@
 											@endif
 										</div>
 									</div>
+								</div> -->
+								<div class="form-group">
+										<label class="db-label mb-2">Payment Method</label>
+										<div class="d-flex gap-5">
+											<div>
+												<div class="position-relative db-radio-btn">
+													<input class="form-check-input"  type="radio" name="payment_method" id="payment_check" value="check" onchange="showDiv(this)" checked>
+													<label class="form-check-label" for="payment_check">
+														<img src="{{ asset('img/bank-check.png') }}" class="mb-2" alt="">
+														<h3>Cheque</h3>
+													</label>
+												</div>
+											</div>
+											<div>
+												<div class="position-relative db-radio-btn">
+													<input class="form-check-input" type="radio" name="payment_method" id="payment_deposit" value="deposit" onchange="showDiv(this)">
+													<label class="form-check-label" for="payment_deposit">
+														<img src="{{ asset('img/bank.png') }}" class="mb-2" alt="">
+														<h3>Direct Deposit</h3>
+													</label>
+												</div>
+											</div>
+										</div>
+										@if ($errors->has('payment_method'))
+										<span class="text-danger">
+											{{ $errors->first('payment_method') }}
+										</span>
+										@endif
+									</div>
 								</div>
-							</div>
 							<div class="col-6 mb-3 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="routing_number_div">
 								<label for="routing_number" class="db-label">Routing Number</label>
 								<div class="form-group mb-0">
