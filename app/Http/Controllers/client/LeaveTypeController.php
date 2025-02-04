@@ -118,7 +118,8 @@ class LeaveTypeController extends Controller
 			'status' => $data['status'],
 			'date_after' => '2022-12-31', //$data['date_after'],
 			'carry_over_amount' => $data['carry_over_amount'],
-			'start_days' => $data['start_days']
+			'start_days' => $data['start_days'],
+			'is_visible_calendar' => $data['is_visible_calendar']
 		]);
 		
 		return redirect()->route('leave-type.index')->with('message', 'Leave policy added successfully.');	
@@ -150,7 +151,8 @@ class LeaveTypeController extends Controller
 			'status' => $data['status'],
 			'date_after' => '2022-12-31', //$data['date_after'],
 			'carry_over_amount' => $data['carry_over_amount'],
-			'start_days' => $data['start_days']
+			'start_days' => $data['start_days'],
+			'is_visible_calendar' => $data['is_visible_calendar']
 		]);
 	
 		return redirect()->route('leave-type.index')->with('message', 'Leave policy updated successfully.');	

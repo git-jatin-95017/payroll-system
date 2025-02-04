@@ -463,6 +463,26 @@
 										</div>
 									</div>
 
+									<div class="row">
+										<div class="col-8 mb-3">
+											<div class="form-group">
+												<!-- <div class="col-md-6"> -->
+													<label for="is_visible_calendar" class="db-label">Is Visible On Calendar?</label>
+													<select class="form-control db-custom-input" id="is_visible_calendar" name="is_visible_calendar">
+														<option @if($employee->employeeProfile->is_visible_calendar == "0") selected @endif value="0">No</option>
+														<option @if($employee->employeeProfile->is_visible_calendar == "1") selected @endif value="1">Yes</option>
+													</select>
+
+													@if ($errors->has('is_visible_calendar'))
+														<span class="text-danger">
+															{{ $errors->first('is_visible_calendar') }}
+														</span>
+													@endif
+												<!-- </div> -->
+											</div>
+										</div>
+									</div>
+
 									<!-- <div class="col-6 mb-3">
 										<div class="form-group">
 											<label class="db-label" for="name">Hire Date</label>
