@@ -255,6 +255,7 @@ class EmployeeController extends Controller
 			'em_number' => $request->em_number,
 			'fb_url' => $request->fb_url,
 			'linkden_url' => $request->linkden_url,
+			'is_visible_calendar' => $request->is_visible_calendar,
 		];
 
 		if ($request->file('file')) {			
@@ -398,6 +399,7 @@ class EmployeeController extends Controller
 			'em_number' => $request->em_number,
 			'fb_url' => $request->fb_url,
 			'linkden_url' => $request->linkden_url,
+			'is_visible_calendar' => $request->is_visible_calendar,
 		];
 
 		if ($request->file('file')) {

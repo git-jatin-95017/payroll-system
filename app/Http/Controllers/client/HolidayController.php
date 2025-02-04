@@ -117,9 +117,9 @@ class HolidayController extends Controller
 			'title' => $data['title'],
 			'description' => $data['description'],
 			'holiday_date' => $data['holiday_date'],
-			'type' => $data['type']
-		]);		
-
+			'type' => $data['type'],
+			'is_visible_calendar' => $data['is_visible_calendar']
+		]);
 		
 		return redirect()->route('holidays.index')->with('message', 'Holiday created successfully.');	
 	}
@@ -148,7 +148,8 @@ class HolidayController extends Controller
 			'title' => $data['title'],
 			'description' => $data['description'],
 			'holiday_date' => $data['holiday_date'],
-			'type' => $data['type']
+			'type' => $data['type'],
+			'is_visible_calendar' => $data['is_visible_calendar']
 		]);		
 	
 		return redirect()->route('holidays.index')->with('message', 'Holiday updated successfully.');	

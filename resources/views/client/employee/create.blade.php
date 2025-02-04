@@ -400,6 +400,26 @@
 									</div>
 								</div>
 
+								<div class="row">
+									<div class="col-8 mb-3">
+										<div class="form-group">
+											<!-- <div class="col-md-6"> -->
+												<label for="is_visible_calendar" class="db-label">Is Visible On Calendar?</label>
+												<select class="form-control db-custom-input" id="is_visible_calendar" name="is_visible_calendar">
+													<option value="0">No</option>
+													<option value="1">Yes</option>
+												</select>
+
+												@if ($errors->has('is_visible_calendar'))
+													<span class="text-danger">
+														{{ $errors->first('is_visible_calendar') }}
+													</span>
+												@endif
+											<!-- </div> -->
+										</div>
+									</div>
+								</div>
+
 								<div class="col-12 text-end">
 									<button type="submit" class="btn btn-primary submit-btn">Submit</button>
 								</div>
