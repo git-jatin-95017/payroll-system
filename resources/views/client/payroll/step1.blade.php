@@ -165,7 +165,9 @@
 														</td>
 													</tr>
 													<tr>
-														<!-- <td>/ Add Personal Note</td> -->
+														<td>
+															<input class="form-control fixed-input"  name="input[{{$employee->id}}][notes]" value="{{$isDataExist->notes ?? ''}}" placeholder="Additional Notes">
+														</td>
 													</tr>
 												</table>
 									      	</td>
