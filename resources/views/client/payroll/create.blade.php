@@ -210,7 +210,7 @@
 													<?php
 											}
 											?>
-													<th>-</th>
+													<th id="th-total-div"></th>
 												</tr>
 											</thead>
 											<tbody>
@@ -406,10 +406,12 @@
 </script>
 <script>
 	$(document).ready(function () {
+		calc_final_total();
 		$(".payroll_date_cell").on('blur', function () {
 			var that = $(this);
 
 			calc_total(that);
+			calc_final_total();
 		});
 
 		function calc_total(obj) {
@@ -428,6 +430,21 @@
 
 			focusedRow.find('td.total').html(sum);
 		}
+
+		function calc_final_total() {
+			var total = 0;
+			$(".total").each(function () {
+				var value = $(this).html().trim(); // Get and trim the content
+				console.log(value);
+				
+				if ($.isNumeric(value)) {
+					total += parseFloat(value);
+				}
+			});
+
+			$('#th-total-div').html(total);
+		}
+
 	});
 </script>
 <script type="text/javascript">
