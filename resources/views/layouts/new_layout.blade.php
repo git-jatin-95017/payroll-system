@@ -85,6 +85,20 @@
     <script type="text/javascript" src="{{asset('js/sitejs/datepicker/moment.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/sitejs/datepicker/daterangepicker.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/sitejs/main.js')}}"></script>
+    <!-- <script>
+    document.querySelectorAll('.toggle-btn').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevents any unintended form submission
+            let targetId = this.getAttribute('data-target');
+            let target = document.getElementById(targetId);
+            if (target.classList.contains('show')) {
+                target.classList.remove('show');
+            } else {
+                target.classList.add('show');
+            }
+        });
+    });
+</script> -->
     @yield('third_party_scripts')
     <!-- Custom js type here -->
     @stack('page_scripts')

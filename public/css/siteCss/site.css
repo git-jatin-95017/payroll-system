@@ -1286,6 +1286,157 @@ border-radius: 8px;
 background: #6b6b6b;
 }
 
+.custom-table-run thead{
+    background: #F8F8FA;
+}
+.custom-table-run thead th{
+    font-size: 14px;
+    color: #696A82;
+    text-transform: uppercase;
+    font-weight: 500;
+    border: none;
+}
+.custom-table-run tbody td {
+    border: none;
+    font-size: 14px;
+    color: #696A82;
+}
+.custom-table-run tbody tr.row-tr-js {
+    border-bottom: 4px solid #f3f3ff;
+}
+.toggle-container {
+    margin-bottom: 10px;
+}
+.toggle-container:last-child{
+    margin-bottom: 0;
+}
+
+.toggle-container button {
+    background-color: transparent;
+    border: none;
+    font-size: 14px;
+    color: #696A82;
+    cursor: pointer !important;
+}
+
+.toggle-container button:last-child{
+    margin-bottom: 0;
+}
+.toggle-container svg {
+    fill: #5E5ADB;
+}
+.toggle-container input {
+    max-width: 150px;
+    margin-left: 10px;
+    margin-top: 5px;
+    height: 36px;
+    border-radius: 6px;
+}
+.toggle-container input:focus{
+    border-color: #5E5ADB;
+}
+span.payroll-emp-name {
+    font-size: 15px;
+    color: #252525;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+.ts-img p {
+    color: #696A82;
+    font-size: 13px;
+}
+.badge-payroll {
+    background: #5E5ADB;
+    color: #fff;
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+.total-payment-gross div{
+    margin-bottom: 10px;
+}
+.confirm-container {
+    background-color: #EFEEFF;
+    border-radius: 10px;
+    padding: 20px 0;
+    margin-bottom: 30px;
+    color: #252525;
+}
+.confirm-container .total_amount_confirm {
+    font-size: 30px !important;
+    color: #5E5ADB;
+    font-weight: 700;
+}
+.confirm-container h3 {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.confirm-container p{
+    font-size: 15px;
+    color: #535353;
+}
+
+.payroll-date-section span{
+    font-size: 13px;
+    font-weight: 500;
+    color: #252525;
+}
+.payroll-date-section p{
+    color: #5E5ADB;
+    font-size: 14px;
+    font-weight: 600;
+}
+.save_continue {
+    font-size: 14px;
+    text-transform: capitalize;
+    font-weight: 500;
+    border-radius: 4px;
+    padding: 10px 25px;
+}
+.payroll-status small {
+    color: #4CAF50;
+    font-weight: 500;
+    font-size: 14px;
+}
+.paid-time-off small{
+    color: #5E5ADB;
+    font-weight: 500;
+    font-size: 14px;
+}
+.toggle-container label {
+    cursor: pointer;
+}
+.back-btn-payroll {
+    width: 110px;
+    border: 1px solid;
+    display: block;
+    font-size: 14px;
+    text-transform: capitalize;
+    font-weight: 500;
+    padding: 10px 25px;
+    text-decoration: none;
+    border-radius: 4px;
+}
+.step-container h2 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #252525;
+    margin-bottom: 15px;
+}
+.step-container .bottom-line {
+    height: 4px;
+    width: 100%;
+    background-color: #DADADA;
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+.on-step.step-container .bottom-line {
+    background-color: #5E5ADB;
+}
+
 @media only screen and (max-width: 992px) {
     #left-menu,
     #logo {
