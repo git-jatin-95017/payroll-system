@@ -30,7 +30,23 @@ class DepartmentController extends Controller
 	 */
 	public function index(Request $request)
 	{		
-		return view('client.department.index');
+
+		// Search input
+		$searchValue = $request->input('search', '');
+
+		// Fetching data with search and pagination
+		$locations = Department::orderBy('departments.id', 'desc')
+			->where('departments.created_by', auth()->user()->id)
+			->where(function ($query) use ($searchValue) {
+				$query
+					->where(function ($query) use ($searchValue) {
+						$query->where('departments.dep_name', 'like', '%' . $searchValue . '%');
+					});
+
+			})
+			->paginate(10);
+
+		return view('client.department.index', compact('locations'));
 	}
 
 	public function getData(Request $request)

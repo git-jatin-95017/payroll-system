@@ -3,25 +3,25 @@
 		<span>Admin Menu</span>
 	</div>
 	<ul class="list-unstyled main-navigation">
-		<li class="active">
+		<li class="{{ request()->is('admin/dashboard') ? 'active' : '' }}">
 			<a href="{{ route('admin.dashboard') }}">
 				<x-bxs-home-alt-2 class="w-20 h-20" />
 				<span>Dashboard</span>
 			</a>
 		</li>
-		<li>
+		<li class="{{ request()->is('admin/settings*') ? 'active' : '' }}">
 			<a href="{{ route('settings.create', auth()->user()->id) }}">
 				<x-bxs-wrench class="w-20 h-20" />
 				<span>Calculations</span>
 			</a>
 		</li>
-		<li>
+		<li class="{{ request()->is('edit-my-profile*') ? 'active' : '' }}">
 			<a href="{{ route('edit-my-profile.edit', auth()->user()->id) }}">
 				<x-bxs-file-doc class="w-20 h-20"/>
 				<span>Profile</span>
 			</a>
 		</li>
-		<li class="has-sub">
+		<li class="has-sub {{ Request::routeIs('my-profile.edit', 'client.index', 'client.create', 'client.edit') ? 'active' : '' }}">
 			<a href="#">
 				<x-bxs-user class="w-20 h-20"/>
 				<span>Clients</span>

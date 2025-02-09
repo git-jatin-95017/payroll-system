@@ -1,95 +1,107 @@
 @extends('layouts.new_layout')
-@push('page_css')
-	<style>
-		thead input.top-filter {
-	        width: 100%;
-	    }
 
-	    table.dataTable tbody td {
-			word-break: break-word;
-		  	vertical-align: top;
-		}
-	</style>
-	<link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/responsive.bootstrap4.min.css') }}">
+@push('page_css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css">
 @endpush
+
 @section('content')
 
-
-<div class="row page-titles">
-    <div class="col-md-5 align-self-center">
-        <h3 class="text-themecolor">
-            <i class="fa fa-braille" style="color:#1976d2"></i>
-            Locations
-        </h3>
-    </div>
-
-    <div class="col-md-7 align-self-center">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a href="javascript:void(0)">Home</a>
-            </li>
-            <li class="breadcrumb-item active">Locations</li>
-        </ol>
-    </div>
-</div>
-<section class="content">
-	<div class="container-fluid">
-		@if ($errors->any())
-        <div class="alert alert-danger">
-            <ul class="m-0">
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
-		@if (session('message'))
-			<div class="row">
-				<div class="col-md-12">
-					<div class="alert alert-success alert-dismissible">
-						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						{{ session('message') }}
-					</div>
-				</div>
-			</div>
-		@elseif (session('error'))
-			<div class="row">
-				<div class="col-md-12">
-					<div class="alert alert-danger alert-dismissible">
-						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						{{ session('error') }}
-					</div>
-				</div>
-			</div>
-		@endif
-		<div class="row">            					
-			<div class="col-12">					
-				<div class="card">
-					<div class="card-header d-flex justify-content-between">
-						<h3 class="card-title">List of Locations</h3>
-						<div class="card-tools">
-							<div class="input-group input-group-sm">
-								<a href="{{ route('department.create' )}}" class="btn btn-primary">Add New</a>
-							</div>
-						</div>
-					</div>					
-					<div class="card-body">							
-						<table class="table table-bordered table-hover wrap" id="dataTableBuilder">
-							<thead>
-								<tr>										
-									<th>Id</th>
-									<th>Location Name</th>										
-									<th>Action</th>								
-								</tr>
-							</thead>
-						</table>
-					</div>
-				  </div>
-			</div>
+<div>
+    <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
+		<div>
+			<h3>Locations</h3>
+			<p class="mb-0">Track and manage your locations here</p>
 		</div>
-	</div>		
-</section>    
+    </div>
+    <div class="d-flex gap-3 align-items-center justify-content-between mb-4">
+        <form method="GET" action="{{ route('department.index') }}" class="d-flex gap-3 align-items-center justify-content-between mb-4">
+            <div class="search-container">
+                <div class="d-flex align-items-center gap-3">
+                    <p class="mb-0 position-relative search-input-container">
+                        <x-heroicon-o-magnifying-glass class="search-icon" />
+                        <input type="search" class="form-control" name="search" placeholder="Type here" value="{{request()->search ?? ''}}">
+                    </p>
+                    <button type="submit" class="btn search-btn">
+                        <x-bx-filter class="w-20 h-20"/>
+                        Search
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div>
+            <form action="{{ route('department.create') }}" method="GET" class="m-0 p-0">
+                <button type="submit" class="d-flex justify-content-center gap-2 primary-add">
+                    <x-heroicon-o-plus width="16" />
+                    <span>Add Location</span>
+                </button>
+            </form>
+        </div>		
+   </div>
+   @if (session('message'))
+   <div>
+      <div class="alert alert-success alert-dismissible">
+         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+         {{ session('message') }}
+      </div>
+   </div>
+   @elseif (session('error'))
+   <div class="col-md-12">
+      <div class="alert alert-danger alert-dismissible">
+         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+         {{ session('error') }}
+      </div>
+   </div>
+   @endif
+   <div class="bg-white p-4">
+        <div class="table-responsive">
+            <table class="table db-custom-table">
+                <thead>
+                    <tr>
+						<!-- <th>Id</th> -->
+						<th>Location Name</th>										
+						<th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($locations as $row)
+					@php $id = $row->id @endphp 
+                        <tr>
+                            <!-- <td>{{ $row->id }}
+							</td> -->
+                            <td class="col-sm-9" style="word-wrap: break-word; white-space: normal;">{!! $row->dep_name  !!}</td>
+                            <td>
+								<div class="dropdown">
+                                    <button class="btn action-dropdown-toggle dropdown-toggle" type="button" id="dropdownMenuButton{$id}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <x-bx-dots-horizontal-rounded class="w-20 h-20" />
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{$id}">
+                                        <li>
+                                            <a href="{{ route('department.edit', $row->id) }}" class="dropdown-item">
+                                                <x-bx-edit-alt class="w-16 h-16" /> Edit
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" data-href="{{ route('department.destroy', $row->id) }}" class="dropdown-item delete" style="color:#dc3545;">
+                                                <x-heroicon-o-trash class="w-16 h-16" /> Delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3" class="text-center">No record found</td>
+                        </tr>
+                    @endforelse
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        {{ $locations->links('vendor.pagination.custom') }}
+   </div>
+</div> 
 @endsection
 @push('page_css')
 	<link rel="stylesheet" href="{{ asset('js/datepicker/datepicker3.css') }}">

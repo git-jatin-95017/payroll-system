@@ -92,28 +92,14 @@
                     </div>
                 </div>
                 <ul class="mb-0 p-0 d-flex align-items-center gap-3 employee-social-media">
-                    <li>
-                        <a href="#">
+					<li>
+                        <a href="{{ $company->companyProfile->fb_url }}" target="_blank">
                             <x-bxl-facebook-square class="w-24 h-24" />
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{{ $company->companyProfile->linkden_url }}"  target="_blank">
                             <x-bxl-linkedin-square class="w-24 h-24" />
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <svg width="22" height="22" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_353_4505)">
-                                    <path d="M15.7508 0.960938H18.8175L12.1175 8.61927L20 19.0384H13.8283L8.995 12.7184L3.46333 19.0384H0.395L7.56167 10.8468L0 0.961771H6.32833L10.6975 6.73844L15.7508 0.960938ZM14.675 17.2034H16.3742L5.405 2.7001H3.58167L14.675 17.2034Z" fill="#454E97"/>
-                                </g>
-                                <defs>
-                                <clipPath id="clip0_353_4505">
-                                    <rect width="22" height="22" fill="white"/>
-                                </clipPath>
-                                </defs>
-                            </svg>
                         </a>
                     </li>
                 </ul>
@@ -297,6 +283,29 @@
 											<span class="text-danger">
 												{{ $errors->first('levy_id_no') }}
 											</span>
+											@endif
+										</div>
+									</div>
+
+									<div class="col-6 mb-3">
+										<div class="form-group">
+											<label class="db-label" for="name">Facebook URL</label>
+											<input id="fb_url" type="text" class="form-control db-custom-input {{ $errors->has('fb_url') ? ' is-invalid' : '' }}" name="fb_url" value="{{ $company->companyProfile->fb_url }}"  >
+											@if ($errors->has('fb_url'))
+												<span class="text-danger">
+													{{ $errors->first('fb_url') }}
+												</span>
+											@endif
+										</div>
+									</div>
+									<div class="col-6 mb-3">
+										<div class="form-group">
+											<label class="db-label" for="name">Linkedin URL</label>
+											<input id="linkden_url" type="text" class="form-control db-custom-input {{ $errors->has('linkden_url') ? ' is-invalid' : '' }}" name="linkden_url" value="{{ $company->companyProfile->linkden_url }}" >
+											@if ($errors->has('linkden_url'))
+												<span class="text-danger">
+													{{ $errors->first('linkden_url') }}
+												</span>
 											@endif
 										</div>
 									</div>
