@@ -25,7 +25,6 @@
         }
     </style>
 </head>
-
 <body>
     <div id="left-menu">
         <div class="sidebar-logo">

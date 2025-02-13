@@ -808,5 +808,3 @@
 
 	});
 </script>
-
-@endpush

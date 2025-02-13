@@ -1393,6 +1393,17 @@ span.payroll-emp-name {
     font-weight: 500;
     border-radius: 4px;
     padding: 10px 25px;
+    border-color: #5e5adb;
+}
+
+.db-back-btn {
+    background: #fff !important;
+    color: #5E5ADB;
+    font-size: 14px;
+    border-color: #5e5adb;
+    align-items: center;
+    display: flex;
+    font-weight: 500;
 }
 .payroll-status small {
     color: #4CAF50;
@@ -1432,9 +1443,56 @@ span.payroll-emp-name {
     padding: 0;
     display: block;
 }
-
 .on-step.step-container .bottom-line {
     background-color: #5E5ADB;
+}
+.dabit-data {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 20px;
+}
+.dabit-data h2 {
+    font-size: 30px;
+    color: #5E5ADB;
+    font-weight: 700;
+    margin: 0;
+}
+.dabit-data span {
+    color: #252525;
+    font-size: 18px;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+.mychart  #myChart {
+    height: 350px !important;
+    margin: 0 auto;
+}
+.payroll-view-container{
+    border: 1px solid #dddddd;
+    box-shadow: 0 0 6px 5px #f1f1f1;
+    padding: 20px;
+    border-radius: 10px;
+}
+.card-more {
+    border: 1px solid #ccc;
+    padding: 22px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+.card-more h2 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #252525;
+}
+
+.card-more .card-body {
+    border-top: 1px solid #cccccc;
+    margin-top: 15px;
+    padding-top: 10px;
+}
+.card-more .card-body .db-custom-table tbody tr:last-child td{
+    border-bottom: none;
+    padding-bottom: 0;
 }
 
 @media only screen and (max-width: 992px) {
