@@ -1435,6 +1435,12 @@ span.payroll-emp-name {
     color: #252525;
     margin-bottom: 15px;
 }
+.payroll-heading p {
+    font-size: 16px;
+    color: #252525;
+    font-weight: 500;
+    margin-bottom: 25px;
+}
 .step-container .bottom-line {
     height: 4px;
     width: 100%;
@@ -1467,10 +1473,10 @@ span.payroll-emp-name {
     height: 350px !important;
     margin: 0 auto;
 }
-.payroll-view-container{
+.payroll-view-container {
     border: 1px solid #dddddd;
     box-shadow: 0 0 6px 5px #f1f1f1;
-    padding: 20px;
+    padding: 30px;
     border-radius: 10px;
 }
 .card-more {

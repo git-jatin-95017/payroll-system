@@ -3,9 +3,17 @@
 @section('content')
 <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 	<div>
-		<h3>Review Submit</h3>
+		<h3>Payroll</h3>
 		<p class="mb-0">Track and manage your payroll here</p>
 	</div>
+</div>
+<div class="text-end payroll-date-section mb-3">
+	<p class="mb-0">
+		<span class="mb-0">
+			Pay Period:
+		</span>
+		{{ date('F dS Y', strtotime($from))}} to {{ date('F dS Y', strtotime($to))}}
+	</p>
 </div>
 <div class="bg-white w-100 border-radius-15 p-4 mb-3">
 	<div class="row">
@@ -59,14 +67,7 @@
 		<div class="row">
 			<div class="col-sm-12">
 				<div>
-					<div class="text-end payroll-date-section mb-3">
-						<span class="mb-0 d-block">
-							Pay Period:
-						</span>
-						<p class="mb-0">
-							{{ date('F dS Y', strtotime($from))}} to {{ date('F dS Y', strtotime($to))}}
-						</p>
-					</div>
+
 					<form class="form-horizontal" method="POST"
 						action="{{ route('store.Step1', ['start_date' => $from, 'end_date' => $to, 'appoval_number'=> $appoval_number]) }}"
 						id="fom-timesheet">

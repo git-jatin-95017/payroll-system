@@ -148,7 +148,7 @@
 ?>
 <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 	<div>
-		<h3>Review Submit</h3>
+		<h3>Payroll</h3>
 		<p class="mb-0">Track and manage your payroll here</p>
 	</div>
 </div>
@@ -161,19 +161,19 @@
 			</div>
 		</div>
 		<div class="col-3">
-			<div class="step-container">
+			<div class="step-container on-step">
 				<h2>2. Paid Time Off</h2>
 				<p class="bottom-line"></p>
 			</div>
 		</div>
 		<div class="col-3">
-			<div class="step-container">
+			<div class="step-container on-step">
 				<h2>3. Review and Submit</h2>
 				<p class="bottom-line"></p>
 			</div>
 		</div>
 		<div class="col-3">
-			<div class="step-container">
+			<div class="step-container on-step">
 				<h2>4. Submitted </h2>
 				<p class="bottom-line"></p>
 			</div>
