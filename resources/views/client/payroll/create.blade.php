@@ -176,7 +176,22 @@
 																for="select_all">All</label>
 														</div>
 													</th>
-													<th scope="col" rowspan="2">
+													<th scope="col">
+														02/11/2025 - 02/18/2025
+													</th>
+												
+													<?php
+													for ($i=0;$i<=$weekday;$i++) {
+													?>
+													<th scope="col">{{ strtoupper(date("D", strtotime("+$i day",
+														strtotime($first_date)))) }}</th>
+													<?php
+														}
+													?>
+													<th>Total</th>
+												</tr>
+												<tr class="ts-day-row">
+													<th scope="col">
 														<p class="db-table-search position-relative mb-0">
 															<svg width="20px" xmlns="http://www.w3.org/2000/svg"
 																fill="currentColor" viewBox="0 0 24 24">
@@ -190,17 +205,6 @@
 																value="{{$request->week_search ??1}}">
 														</p>
 													</th>
-													<?php
-													for ($i=0;$i<=$weekday;$i++) {
-													?>
-													<th scope="col">{{ strtoupper(date("D", strtotime("+$i day",
-														strtotime($first_date)))) }}</th>
-													<?php
-														}
-													?>
-													<th>Total</th>
-												</tr>
-												<tr class="ts-day-row">
 													<?php
 
 											for ($i=0;$i<=$weekday;$i++) {

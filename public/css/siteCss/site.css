@@ -1136,6 +1136,9 @@ a:hover {
     font-weight: 500;
     color: #fff;
 }
+tr.ts-day-row th {
+    padding-top: 0;
+}
 .daterange-container-main{
     max-width: 260px;
     width: 100%;
@@ -1218,6 +1221,10 @@ td.total {
     text-align: center;
     font-size: 12px;
     font-weight: 700;
+    border-left: 1px solid #cdcdeb !important;
+}
+#th-total-div, .ts-date-row th:last-child {
+    border-left: 1px solid #4f4bc3;
 }
 .start-date{
  background-color: #5e5adb !important;
