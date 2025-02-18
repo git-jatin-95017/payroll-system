@@ -178,6 +178,13 @@ class MyProfileController extends Controller
 				'bank_acc_number' => !empty($request->bank_acc_number) ? $request->bank_acc_number : NULL,
 				// 'ifsc_code' => $request->ifsc_code,
 				// 'pf_account_number' => $request->pf_account_number,
+				'manager_position' => $request->manager_position ?? NULL,
+				'manager' => $request->manager ?? NULL,
+				'em_name' => $request->em_name ?? NULL,
+				'em_number' => $request->em_number ?? NULL,
+				'fb_url' => $request->fb_url ?? NULL,
+				'linkden_url' => $request->linkden_url ?? NULL,
+				
 			];
 
 			if ($request->file('file')) {

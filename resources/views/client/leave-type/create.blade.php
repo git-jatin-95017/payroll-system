@@ -94,7 +94,7 @@
 								</div>
 							</div>
 
-							<div class="row">
+							<!-- <div class="row">
 								<div class="col-8 mb-3">
 									<div class="form-group">
 										<label for="carry_over_amount" class="db-label">Carryover Amount</label>
@@ -106,7 +106,7 @@
 											@endif
 									</div>
 								</div>
-							</div>
+							</div> -->
 
 							<div class="row">
 								<div class="col-8 mb-3">

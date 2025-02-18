@@ -47,7 +47,7 @@
             <div class="d-flex flex-column justify-content-between h-100">
                 <div class="profile-name-container pt-5">
                     <h3>{{auth()->user()->name}}</h3>
-                    <p>{{ $employee->employeeProfile->designation ?? ''}} - {{ $employee->employeeProfile->department }}</p>
+                    <p>{{ $employee->employeeProfile->designation ?? ''}}</p>
                 </div>
                 <div>
                     <ul class="nav nav-tabs nav-pills db-custom-tabs gap-5 employee-tabs" id="myTab" role="tablist">
@@ -74,8 +74,8 @@
     </div>
     <div class="d-flex gap-4">
         <div class="employee-profile-left">
-            <div class="bg-white py-4 px-3 border-radius-15">
-				<h5 class="mb-1">Personal</h5>
+            <div class="bg-white sub-text-heading py-4 px-3 border-radius-15">
+				<h3 class="mb-1">Personal</h3>
 				<div class="d-flex gap-2 employee-info align-items-center mb-3">
                     <div>
 						<x-bx-phone class="w-20 h-20" />
@@ -108,7 +108,7 @@
                         <p class="mb-0">{{ $employee->email }}</p>
                     </div>
                 </div>
-				<ul class="mb-0 p-0 d-flex align-items-center gap-3 employee-social-media">
+				<ul class="mb-2 p-0 d-flex align-items-center gap-3 employee-social-media">
                     <li>
                         <a href="{{$employee->employeeProfile->fb_url}}" target="_blank">
                             <x-bxl-facebook-square class="w-24 h-24" />
@@ -119,29 +119,9 @@
                             <x-bxl-linkedin-square class="w-24 h-24" />
                         </a>
                     </li>
-                    <!-- <li>
-                        <a href="#">
-                            <svg width="22" height="22" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_353_4505)">
-                                    <path d="M15.7508 0.960938H18.8175L12.1175 8.61927L20 19.0384H13.8283L8.995 12.7184L3.46333 19.0384H0.395L7.56167 10.8468L0 0.961771H6.32833L10.6975 6.73844L15.7508 0.960938ZM14.675 17.2034H16.3742L5.405 2.7001H3.58167L14.675 17.2034Z" fill="#454E97"/>
-                                </g>
-                                <defs>
-                                <clipPath id="clip0_353_4505">
-                                    <rect width="22" height="22" fill="white"/>
-                                </clipPath>
-                                </defs>
-                            </svg>
-                        </a>
-                    </li> -->
                 </ul>
 
-				<h5 class="mb-1">Employment</h5>
-				<h5 class="mb-1">Hire date</h5>
-				<h5 class="mb-1">Manager</h5>
-				
-
-				
-
+				<h3 class="mb-2 mt-2">Employment</h3>
 				<div class="d-flex gap-2 employee-info align-items-center mb-2">
                     <div>
                         <x-bx-map class="w-20 h-20" />
@@ -178,6 +158,7 @@
                     </div>
                 </div>
 
+				<h3 class="mb-2 mt-2">Hire date</h3>
 				<div class="d-flex gap-2 employee-info align-items-center mb-2">
                     <div>
                         <x-bx-calendar class="w-20 h-20" />
@@ -186,6 +167,8 @@
                         <p class="mb-0">{{ $employee->employeeProfile->doj }}</p>
                     </div>
                 </div>
+
+				<h3 class="mb-2 mt-2">Manager</h3>
 				<div class="d-flex gap-2 employee-info align-items-center mb-2">
                     <div>
                         <x-bx-user class="w-20 h-20" />
@@ -194,7 +177,6 @@
                         <p class="mb-0">{{ ucwords($employee->employeeProfile->manager) }}</p>
                     </div>
                 </div>
-
 				<div class="d-flex gap-2 employee-info align-items-center mb-2">
                     <div>
                         <x-bx-user-pin class="w-20 h-20" />
@@ -203,8 +185,6 @@
                         <p class="mb-0">{{ ucwords($employee->employeeProfile->manager_position) }}</p>
                     </div>
                 </div>
-
-                
             </div>
         </div>
         <div class="bg-white w-100 border-radius-15 p-4">

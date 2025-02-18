@@ -95,6 +95,7 @@
 								</div>
 							</div>
 
+							<!-- 
 							<div class="row">
 								<div class="col-8 mb-3">
 									<div class="form-group">
@@ -107,7 +108,8 @@
 											@endif
 									</div>
 								</div>
-							</div>
+							</div> 
+							-->
 
 							<div class="row">
 								<div class="col-8 mb-3">
@@ -164,6 +166,36 @@
 								</div>
 							</div>
 
+							<table class="w-full border-collapse border border-gray-300">
+								<thead>
+									<tr class="bg-gray-200">
+										<th class="border p-2">Select</th>
+										<th class="border p-2">Employee Name</th>
+										<th class="border p-2">Manual Balance</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($employees as $employee)
+									@php
+									$leaveBalance = \App\Models\LeaveBalance::where('user_id', $employee->id)
+										->where('leave_type_id', $leaveType->id)
+										->where('leave_year', date('Y'))
+										->first();
+									@endphp
+										<tr>
+											<td class="border p-2 text-center">
+												<input type="checkbox" name="users[{{ $employee->id }}][selected]" value="1">
+											</td>
+											<td class="border p-2">{{ $employee->name }}</td>
+									
+											<td class="border p-2">
+												<input value="{{ $leaveBalance->balance ?? 0 }}" type="number" name="users[{{ $employee->id }}][balance]" step="0.01" class="border p-2 w-full" placeholder="Enter Balance">
+											</td>
+										</tr>
+									@endforeach
+								</tbody>
+							</table>
+							
 							<div class="card-footer">
 								<button type="submit" class="btn btn-primary">Save</button>
 							</div>

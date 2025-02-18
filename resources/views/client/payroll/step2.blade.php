@@ -398,6 +398,7 @@
 </section>
 @endsection
 @push('page_scripts')
+<script src="{{asset('js/payroljs/jquery.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/bloodhound.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.min.js"></script>
 <script>

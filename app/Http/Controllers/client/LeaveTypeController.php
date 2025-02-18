@@ -5,11 +5,14 @@ namespace App\Http\Controllers\client;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\LeaveType;
+use App\Models\User;
+use App\Models\LeaveBalance;
 use App\Models\EmpLeavePolicy;
 // use DataTables;
 // use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class LeaveTypeController extends Controller
 {
@@ -132,7 +135,10 @@ class LeaveTypeController extends Controller
 	public function edit($id)
 	{
 		$leaveType = LeaveType::find($id);
-	   	return view('client.leave-type.edit', compact('leaveType'));
+
+		$employees = User::where('role_id', 3)->get();
+
+	   	return view('client.leave-type.edit', compact('leaveType', 'employees'));
 	}
 
 	public function update(Request $request, $id)
@@ -154,6 +160,36 @@ class LeaveTypeController extends Controller
 			'start_days' => $data['start_days'],
 			'is_visible_calendar' => $data['is_visible_calendar']
 		]);
+
+		foreach ($request->users as $userId => $data) {
+            if (!isset($data['selected'])) {
+                continue;
+            }
+
+            $leave_type_id = $leaveType->id; // $data['leave_type_id'];
+            $balance = $data['balance'] ?? 0;
+            $leave_year = Carbon::now()->year;
+
+            // Check if leave balance exists
+            $leaveBalance = LeaveBalance::where('user_id', $userId)
+                ->where('leave_type_id', $leave_type_id)
+                ->where('leave_year', $leave_year)
+                ->first();
+
+            if ($leaveBalance) {
+                $leaveBalance->update([
+                    'balance' => $balance,
+                    'updated_at' => now(),
+                ]);
+            } else {
+                LeaveBalance::create([
+                    'user_id' => $userId,
+                    'leave_type_id' => $leave_type_id,
+                    'balance' => $balance,
+                    'leave_year' => $leave_year,
+                ]);
+            }
+        }
 	
 		return redirect()->route('leave-type.index')->with('message', 'Leave policy updated successfully.');	
 	}   

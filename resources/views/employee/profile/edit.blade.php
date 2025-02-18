@@ -73,50 +73,118 @@
         </div>
     </div>
     <div class="d-flex gap-4">
-        <div class="employee-profile-left">
-            <div class="bg-white p-4 border-radius-15">
-                <div class="d-flex gap-2 employee-info align-items-center mb-2">
+	<div class="employee-profile-left">
+            <div class="bg-white sub-text-heading py-4 px-3 border-radius-15">
+				<h3 class="mb-1">Personal</h3>
+				<div class="d-flex gap-2 employee-info align-items-center mb-3">
                     <div>
-                        <x-heroicon-o-map-pin class="w-20 h-20" />
+						<x-bx-phone class="w-20 h-20" />
                     </div>
                     <div>
-                        <p class="mb-0">{{$employee->employeeProfile->country}} ({{ucwords($employee->employeeProfile->city)}})</p>
-                    </div>
-                </div>
-                <div class="d-flex gap-2 employee-info align-items-center mb-3">
-                    <div>
-                        <x-heroicon-o-envelope class="w-20 h-20" />
-                    </div>
-                    <div>
-                        <p class="mb-0">{{$employee->email}}</p>
+                        <p class="mb-0">{{ $employee->phone_number }}</p>
                     </div>
                 </div>
-                <ul class="mb-0 p-0 d-flex align-items-center gap-3 employee-social-media">
+				<div class="d-flex gap-2 employee-info align-items-center mb-3">
+                    <div>
+						<x-bx-user class="w-20 h-20"  style="color: #d76060 !important;" />
+                    </div>
+                    <div>
+                        <p class="mb-0">{{ $employee->employeeProfile->em_name }}</p>
+                    </div>
+                </div>
+				<div class="d-flex gap-2 employee-info align-items-center mb-3">
+                    <div>
+						<x-bx-phone class="w-20 h-20"  style="color: #d76060 !important;" />
+                    </div>
+                    <div>
+                        <p class="mb-0">{{ $employee->employeeProfile->em_number }}</p>
+                    </div>
+                </div>
+				<div class="d-flex gap-2 employee-info align-items-center mb-3">
+                    <div>
+						<x-bx-envelope class="w-20 h-20" />
+                    </div>
+                    <div>
+                        <p class="mb-0">{{ $employee->email }}</p>
+                    </div>
+                </div>
+				<ul class="mb-2 p-0 d-flex align-items-center gap-3 employee-social-media">
                     <li>
-                        <a href="#">
+                        <a href="{{$employee->employeeProfile->fb_url}}" target="_blank">
                             <x-bxl-facebook-square class="w-24 h-24" />
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{{$employee->employeeProfile->linkden_url}}"  target="_blank">
                             <x-bxl-linkedin-square class="w-24 h-24" />
                         </a>
                     </li>
-                    <li>
-                        <a href="#">
-                            <svg width="22" height="22" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_353_4505)">
-                                    <path d="M15.7508 0.960938H18.8175L12.1175 8.61927L20 19.0384H13.8283L8.995 12.7184L3.46333 19.0384H0.395L7.56167 10.8468L0 0.961771H6.32833L10.6975 6.73844L15.7508 0.960938ZM14.675 17.2034H16.3742L5.405 2.7001H3.58167L14.675 17.2034Z" fill="#454E97"/>
-                                </g>
-                                <defs>
-                                <clipPath id="clip0_353_4505">
-                                    <rect width="22" height="22" fill="white"/>
-                                </clipPath>
-                                </defs>
-                            </svg>
-                        </a>
-                    </li>
                 </ul>
+
+				<h3 class="mb-2 mt-2">Employment</h3>
+				<div class="d-flex gap-2 employee-info align-items-center mb-2">
+                    <div>
+                        <x-bx-map class="w-20 h-20" />
+                    </div>
+                    <div>
+                        <p class="mb-0">{{$employee->employeeProfile->address}}</p>
+                    </div>
+                </div>
+
+				<div class="d-flex gap-2 employee-info align-items-center mb-2">
+                    <div>
+						<x-bx-briefcase-alt class="w-20 h-20" />
+                    </div>
+                    <div>
+                        <p class="mb-0">{{$employee->employeeProfile->designation}}</p>
+                    </div>
+                </div>
+
+				<div class="d-flex gap-2 employee-info align-items-center mb-2">
+                    <div>
+                        <x-bx-building class="w-20 h-20" />
+                    </div>
+                    <div>
+                        <p class="mb-0">{{$employee->employeeProfile->department}}</p>
+                    </div>
+                </div>
+
+				<div class="d-flex gap-2 employee-info align-items-center mb-2">
+                    <div>
+                        <x-bx-dock-left class="w-20 h-20" />
+                    </div>
+                    <div>
+                        <p class="mb-0">{{ ucwords($employee->employeeProfile->emp_type) }}</p>
+                    </div>
+                </div>
+
+				<h3 class="mb-2 mt-2">Hire date</h3>
+				<div class="d-flex gap-2 employee-info align-items-center mb-2">
+                    <div>
+                        <x-bx-calendar class="w-20 h-20" />
+                    </div>
+                    <div>
+                        <p class="mb-0">{{ $employee->employeeProfile->doj }}</p>
+                    </div>
+                </div>
+
+				<h3 class="mb-2 mt-2">Manager</h3>
+				<div class="d-flex gap-2 employee-info align-items-center mb-2">
+                    <div>
+                        <x-bx-user class="w-20 h-20" />
+                    </div>
+                    <div>
+                        <p class="mb-0">{{ ucwords($employee->employeeProfile->manager) }}</p>
+                    </div>
+                </div>
+				<div class="d-flex gap-2 employee-info align-items-center mb-2">
+                    <div>
+                        <x-bx-user-pin class="w-20 h-20" />
+                    </div>
+                    <div>
+                        <p class="mb-0">{{ ucwords($employee->employeeProfile->manager_position) }}</p>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="bg-white w-100 border-radius-15 p-4">
@@ -332,6 +400,53 @@
 									</div>
 								</div>
 
+								<div class="col-6 mb-3">
+										<div class="form-group">
+											<label class="db-label" for="name">Emergency Contact Name</label>
+											<input id="em_name" type="text" class="form-control db-custom-input {{ $errors->has('em_name') ? ' is-invalid' : '' }}" name="em_name" value="{{ $employee->employeeProfile->em_name }}" {{$disabled}}>
+											@if ($errors->has('em_name'))
+												<span class="text-danger">
+													{{ $errors->first('em_name') }}
+												</span>
+											@endif
+										</div>
+									</div>
+
+									<div class="col-6 mb-3">
+										<div class="form-group">
+											<label class="db-label" for="name">Emergency Contact Number</label>
+											<input id="em_number" type="text" class="form-control db-custom-input {{ $errors->has('em_number') ? ' is-invalid' : '' }}" name="em_number" value="{{ $employee->employeeProfile->em_number }}" {{$disabled}}>
+											@if ($errors->has('em_number'))
+												<span class="text-danger">
+													{{ $errors->first('em_number') }}
+												</span>
+											@endif
+										</div>
+									</div>
+
+									<div class="col-6 mb-3">
+										<div class="form-group">
+											<label class="db-label" for="name">Facebook URL</label>
+											<input id="fb_url" type="text" class="form-control db-custom-input {{ $errors->has('fb_url') ? ' is-invalid' : '' }}" name="fb_url" value="{{ $employee->employeeProfile->fb_url }}"  >
+											@if ($errors->has('fb_url'))
+												<span class="text-danger">
+													{{ $errors->first('fb_url') }}
+												</span>
+											@endif
+										</div>
+									</div>
+									<div class="col-6 mb-3">
+										<div class="form-group">
+											<label class="db-label" for="name">Linkedin URL</label>
+											<input id="linkden_url" type="text" class="form-control db-custom-input {{ $errors->has('linkden_url') ? ' is-invalid' : '' }}" name="linkden_url" value="{{ $employee->employeeProfile->linkden_url }}" {{$disabled}}>
+											@if ($errors->has('linkden_url'))
+												<span class="text-danger">
+													{{ $errors->first('linkden_url') }}
+												</span>
+											@endif
+										</div>
+									</div>
+
 								<div class="col-12 text-end">
 									<button type="submit" class="btn btn-primary submit-btn">Submit</button>
 								</div>
@@ -454,6 +569,29 @@
 										<span class="text-danger">
 											{{ $errors->first('pay_rate') }}
 										</span>
+										@endif
+									</div>
+								</div>
+
+								<div class="col-4 mb-3">
+									<div class="form-group">
+										<label class="db-label" for="name">Manager Name</label>
+										<input id="manager" type="text" class="form-control db-custom-input {{ $errors->has('manager') ? ' is-invalid' : '' }}" name="manager" value="{{ $employee->employeeProfile->manager }}"  >
+										@if ($errors->has('manager'))
+											<span class="text-danger">
+												{{ $errors->first('manager') }}
+											</span>
+										@endif
+									</div>
+								</div>
+								<div class="col-6 mb-3">
+									<div class="form-group">
+										<label class="db-label" for="name">Manager Position</label>
+										<input id="manager_position" type="text" class="form-control db-custom-input {{ $errors->has('manager_position') ? ' is-invalid' : '' }}" name="manager_position" value="{{ $employee->employeeProfile->manager_position }}" {{$disabled}}>
+										@if ($errors->has('	'))
+											<span class="text-danger">
+												{{ $errors->first('manager_position') }}
+											</span>
 										@endif
 									</div>
 								</div>

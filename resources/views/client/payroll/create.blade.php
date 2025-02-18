@@ -177,7 +177,8 @@
 														</div>
 													</th>
 													<th scope="col">
-														02/11/2025 - 02/18/2025
+														
+														{{ date('m/d/Y', strtotime($request->start_date)).' - '.date('m/d/Y', strtotime($request->end_date)) }}
 													</th>
 												
 													<?php
