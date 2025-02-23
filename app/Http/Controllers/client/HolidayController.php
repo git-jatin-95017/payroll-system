@@ -71,7 +71,7 @@ class HolidayController extends Controller
 
 		// Fetching data with search and pagination
 		$holidays = Holiday::orderBy('holidays.id', 'desc')
-			->where('holidays.created_by', auth()->user()->id)
+			->where('holidays.created_by', auth()->user()->role_id == 3 ? auth()->user()->created_by : auth()->user()->id)
 			->where(function ($query) use ($searchValue) {
 				$query
 					->where(function ($query) use ($searchValue) {

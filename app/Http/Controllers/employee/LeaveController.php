@@ -206,7 +206,7 @@ class LeaveController extends Controller
             echo $daysTaken['0']->day;
             echo $leavetypes->leave_day;*/
 		} else {
-			$leavetypes = LeaveType::where('status', 1)->where('created_by', auth()->user()->id)->get();		
+			$leavetypes = LeaveType::where('status', 1)->where('created_by', auth()->user()->role_id == 3 ? auth()->user()->created_by : auth()->user()->id)->get();		
 	   		return view('employee.leaves.create', compact('leavetypes'));
 		}
 	}

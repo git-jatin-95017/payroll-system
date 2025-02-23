@@ -290,7 +290,7 @@
 															// $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
 														}
 													?>
-													<td class="total" @if($sum> 0) style="color:#33ba5d !important;"
+													<td class="total" @if($result[$dateToday]['approval_status'] == 1) style="color:#33ba5d !important;"
 														@endif>{{ $sum }}</td>
 												</tr>
 												@endforeach

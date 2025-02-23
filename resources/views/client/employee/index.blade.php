@@ -94,22 +94,22 @@
                             <td>${{ $employee->pay_rate }}</td>
                             <td>
                                 <div class="dropdown">
-                                    <button class="btn action-dropdown-toggle dropdown-toggle" type="button" id="dropdownMenuButton{$empId}" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn action-dropdown-toggle dropdown-toggle" type="button" id="dropdownMenuButton{{$empId}}" data-bs-toggle="dropdown" aria-expanded="false">
                                         <x-bx-dots-horizontal-rounded class="w-20 h-20" />
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{$empId}">
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{$empId}}">
                                         <li>
-                                            <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#ManageModal" class="dropdown-item" onclick="updateEmpCode({$empId})">
+                                            <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#ManageModal" class="dropdown-item" onclick="updateEmpCode({{$empId}})">
                                                 <x-bx-dollar-circle class="w-16 h-16" /> Assign Pay Label
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#LeavePolicyModal" class="dropdown-item" onclick="updateLeaveAssign({$empId})">
+                                            <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#LeavePolicyModal" class="dropdown-item" onclick="updateLeaveAssign({{$empId}})">
                                                 <x-bx-user-check class="w-16 h-16" /> Assign Leave Policy
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#LocationModal" class="dropdown-item" onclick="updateLocationAssign({$empId})">
+                                            <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#LocationModal" class="dropdown-item" onclick="updateLocationAssign({{$empId}})">
                                                 <x-bx-map-alt class="w-16 h-16" /> Assign Location
                                             </a>
                                         </li>
@@ -151,8 +151,9 @@
             </div>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          <form method="post" role="form" data-toggle="validator" id="assign-payhead-form">
           <div class="modal-body px-4 py-2">
-            <form method="post" role="form" data-toggle="validator" id="assign-payhead-form">
+            
                 @csrf
                 <div class="row">
                    <div class="col-6 mb-3">
@@ -188,13 +189,14 @@
                      </div>
                    </div>
                 </div>
-             </form>
+            
           </div>
           <div class="px-3 pb-4 d-flex gap-3 justify-content-end">
             <button  data-bs-dismiss="modal" aria-label="Close" class="btn submit-cencel">Cancel</button>
             <input type="hidden" name="empcode" id="empcode" />
             <button type="submit" name="submit" class="btn btn-primary submit-btn w-auto">Add Pay Labels</button>
           </div>
+          </form>
       </div>
     </div>
 </div>
@@ -211,8 +213,9 @@
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <form method="post" role="form" data-toggle="validator" id="assign-leave-policy-form">
+
         <div class="modal-body px-4 py-2">
-            <form method="post" role="form" data-toggle="validator" id="assign-leave-policy-form">
                 @csrf
                 <div class="row">
                     <div class="col-6 mb-3">
@@ -248,13 +251,14 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            
         </div>
         <div class="px-3 pb-4 d-flex gap-3 justify-content-end">
             <button  data-bs-dismiss="modal" aria-label="Close" class="btn submit-cencel">Cancel</button>
             <input type="hidden" name="empcodepolicy" id="empcodepolicy" />
             <button type="submit" name="submit" class="btn btn-primary submit-btn w-auto">Add Leave Policy</button>
         </div>
+        </form>
     </div>
   </div>
 </div>
@@ -269,8 +273,9 @@
                 </div>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          <form method="post" role="form" data-toggle="validator" id="assign-location-form">
           <div class="modal-body px-4 py-2">
-            <form method="post" role="form" data-toggle="validator" id="assign-location-form">
+            
                 @csrf
                 <div class="row">
                     <div class="col-6 mb-3">
@@ -305,13 +310,14 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            
           </div>
           <div class="px-3 pb-4 d-flex gap-3 justify-content-end">
             <button  data-bs-dismiss="modal" aria-label="Close" class="btn submit-cencel">Cancel</button>
             <input type="hidden" name="empcodelocation" id="empcodelocation" />
             <button type="submit" name="submit" class="btn btn-primary submit-btn w-auto">Add Location</button>
           </div>
+          </form>
       </div>
     </div>
 </div>
@@ -644,7 +650,7 @@
                                 from: "top",
                                 align: "right"
                             },
-                            z_index: 9999,
+                            // z_index: 9999,
                         });
                     }
                 }

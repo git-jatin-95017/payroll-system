@@ -74,7 +74,7 @@
     </div>
     <div class="d-flex gap-4">
         <div class="employee-profile-left">
-            <div class="bg-white sub-text-heading py-4 px-3 border-radius-15">
+		<div class="bg-white sub-text-heading py-4 px-3 border-radius-15">
 				<h3 class="mb-1">Personal</h3>
 				<div class="d-flex gap-2 employee-info align-items-center mb-3">
                     <div>
@@ -108,6 +108,18 @@
                         <p class="mb-0">{{ $employee->email }}</p>
                     </div>
                 </div>
+				<div class="d-flex gap-2 employee-info align-items-center mb-2">
+                    <div>
+                        <x-bx-map class="w-20 h-20" />
+                    </div>
+                    <div>
+                        <p class="mb-0">
+							{{$employee->employeeProfile->address}},
+							{{$employee->employeeProfile->city}},
+							{{$employee->employeeProfile->country}},
+						</p>
+                    </div>
+                </div>
 				<ul class="mb-2 p-0 d-flex align-items-center gap-3 employee-social-media">
                     <li>
                         <a href="{{$employee->employeeProfile->fb_url}}" target="_blank">
@@ -121,15 +133,8 @@
                     </li>
                 </ul>
 
-				<h3 class="mb-2 mt-2">Employment</h3>
-				<div class="d-flex gap-2 employee-info align-items-center mb-2">
-                    <div>
-                        <x-bx-map class="w-20 h-20" />
-                    </div>
-                    <div>
-                        <p class="mb-0">{{$employee->employeeProfile->address}}</p>
-                    </div>
-                </div>
+				<h3 class="mb-2 mt-4">Employment</h3>
+				
 
 				<div class="d-flex gap-2 employee-info align-items-center mb-2">
                     <div>
@@ -158,7 +163,7 @@
                     </div>
                 </div>
 
-				<h3 class="mb-2 mt-2">Hire date</h3>
+				<h3 class="mb-2 mt-4">Hire date</h3>
 				<div class="d-flex gap-2 employee-info align-items-center mb-2">
                     <div>
                         <x-bx-calendar class="w-20 h-20" />
@@ -168,7 +173,7 @@
                     </div>
                 </div>
 
-				<h3 class="mb-2 mt-2">Manager</h3>
+				<h3 class="mb-2 mt-4">Manager</h3>
 				<div class="d-flex gap-2 employee-info align-items-center mb-2">
                     <div>
                         <x-bx-user class="w-20 h-20" />
@@ -193,7 +198,7 @@
                     <div class="max-w-md max-auto">
                         <div class="sub-text-heading pb-4">
                             <h3 class="mb-1">Personal Information</h3>
-                            <p>Type your information</p>
+                            <!-- <p>Type your information</p> -->
                         </div>
 						<form class="form-horizontal" method="POST" action="{{ route('employee.update', $employee->id) }}" enctype="multipart/form-data">
 							@csrf
@@ -256,7 +261,7 @@
 							</div>
 
 							<div class="row">
-								<div class="col-6 mb-3">
+								<div class="col-3 mb-3">
 									<div class="form-group">
 										<label class="db-label" for="name">Date of Birth</label>
 										<input id="dob" type="date" class="form-control db-custom-input {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" value="{{ $employee->employeeProfile->dob }}" {{$disabled}}>
@@ -265,6 +270,23 @@
 												{{ $errors->first('dob') }}
 											</span>
 										@endif
+									</div>
+								</div>
+								<div class="col-3 mb-3">
+									<div class="form-group">
+										<!-- <div class="col-md-6"> -->
+											<label for="is_visible_calendar" class="db-label">Is Visible On Calendar?</label>
+											<select class="form-control db-custom-input" id="is_visible_calendar" name="is_visible_calendar">
+												<option @if($employee->employeeProfile->is_visible_calendar == "0") selected @endif value="0">No</option>
+												<option @if($employee->employeeProfile->is_visible_calendar == "1") selected @endif value="1">Yes</option>
+											</select>
+
+											@if ($errors->has('is_visible_calendar'))
+												<span class="text-danger">
+													{{ $errors->first('is_visible_calendar') }}
+												</span>
+											@endif
+										<!-- </div> -->
 									</div>
 								</div>
 								<div class="col-6 mb-3">
@@ -458,25 +480,7 @@
 										</div>
 									</div>
 
-									<div class="row">
-										<div class="col-8 mb-3">
-											<div class="form-group">
-												<!-- <div class="col-md-6"> -->
-													<label for="is_visible_calendar" class="db-label">Is Visible On Calendar?</label>
-													<select class="form-control db-custom-input" id="is_visible_calendar" name="is_visible_calendar">
-														<option @if($employee->employeeProfile->is_visible_calendar == "0") selected @endif value="0">No</option>
-														<option @if($employee->employeeProfile->is_visible_calendar == "1") selected @endif value="1">Yes</option>
-													</select>
-
-													@if ($errors->has('is_visible_calendar'))
-														<span class="text-danger">
-															{{ $errors->first('is_visible_calendar') }}
-														</span>
-													@endif
-												<!-- </div> -->
-											</div>
-										</div>
-									</div>
+									
 
 									<!-- <div class="col-6 mb-3">
 										<div class="form-group">
@@ -500,7 +504,7 @@
 					<div class="max-w-md max-auto">
 						<div class="sub-text-heading pb-4">
 							<h3 class="mb-1">Employment Information</h3>
-							<p>Type your employee details here</p>
+							<!-- <p>Type your employee details here</p> -->
 						</div>
 						<div class="row">
 							<div class="col-12  mb-3">
@@ -638,7 +642,7 @@
 					<div class="max-w-md max-auto">
 						<div class="sub-text-heading pb-4">
 							<h3 class="mb-1">Payment Information</h3>
-							<p>Add your payment method here</p>
+							<!-- <p>Add your payment method here</p> -->
 						</div>
 						<div class="row">
 							<div class="col-12 mb-3">
@@ -756,12 +760,12 @@
 						<div class="sub-text-heading pb-4 d-flex justify-content-between">
 							<div>
 								<h3 class="mb-1">Password</h3>
-								<p>Change password here</p>
+								<!-- <p>Change password here</p> -->
 							</div>
 						</div>
 							<div id="dynamicRowsContainer">
 								<div class="row">
-									<div class="col-6 mb-3">
+									<!-- <div class="col-6 mb-3">
 										<div class="form-group">
 											<label for="name" class="db-label">Current Password</label>
 											<div class="col-md-12">
@@ -773,7 +777,7 @@
 												@endif
 											</div>
 										</div>
-									</div>
+									</div> -->
 									<div class="col-6 mb-3">
 										<div class="form-group">
 											<label for="email" class="db-label">New Password</label>

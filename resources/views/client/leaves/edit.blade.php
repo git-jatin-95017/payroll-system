@@ -208,18 +208,18 @@
                 // Get the record's ID via attribute  
                 var duration = $('input[name=type]:checked', '#leaveapply').attr('data-value');
 
-                if(duration =='Half'){
+                if(duration =='Hourly'){
                     // $('#enddate').hide();
                     $('#hourlyFix').text('Date');
                     $('#hourAmount').show();
                 }
                 else if(duration =='Full'){
-                    // $('#enddate').hide();  
+                    $('#enddate').hide();  
                     $('#hourAmount').hide();  
                     $('#hourlyFix').text('Start date');  
                 }
                 else if(duration =='More'){
-                    // $('#enddate').show();
+                    $('#enddate').show();
                     $('#hourAmount').hide();
                 }
             });

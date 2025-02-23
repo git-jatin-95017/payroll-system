@@ -85,7 +85,7 @@
 							</td>
                             <td>{{ $row->title }}</td>
                             <td>{{ $row->description }}</td>
-                            <td>{{  date('m-d', strtotime($row->holiday_date)) }}</td>
+                            <td>{{  date('Y-m-d', strtotime($row->holiday_date)) }}</td>
                             <td>
 								<?php 
 									if ($row->type == 1) {

@@ -104,7 +104,7 @@ class MyProfileController extends Controller
 
 			$request->validate([
 	//			'email_address' => ['required', 'email'],
-				'old_password' => ['required'],
+				// 'old_password' => ['required'],
 				'password' => ['required', 'string', 'min:8', 'confirmed'],
 				'password_confirmation' => 'required_with:password',
 			], [], [
@@ -113,9 +113,9 @@ class MyProfileController extends Controller
 
 			unset($data['update_request']);
 
-			$user->password = Hash::make($data['password_confirmation']);
+			$employee->password = Hash::make($data['password_confirmation']);
 			
-			$user->save();
+			$employee->save();
 		} else {
 			$request->validate([
 				'first_name' => ['required'],
