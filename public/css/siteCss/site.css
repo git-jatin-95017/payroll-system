@@ -1143,12 +1143,22 @@ tr.ts-day-row th {
     max-width: 260px;
     width: 100%;
 }
-
+.ts-date-row {
+    border-bottom: 2px solid #4f4bc3;
+}
 .time-sheet-container .ts-custom-table tr td div input[type="text"]:focus{
     border: transparent;
 }
-
-
+.ts-date-row th {
+    padding-bottom: 15px;
+}
+tr.ts-day-row th {
+    padding-top: 8px;
+}
+.ts-date-row th {
+    padding-bottom: 15px;
+    padding-top: 15px;
+}
 .db-radio-btn label {
     border: 2px solid transparent;
     width: 100%;

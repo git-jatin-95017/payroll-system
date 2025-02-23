@@ -167,13 +167,11 @@
 										<table class="table ts-custom-table">
 											<thead>
 												<tr class="ts-date-row">
-													<th rowspan="2">
+													<th scope="col">
 														<div class="form- mb-0">
 															<input style="width: 16px; height: 16px;" type="checkbox"
 																id="select_all" class="form-check-input mt-0" />
-															<label class="form-check-label d-block db-label mt-1"
-																style="font-size: 11px; color: #fff;"
-																for="select_all">All</label>
+															
 														</div>
 													</th>
 													<th scope="col">
@@ -192,6 +190,9 @@
 													<th>Total</th>
 												</tr>
 												<tr class="ts-day-row">
+													<th scope="col">
+														<label class="form-check-label d-block db-label mt-1" style="font-size: 11px; color: #fff;" for="select_all">All</label>
+													</th>
 													<th scope="col">
 														<p class="db-table-search position-relative mb-0">
 															<svg width="20px" xmlns="http://www.w3.org/2000/svg"
