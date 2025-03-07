@@ -198,27 +198,38 @@
 	<script src="{{ asset('js/datepicker/bootstrap-datepicker.js') }}"></script>
 	<script>
         $(document).ready(function () {
+			if ($('input[name=type]:checked', '#leaveapply').attr('data-value') == 'More') {
+				$('#enddate').show();
+			} else {
+				$('#enddate').hide();
+			}
+			  
+			
+			
+			
             $('#leaveapply input').on('change', function(e) {
                 e.preventDefault(e);
 
                 // Get the record's ID via attribute  
                 var duration = $('input[name=type]:checked', '#leaveapply').attr('data-value');
 
-                if(duration =='Half'){
-                    // $('#enddate').hide();
+                if(duration =='Hourly'){
+                    $('#enddate').hide();
                     $('#hourlyFix').text('Date');
                     $('#hourAmount').show();
                 }
                 else if(duration =='Full'){
-                    // $('#enddate').hide();  
+                    $('#enddate').hide();  
                     $('#hourAmount').hide();  
                     $('#hourlyFix').text('Start date');  
                 }
                 else if(duration =='More'){
-                    // $('#enddate').show();
+                    $('#enddate').show();
                     $('#hourAmount').hide();
                 }
             });
+
+			$('#leaveapply input').trigger('change');
         }); 
     </script>
     <script>

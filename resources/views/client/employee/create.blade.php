@@ -123,7 +123,7 @@
                     <div class="max-w-md max-auto">
                         <div class="sub-text-heading pb-4">
                             <h3 class="mb-1">Personal Information</h3>
-                            <p>Type your information</p>
+                            <!-- <p>Type your information</p> -->
                         </div>
 							<form class="form-horizontal" method="POST" action="{{ route('employee.store') }}" enctype="multipart/form-data">
 							@csrf
@@ -199,13 +199,28 @@
 							</div>
 
 							<div class="row">
-								<div class="col-6 mb-3">
+								<div class="col-3 mb-3">
 									<div class="form-group">
 										<label class="db-label" for="name">Date of Birth</label>
 										<input id="dob" type="date" class="form-control db-custom-input {{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" value="{{old('dob')}}">
 										@if ($errors->has('dob'))
 											<span class="text-danger">
 												{{ $errors->first('dob') }}
+											</span>
+										@endif
+									</div>
+								</div>
+								<div class="col-3 mb-3">
+									<div class="form-group">
+										<label for="is_visible_calendar" class="db-label">Is Visible On Calendar?</label>
+										<select class="form-control db-custom-input" id="is_visible_calendar" name="is_visible_calendar">
+											<option value="0">No</option>
+											<option value="1">Yes</option>
+										</select>
+
+										@if ($errors->has('is_visible_calendar'))
+											<span class="text-danger">
+												{{ $errors->first('is_visible_calendar') }}
 											</span>
 										@endif
 									</div>
@@ -400,26 +415,6 @@
 									</div>
 								</div>
 
-								<div class="row">
-									<div class="col-8 mb-3">
-										<div class="form-group">
-											<!-- <div class="col-md-6"> -->
-												<label for="is_visible_calendar" class="db-label">Is Visible On Calendar?</label>
-												<select class="form-control db-custom-input" id="is_visible_calendar" name="is_visible_calendar">
-													<option value="0">No</option>
-													<option value="1">Yes</option>
-												</select>
-
-												@if ($errors->has('is_visible_calendar'))
-													<span class="text-danger">
-														{{ $errors->first('is_visible_calendar') }}
-													</span>
-												@endif
-											<!-- </div> -->
-										</div>
-									</div>
-								</div>
-
 								<div class="col-12 text-end">
 									<button type="submit" class="btn btn-primary submit-btn">Submit</button>
 								</div>
@@ -430,7 +425,7 @@
 					<div class="max-w-md max-auto">
 						<div class="sub-text-heading pb-4">
 							<h3 class="mb-1">Employment Information</h3>
-							<p>Type your employee details here</p>
+							<!-- <p>Type your employee details here</p> -->
 						</div>
 						<div class="row">
 								<div class="col-4 mb-3">
@@ -570,13 +565,34 @@
 					<div class="max-w-md max-auto">
 						<div class="sub-text-heading pb-4">
 							<h3 class="mb-1">Payment Information</h3>
-							<p>Add your payment method here</p>
+							<!-- <p>Add your payment method here</p> -->
 						</div>
 							<div class="row">
-								<div class="col-4 mb-3">
+								<div class="col-12 mb-3">
 									<div class="form-group">
 										<label class="db-label" for="name">Payment Method</label>
-										<select class="form-control select-drop-down-arrow db-custom-input {{ $errors->has('payment_method') ? ' is-invalid' : '' }}" id="payment_method" name="payment_method"  onchange="showDiv(this)">
+										<div class="d-flex gap-5">
+											<div>
+												<div class="position-relative db-radio-btn">
+													<input class="form-check-input"  type="radio" name="payment_method" id="payment_check" value="check" onchange="showDiv(this)" checked>
+													<label class="form-check-label" for="payment_check">
+														<img src="{{ asset('img/bank-check.png') }}" class="mb-2" alt="">
+														<h3>Cheque</h3>
+													</label>
+												</div>
+											</div>
+											<div>
+												<div class="position-relative db-radio-btn">
+													<input class="form-check-input" type="radio" name="payment_method" id="payment_deposit" value="deposit" onchange="showDiv(this)">
+													<label class="form-check-label" for="payment_deposit">
+														<img src="{{ asset('img/bank.png') }}" class="mb-2" alt="">
+														<h3>Direct Deposit</h3>
+													</label>
+												</div>
+											</div>
+										</div>
+
+										<!-- <select class="form-control select-drop-down-arrow db-custom-input {{ $errors->has('payment_method') ? ' is-invalid' : '' }}" id="payment_method" name="payment_method"  onchange="showDiv(this)">
 											<option value="" selected disabled>Please Select</option>
 											<option value="check">Cheque</option>
 											<option value="deposit">Direct Deposit</option>
@@ -585,10 +601,10 @@
 										<span class="text-danger">
 											{{ $errors->first('payment_method') }}
 										</span>
-										@endif
+										@endif -->
 									</div>
 								</div>
-								<div class="col-4 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="routing_number_div">
+								<div class="col-6 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="routing_number_div">
 									<label for="routing_number" class="db-label">Routing Number</label>
 									<div class="form-group mb-0">
 										<input id="routing_number" type="routing_number" class="form-control db-custom-input {{ $errors->has('routing_number') ? ' is-invalid' : '' }}" name="routing_number">
@@ -599,7 +615,7 @@
 										@endif
 									</div>
 								</div>
-								<div class="col-4 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="account_number_div">
+								<div class="col-6 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="account_number_div">
 									<label for="account_number" class="db-label">Account Number</label>
 									<div class="form-group mb-0">
 										<input id="account_number" type="account_number" class="form-control db-custom-input {{ $errors->has('account_number') ? ' is-invalid' : '' }}" name="account_number">
@@ -613,8 +629,9 @@
 							</div>
 
 							<div class="row">
+								
 								<div class="row mb-3 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="account_type_div">
-									<div class="col-md-4 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="bank_div">
+									<div class="col-md-6 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="bank_div">
 										<label for="bank_name" class="db-label">Bank Name</label>
 										<div class="form-group mb-0">
 											<input id="bank_name" type="bank_name" class="form-control db-custom-input {{ $errors->has('bank_name') ? ' is-invalid' : '' }}"  name="bank_name">
@@ -626,10 +643,10 @@
 											@endif
 										</div>
 									</div>
-									<div class="col-md-4">
-										<div class="form-group">
-											<label for="name">Account Type</label>
-											<select class="form-control select-drop-down-arrow  db-custom-input {{ $errors->has('account_type') ? ' is-invalid' : '' }}" id="account_type" name="account_type">
+									<div class="col-md-6">
+										<label for="name" class="db-label">Account Type</label>
+										<div class="form-group mb-0">	
+											<select class="form-control select-drop-down-arrow db-custom-input {{ $errors->has('account_type') ? ' is-invalid' : '' }}" id="account_type" name="account_type">
 												<option value="" disabled>Please Select</option>
 												<option value="checking">Chequing</option>
 												<option value="saving">Saving</option>
@@ -655,13 +672,13 @@
 						<div class="sub-text-heading pb-4 d-flex justify-content-between">
 							<div>
 								<h3 class="mb-1">Password</h3>
-								<p>Change password here</p>
+								<!-- <p>Change password here</p> -->
 							</div>
 						</div>
 
 							<div id="dynamicRowsContainer">
 								<div class="row">
-									<div class="col-6 mb-3">
+									<!-- <div class="col-6 mb-3">
 										<div class="form-group">
 											<label for="name" class="db-label">Current Password</label>
 											<div class="col-md-12">
@@ -673,7 +690,7 @@
 												@endif
 											</div>
 										</div>
-									</div>
+									</div> -->
 									<div class="col-6 mb-3">
 										<div class="form-group">
 											<label for="email" class="db-label">New Password</label>

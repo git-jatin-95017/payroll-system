@@ -202,6 +202,14 @@
 	<script src="{{ asset('js/datepicker/bootstrap-datepicker.js') }}"></script>
 	<script>
         $(document).ready(function () {
+			if ($('input[name=type]:checked', '#leaveapply').attr('data-value') == 'More') {
+				$('#enddate').show();
+			} else {
+				$('#enddate').hide();
+			}
+			  
+			
+
             $('#leaveapply input').on('change', function(e) {
                 e.preventDefault(e);
 
@@ -209,7 +217,7 @@
                 var duration = $('input[name=type]:checked', '#leaveapply').attr('data-value');
 
                 if(duration =='Hourly'){
-                    // $('#enddate').hide();
+                    $('#enddate').hide();
                     $('#hourlyFix').text('Date');
                     $('#hourAmount').show();
                 }
@@ -223,6 +231,8 @@
                     $('#hourAmount').hide();
                 }
             });
+
+			$('#leaveapply input').trigger('change');
         }); 
     </script>
     <script>

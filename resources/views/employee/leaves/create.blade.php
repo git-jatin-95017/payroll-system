@@ -205,7 +205,7 @@
                 var duration = $('input[name=type]:checked', '#leaveapply').attr('data-value');
 
                 if(duration =='Hourly'){
-                    // $('#enddate').hide();
+                    $('#enddate').hide();
                     $('#hourlyFix').text('Date');
                     $('#hourAmount').show();
                 }
@@ -219,6 +219,8 @@
                     $('#hourAmount').hide();
                 }
             });
+
+			$('#leaveapply input').trigger('change');
         }); 
     </script>
     <script>
