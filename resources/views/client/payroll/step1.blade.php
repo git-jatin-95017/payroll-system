@@ -7,16 +7,21 @@
 		<p class="mb-0">Track and manage your payroll here</p>
 	</div>
 </div>
-<div class="text-end payroll-date-section mb-3">
-	<p class="mb-0">
-		<span class="mb-0">
-			Pay Period:
-		</span>
-		{{ date('F dS Y', strtotime($from))}} to {{ date('F dS Y', strtotime($to))}}
-	</p>
-</div>
+
 <div class="bg-white w-100 border-radius-15 p-4 mb-3">
-	<div class="row">
+	<div class="row mb-4">
+		<div class="col-12">
+			<div class="text-end payroll-date-section mb-3">
+				<p class="mb-0">
+					<span class="mb-0">
+						Pay Period:
+					</span>
+					{{ date('F dS Y', strtotime($from))}} to {{ date('F dS Y', strtotime($to))}}
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="row mb-5">
 		<div class="col-3">
 			<div class="step-container on-step">
 				<h2>1. Hours and Earnings</h2>
@@ -42,8 +47,6 @@
 			</div>
 		</div>
 	</div>
-</div>
-<div class="bg-white w-100 border-radius-15 p-4">
 	<div class="tab-content" id="myTabContent">
 		@if (session('message'))
 		<div class="row">
@@ -67,7 +70,7 @@
 		<div class="row">
 			<div class="col-sm-12">
 				<div>
-
+	
 					<form class="form-horizontal" method="POST"
 						action="{{ route('store.Step1', ['start_date' => $from, 'end_date' => $to, 'appoval_number'=> $appoval_number]) }}"
 						id="fom-timesheet">
@@ -87,18 +90,18 @@
 									<?php
 										// $from = date('Y-m-01'); //date('m-01-Y');
 										// $to = date('Y-m-t'); //date('m-t-Y');
-
+	
 										$timeCardData = \App\Models\PayrollSheet::whereBetween('payroll_date', [$from, $to])->where('approval_status', 1)->where('appoval_number', $appoval_number)->whereNotNull('payroll_date')->where('emp_id', $employee->id)->get();
-
+	
 										if ($timeCardData->count() == 0) {
 											continue;
 										}
 										// foreach($timeCardData as $k => $v) {
 										// 	$timeCardData[$k]['daily_hrs'] = (float) $v['daily_hrs'];
 										// }
-
+	
 										$isDataExist = \App\Models\PayrollAmount::where('start_date', '>=', $from)->where('end_date', '<=', $to)->where('user_id', $employee->id)->first();
-
+	
 										if(!empty($isDataExist)) {
 											$id = $isDataExist->id;
 											$totalHours = $isDataExist->total_hours;
@@ -119,7 +122,7 @@
 											$otCalc = $isDataExist->overtime_calc;
 											$dotCalc = $isDataExist->doubl_overtime_calc;
 											$edu_levy = $isDataExist->edu_levy;
-
+	
 											$medical_less_60_amt = $isDataExist->medical_less_60 ?? $settings->medical_less_60;
 											$medical_gre_60_amt = $isDataExist->medical_gre_60 ?? $settings->medical_gre_60;
 											$social_security_amt = $isDataExist->social_security ?? $settings->social_security;
@@ -144,7 +147,7 @@
 											$securityEmployer = 0;
 											$net_pay = 0;
 											$edu_levy = 0;
-
+	
 											$medical_less_60_amt = $settings->medical_less_60;
 											$medical_gre_60_amt = $settings->medical_gre_60;
 											$social_security_amt = $settings->social_security;
@@ -152,13 +155,13 @@
 											$education_levy_amt = $settings->education_levy;
 											$education_levy_amt_5 = $settings->education_levy_amt_5;
 										}
-
-
+	
+	
 										// $from = new \DateTime($employee->employeeProfile->dob);
 										// $to   = new \DateTime('today');
 										// dd($from->diff($to)->y);
 										$diff = date_diff(date_create($employee->employeeProfile->dob), date_create(date("Y-m-d")));
-
+	
 										$dob = $diff->format('%y');
 									?>
 									<tr class="row-tr-js tr-main">
@@ -316,7 +319,7 @@
 																	// $collection = collect($isDataExist->additionalEarnings);
 																	// dd($collection);
 																	$arrTemp = $isDataExist->additionalEarnings()->select('amount')->where('user_id', $employee->id)->where('payhead_id', $value->payhead->id)->first();
-
+	
 																	$amountPayhead = !empty($arrTemp->amount) ? $arrTemp->amount: 0;
 																}
 															?>
@@ -360,7 +363,7 @@
 													<td></td>
 												</tr>
 											</table>
-
+	
 										</td>
 										<td class="col-sm-3">
 											<table>
@@ -510,12 +513,12 @@
 							</div>
 						</div>
 					</form>
-
+	
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
+	</div>
 </div>
 @endsection
 @push('page_scripts')

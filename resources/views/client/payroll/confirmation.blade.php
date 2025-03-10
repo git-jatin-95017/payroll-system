@@ -153,7 +153,7 @@
 	</div>
 </div>
 <div class="bg-white w-100 border-radius-15 p-4 mb-3">
-	<div class="row">
+	<div class="row mb-4">
 		<div class="col-3">
 			<div class="step-container on-step">
 				<h2>1. Hours and Earnings</h2>
@@ -179,8 +179,6 @@
 			</div>
 		</div>
 	</div>
-</div>
-<section class="bg-white w-100 border-radius-15 p-4">
     <div class="row">
         <div class="col-12">
             <div class="payroll-heading">
@@ -301,25 +299,25 @@
                                 @php
                                     $medical_benefits11 = $social_security11 = $education_lvey11 = $social_security_employer11 = [];
                                 @endphp
-
+    
                                 @foreach($data as $row)
                                     <?php
-
+    
                                         $medical_less_60_amt = $row->medical_less_60 ?? $settings->medical_less_60;
                                         $medical_gre_60_amt = $row->medical_gre_60 ?? $settings->medical_gre_60;
                                         $social_security_amt = $row->social_security ?? $settings->social_security;
                                         $social_security_employer_amt = $row->social_security_employer ?? $settings->social_security_employer;
                                         $education_levy_amt = $row->education_levy ?? $settings->education_levy;
                                         $education_levy_amt_5 = $row->education_levy_amt_5 > 0 ? $row->education_levy_amt_5 : $settings->education_levy_amt_5;
-
+    
                                         $gross1 =0;
                                         $gross1 = $row->gross + $row->paid_time_off;
-
+    
                                         $pay_type = $row->user->employeeProfile->pay_type;
                                         $diff = date_diff(date_create($row->user->employeeProfile->dob), date_create(date("Y-m-d")));
                                         $dob = $diff->format('%y');
                                         $days = $row->total_hours;
-
+    
                                         if ($pay_type == 'hourly' || $pay_type == 'weekly') {
                                             if ($dob <= 60) {
                                                 $medical_benefits1 = ($gross1 * $medical_less_60_amt) / 100;
@@ -328,7 +326,7 @@
                                             } else if ($dob > 70 ) {
                                                 $medical_benefits1 = 0;
                                             }
-
+    
                                             $social_security1 = ( $gross1>1500 ? ((1500*$social_security_amt) / 100) : ($gross1*$social_security_amt) / 100 );
                                             $social_security_employer1 = ( $gross1>1500 ? ((1500*$social_security_employer_amt) / 100) : ($gross1*$social_security_employer_amt) / 100 );
                                             $education_lvey1 = ($gross1<=125?0:($gross1>1154?( ((1154-125)*$education_levy_amt) / 100)+( (($gross1-1154)*$education_levy_amt_5) / 100 ):( (($gross1-125)*$education_levy_amt) /100)));
@@ -343,7 +341,7 @@
                                             } else if ($dob > 70 ) {
                                                 $medical_benefits1 = 0;
                                             }
-
+    
                                             if ($days <= 7) {
                                                 $social_security1 = ( $gross1>3000 ? ((3000*$social_security_amt) / 100) : ($gross1*$social_security_amt) / 100 );
                                                 $social_security_employer1 = ( $gross1>3000 ? ((3000*$social_security_employer_amt) / 100) : ($gross1*$social_security_employer_amt) / 100 );
@@ -353,7 +351,7 @@
                                             }
                                             $education_lvey1 = ($gross1<=250?0:($gross1>2308?(((2308-250)*$education_levy_amt)/100)+((($gross1-2308)*$education_levy_amt_5)/100):((($gross1-250)*$education_levy_amt)/100)));
                                             // $mbse_deductions = $medical_benefits1 + $social_security1 + $education_lvey1;
-
+    
                                         } else if ($pay_type == 'semi-monthly') {
                                             if ($dob <= 60) {
                                                 $medical_benefits1 = ($gross1 * $medical_less_60_amt) / 100;
@@ -379,8 +377,8 @@
                                             $education_lvey1 = ($gross1<=125?0:($gross1>5000?(((5000-541.67)*$education_levy_amt)/100)+((($gross1-5000)*$education_levy_amt_5)/100):((($gross1-541.67)*$education_levy_amt)/100)));
                                             // $mbse_deductions = $medical_benefits1 + $social_security1 + $education_lvey1;
                                         }
-
-
+    
+    
                                         array_push($medical_benefits11, $medical_benefits1);
                                         array_push($social_security11, $social_security1);
                                         array_push($education_lvey11, $education_lvey1);
@@ -665,14 +663,14 @@
                                     @endphp
                                     @foreach($data as $row)
                                         <?php
-
+    
                                             $medical_less_60_amt = $row->medical_less_60 ?? $settings->medical_less_60;
                                             $medical_gre_60_amt = $row->medical_gre_60 ?? $settings->medical_gre_60;
                                             $social_security_amt = $row->social_security ?? $settings->social_security;
                                             $social_security_employer_amt = $row->social_security_employer ?? $settings->social_security_employer;
                                             $education_levy_amt = $row->education_levy ?? $settings->education_levy;
                                             $education_levy_amt_5 = $row->education_levy_amt_5 > 0 ? $row->education_levy_amt_5 : $settings->education_levy_amt_5;
-
+    
                                             $gross =0;
                                             $employeePay =0;
                                             $deductions = 0;
@@ -680,38 +678,38 @@
                                             // $paidTimeOff = 0;
                                             // $reimbursement = $row->reimbursement;
                                             $nothingAdditionTonetPay = 0;
-
+    
                                             if (count($row->additionalEarnings) > 0) {
                                                 foreach($row->additionalEarnings as $key => $val) {
                                                     if($val->payhead->pay_type =='earnings') {
                                                         $earnings += $val->amount;
                                                     }
-
+    
                                                     if($val->payhead->pay_type =='deductions') {
                                                         $deductions += $val->amount;
                                                     }
-
+    
                                                     if($val->payhead->pay_type =='nothing') {
                                                         $nothingAdditionTonetPay += $val->amount;
                                                     }
                                                 }
                                             }
-
+    
                                             // if (count($row->additionalPaids) > 0){
                                             //     foreach($row->additionalPaids as $key => $val) {
                                             //         $paidTimeOff += $val->amount;
                                             //     }
                                             // }
-
+    
                                             // $regHrs = $row->user->employeeProfile->pay_rate * $row->total_hours;
-
+    
                                             $gross = $row->gross + $row->paid_time_off;
-
+    
                                             $pay_type = $row->user->employeeProfile->pay_type;
                                             $diff = date_diff(date_create($row->user->employeeProfile->dob), date_create(date("Y-m-d")));
                                             $dob = $diff->format('%y');
                                             $days = $row->total_hours;
-
+    
                                             if ($pay_type == 'hourly' || $pay_type == 'weekly') {
                                                 if ($dob <= 60) {
                                                     $medical_benefits = ($gross * $medical_less_60_amt) / 100;
@@ -720,7 +718,7 @@
                                                 } else if ($dob > 70 ) {
                                                     $medical_benefits = 0;
                                                 }
-
+    
                                                 $social_security = ( $gross>1500 ? ((1500*$social_security_amt) / 100) : ($gross*$social_security_amt) / 100 );
                                                 $social_security_employer = ( $gross>1500 ? ((1500*$social_security_employer_amt) / 100) : ($gross*$social_security_employer_amt) / 100 );
                                                 $education_lvey = ($gross<=125?0:($gross>1154?( ((1154-125)*$education_levy_amt) / 100)+( (($gross-1154)*$education_levy_amt_5) / 100 ):( (($gross-125)*$education_levy_amt) /100)));
@@ -735,7 +733,7 @@
                                                 } else if ($dob > 70 ) {
                                                     $medical_benefits = 0;
                                                 }
-
+    
                                                 if ($days <= 7) {
                                                     $social_security = ( $gross>3000 ? ((3000*$social_security_amt) / 100) : ($gross*$social_security_amt) / 100 );
                                                     $social_security_employer = ( $gross>3000 ? ((3000*$social_security_employer_amt) / 100) : ($gross*$social_security_employer_amt) / 100 );
@@ -778,18 +776,18 @@
                                                 $net_pay = $gross - $mbse_deductions;
                                             }
                                             // $gross += ($regHrs + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings + $nothingAdditionTonetPay) + $row->paid_time_off); commented
-
+    
                                             // $grossFinal += $gross;
                                             // $grossFinal += ($regHrs + $row->overtime_hrs + $row->doubl_overtime_hrs + $row->holiday_pay + ($earnings + $nothingAdditionTonetPay) + $row->paid_time_off);
-
+    
                                             $employeePay = $gross- ($mbse_deductions) + ($nothingAdditionTonetPay) - $deductions;
-
+    
                                             // $totalEmployeePay += $employeePay;
                                             // $totalTaxes += ($row->medical +$row->security + $row->edu_levy);
                                             // $totalDeductions += $deductions;
                                             // $totalAdditions += $earnings;
                                             // $nothingAdditionTonetPayTotal += $nothingAdditionTonetPay;
-
+    
                                             $subtotal += $employeePay + $mbse_deductions + $row->security_employer + $medical_benefits;
                                         ?>
                                         <tr>
@@ -822,8 +820,7 @@
             </div>
         </div>
     </div>
-</section>
-
+</div>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 

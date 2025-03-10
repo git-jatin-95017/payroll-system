@@ -1,13 +1,14 @@
 @extends('layouts.new_layout')
 
 @section('content')
+sty
 <div class="img-load">
 	<div>
 		<img src="{{asset('img/new-load.gif')}}" alt="logo" >
 	</div>
 </div>
 <section class="content">
-	<div class="bg-white w-100 border-radius-15 p-4">		
+	<div class="bg-white w-100 border-radius-15 p-4 h-100">		
 		<div class="tab-content" id="myTabContent">
 			@if (session('message'))
 				<div class="row">
