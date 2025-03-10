@@ -167,8 +167,10 @@ class DashboardController extends Controller
 		$totalRows = [];
 		foreach ($latestStartDates as $date) {
 			// Get payroll records for the current start_date
-			$payrollRecords = PayrollAmount::whereIn('status', [1])
-				->where('created_by', auth()->user()->id)
+			$payrollRecords = PayrollAmount::whereIn('payroll_amounts.status', [1])
+				->join('users', 'users.id', '=', 'payroll_amounts.user_id')
+				->join('employee_profile', 'users.id', '=', 'employee_profile.user_id')
+				->where('payroll_amounts.created_by', auth()->user()->id)
 				->where('start_date', $date->start_date)
 				->get();
 			
