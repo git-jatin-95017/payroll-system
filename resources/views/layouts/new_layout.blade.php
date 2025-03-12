@@ -74,7 +74,7 @@
                 </div>
             </div>
         </div>
-        <div id="page-container" class="p-4">
+        <div id="page-container" class="p-4 h-100">
             @yield('content')
         </div>
     </div>
