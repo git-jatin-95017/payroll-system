@@ -669,7 +669,7 @@
 										<div class="d-flex gap-5">
 											<div>
 												<div class="position-relative db-radio-btn">
-													<input class="form-check-input"  type="radio" name="payment_method" id="payment_check" value="check" onchange="showDiv(this)" checked>
+													<input class="form-check-input"  type="radio" name="payment_method" id="payment_check" value="check" onchange="showDiv(this)" @if(!empty($employee->paymentProfile->payment_method) && $employee->paymentProfile->payment_method == "check") checked @endif>
 													<label class="form-check-label" for="payment_check">
 														<img src="{{ asset('img/bank-check.png') }}" class="mb-2" alt="">
 														<h3>Cheque</h3>
@@ -678,7 +678,7 @@
 											</div>
 											<div>
 												<div class="position-relative db-radio-btn">
-													<input class="form-check-input" type="radio" name="payment_method" id="payment_deposit" value="deposit" onchange="showDiv(this)">
+													<input class="form-check-input" type="radio" name="payment_method" id="payment_deposit" value="deposit" onchange="showDiv(this)" @if(!empty($employee->paymentProfile->payment_method) && $employee->paymentProfile->payment_method == "deposit") checked @endif>
 													<label class="form-check-label" for="payment_deposit">
 														<img src="{{ asset('img/bank.png') }}" class="mb-2" alt="">
 														<h3>Direct Deposit</h3>
@@ -693,28 +693,28 @@
 										@endif
 									</div>
 								</div>
-							<div class="col-6 mb-3 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="routing_number_div">
-								<label for="routing_number" class="db-label">Routing Number</label>
-								<div class="form-group mb-0">
-									<input id="routing_number" type="routing_number" class="form-control db-custom-input {{ $errors->has('routing_number') ? ' is-invalid' : '' }}" name="routing_number" value="{{ !empty($employee->paymentProfile->routing_number) ? $employee->paymentProfile->routing_number : '' }}" {{$disabled}}>
-									@if ($errors->has('routing_number'))
-										<span class="text-danger">
-											{{ $errors->first('routing_number') }}
-										</span>
-									@endif
+								<div class="col-6 mb-3 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="routing_number_div">
+									<label for="routing_number" class="db-label">Routing Number</label>
+									<div class="form-group mb-0">
+										<input id="routing_number" type="routing_number" class="form-control db-custom-input {{ $errors->has('routing_number') ? ' is-invalid' : '' }}" name="routing_number" value="{{ !empty($employee->paymentProfile->routing_number) ? $employee->paymentProfile->routing_number : '' }}" {{$disabled}}>
+										@if ($errors->has('routing_number'))
+											<span class="text-danger">
+												{{ $errors->first('routing_number') }}
+											</span>
+										@endif
+									</div>
 								</div>
-							</div>
-							<div class="col-6 mb-3 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="account_number_div">
-								<label for="account_number" class="db-label">Account Number</label>
-								<div class="form-group mb-0">
-									<input id="account_number" type="account_number" class="form-control db-custom-input {{ $errors->has('account_number') ? ' is-invalid' : '' }}" value="{{ !empty($employee->paymentProfile->account_number) ? $employee->paymentProfile->account_number:'' }}" name="account_number" {{$disabled}}>
-									@if ($errors->has('account_number'))
-										<span class="text-danger">
-											{{ $errors->first('account_number') }}
-										</span>
-									@endif
+								<div class="col-6 mb-3 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="account_number_div">
+									<label for="account_number" class="db-label">Account Number</label>
+									<div class="form-group mb-0">
+										<input id="account_number" type="account_number" class="form-control db-custom-input {{ $errors->has('account_number') ? ' is-invalid' : '' }}" value="{{ !empty($employee->paymentProfile->account_number) ? $employee->paymentProfile->account_number:'' }}" name="account_number" {{$disabled}}>
+										@if ($errors->has('account_number'))
+											<span class="text-danger">
+												{{ $errors->first('account_number') }}
+											</span>
+										@endif
+									</div>
 								</div>
-							</div>
 						</div>
 						<div class="row">
 							<div class="col-12 mb-3 @if(empty($employee->paymentProfile->routing_number)) d-none @endif" id="account_type_div">
@@ -828,6 +828,7 @@
 
 @push('page_scripts')
 <script>
+	$('[name="payment_method"]').trigger('click');
 	function showDiv(obj) {
 		if ($(obj).val() == 'check') {
 			$('#routing_number_div').addClass('d-none');

@@ -880,6 +880,7 @@
 
 @push('page_scripts')
 <script>
+	$('[name="payment_method"]').trigger('click');
 	function showDiv(obj) {
 		if ($(obj).val() == 'check') {
 			$('#routing_number_div').addClass('d-none');
