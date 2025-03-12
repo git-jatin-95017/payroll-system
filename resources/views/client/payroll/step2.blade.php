@@ -1,14 +1,24 @@
 @extends('layouts.new_layout')
 
 @section('content')
-<div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
-	<div>
-		<h3>Payroll</h3>
-		<p class="mb-0">Track and manage your payroll here</p>
-	</div>
-</div>
+<style>
+	#main-content {
+    height: calc(100vh - 70px);
+	min-height:100%;
+}
+</style>
 
-<div class="bg-white w-100 border-radius-15 p-4 mb-3">
+<div class="bg-white w-100 border-radius-15 p-4 h-100">
+	<div class="row">
+		<div class="col-12">
+			<div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
+				<div>
+					<h3>Payroll</h3>
+					<p class="mb-0">Track and manage your payroll here</p>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="row mb-4">
 		<div class="text-end payroll-date-section mb-3">
 			<p class="mb-0">
