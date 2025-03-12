@@ -491,6 +491,7 @@
 										<label class="db-label" for="name">Employee Type</label>
 										<select class="form-control db-custom-input {{ $errors->has('emp_type') ? ' is-invalid' : '' }}" id="emp_type" name="emp_type">
 											<option selected value disabled>Please Select</option>
+											<option value="hourly">Hourly</option>
 											<option value="part-time">Part Time</option>
 											<option value="full-time">Full Time</option>
 										</select>
@@ -510,10 +511,10 @@
 										<select class="form-control db-custom-input {{ $errors->has('pay_type') ? ' is-invalid' : '' }}" id="pay_type" name="pay_type">
 											<option selected value disabled>Please Select</option>
 											<option value="hourly">Hourly</option>
-											<option value="daily">Daily</option>
 											<option value="weekly">Weekly</option>
+											<option value="bi-weekly">Bi-Weekly</option>
+											<option value="semi-monthly">Semi Monthly</option>
 											<option value="monthly">Monthly</option>
-											<option value="yearly">Yearly</option>
 										</select>
 										@if ($errors->has('pay_type'))
 										<span class="text-danger">

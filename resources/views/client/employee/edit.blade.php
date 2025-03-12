@@ -571,6 +571,7 @@
 									<label class="db-label"  for="name">Employee Type</label>
 									<select class="form-control db-custom-input select-drop-down-arrow  {{ $errors->has('emp_type') ? ' is-invalid' : '' }}" id="emp_type" name="emp_type" @if($disabledDrop) style="pointer-events: none;" @endif>
 										<option selected value disabled>Please Select</option>
+										<option @if($employee->employeeProfile->emp_type == "hourly") selected @endif value="hourly">Hourly</option>
 										<option @if($employee->employeeProfile->emp_type == "part-time") selected @endif value="part-time">Part Time</option>
 										<option @if($employee->employeeProfile->emp_type == "full-time") selected @endif value="full-time">Full Time</option>
 									</select>
@@ -587,10 +588,10 @@
 									<select class="form-control db-custom-input select-drop-down-arrow  {{ $errors->has('pay_type') ? ' is-invalid' : '' }}" id="pay_type" name="pay_type" @if($disabledDrop) style="pointer-events: none;" @endif>
 										<option selected value disabled>Please Select</option>
 										<option @if($employee->employeeProfile->pay_type == "hourly") selected @endif value="hourly">Hourly</option>
-										<option @if($employee->employeeProfile->pay_type == "daily") selected @endif value="daily">Daily</option>
 										<option @if($employee->employeeProfile->pay_type == "weekly") selected @endif value="weekly">Weekly</option>
+										<option @if($employee->employeeProfile->pay_type == "bi-weekly") selected @endif value="bi-weekly">Bi-Weekly</option>
+										<option @if($employee->employeeProfile->pay_type == "semi-monthly") selected @endif value="semi-monthly">Semi Monthly</option>
 										<option @if($employee->employeeProfile->pay_type == "monthly") selected @endif value="monthly">Monthly</option>
-										<option @if($employee->employeeProfile->pay_type == "yearly") selected @endif value="yearly">Yearly</option>
 									</select>
 									@if ($errors->has('pay_type'))
 									<span class="text-danger">
