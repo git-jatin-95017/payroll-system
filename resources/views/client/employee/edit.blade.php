@@ -46,7 +46,7 @@
         <div>
             <div class="d-flex flex-column justify-content-between h-100">
                 <div class="profile-name-container pt-5">
-                    <h3>{{ $employee->employeeProfile->first_name ?? ''}}</h3>
+                    <h3>{{ $employee->employeeProfile->first_name ?? ''}} {{ $employee->employeeProfile->last_name ?? ''}}</h3>
                     <p>{{ $employee->employeeProfile->designation ?? ''}}</p>
                 </div>
                 <div>

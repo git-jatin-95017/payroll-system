@@ -134,6 +134,7 @@
 											$social_security_employer_amt = $isDataExist->social_security_employer ?? $settings->social_security_employer;
 											$education_levy_amt = $isDataExist->education_levy ?? $settings->education_levy;
 											$education_levy_amt_5 = $isDataExist->education_levy_amt_5 ?? $settings->education_levy_amt_5;
+											$notes = $isDataExist->notes ?? '';
 										} else {
 											$id = NULL;
 											$totalHours = collect($timeCardData)->sum(function ($row) {
@@ -159,6 +160,7 @@
 											$social_security_employer_amt = $settings->social_security_employer;
 											$education_levy_amt = $settings->education_levy;
 											$education_levy_amt_5 = $settings->education_levy_amt_5;
+											$notes = '';
 										}
 	
 	
@@ -186,7 +188,7 @@
 																		style="width: 40px; height: 40px; border-radius: 100em;">
 																	@endif
 																</div>
-																<div class="col pe-4">
+																<div class="col pe-6">
 																	<p class="mb-0 d-flex justify-content-between">
 																		<span class="payroll-emp-name">{{
 																			$employee->name }}</span>
@@ -194,8 +196,12 @@
 																			strtoupper($employee->employeeProfile->pay_type)
 																			}}</span>
 																	</p>
-																	<p class="mb-0">${{
+																	<p class="mb-2 mt-2">${{
 																		$employee->employeeProfile->pay_rate }}</p>
+																	<p class="mb-2">Add Personal note</p>
+																	<p class="mb-2">
+																		<input type="text" name="input[{{$employee->id}}][notes]" value="{{ $notes }}" class="form-control fixed-input db-custom-input">
+																	</p>
 																</div>
 															</div>
 														</div>
