@@ -1,7 +1,11 @@
 @extends('layouts.new_layout')
 
 @section('content')
-sty
+<style>
+	body{
+		background:#fff;
+	}
+</style>
 <div class="img-load">
 	<div>
 		<img src="{{asset('img/new-load.gif')}}" alt="logo" >

@@ -146,7 +146,11 @@
 <?php
     $TotalTaxes = array_sum($medical_benefits11T)+array_sum($social_security11T)+array_sum($education_lvey11T)+array_sum($medical_benefits11T)+array_sum($social_security11T_employer);
 ?>
-
+<style>
+	body{
+		background:#fff;
+	}
+</style>
 <div class="bg-white w-100 border-radius-15 p-4">
     <div class="row">
         <div class="col-12">

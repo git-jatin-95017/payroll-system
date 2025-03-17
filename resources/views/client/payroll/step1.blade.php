@@ -1,7 +1,11 @@
 @extends('layouts.new_layout')
 
 @section('content')
-
+<style>
+	body{
+		background:#fff;
+	}
+</style>
 
 <div class="bg-white w-100 border-radius-15 p-4 mb-3">
 	<div class="row">

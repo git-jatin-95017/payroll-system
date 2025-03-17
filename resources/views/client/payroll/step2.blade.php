@@ -2,6 +2,9 @@
 
 @section('content')
 <style>
+	body{
+		background:#fff;
+	}
 	#main-content {
     height: calc(100vh - 70px);
 	min-height:100%;
