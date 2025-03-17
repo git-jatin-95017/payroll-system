@@ -326,7 +326,7 @@
 							action="{{ route('my-profile.update', auth()->user()->id) }}">
 							@csrf
 							{{ method_field('PUT') }}
-							<div class="row">
+							<!-- <div class="row">
 								<div class="col-8 mb-3">
 									<input type="hidden" name="update_request" value="payment">
 									<div class="form-group">
@@ -349,9 +349,97 @@
 										@endif
 									</div>
 								</div>
+							</div> -->
+							<div class="row">
+								<div class="col-12 mb-3">
+									<div class="form-group">
+										<label class="db-label mb-2">Payment Method</label>
+										<div class="d-flex gap-5">
+											<div>
+												<div class="position-relative db-radio-btn">
+													<input class="form-check-input"  type="radio" name="payment_method" id="payment_check" value="check" onchange="showDiv(this)" @if(!empty($company->paymentProfile->payment_method) && $company->paymentProfile->payment_method == "check") checked @endif>
+													<label class="form-check-label" for="payment_check">
+														<img src="{{ asset('img/bank-check.png') }}" class="mb-2" alt="">
+														<h3>Cheque</h3>
+													</label>
+												</div>
+											</div>
+											<div>
+												<div class="position-relative db-radio-btn">
+													<input class="form-check-input" type="radio" name="payment_method" id="payment_deposit" value="deposit" onchange="showDiv(this)" @if(!empty($company->paymentProfile->payment_method) && $company->paymentProfile->payment_method == "deposit") checked @endif>
+													<label class="form-check-label" for="payment_deposit">
+														<img src="{{ asset('img/bank.png') }}" class="mb-2" alt="">
+														<h3>Direct Deposit</h3>
+													</label>
+												</div>
+											</div>
+										</div>
+										@if ($errors->has('payment_method'))
+										<span class="text-danger">
+											{{ $errors->first('payment_method') }}
+										</span>
+										@endif
+									</div>
+								</div>
+								<div class="col-6 mb-3 @if(empty($company->paymentProfile->routing_number)) d-none @endif" id="routing_number_div">
+									<label for="routing_number" class="db-label">Routing Number</label>
+									<div class="form-group mb-0">
+										<input id="routing_number" type="routing_number" class="form-control db-custom-input {{ $errors->has('routing_number') ? ' is-invalid' : '' }}" name="routing_number" value="{{ !empty($company->paymentProfile->routing_number) ? $company->paymentProfile->routing_number : '' }}" >
+										@if ($errors->has('routing_number'))
+											<span class="text-danger">
+												{{ $errors->first('routing_number') }}
+											</span>
+										@endif
+									</div>
+								</div>
+								<div class="col-6 mb-3 @if(empty($company->paymentProfile->routing_number)) d-none @endif" id="account_number_div">
+									<label for="account_number" class="db-label">Account Number</label>
+									<div class="form-group mb-0">
+										<input id="account_number" type="account_number" class="form-control db-custom-input {{ $errors->has('account_number') ? ' is-invalid' : '' }}" value="{{ !empty($company->paymentProfile->account_number) ? $company->paymentProfile->account_number:'' }}" name="account_number" >
+										@if ($errors->has('account_number'))
+											<span class="text-danger">
+												{{ $errors->first('account_number') }}
+											</span>
+										@endif
+									</div>
+								</div>
 							</div>
 							<div class="row">
+								<div class="col-12 mb-3 @if(empty($company->paymentProfile->routing_number)) d-none @endif" id="account_type_div">
+									<div class="row">
+										<div class="col-md-6 @if(empty($company->paymentProfile->routing_number)) d-none @endif" id="bank_div">
+											<label for="bank_name" class="db-label">Bank Name</label>
+											<div class="form-group mb-0">
+												<input id="bank_name" type="bank_name" class="form-control db-custom-input {{ $errors->has('bank_name') ? ' is-invalid' : '' }}" value="{{ !empty($company->paymentProfile->bank_name) ? $company->paymentProfile->bank_name:'' }}" name="bank_name" >
 
+												@if ($errors->has('bank_name'))
+													<span class="text-danger">
+														{{ $errors->first('bank_name') }}
+													</span>
+												@endif
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="name" class="db-label" >Account Type</label>
+												<select class="form-control select-drop-down-arrow  db-custom-input {{ $errors->has('account_type') ? ' is-invalid' : '' }}" id="account_type" name="account_type">
+													<option value="" disabled>Please Select</option>
+													<option @if(!empty($company->paymentProfile->account_type) && $company->paymentProfile->account_type == "checking") selected @endif value="checking">Chequing</option>
+													<option @if(!empty($company->paymentProfile->account_type) && $company->paymentProfile->account_type == "saving") selected @endif value="saving">Saving</option>
+												</select>
+												@if ($errors->has('account_type'))
+													<span class="text-danger">
+														{{ $errors->first('account_type') }}
+													</span>
+												@endif
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+							<!-- <div class="row">
 								<div class="col-6 mb-3">
 									<div class="form-group
 										@if(empty($company->paymentProfile->account_type)) d-none @endif" id="account_type_div">
@@ -431,7 +519,7 @@
 										</span>
 										@endif
 									</div>
-								</div>
+								</div> -->
 								<div class="col-12 text-end">
 									<button type="submit" class="btn btn-primary submit-btn">Submit</button>
 								</div>
@@ -620,20 +708,36 @@
 	});
 </script>
 <script>
+	$('[name="payment_method"]').trigger('click');
 	function showDiv(obj) {
-		console.log(obj.value);
-		if (obj.value == 'check') {
+		if ($(obj).val() == 'check') {
 			$('#routing_number_div').addClass('d-none');
-			//$('#account_number_div').addClass('d-none');
-			// $('#account_type_div').addClass('d-none');
+			$('#account_number_div').addClass('d-none');
+			$('#account_type_div').addClass('d-none');
+			$('#bank_div').addClass('d-none');
 		}
 
-		if (obj.value == 'Direct Deposit') {
+		if ($(obj).val() == 'deposit') {
 			$('#routing_number_div').removeClass('d-none');
 			$('#account_number_div').removeClass('d-none');
 			$('#account_type_div').removeClass('d-none');
+			$('#bank_div').removeClass('d-none');
 		}
 	}
+	// function showDiv(obj) {
+	// 	console.log(obj.value);
+	// 	if (obj.value == 'check') {
+	// 		$('#routing_number_div').addClass('d-none');
+	// 		//$('#account_number_div').addClass('d-none');
+	// 		// $('#account_type_div').addClass('d-none');
+	// 	}
+
+	// 	if (obj.value == 'Direct Deposit') {
+	// 		$('#routing_number_div').removeClass('d-none');
+	// 		$('#account_number_div').removeClass('d-none');
+	// 		$('#account_type_div').removeClass('d-none');
+	// 	}
+	// }
 </script>
 <script>
 

@@ -65,14 +65,14 @@
 </div>
 <ul class="nav nav-tabs nav-pills db-custom-tabs db-custom-tabs-theme gap-5 employee-tabs mb-4" id="myTab"
 	role="tablist">
-	<li class="nav-item" role="presentation">
+	<!-- <li class="nav-item" role="presentation">
 		<button class="nav-link active" id="company-tab" data-bs-toggle="tab" data-bs-target="#company" type="button"
 			role="tab" aria-controls="company" aria-selected="true">Personal</button>
 	</li>
 	<li class="nav-item" role="presentation">
 		<button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button"
 			role="tab" aria-controls="payment" aria-selected="false">Approvals</button>
-	</li>
+	</li> -->
 </ul>
 
 <div class="bg-white w-100 border-radius-15 p-4">

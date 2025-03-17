@@ -42,17 +42,34 @@
 		</div>
 		@endif
 	</div>
+
+	
+
 	<div class="bg-white white-container py-4 px-4 pt-4continer-h-full">
-		<div class="row">            	
-				<div class="col-sm-12">
-					<div class="max-w-md max-auto">
-						<div class="sub-text-heading pb-4">
-							<h3 class="mb-1">Leave Policies</h3>
-							<p>Edit your policy information here</p>
-						</div>
-						<form class="form-horizontal" method="POST" action="{{ route('leave-type.update', $leaveType->id) }}">
-						@csrf
-						{{ method_field('PUT') }}
+		<ul class="nav nav-tabs nav-pills db-custom-tabs db-custom-tabs-theme gap-5 employee-tabs mb-4" id="myTab"
+		role="tablist">
+			<li class="nav-item" role="presentation">
+				<button class="nav-link active" id="company-tab" data-bs-toggle="tab" data-bs-target="#company" type="button"
+					role="tab" aria-controls="company" aria-selected="true">Leave Type</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button"
+					role="tab" aria-controls="payment" aria-selected="false">Carryover</button>
+			</li>
+		</ul>
+
+		<form class="form-horizontal" method="POST" action="{{ route('leave-type.update', $leaveType->id) }}">
+		@csrf
+		{{ method_field('PUT') }}
+		<div class="tab-content" id="myTabContent">
+			<div class="tab-pane fade show active" id="company" role="tabpanel" aria-labelledby="company-tab">
+				<div class="row">            	
+					<div class="col-sm-12">
+						<div class="max-w-md max-auto">
+							<div class="sub-text-heading pb-4">
+								<h3 class="mb-1">Leave Policies</h3>
+								<p>Edit your policy information here</p>
+							</div>
 							<div class="row">
 								<div class="col-8 mb-3">
 									<div class="form-group">
@@ -80,7 +97,7 @@
 									</div>
 								</div>
 							</div>
-   							
+							
 							<div class="row">
 								<div class="col-8 mb-3">
 									<div class="form-group">
@@ -165,45 +182,55 @@
 									</div>
 								</div>
 							</div>
-
-							<table class="w-full border-collapse border border-gray-300">
-								<thead>
-									<tr class="bg-gray-200">
-										<th class="border p-2">Select</th>
-										<th class="border p-2">Employee Name</th>
-										<th class="border p-2">Manual Balance</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach($employees as $employee)
-									@php
-									$leaveBalance = \App\Models\LeaveBalance::where('user_id', $employee->id)
-										->where('leave_type_id', $leaveType->id)
-										->where('leave_year', date('Y'))
-										->first();
-									@endphp
-										<tr>
-											<td class="border p-2 text-center">
-												<input type="checkbox" name="users[{{ $employee->id }}][selected]" value="1">
-											</td>
-											<td class="border p-2">{{ $employee->name }}</td>
-									
-											<td class="border p-2">
-												<input value="{{ $leaveBalance->balance ?? 0 }}" type="number" name="users[{{ $employee->id }}][balance]" step="0.01" class="border p-2 w-full" placeholder="Enter Balance">
-											</td>
-										</tr>
-									@endforeach
-								</tbody>
-							</table>
-							
 							<div class="card-footer">
 								<button type="submit" class="btn btn-primary">Save</button>
 							</div>
-						</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+			<div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+				<div class="row">            	
+					<div class="col-sm-12">
+						<table class="w-full border-collapse border border-gray-300">
+							<thead>
+								<tr class="bg-gray-200">
+									<th class="border p-2">Select</th>
+									<th class="border p-2">Employee Name</th>
+									<th class="border p-2">Manual Balance</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach($employees as $employee)
+								@php
+								$leaveBalance = \App\Models\LeaveBalance::where('user_id', $employee->id)
+									->where('leave_type_id', $leaveType->id)
+									->where('leave_year', date('Y'))
+									->first();
+								@endphp
+									<tr>
+										<td class="border p-2 text-center">
+											<input type="checkbox" name="users[{{ $employee->id }}][selected]" value="1">
+										</td>
+										<td class="border p-2">{{ $employee->name }}</td>
+								
+										<td class="border p-2">
+											<input value="{{ $leaveBalance->balance ?? 0 }}" type="number" name="users[{{ $employee->id }}][balance]" step="0.01" class="border p-2 w-full" placeholder="Enter Balance">
+										</td>
+									</tr>
+								@endforeach
+							</tbody>
+						</table>
+						<div class="card-footer">
+							<button type="submit" class="btn mt-4 btn-primary">Save</button>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+	</form>
+
 	</div>
 </div>     
 @endsection
