@@ -202,13 +202,30 @@
 																	</p>
 																	<p class="mb-2 mt-2">${{
 																		$employee->employeeProfile->pay_rate }}</p>
-																	<p class="mb-2">Add Personal note</p>
-																	<p class="mb-2">
-																		<input type="text" name="input[{{$employee->id}}][notes]" value="{{ $notes }}" class="form-control fixed-input db-custom-input">
-																	</p>
+																	
 																</div>
 															</div>
 														</div>
+														<div class="toggle-container mb-2 mt-2">
+																		<button class="btn-none" type="button"
+																			data-bs-toggle="collapse"
+																			data-bs-target="#collapseExampleNotes{{$k}}"
+																			aria-expanded="false"
+																			aria-controls="collapseExampleNotes{{$k}}">
+																			<svg width="20px" class="align-middle"
+																				xmlns="http://www.w3.org/2000/svg"
+																				viewBox="0 0 24 24" fill="#007bff"
+																				aria-hidden="true">
+																				<path fill-rule="evenodd"
+																					d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
+																					clip-rule="evenodd"></path>
+																			</svg>
+																			Personal note
+																		</button>
+																	</div>
+																	<div class="collapse mb-2 mt-2" id="collapseExampleNotes{{$k}}">
+																		<input type="text" name="input[{{$employee->id}}][notes]" value="{{ $notes }}" class="form-control fixed-input db-custom-input">
+																	</div>
 													</td>
 												</tr>
 											</table>
