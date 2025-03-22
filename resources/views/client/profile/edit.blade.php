@@ -326,6 +326,7 @@
 							action="{{ route('my-profile.update', auth()->user()->id) }}">
 							@csrf
 							{{ method_field('PUT') }}
+							<input type="hidden" name="update_request" value="payment">
 							<!-- <div class="row">
 								<div class="col-8 mb-3">
 									<input type="hidden" name="update_request" value="payment">
@@ -708,7 +709,8 @@
 	});
 </script>
 <script>
-	$('[name="payment_method"]').trigger('click');
+	// $('[name="payment_method"]').trigger('click');
+
 	function showDiv(obj) {
 		if ($(obj).val() == 'check') {
 			$('#routing_number_div').addClass('d-none');

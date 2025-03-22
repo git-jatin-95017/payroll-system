@@ -136,7 +136,7 @@ class LeaveTypeController extends Controller
 	{
 		$leaveType = LeaveType::find($id);
 
-		$employees = User::where('role_id', 3)->get();
+		$employees = User::where('role_id', 3)->where('created_by', auth()->user()->id)->get();
 
 	   	return view('client.leave-type.edit', compact('leaveType', 'employees'));
 	}

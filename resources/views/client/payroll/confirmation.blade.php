@@ -156,7 +156,7 @@
         <div class="col-12">
             <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-4">
                 <div>
-                    <h3>Payroll</h3>
+                    <h3>Review and Submit</h3>
                     <p class="mb-0">Track and manage your payroll here</p>
                 </div>
             </div>
