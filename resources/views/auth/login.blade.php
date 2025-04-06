@@ -137,28 +137,44 @@
           <form method="post" id="loginform" action="{{ url('/login') }}">
           @csrf
             <div class="mb-3 login-input-container">
-              <label for="email" class="form-label">Email Address</label>
-              <div class="input-group">
-                  <input type="email" class="form-control" name="email" value="" required placeholder="Email">
-                  <span class="input-group-text login-icon-container">
-                      <x-bx-envelope class="w-20 h-20" />
-                  </span>
-                  @error('email')
-                  <span class="error invalid-feedback">{{ $message }}</span>
+                <label for="email" class="form-label">Email Address</label>
+                <div class="input-group">
+                    <input 
+                        type="email" 
+                        name="email" 
+                        id="email"
+                        class="form-control @error('email') is-invalid @enderror" 
+                        value="{{ old('email') }}" 
+                        required 
+                        placeholder="Email"
+                    >
+                    <span class="input-group-text login-icon-container">
+                        <x-bx-envelope class="w-20 h-20" />
+                    </span>
+                </div>
+                @error('email')
+                    <span class="invalid-feedback d-block">{{ $message }}</span>
                 @enderror
-              </div>
             </div>
             <div class="mb-3 login-input-container">
               <label for="password" class="form-label">Password</label>
-              <div class="input-group">
-                  <input type="password" class="form-control" name="password" value="" required placeholder="Password">
-                  <span class="input-group-text login-icon-container">
-                        <x-bx-lock class="w-20 h-20" />
-                  </span>
-                  @error('password')
-                    <span class="error invalid-feedback">{{ $message }}</span>
-                @enderror
-              </div>
+                    <div class="input-group">
+                        <input 
+                            type="password" 
+                            name="password" 
+                            id="password"
+                            class="form-control @error('password') is-invalid @enderror" 
+                            required 
+                            placeholder="Password"
+                        >
+                        <span class="input-group-text login-icon-container">
+                            <x-bx-lock class="w-20 h-20" />
+                        </span>
+                    </div>
+                    @error('password')
+                        <span class="invalid-feedback d-block">{{ $message }}</span>
+                    @enderror
+
               <div class="text-end mt-2">
                 <a href="{{ route('password.request') }}" class="forget-password">Forgot Password?</a>
               </div>

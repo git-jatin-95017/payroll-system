@@ -213,7 +213,7 @@ class PayrollController extends Controller
 
 				$count = Attendance::where('attendance_date', $dateS)->count();				
 
-				$hours = 8;
+				$hours = 0;
 
 				if ($count == 2) {
 					$attendance = Attendance::where('attendance_date', $dateS)->get();					
