@@ -172,6 +172,7 @@ class DashboardController extends Controller
 				->join('employee_profile', 'users.id', '=', 'employee_profile.user_id')
 				->where('payroll_amounts.created_by', auth()->user()->id)
 				->where('start_date', $date->start_date)
+				->select('payroll_amounts.*')
 				->get();
 			
 			// Loop through payroll records and calculate totals
