@@ -24,6 +24,7 @@ class User extends Authenticatable
         'role_id',
         'phone_number',
         'user_code',
+        'kiosk_code',
         'is_proifle_edit_access',
         'logo',
         'status'
