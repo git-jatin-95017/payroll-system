@@ -25,6 +25,7 @@ use App\Http\Controllers\admin\SettingController;
 use App\Http\Middleware\CheckPunchin;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
+use App\Http\Controllers\KioskController;
 
 
 /*
@@ -259,4 +260,10 @@ Route::get('report', function(){
 
 Route::get('employee_profile', function(){
     return view('pages.employee_profile');
+});
+
+// Kiosk Routes
+Route::prefix('kiosk')->group(function () {
+    Route::get('/login', [App\Http\Controllers\KioskController::class, 'login'])->name('kiosk.login');
+    Route::post('/process-login', [App\Http\Controllers\KioskController::class, 'processLogin'])->name('kiosk.process-login');
 });
