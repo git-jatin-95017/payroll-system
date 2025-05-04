@@ -197,6 +197,7 @@ class EmployeeController extends Controller
 			// 'identity_number' => ['required'],
 			// 'designation' => ['required'],
 			// 'department' => ['required'],
+			'kiosk_code' => ['nullable', 'digits:4'],
 			'password' => ['required', 'string', 'min:8', 'confirmed'],
 			'password_confirmation' => 'required_with:password',
 			'file' => 'mimes:png,jpg,jpeg|max:2048',
@@ -207,7 +208,8 @@ class EmployeeController extends Controller
 		],[],[
 			// 'emp_code' => 'Employee ID number',
 			'doj' => 'Start Date',
-			'pay_rate' => 'amount'
+			'pay_rate' => 'amount',
+			'kiosk_code' => 'Kiosk PIN'
 		]);
 
 		$user = User::create([
@@ -217,6 +219,7 @@ class EmployeeController extends Controller
 			'password' => Hash::make($data['password']),
 			'role_id' => 3,
 			'user_code' => strtoupper(uniqid()), //$request->emp_code,
+			'kiosk_code' => $data['kiosk_code'],
 			'is_proifle_edit_access' => $request->is_proifle_edit_access,
 			'status' => $request->status ?? 1,
 		]);		
@@ -350,11 +353,13 @@ class EmployeeController extends Controller
 			// 'department' => ['required'],
 			// 'password' => ['required', 'string', 'min:8', 'confirmed'],
 			// 'password_confirmation' => 'required_with:password',
+			'kiosk_code' => ['nullable', 'digits:4'],
 			'file' => 'nullable|mimes:png,jpg,jpeg|max:2048'
 		],[],[
 			'emp_code' => 'Employee ID number',
 			'doj' => 'Start Date',
-			'pay_rate' => 'amount'
+			'pay_rate' => 'amount',
+			'kiosk_code' => 'Kiosk PIN'
 		]);
 
 		$employee->update([
@@ -362,6 +367,7 @@ class EmployeeController extends Controller
 			'email' => $data['email'],
 			'phone_number' => $data['phone_number'],
 			'user_code' => $request->emp_code,
+			'kiosk_code' => $data['kiosk_code'],
 			'is_proifle_edit_access' => $request->is_proifle_edit_access,
 			'status' => $request->status,
 		]);

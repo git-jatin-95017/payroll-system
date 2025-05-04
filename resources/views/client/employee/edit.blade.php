@@ -379,6 +379,17 @@
 								</div>
 								<div class="col-6 mb-3">
 									<div class="form-group">
+										<label class="db-label" for="kiosk_code">Kiosk PIN (4 digits)</label>
+										<input id="kiosk_code" type="text" maxlength="4" pattern="\d{4}" class="form-control db-custom-input {{ $errors->has('kiosk_code') ? ' is-invalid' : '' }}" name="kiosk_code" value="{{ $employee->kiosk_code }}" {{$disabled}}>
+										@if ($errors->has('kiosk_code'))
+										<span class="text-danger">
+											{{ $errors->first('kiosk_code') }}
+										</span>
+										@endif
+									</div>
+								</div>
+								<div class="col-6 mb-3">
+									<div class="form-group">
 										<label class="db-label" for="name">Identity Document</label>
 										<select class="form-control db-custom-input select-drop-down-arrow {{ $errors->has('identity_document') ? ' is-invalid' : '' }}" id="identity_document" name="identity_document" @if($disabledDrop) style="pointer-events: none;" @endif>
 											<option selected value disabled>Please Select</option>

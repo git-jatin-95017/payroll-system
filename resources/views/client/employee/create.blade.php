@@ -150,6 +150,7 @@
 										</label>
 										<input type="file" name="file" id="tb-file-upload" accept="image/*"
 											onchange="fileUpload(event);" />
+										<input type="hidden" name="base64_image" id="base64_image">
 									</div>
 								</div>
 							</div>
@@ -309,6 +310,17 @@
 										@if ($errors->has('email'))
 										<span class="text-danger">
 											{{ $errors->first('email') }}
+										</span>
+										@endif
+									</div>
+								</div>
+								<div class="col-6 mb-3">
+									<div class="form-group">
+										<label class="db-label" for="kiosk_code">Kiosk PIN (4 digits)</label>
+										<input id="kiosk_code" type="text" maxlength="4" pattern="\d{4}" class="form-control db-custom-input {{ $errors->has('kiosk_code') ? ' is-invalid' : '' }}" name="kiosk_code" value="{{old('kiosk_code')}}">
+										@if ($errors->has('kiosk_code'))
+										<span class="text-danger">
+											{{ $errors->first('kiosk_code') }}
 										</span>
 										@endif
 									</div>
@@ -763,7 +775,7 @@
 		const filesLength = files.length;
 
 		const imagePreviewElement = document.querySelector("#tb-image");
-		const avatarElement = document.querySelector("#tb-avatar");
+		// const avatarElement = document.querySelector("#tb-avatar");
 
 		if (filesLength > 0) {
 			const imageSrc = URL.createObjectURL(files[0]);
@@ -773,12 +785,26 @@
 			imagePreviewElement.style.display = "block";
 
 			// Hide the default SVG avatar
-			avatarElement.style.display = "none";
+			// avatarElement.style.display = "none";
 		} else {
 			// Show the default SVG avatar and hide the image preview
 			imagePreviewElement.style.display = "none";
-			avatarElement.style.display = "block";
+			// avatarElement.style.display = "block";
 		}
+
+		convertImageToBase64(event);
 	};
+
+	function convertImageToBase64(event) {
+		const file = event.target.files[0];
+		const reader = new FileReader();
+		reader.onload = function(event) {
+			const base64 = event.target.result;
+			document.getElementById('base64_image').value = base64;
+			console.log("Base64 image set:", base64);
+		};
+		reader.readAsDataURL(file);
+	}
+</script>
 </script>
 @endpush
