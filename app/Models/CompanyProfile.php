@@ -24,4 +24,13 @@ class CompanyProfile extends Model
 	 * @var array<int, string>
 	 */
 	protected $guarded = [];
+
+	protected $casts = [
+		'status' => 'boolean'
+	];
+
+	public function users()
+	{
+		return $this->hasMany(User::class, 'user_id');
+	}
 }

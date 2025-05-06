@@ -7,6 +7,10 @@
     <!-- Add CSRF Token Meta Tag -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
     @yield('third_party_stylesheets')
     @stack('page_css')
     <!-- fonts -->
@@ -15,15 +19,16 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
         rel="stylesheet">
-        <!-- style -->
-        <link rel="stylesheet" type="text/css" href="{{ asset('css/siteCss/daterangepicker.css') }}" />
-        <link href=" {{ asset('css/siteCss/bootstrap.min.css') }}" rel="stylesheet">
-        <link href=" {{ asset('css/siteCss/site.css') }}" rel="stylesheet">
+    <!-- style -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/siteCss/daterangepicker.css') }}" />
+    <link href=" {{ asset('css/siteCss/bootstrap.min.css') }}" rel="stylesheet">
+    <link href=" {{ asset('css/siteCss/site.css') }}" rel="stylesheet">
     <style>
         body {
             background: #F6F6F4;
         }
     </style>
+    @stack('styles')
 </head>
 <body>
     <div id="left-menu">
@@ -51,12 +56,10 @@
         </div>
     </div>
 
-
     <!-- Content Wrapper. Contains page content -->
     <div id="main-content">
         <div id="header" class="px-4">
             <div class="d-flex justify-content-end align-items-center">
-
                 <div>
                     <ul class="d-flex m-0 p-0 gap-3 align-items-center top-right-bar">
                         <li>
@@ -78,29 +81,20 @@
             @yield('content')
         </div>
     </div>
+
+    <!-- Modal container -->
+    <div id="modal-container">
+        @stack('modals')
     </div>
+
     <script src="{{asset('js/sitejs/libs/jquery.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="{{asset('js/sitejs/datepicker/moment.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/sitejs/datepicker/daterangepicker.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/sitejs/main.js')}}"></script>
-    <!-- <script>
-    document.querySelectorAll('.toggle-btn').forEach(button => {
-        button.addEventListener('click', function(event) {
-            event.preventDefault(); // Prevents any unintended form submission
-            let targetId = this.getAttribute('data-target');
-            let target = document.getElementById(targetId);
-            if (target.classList.contains('show')) {
-                target.classList.remove('show');
-            } else {
-                target.classList.add('show');
-            }
-        });
-    });
-</script> -->
     @yield('third_party_scripts')
-    <!-- Custom js type here -->
     @stack('page_scripts')
+    @stack('scripts')
 </body>
 
 </html>

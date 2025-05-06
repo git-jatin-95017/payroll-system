@@ -171,6 +171,50 @@ class EmployeeController extends Controller
 	   return view('client.employee.create');
 	}
 
+	private function processFaceData($faceData)
+	{
+		try {
+			$decodedData = json_decode($faceData, true);
+			if (!is_array($decodedData)) {
+				throw new \Exception('Invalid face data format');
+			}
+
+			// Process each face capture
+			$processedFaces = array_map(function($face) {
+				if (!isset($face['image']) || !isset($face['features'])) {
+					throw new \Exception('Missing required face data fields');
+				}
+
+				// Validate features array
+				if (!is_array($face['features'])) {
+					throw new \Exception('Invalid feature vector format - not an array');
+				}
+
+				// Each landmark (eye, nose, etc.) has x,y coordinates
+				// 6 landmarks * 2 coordinates = 12 features minimum
+				if (count($face['features']) < 12) {
+					throw new \Exception('Invalid feature vector format - insufficient features');
+				}
+
+				// Validate feature values (normalized coordinates)
+				foreach ($face['features'] as $value) {
+					if (!is_numeric($value) || $value < 0 || $value > 1) {
+						throw new \Exception('Invalid feature values - must be normalized between 0 and 1');
+					}
+				}
+
+				return [
+					'image' => $face['image'],
+					'features' => $face['features']
+				];
+			}, $decodedData);
+
+			return json_encode($processedFaces);
+		} catch (\Exception $e) {
+			throw new \Exception('Face data processing failed: ' . $e->getMessage());
+		}
+	}
+
 	public function store(Request $request)
 	{   
 		$data = $request->all();
@@ -204,7 +248,8 @@ class EmployeeController extends Controller
 			'payment_method' =>['required'],
 			'routing_number' => ['required_if:payment_method,==,deposit'],
 			'account_number' => ['required_if:payment_method,==,deposit'],
-			'account_type' => ['required_if:payment_method,==,deposit']
+			'account_type' => ['required_if:payment_method,==,deposit'],
+			'face_data' => ['nullable', 'json'],
 		],[],[
 			// 'emp_code' => 'Employee ID number',
 			'doj' => 'Start Date',
@@ -224,7 +269,7 @@ class EmployeeController extends Controller
 			'status' => $request->status ?? 1,
 		]);		
 
-		$data = [
+		$employeeData = [
 			'user_id' => $user->id,
 			'first_name' => $request->first_name,
 			'last_name' => $request->last_name,
@@ -261,6 +306,20 @@ class EmployeeController extends Controller
 			'is_visible_calendar' => $request->is_visible_calendar,
 		];
 
+		// Process face data if present
+		if ($request->has('face_data')) {
+			try {
+				$processedFaceData = $this->processFaceData($request->face_data);
+				$employeeData['face_data'] = $processedFaceData;
+				$employeeData['face_captured_at'] = now();
+			} catch (\Exception $e) {
+				\Log::error('Face data processing error: ' . $e->getMessage());
+				return redirect()->back()
+					->with('error', 'Failed to process face data: ' . $e->getMessage())
+					->withInput();
+			}
+		}
+
 		if ($request->file('file')) {			
 	        $file = $request->file('file');
 	        $filename = time().'_'.$file->getClientOriginalName();
@@ -271,7 +330,7 @@ class EmployeeController extends Controller
 	        // Upload file
 	        $file->move($location,$filename);
 
-	        $data['file'] = $filename;
+	        $employeeData['file'] = $filename;
 	   	}
 
 	   	//Logo
@@ -286,12 +345,12 @@ class EmployeeController extends Controller
 	        // Upload file
 	        $file2->move($location2, $filename2);
 
-	        $data['logo'] = $filename2;
+	        $employeeData['logo'] = $filename2;
 	   	}
 	   	
-	   	unset($data['status']);
+	   	unset($employeeData['status']);
 
-		EmployeeProfile::create($data);
+		$employee = EmployeeProfile::create($employeeData);
 		
 		$paymentdata = [
 			'routing_number' => $request->routing_number ?? '',
@@ -326,142 +385,114 @@ class EmployeeController extends Controller
 	   	return view('client.employee.edit', compact('employee', 'disabled', 'disabledDrop'));
 	}
 
-	public function update(Request $request, User $employee)
+	public function update(Request $request, $id)
 	{
-		$data = $request->all();
+		try {
+			$employee = User::findOrFail($id);
+			// $this->authorize('update', $employee);
 
-		$request->validate([
-			// 'emp_code' => 'required|max:255',		
-			'first_name' => ['required'],
-			'last_name' => ['required'],
-			'marital_status' => ['required'],
-			'emp_type' => ['required'],
-			'pay_type' => ['required'],
-			'dob' => ['required', 'date'],
-			'doj' => ['required', 'date'],
-			'country' => ['required'],
-			'address' => ['required'],
-			'nationality' => ['required'],
-			'pay_rate' => ['required'],
-			// 'mobile' => ['required'],
-			'email' => ['required', 'email', 'max:191', 'unique:users,email,'.$employee->id],	
-			// 'identity_document' => ['required'],
-			// 'identity_number' => ['required'],
-			// 'emp_type' => ['required'],
-			// 'doj' => ['required', 'date'],
-			// 'designation' => ['required'],
-			// 'department' => ['required'],
-			// 'password' => ['required', 'string', 'min:8', 'confirmed'],
-			// 'password_confirmation' => 'required_with:password',
-			'kiosk_code' => ['nullable', 'digits:4'],
-			'file' => 'nullable|mimes:png,jpg,jpeg|max:2048'
-		],[],[
-			'emp_code' => 'Employee ID number',
-			'doj' => 'Start Date',
-			'pay_rate' => 'amount',
-			'kiosk_code' => 'Kiosk PIN'
-		]);
+			$request->validate([
+				'first_name' => ['required'],
+				'last_name' => ['required'],
+				'marital_status' => ['required'],
+				'emp_type' => ['required'],
+				'pay_type' => ['required'],
+				'dob' => ['required', 'date'],
+				'doj' => ['required', 'date'],
+				'country' => ['required'],
+				'address' => ['required'],
+				'nationality' => ['required'],
+				'pay_rate' => ['required'],
+				'email' => ['required', 'email', 'max:191', 'unique:users,email,' . $id],
+				'kiosk_code' => ['nullable', 'digits:4'],
+				'file' => 'nullable|mimes:png,jpg,jpeg|max:2048',
+				'face_data' => ['nullable', 'json'],
+			]);
 
-		$employee->update([
-			'name' => $data['first_name'] . ' '. $data['last_name'],
-			'email' => $data['email'],
-			'phone_number' => $data['phone_number'],
-			'user_code' => $request->emp_code,
-			'kiosk_code' => $data['kiosk_code'],
-			'is_proifle_edit_access' => $request->is_proifle_edit_access,
-			'status' => $request->status,
-		]);
+			// Update user data
+			$employee->update([
+				'name' => $request->first_name . ' ' . $request->last_name,
+				'email' => $request->email,
+				'phone_number' => $request->phone_number,
+				'kiosk_code' => $request->kiosk_code,
+			]);
 
-		$data = [
-			'first_name' => $request->first_name,
-			'last_name' => $request->last_name,
-			'dob' => $request->dob,
-			'gender' => $request->gender ?? 'Male',
-			'marital_status' => $request->marital_status,
-			'nationality' => $request->nationality,
-			'blood_group' => NULL,
-			'city' => $request->city,
-			'address' => $request->address,
-			'state' => NULL,
-			'country' => $request->country,
-			'mobile' => NULL,
-			'phone_number' => $request->phone_number,
-			'identity_document' => $request->identity_document,
-			'identity_number' => $request->identity_number,
-			'emp_type' => $request->emp_type,
-			'pay_type' => $request->pay_type,
-			'pay_rate' => $request->pay_rate,
-			'doj' => $request->doj,
-			'designation' => $request->designation,
-			'department' => $request->department,
-			'pan_number' => $request->pan_number,
-			'bank_name' => $request->bank_name,
-			'bank_acc_number' => $request->bank_acc_number,
-			'ifsc_code' => $request->ifsc_code,
-			'pf_account_number' => $request->pf_account_number,
-			'manager_position' => $request->manager_position,
-			'manager' => $request->manager,
-			'em_name' => $request->em_name,
-			'em_number' => $request->em_number,
-			'fb_url' => $request->fb_url,
-			'linkden_url' => $request->linkden_url,
-			'is_visible_calendar' => $request->is_visible_calendar,
-		];
+			$employeeData = [
+				'first_name' => $request->first_name,
+				'last_name' => $request->last_name,
+				'dob' => $request->dob,
+				'gender' => $request->gender,
+				'marital_status' => $request->marital_status,
+				'nationality' => $request->nationality,
+				'blood_group' => NULL,
+				'city' => $request->city,
+				'address' => $request->address,
+				'state' => NULL,
+				'country' => $request->country,
+				'mobile' => NULL,
+				'phone_number' => $request->phone_number,
+				'identity_document' => $request->identity_document,
+				'identity_number' => $request->identity_number,
+				'emp_type' => $request->emp_type,
+				'pay_type' => $request->pay_type,
+				'pay_rate' => $request->pay_rate,
+				'doj' => $request->doj,
+				'designation' => $request->designation,
+				'department' => $request->department,
+				'pan_number' => $request->pan_number,
+				'bank_name' => $request->bank_name,
+				'bank_acc_number' => $request->bank_acc_number,
+				'ifsc_code' => $request->ifsc_code,
+				'pf_account_number' => $request->pf_account_number,
+				'manager_position' => $request->manager_position,
+				'manager' => $request->manager,
+				'em_name' => $request->em_name,
+				'em_number' => $request->em_number,
+				'fb_url' => $request->fb_url,
+				'linkden_url' => $request->linkden_url,
+				'is_visible_calendar' => $request->is_visible_calendar,
+			];
 
-		if ($request->file('file')) {
-			$oldFile = $employee->employeeProfile->file;
-			if (\File::exists(public_path('files/'.$oldFile))) {
-				\File::delete(public_path('files/'.$oldFile));
+			// Process face data if present
+			if ($request->has('face_data')) {
+				try {
+					$processedFaceData = $this->processFaceData($request->face_data);
+					$employeeData['face_data'] = $processedFaceData;
+					$employeeData['face_captured_at'] = now();
+				} catch (\Exception $e) {
+					\Log::error('Face data processing error for employee ' . $id . ': ' . $e->getMessage());
+					return redirect()->back()
+						->with('error', 'Failed to process face data: ' . $e->getMessage())
+						->withInput();
+				}
 			}
 
-	        $file = $request->file('file');
-	        $filename = time().'_'.$file->getClientOriginalName();
+			// Handle file upload if provided
+			if ($request->hasFile('file')) {
+				$oldFile = $employee->employeeProfile->file;
+				if (\File::exists(public_path('files/'.$oldFile))) {
+					\File::delete(public_path('files/'.$oldFile));
+				}
 
-	        // File upload location
-	        $location = 'files';
-
-	        // Upload file
-	        $file->move($location, $filename);
-
-	        $data['file'] = $filename;
-	   	}
-
-	   	//Logo
-	   	if ($request->file('logo')) {
-			$oldLogo = $employee->employeeProfile->logo;
-			if (\File::exists(public_path('files/'.$oldLogo))) {
-				\File::delete(public_path('files/'.$oldLogo));
+				$file = $request->file('file');
+				$filename = time().'_'.$file->getClientOriginalName();
+				$file->move(public_path('files'), $filename);
+				$employeeData['file'] = $filename;
 			}
 
-	        $file2 = $request->file('logo');
-	        $filename2 = time().'_'.$file2->getClientOriginalName();
+			// Update employee profile
+			$employee->employeeProfile()->update($employeeData);
 
-	        // File upload location
-	        $location2 = 'files';
+			return redirect()->route('employee.index')
+				->with('success', 'Employee updated successfully');
 
-	        // Upload file
-	        $file2->move($location2, $filename2);
-
-	        $data['logo'] = $filename2;
-	   	}
-
-		$employee->employeeProfile->update($data);
-		
-		$paymentdata = [
-			'routing_number' => $request->routing_number ?? '',
-			'account_number' => $request->account_number ?? '',
-			'account_type' => $request->account_type ?? '',
-			'payment_method' => $request->payment_method ?? '',
-			'bank_name' => $request->bank_name ?? ''
-		];
-
-		PaymentDetail::updateOrCreate(
-		    ['user_id' => $employee->id],
-		    $paymentdata
-		);
-
-		return redirect()->route('employee.index')->with('message', 'Employee updated successfully.');	
-	}   
+		} catch (\Exception $e) {
+			\Log::error('Employee update error: ' . $e->getMessage());
+			return redirect()->back()
+				->with('error', 'Failed to update employee: ' . $e->getMessage())
+				->withInput();
+		}
+	}
 
 	protected function permanentDelete($id) {
         $trash = User::find($id);
