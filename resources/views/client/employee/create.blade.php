@@ -130,27 +130,16 @@
 							<div class="row">
 								<div class="col-12 mb-3">
 									<div class="tb-container d-flex gap-4 align-items-center">
-										<!-- <div class="tb-img-view">
-											<img  src="" style="display:none;" alt="Uploaded Image" />
-											<svg id="tb-avatar" class="w-64 h-64" xmlns="http://www.w3.org/2000/svg"
-												viewBox="0 0 32 32" fill="currentColor">
-												<path id="_inner-path_" data-name="<inner-path>" class="cls-1"
-													d="M8.0071,24.93A4.9958,4.9958,0,0,1,13,20h6a4.9959,4.9959,0,0,1,4.9929,4.93,11.94,11.94,0,0,1-15.9858,0ZM20.5,12.5A4.5,4.5,0,1,1,16,8,4.5,4.5,0,0,1,20.5,12.5Z"
-													style="fill: none"></path>
-												<path
-													d="M26.7489,24.93A13.9893,13.9893,0,1,0,2,16a13.899,13.899,0,0,0,3.2511,8.93l-.02.0166c.07.0845.15.1567.2222.2392.09.1036.1864.2.28.3008.28.3033.5674.5952.87.87.0915.0831.1864.1612.28.2417.32.2759.6484.5372.99.7813.0441.0312.0832.0693.1276.1006v-.0127a13.9011,13.9011,0,0,0,16,0V27.48c.0444-.0313.0835-.0694.1276-.1006.3412-.2441.67-.5054.99-.7813.0936-.08.1885-.1586.28-.2417.3025-.2749.59-.5668.87-.87.0933-.1006.1894-.1972.28-.3008.0719-.0825.1522-.1547.2222-.2392ZM16,8a4.5,4.5,0,1,1-4.5,4.5A4.5,4.5,0,0,1,16,8ZM8.0071,24.93A4.9957,4.9957,0,0,1,13,20h6a4.9958,4.9958,0,0,1,4.9929,4.93,11.94,11.94,0,0,1-15.9858,0Z">
-												</path>
-												<rect id="_Transparent_Rectangle_" data-name="<Transparent Rectangle>"
-													class="cls-1" width="32" height="32" style="fill: none"></rect>
-											</svg>
-										</div> -->
 										<label for="tb-file-upload">
 											Upload Image
 											<x-bx-upload class="w-20 g-20 ms-1"></x-bx-upload>
 										</label>
-										<input type="file" name="file" id="tb-file-upload" accept="image/*"
-											onchange="fileUpload(event);" />
+										<input type="file" name="file" id="tb-file-upload" accept="image/*" onchange="fileUpload(event);" />
 										<input type="hidden" name="base64_image" id="base64_image">
+										
+										<button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#faceCaptureModal">
+											<i class="fas fa-camera me-2"></i>Capture Face
+										</button>
 									</div>
 								</div>
 							</div>
@@ -740,6 +729,11 @@
         </div>
     </div>
 </section>
+@include('client.employee.face-capture')
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#faceCaptureModal">
+    Capture Face
+</button>
 @endsection
 @section('third_party_scripts')
 <!-- FullCalendar JS -->
@@ -748,63 +742,283 @@
 <script src="https://unpkg.com/tippy.js@6"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<!-- Add Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 @endsection
-
 
 @push('page_scripts')
 <script>
-	function showDiv(obj) {
-		if ($(obj).val() == 'check') {
-			$('#routing_number_div').addClass('d-none');
-			$('#account_number_div').addClass('d-none');
-			$('#account_type_div').addClass('d-none');
-			$('#bank_div').addClass('d-none');
-		}
+// Initialize Bootstrap components
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all modals
+    var modals = document.querySelectorAll('.modal');
+    modals.forEach(function(modal) {
+        new bootstrap.Modal(modal);
+    });
 
-		if ($(obj).val() == 'deposit') {
-			$('#routing_number_div').removeClass('d-none');
-			$('#account_number_div').removeClass('d-none');
-			$('#account_type_div').removeClass('d-none');
-			$('#bank_div').removeClass('d-none');
-		}
-	}
-</script>
-<script>
-	const fileUpload = (event) => {
-		const files = event.target.files;
-		const filesLength = files.length;
+    // Initialize face capture functionality
+    initializeFaceCapture();
+});
 
-		const imagePreviewElement = document.querySelector("#tb-image");
-		// const avatarElement = document.querySelector("#tb-avatar");
+// Face capture functionality
+function initializeFaceCapture() {
+    const faceCaptureModal = document.getElementById('faceCaptureModal');
+    if (!faceCaptureModal) return;
 
-		if (filesLength > 0) {
-			const imageSrc = URL.createObjectURL(files[0]);
+    // Camera initialization
+    let currentFacingMode = 'user';
+    let videoElement;
+    let stream = null;
 
-			// Show uploaded image
-			imagePreviewElement.src = imageSrc;
-			imagePreviewElement.style.display = "block";
+    async function startCaptureVideo() {
+        videoElement = document.getElementById('videoCapture');
+        const startButton = document.getElementById('startCapture');
+        const takePhotoButton = document.getElementById('takePhoto');
+        const switchCameraButton = document.getElementById('switchCamera');
+        const errorElement = document.getElementById('error-message');
 
-			// Hide the default SVG avatar
-			// avatarElement.style.display = "none";
-		} else {
-			// Show the default SVG avatar and hide the image preview
-			imagePreviewElement.style.display = "none";
-			// avatarElement.style.display = "block";
-		}
+        try {
+            // Basic camera check
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                throw new Error('Camera access is not supported in your browser');
+            }
 
-		convertImageToBase64(event);
-	};
+            // Stop any existing stream
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
 
-	function convertImageToBase64(event) {
-		const file = event.target.files[0];
-		const reader = new FileReader();
-		reader.onload = function(event) {
-			const base64 = event.target.result;
-			document.getElementById('base64_image').value = base64;
-			console.log("Base64 image set:", base64);
-		};
-		reader.readAsDataURL(file);
-	}
-</script>
+            // Set up camera constraints
+            const constraints = {
+                video: {
+                    facingMode: currentFacingMode,
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                },
+                audio: false
+            };
+
+            // Request camera access
+            stream = await navigator.mediaDevices.getUserMedia(constraints);
+            videoElement.srcObject = stream;
+
+            // Set video element dimensions based on stream
+            const videoTrack = stream.getVideoTracks()[0];
+            const settings = videoTrack.getSettings();
+            const aspectRatio = settings.width / settings.height;
+            
+            // Set canvas dimensions to match video
+            const canvas = document.getElementById('canvasCapture');
+            canvas.width = settings.width;
+            canvas.height = settings.height;
+
+            // Update UI
+            startButton.style.display = 'none';
+            takePhotoButton.style.display = 'inline-block';
+            errorElement.style.display = 'none';
+
+            // Show switch camera button only if multiple cameras are available
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                if (videoDevices.length > 1) {
+                    switchCameraButton.style.display = 'inline-block';
+                    switchCameraButton.onclick = switchCamera;
+                }
+            } catch (err) {
+                console.log('Could not detect multiple cameras');
+            }
+
+        } catch (error) {
+            console.error('Camera error:', error);
+            let errorMessage = 'Failed to access camera: ';
+            
+            if (error.name === 'NotAllowedError') {
+                errorMessage += 'Please allow camera access in your browser settings';
+            } else if (error.name === 'NotFoundError') {
+                errorMessage += 'No camera found on your device';
+            } else if (error.name === 'NotReadableError') {
+                errorMessage += 'Camera is already in use by another application';
+            } else {
+                errorMessage += error.message;
+            }
+            
+            errorElement.textContent = errorMessage;
+            errorElement.style.display = 'block';
+            startButton.style.display = 'inline-block';
+        }
+    }
+
+    // Switch between front and back cameras
+    async function switchCamera() {
+        currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+        await startCaptureVideo();
+    }
+
+    // Take photo function
+    function takePhoto() {
+        const video = document.getElementById('videoCapture');
+        const canvas = document.getElementById('canvasCapture');
+        const context = canvas.getContext('2d');
+        const capturedFacesDiv = document.getElementById('capturedFaces');
+
+        // Draw video frame to canvas
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        // Convert to base64
+        const imageData = canvas.toDataURL('image/jpeg', 0.8);
+        
+        // Create preview
+        const previewDiv = document.createElement('div');
+        previewDiv.className = 'col-6 col-md-4 position-relative';
+        previewDiv.innerHTML = `
+            <div class="text-center">
+                <img src="${imageData}" class="img-fluid rounded" alt="Captured face">
+                <button type="button" class="btn-remove-photo" onclick="this.closest('.col-6').remove()">&times;</button>
+            </div>
+        `;
+        
+        capturedFacesDiv.appendChild(previewDiv);
+    }
+
+    // Save captured faces
+    function saveFaceData() {
+        const capturedFacesDiv = document.getElementById('capturedFaces');
+        const images = capturedFacesDiv.getElementsByTagName('img');
+        
+        if (images.length === 0) {
+            const errorElement = document.getElementById('error-message');
+            errorElement.textContent = 'Please capture at least one photo';
+            errorElement.style.display = 'block';
+            return;
+        }
+        
+        // Create array of captured images
+        const capturedData = Array.from(images).map(img => img.src);
+        
+        // Store in hidden input
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'face_data';
+        input.value = JSON.stringify(capturedData);
+        document.querySelector('form').appendChild(input);
+        
+        // Close modal and remove backdrop
+        const modal = bootstrap.Modal.getInstance(faceCaptureModal);
+        modal.hide();
+        
+        // Remove modal backdrop and reset body styles
+        setTimeout(() => {
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+                backdrop.remove();
+            }
+            document.body.classList.remove('modal-open');
+            document.body.style.removeProperty('overflow');
+            document.body.style.removeProperty('padding-right');
+        }, 200);
+    }
+
+    // Attach event listeners when modal is shown
+    faceCaptureModal.addEventListener('shown.bs.modal', function () {
+        console.log('Face capture modal shown');
+        const startButton = document.getElementById('startCapture');
+        const takePhotoButton = document.getElementById('takePhoto');
+        const saveFacesButton = document.getElementById('saveFaces');
+
+        if (startButton) {
+            startButton.onclick = function() {
+                console.log('Start camera button clicked');
+                startCaptureVideo();
+            };
+        }
+
+        if (takePhotoButton) {
+            takePhotoButton.onclick = takePhoto;
+        }
+
+        if (saveFacesButton) {
+            saveFacesButton.onclick = saveFaceData;
+        }
+    });
+
+    // Cleanup when modal is hidden
+    faceCaptureModal.addEventListener('hidden.bs.modal', function () {
+        // Stop camera
+        const video = document.getElementById('videoCapture');
+        if (video.srcObject) {
+            video.srcObject.getTracks().forEach(track => track.stop());
+            video.srcObject = null;
+        }
+
+        // Remove modal backdrop and reset body styles
+        setTimeout(() => {
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+                backdrop.remove();
+            }
+            document.body.classList.remove('modal-open');
+            document.body.style.removeProperty('overflow');
+            document.body.style.removeProperty('padding-right');
+        }, 200);
+
+        // Clear captured faces
+        const capturedFacesDiv = document.getElementById('capturedFaces');
+        if (capturedFacesDiv) {
+            capturedFacesDiv.innerHTML = '';
+        }
+
+        // Reset buttons
+        const startButton = document.getElementById('startCapture');
+        const takePhotoButton = document.getElementById('takePhoto');
+        if (startButton) startButton.style.display = 'block';
+        if (takePhotoButton) takePhotoButton.style.display = 'none';
+    });
+}
+
+// Payment method toggle function
+function showDiv(obj) {
+    if ($(obj).val() == 'check') {
+        $('#routing_number_div').addClass('d-none');
+        $('#account_number_div').addClass('d-none');
+        $('#account_type_div').addClass('d-none');
+        $('#bank_div').addClass('d-none');
+    }
+
+    if ($(obj).val() == 'deposit') {
+        $('#routing_number_div').removeClass('d-none');
+        $('#account_number_div').removeClass('d-none');
+        $('#account_type_div').removeClass('d-none');
+        $('#bank_div').removeClass('d-none');
+    }
+}
+
+// File upload handling
+const fileUpload = (event) => {
+    const files = event.target.files;
+    const filesLength = files.length;
+
+    const imagePreviewElement = document.querySelector("#tb-image");
+
+    if (filesLength > 0) {
+        const imageSrc = URL.createObjectURL(files[0]);
+        imagePreviewElement.src = imageSrc;
+        imagePreviewElement.style.display = "block";
+    } else {
+        imagePreviewElement.style.display = "none";
+    }
+
+    convertImageToBase64(event);
+};
+
+function convertImageToBase64(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const base64 = event.target.result;
+        document.getElementById('base64_image').value = base64;
+    };
+    reader.readAsDataURL(file);
+}
 </script>
 @endpush
