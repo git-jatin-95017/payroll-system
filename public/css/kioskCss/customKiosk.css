@@ -1,0 +1,50 @@
+body,html{
+    height: 100%;
+}
+body{
+    font-family: "Inter", sans-serif;
+    color: #1A1A1A;
+}
+.kiosk-footer{
+    background-color: #522081;
+}
+
+.max-w-sm{
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.text-lg{
+    font-size: 18px;
+}
+
+.site-input-lg{
+    border: 2px solid #989898;
+    height: 54px;
+}
+
+.site-input-lg:focus{
+    box-shadow: none;
+    outline: none;
+    border-color: #522081;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 15px;
+}
+.site-input-lg::placeholder{
+    color: #7B7B7B;
+    font-weight: 500;
+}
+.btn-verify {
+    background: #a456e7;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+.btn-verify:hover{
+    background-color: #7f3ebd;
+    color: #fff;
+}

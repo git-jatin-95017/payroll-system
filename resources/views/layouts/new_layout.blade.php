@@ -7,10 +7,10 @@
     <!-- Add CSRF Token Meta Tag -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    
+
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
+
     @yield('third_party_stylesheets')
     @stack('page_css')
     <!-- fonts -->
@@ -30,6 +30,7 @@
     </style>
     @stack('styles')
 </head>
+
 <body>
     <div id="left-menu">
         <div class="sidebar-logo">
@@ -38,9 +39,9 @@
             </button>
             <a href="">
                 @if(!empty(auth()->user()->companyProfile->logo))
-                    <img src="/files/{{auth()->user()->companyProfile->logo}}" style="widht:150px; height:31px;" alt="logo">
+                <img src="/files/{{auth()->user()->companyProfile->logo}}" style="widht:150px; height:31px;" alt="logo">
                 @else
-                    <img src="{{ asset('img/paywiz-logo.png') }}" alt="logo">
+                <img src="{{ asset('img/paywiz-logo.png') }}" alt="logo">
                 @endif
             </a>
             <span class="small-logo">Pay</span>
