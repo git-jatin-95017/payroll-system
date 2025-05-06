@@ -31,9 +31,9 @@
                     <button type="button" class="btn btn-success btn-lg" id="takePhoto" style="display: none;">
                         <i class="fas fa-camera me-2"></i>Capture Photo
                     </button>
-                    <button type="button" class="btn btn-secondary btn-lg ms-2" id="switchCamera" style="display: none;">
+                    <!-- <button type="button" class="btn btn-secondary btn-lg ms-2" id="switchCamera" style="display: none;">
                         <i class="fas fa-sync me-2"></i>Switch Camera
-                    </button>
+                    </button> -->
                 </div>
 
                 <div class="mt-4">
