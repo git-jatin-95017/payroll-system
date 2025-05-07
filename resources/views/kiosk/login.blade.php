@@ -6,6 +6,9 @@
             <img src="{{ asset('img/logo-kiosk.png') }}" alt="logo">
         </div>
         <div class="company-verification mb-4">
+            <div id="errorMessage" class="alert alert-danger mt-3" style="display: none;">
+                Invalid company name. Please try again.
+            </div>
             <form id="companyForm">
                 <label class="fs-6 fw-medium mb-2">Company Name</label>
                 <div class="form-group mb-4">
@@ -21,9 +24,7 @@
                 </button>
             </form>
         </div>
-        <div id="errorMessage" class="alert alert-danger mt-3" style="display: none;">
-            Invalid company name. Please try again.
-        </div>
+
     </div>
 </div>
 @endsection

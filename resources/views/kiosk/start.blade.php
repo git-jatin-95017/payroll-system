@@ -1,59 +1,27 @@
 @extends('layouts.kiosk')
 
 @section('content')
-<div class="container h-100 d-flex flex-column justify-content-center align-items-center">
-    <div class="text-center mb-5">
-        <h1 class="display-4">Account Payroll</h1>
-        <p class="lead">Welcome to the Kiosk System</p>
-    </div>
-
-    <div class="tap-circle" id="tapToBegin">
-        <div class="tap-text">
-            <h2>TAP TO</h2>
-            <h2>BEGIN</h2>
+<div class="max-w-sm h-100">
+    <div class="h-100 d-flex flex-column justify-content-center">
+        <div class="tap-circle d-flex align-items-center text-white justify-content-center mx-auto mb-4" id="tapToBegin">
+            <div class="tap-text text-center">
+                <p class="fs-3 mb-0">TAP TO</p>
+                <p class="fs-3 mb-0">BEGIN</p>
+            </div>
         </div>
+        <a href="{{ route('kiosk.back') }}" class="back-btn text-center d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+            Back
+        </a>
     </div>
-
-    <a href="{{ route('kiosk.back') }}" class="btn btn-link mt-4">
-        <i class="fas fa-arrow-left"></i> Back
-    </a>
 </div>
-
-@push('styles')
-<style>
-    .tap-circle {
-        width: 200px;
-        height: 200px;
-        background-color: #6f42c1;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        transition: transform 0.2s;
-    }
-
-    .tap-circle:hover {
-        transform: scale(1.05);
-    }
-
-    .tap-text {
-        color: white;
-        text-align: center;
-    }
-
-    .tap-text h2 {
-        margin: 0;
-        font-size: 24px;
-        font-weight: 500;
-    }
-</style>
-@endpush
-
+@endsection
 @push('scripts')
 <script>
-document.getElementById('tapToBegin').addEventListener('click', function() {
-    window.location.href = "{{ route('kiosk.face-recognition') }}";
-});
+    document.getElementById('tapToBegin').addEventListener('click', function() {
+        window.location.href = "{{ route('kiosk.face-recognition') }}";
+    });
 </script>
-@endpush 
+@endpush
