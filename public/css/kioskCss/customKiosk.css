@@ -48,3 +48,31 @@ body{
     background-color: #7f3ebd;
     color: #fff;
 }
+
+.top-text {
+    font-size: 16px !important;
+    vertical-align: text-top;
+    display: inline-block;
+}
+
+.company-icon{
+    background-color: #DBB5FF;
+    width: 40px;
+    height: 40px;
+    border-radius: 100em;
+}
+
+.tap-circle{
+    background-color: #522081;
+    width: 200px;
+    height: 200px;
+    border-radius: 100em;
+    cursor: pointer;
+}
+
+.back-btn{
+    color: #522081;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+}
