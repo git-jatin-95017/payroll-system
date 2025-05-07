@@ -731,9 +731,9 @@
 </section>
 @include('client.employee.face-capture')
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#faceCaptureModal">
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#faceCaptureModal">
     Capture Face
-</button>
+</button> -->
 @endsection
 @section('third_party_scripts')
 <!-- FullCalendar JS -->

@@ -307,7 +307,7 @@ class EmployeeController extends Controller
 		];
 
 		// Process face data if present
-		if ($request->has('face_data')) {
+		if ($request->has('face_data') && $request->face_data != null) {
 			try {
 				$processedFaceData = $this->processFaceData($request->face_data);
 				$employeeData['face_data'] = $processedFaceData;
@@ -454,7 +454,7 @@ class EmployeeController extends Controller
 			];
 
 			// Process face data if present
-			if ($request->has('face_data')) {
+			if ($request->has('face_data') && $request->face_data != null) {
 				try {
 					$processedFaceData = $this->processFaceData($request->face_data);
 					$employeeData['face_data'] = $processedFaceData;
