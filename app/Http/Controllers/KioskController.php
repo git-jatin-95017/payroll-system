@@ -235,7 +235,17 @@ class KioskController extends Controller
                 $profileFaceData = $storedFaces[0]['image'];
             }
         }
+        // dd($profileFaceData ?: $request->face_data)
         session(['kiosk_captured_face' => $profileFaceData ?: $request->face_data]);
+        
+        \Log::info('Session set:', ['kiosk_captured_face' => session('kiosk_captured_face')]);
+
+        \Log::info('Profile face_data:', [
+            'raw' => $bestMatch->employeeProfile->face_data ?? null,
+            'decoded' => isset($storedFaces) ? $storedFaces : null,
+            'profileFaceData' => $profileFaceData,
+            'request_face_data' => $request->face_data,
+        ]);
 
         \Log::info('Face verification successful', [
             'employee_id' => $bestMatch->id,
@@ -243,7 +253,7 @@ class KioskController extends Controller
             'threshold' => $threshold
         ]);
 
-        session()->forget('kiosk_captured_face');
+        // session()->forget('kiosk_captured_face');
 
         return response()->json([
             'success' => true,

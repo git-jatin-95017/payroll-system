@@ -8,9 +8,9 @@
                     <span id="current-time" class="text-white"></span>
                 </div> -->
                 <div class="text-white">
-                    <h2 class="footer-time fs-1 fw-semibold mb-1">9:30 <span class="time-sub fst-normal fs-3">am</span></h2>
-                    <p class="footer-day fs-5 mb-1 fw-light">Sunday</p>
-                    <p class="footer-date fs-5 mb-0 fw-light">April 20, 2025</p>
+                    <h2 class="footer-time fs-1 fw-semibold mb-1"><span id="footerTime">--:--</span> <span class="time-sub fst-normal fs-3" id="footerAmPm">--</span></h2>
+                    <p class="footer-day fs-5 mb-1 fw-light" id="footerDay">--</p>
+                    <p class="footer-date fs-5 mb-0 fw-light" id="footerDate">--</p>
                 </div>
             </div>
             <div class="col-6">
@@ -36,22 +36,22 @@
 </div>
 @push('scripts')
 <script>
-    function updateDateTime() {
+    function updateFooterTime() {
         const now = new Date();
-        const options = {
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true,
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric'
-        };
-        document.getElementById('current-time').textContent = now.toLocaleString('en-US', options);
+        let hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        document.getElementById('footerTime').textContent = `${hours}:${minutes}`;
+        document.getElementById('footerAmPm').textContent = ampm;
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        document.getElementById('footerDay').textContent = days[now.getDay()];
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('footerDate').textContent = now.toLocaleDateString(undefined, options);
     }
-
-    // Update time every second
-    setInterval(updateDateTime, 1000);
-    updateDateTime(); // Initial call
+    setInterval(updateFooterTime, 1000);
+    updateFooterTime();
 
     // Fetch weather data
     async function fetchWeather() {
