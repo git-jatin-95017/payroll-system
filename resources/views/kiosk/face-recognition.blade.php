@@ -2,15 +2,19 @@
 
 @section('content')
 <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
-    <div id="error-message" class="alert alert-danger" style="display: none;"></div>
     <div class="text-center mb-4">
-        <h1 class="fs-5 fw-semibold mb-1">Face Recognition</h1>
-        <p class="text-sm text-gray">Scan your face to verify identity</p>
+        <h1>Face Recognition</h1>
+        <p>Scan your face to verify identity</p>
     </div>
+
     <div class="face-scan-container mb-4">
         <div class="scan-frame">
-            <video id="video" width="400" height="350" autoplay playsinline></video>
-            <canvas id="canvas" width="400" height="350" style="display:none;"></canvas>
+            <video id="video" width="640" height="480" autoplay playsinline></video>
+            <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+            <div class="face-guide-overlay">
+                <div class="face-guide"></div>
+                <div class="face-status">Position your face in the frame</div>
+            </div>
         </div>
         <div id="loading" class="loading-overlay" style="display: none;">
             <div class="spinner-border text-primary" role="status">
@@ -18,21 +22,29 @@
             </div>
         </div>
     </div>
-    <div class="mb-3">
-        <button class="btn btn-verify mb-3" id="startScan">
-            Start Camera
-        </button>
-        <a href="{{ route('kiosk.back') }}" class="back-btn text-center d-flex align-items-center justify-content-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-            </svg>
-            Back
-        </a>
-    </div>
+
+    <div id="error-message" class="alert alert-danger" style="display: none;"></div>
+
+    <button class="btn btn-primary btn-lg mb-3" id="startScan">
+        Start Camera
+    </button>
+
+    <a href="{{ route('kiosk.back') }}" class="btn btn-link mt-4">
+        <i class="fas fa-arrow-left"></i> Cancel
+    </a>
 </div>
-@endsection
+
 @push('styles')
 <style>
+    .face-scan-container {
+        position: relative;
+        width: 640px;
+        height: 480px;
+        border: 2px solid #6f42c1;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
     .scan-frame {
         position: relative;
         width: 100%;
@@ -44,6 +56,76 @@
         height: 100%;
         object-fit: cover;
     }
+
+    .face-guide-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+    }
+
+    .face-guide {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 300px;
+        height: 300px;
+        border: 2px solid #6f42c1;
+        border-radius: 50%;
+        box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+    }
+
+    .face-guide::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100px;
+        height: 100px;
+        border: 2px dashed rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+    }
+
+    .face-guide::after {
+        content: 'Position your entire face here';
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        font-size: 1.2em;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        white-space: nowrap;
+    }
+
+    .face-status {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: white;
+        font-size: 1.2em;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.5);
+        padding: 10px;
+    }
+
+    .face-guide.face-detected {
+        border-color: #28a745;
+        animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+    }
+
     .loading-overlay {
         position: absolute;
         top: 0;
