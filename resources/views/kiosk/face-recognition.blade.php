@@ -129,7 +129,10 @@ let stream = null;
 let detectionInterval = null;
 let faceDetected = false;
 let faceDetectionCount = 0;
-const REQUIRED_DETECTIONS = 5; // Number of consecutive detections before capturing
+const REQUIRED_DETECTIONS = 8; // Reduced from 10 to 8
+const MIN_CONFIDENCE = 0.80; // Reduced from 0.85 to 0.80
+let lastDetectionTime = 0;
+const MIN_DETECTION_TIME = 800; // Reduced from 1000ms to 800ms
 
 // Check for camera support
 function checkCameraSupport() {
@@ -263,20 +266,34 @@ async function detectFaces() {
             const confidence = face.probability[0];
             
             // Only consider high confidence detections
-            if (confidence > 0.9) {
+            if (confidence > MIN_CONFIDENCE) {
+                // Update last detection time if this is the first detection
+                if (faceDetectionCount === 0) {
+                    lastDetectionTime = Date.now();
+                }
+                
                 faceDetectionCount++;
                 faceGuide.classList.add('face-detected');
-                faceStatus.textContent = `Face detected (${Math.round(confidence * 100)}%) - Hold still...`;
                 
-                if (faceDetectionCount >= REQUIRED_DETECTIONS) {
-                    // Face has been consistently detected, capture image
+                // Calculate time since first detection
+                const detectionDuration = Date.now() - lastDetectionTime;
+                const remainingTime = Math.max(0, MIN_DETECTION_TIME - detectionDuration);
+                
+                if (remainingTime > 0) {
+                    faceStatus.textContent = `Face detected (${Math.round(confidence * 100)}%) - Hold still for ${Math.ceil(remainingTime/1000)}s...`;
+                } else if (faceDetectionCount >= REQUIRED_DETECTIONS) {
+                    // Face has been consistently detected for required time and count
                     faceStatus.textContent = "Capturing...";
                     await captureAndVerifyFace(face);
+                } else {
+                    faceStatus.textContent = `Face detected (${Math.round(confidence * 100)}%) - Keep holding still...`;
                 }
             } else {
+                console.log('Low confidence detection:', confidence);
                 resetFaceDetection();
             }
         } else {
+            console.log('No face detected in frame');
             resetFaceDetection();
         }
     } catch (err) {
@@ -287,6 +304,7 @@ async function detectFaces() {
 
 function resetFaceDetection() {
     faceDetectionCount = 0;
+    lastDetectionTime = 0;
     const faceGuide = document.querySelector('.face-guide');
     const faceStatus = document.querySelector('.face-status');
     faceGuide.classList.remove('face-detected');
@@ -295,17 +313,35 @@ function resetFaceDetection() {
 
 async function captureAndVerifyFace(face) {
     try {
+        // Add a small delay before capture to ensure stability
+        await new Promise(resolve => setTimeout(resolve, 300)); // Reduced from 500ms to 300ms
+        
         // Draw video frame to canvas with consistent dimensions
         canvas.width = 640;
         canvas.height = 480;
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         
-        // Get face region with consistent padding
-        const padding = 40; // pixels
+        // Get face region with larger padding for better detection
+        const padding = 60; // Increased from 40 to 60 pixels
         const x = Math.max(0, Math.round(face.topLeft[0]) - padding);
         const y = Math.max(0, Math.round(face.topLeft[1]) - padding);
         const width = Math.min(canvas.width - x, Math.round(face.bottomRight[0] - face.topLeft[0]) + (padding * 2));
         const height = Math.min(canvas.height - y, Math.round(face.bottomRight[1] - face.topLeft[1]) + (padding * 2));
+
+        // Log original face detection details
+        console.log('Original face detection:', {
+            topLeft: face.topLeft,
+            bottomRight: face.bottomRight,
+            confidence: face.probability[0],
+            padding: padding,
+            cropRegion: { x, y, width, height }
+        });
+
+        // Verify face is still in frame after capture
+        if (width < 80 || height < 80) { // Reduced from 100 to 80
+            console.warn('Face region too small:', { width, height });
+            throw new Error('Please move closer to the camera');
+        }
 
         // Create temporary canvas with consistent dimensions
         const tempCanvas = document.createElement('canvas');
@@ -316,6 +352,28 @@ async function captureAndVerifyFace(face) {
         // Draw face region with consistent quality
         tempContext.drawImage(canvas, x, y, width, height, 0, 0, width, height);
 
+        // Try multiple times to detect face in cropped image
+        let verifyPredictions = null;
+        let attempts = 0;
+        const maxAttempts = 3;
+
+        while (attempts < maxAttempts) {
+            verifyPredictions = await model.estimateFaces(tempCanvas, false);
+            if (verifyPredictions.length > 0) {
+                console.log('Face verified in cropped image on attempt', attempts + 1);
+                break;
+            }
+            attempts++;
+            if (attempts < maxAttempts) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        }
+
+        if (!verifyPredictions || verifyPredictions.length === 0) {
+            console.warn('Face verification failed after', maxAttempts, 'attempts');
+            throw new Error('Please try again - make sure your face is clearly visible');
+        }
+
         // Extract features before converting to base64
         const features = await extractFaceFeatures(tempCanvas);
         
@@ -323,36 +381,50 @@ async function captureAndVerifyFace(face) {
         const imageData = tempCanvas.toDataURL('image/jpeg', 0.7);
         
         // Log capture details for debugging
-        console.log('Face capture details:', {
+        console.log('Face capture successful:', {
             width,
             height,
             confidence: face.probability[0],
-            featureCount: features.length
+            featureCount: features.length,
+            detectionCount: faceDetectionCount,
+            detectionDuration: Date.now() - lastDetectionTime,
+            verificationAttempts: attempts + 1
         });
 
         // Stop detection and video
         stopVideo();
         
-        // Send to server for verification
-        const response = await fetch('{{ route("kiosk.verify-face") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({
-                face_data: imageData,
-                face_features: features
-            })
-        });
-
-        const data = await response.json();
+        // Show loading state
+        document.getElementById('loading').style.display = 'flex';
         
-        if (data.success) {
-            window.location.href = '{{ route("kiosk.pin-verification") }}';
-        } else {
-            showError(data.message || 'Face verification failed');
-            document.getElementById('startScan').style.display = 'block';
+        try {
+            // Send to server for verification
+            const response = await fetch('{{ route("kiosk.verify-face") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    face_data: imageData,
+                    face_features: features
+                })
+            });
+
+            const data = await response.json();
+            
+            // Hide loading state
+            document.getElementById('loading').style.display = 'none';
+            
+            if (data.success) {
+                window.location.href = '{{ route("kiosk.pin-verification") }}';
+            } else {
+                showError(data.message || 'Face verification failed');
+                document.getElementById('startScan').style.display = 'block';
+            }
+        } catch (err) {
+            document.getElementById('loading').style.display = 'none';
+            throw err;
         }
     } catch (err) {
         console.error('Face capture error:', err);
