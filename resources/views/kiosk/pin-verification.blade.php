@@ -3,7 +3,7 @@
 @section('content')
 <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
     <div class="text-center mb-4">
-        <h1 class="fs-5 fw-semibold">Employee not found</h1>
+        <h1 class="fs-5 fw-semibold">Employee found</h1>
         <p class="text-sm text-gray">Please enter your 4-digit PIN code to verify it's you</p>
     </div>
 
