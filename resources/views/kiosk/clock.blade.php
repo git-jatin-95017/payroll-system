@@ -218,7 +218,7 @@ async function handleClockAction() {
                 // Clear storage and redirect
                 sessionStorage.clear();
                 localStorage.clear();
-                window.location.href = '/kiosk';
+                window.location.href = '/';
             }
         } else {
             alert(data.message || 'An error occurred');

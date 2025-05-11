@@ -39,7 +39,7 @@ class KioskController extends Controller
         }
 
         // Store company ID in session for later use
-        session(['kiosk_company_id' => $company->id]);
+        session(['kiosk_company_id' => $company->user_id]);
 
         return response()->json([
             'success' => true,
@@ -74,8 +74,13 @@ class KioskController extends Controller
             'face_features' => 'required|array' // Extracted face features
         ]);
 
-        // Log incoming feature vector size for debugging
-        \Log::info('Incoming face features count: ' . count($request->face_features));
+        // Log incoming request details
+        \Log::info('Face verification request received:', [
+            'feature_count' => count($request->face_features),
+            'company_id' => session('kiosk_company_id'),
+            'timestamp' => now()->toDateTimeString(),
+            'feature_sample' => array_slice($request->face_features, 0, 3) // Log first 3 features for debugging
+        ]);
 
         // Get all employees created by the current company with face data
         $employees = User::where('created_by', session('kiosk_company_id'))
@@ -85,7 +90,15 @@ class KioskController extends Controller
             ->with('employeeProfile')
             ->get();
 
+        \Log::info('Found employees with face data:', [
+            'count' => $employees->count(),
+            'company_id' => session('kiosk_company_id')
+        ]);
+
         if ($employees->isEmpty()) {
+            \Log::warning('No employees found with face data', [
+                'company_id' => session('kiosk_company_id')
+            ]);
             return response()->json([
                 'success' => false,
                 'message' => 'No registered employees found with face data'
@@ -95,41 +108,64 @@ class KioskController extends Controller
         // Find the best match by comparing face features
         $bestMatch = null;
         $highestSimilarity = 0;
-        $threshold = 0.85; // Increased threshold for normalized coordinates
+        $threshold = 0.55; // Lowered threshold to account for variations in capture conditions
         $matchDetails = [];
 
         foreach ($employees as $employee) {
             try {
                 $storedFaces = json_decode($employee->employeeProfile->face_data, true);
                 if (!is_array($storedFaces)) {
-                    \Log::warning("Invalid face data format for employee {$employee->id}");
+                    \Log::warning("Invalid face data format for employee", [
+                        'employee_id' => $employee->id,
+                        'face_data_type' => gettype($employee->employeeProfile->face_data)
+                    ]);
                     continue;
                 }
+
+                \Log::info("Processing employee faces", [
+                    'employee_id' => $employee->id,
+                    'stored_faces_count' => count($storedFaces)
+                ]);
 
                 foreach ($storedFaces as $index => $storedFace) {
                     // Skip if stored face data is invalid
                     if (!isset($storedFace['features']) || !is_array($storedFace['features'])) {
-                        \Log::warning("Invalid features format for employee {$employee->id}, face index {$index}");
+                        \Log::warning("Invalid features format for employee", [
+                            'employee_id' => $employee->id,
+                            'face_index' => $index,
+                            'features_type' => isset($storedFace['features']) ? gettype($storedFace['features']) : 'not set'
+                        ]);
                         continue;
                     }
-
-                    // Log feature vector sizes for comparison
-                    \Log::debug("Comparing features - Input: " . count($request->face_features) . 
-                              ", Stored: " . count($storedFace['features']) . 
-                              " for employee {$employee->id}");
 
                     // Only compare if feature counts match
                     if (count($request->face_features) !== count($storedFace['features'])) {
-                        \Log::warning("Feature count mismatch for employee {$employee->id} - Input: " . 
-                                    count($request->face_features) . ", Stored: " . 
-                                    count($storedFace['features']));
+                        \Log::warning("Feature count mismatch", [
+                            'employee_id' => $employee->id,
+                            'face_index' => $index,
+                            'input_features_count' => count($request->face_features),
+                            'stored_features_count' => count($storedFace['features']),
+                            'input_features_sample' => array_slice($request->face_features, 0, 3),
+                            'stored_features_sample' => array_slice($storedFace['features'], 0, 3)
+                        ]);
                         continue;
                     }
 
+                    // Calculate similarity first
                     $similarity = $this->calculateCosineSimilarity(
                         $request->face_features,
                         $storedFace['features']
                     );
+
+                    // Log each comparison
+                    \Log::info("Face comparison result", [
+                        'employee_id' => $employee->id,
+                        'face_index' => $index,
+                        'similarity_score' => $similarity,
+                        'threshold' => $threshold,
+                        'input_features_count' => count($request->face_features),
+                        'stored_features_count' => count($storedFace['features'])
+                    ]);
 
                     // Log similarity score for debugging
                     $matchDetails[] = [
@@ -145,22 +181,38 @@ class KioskController extends Controller
                     if ($similarity > $highestSimilarity) {
                         $highestSimilarity = $similarity;
                         $bestMatch = $employee;
+                        \Log::info("New best match found", [
+                            'employee_id' => $employee->id,
+                            'similarity' => $similarity,
+                            'threshold' => $threshold
+                        ]);
                     }
                 }
             } catch (\Exception $e) {
-                \Log::error("Error processing face data for employee {$employee->id}: " . $e->getMessage());
+                \Log::error("Error processing face data for employee", [
+                    'employee_id' => $employee->id,
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ]);
                 continue;
             }
         }
 
-        // Log match details for debugging
-        \Log::info('Face match details:', [
+        // Log final match details
+        \Log::info('Face verification complete', [
             'highest_similarity' => $highestSimilarity,
             'threshold' => $threshold,
-            'match_details' => $matchDetails
+            'best_match_id' => $bestMatch ? $bestMatch->id : null,
+            'match_details' => $matchDetails,
+            'total_comparisons' => count($matchDetails)
         ]);
 
         if (!$bestMatch || $highestSimilarity < $threshold) {
+            \Log::warning('Face verification failed - no match above threshold', [
+                'highest_similarity' => $highestSimilarity,
+                'threshold' => $threshold,
+                'best_match_id' => $bestMatch ? $bestMatch->id : null
+            ]);
             return response()->json([
                 'success' => false,
                 'message' => 'Face verification failed. No matching employee found.',
@@ -174,6 +226,12 @@ class KioskController extends Controller
 
         // Store the matched user ID in session
         session(['kiosk_user_id' => $bestMatch->id]);
+
+        \Log::info('Face verification successful', [
+            'employee_id' => $bestMatch->id,
+            'similarity' => $highestSimilarity,
+            'threshold' => $threshold
+        ]);
 
         return response()->json([
             'success' => true,
@@ -317,6 +375,9 @@ class KioskController extends Controller
                 'note' => $request->note ?: $activeCheckin->note
             ]);
 
+            // Clear only kiosk_company_id from session
+            session()->forget('kiosk_company_id');
+            
             // Clear session
             session()->flush();
 
@@ -348,7 +409,7 @@ class KioskController extends Controller
     public function goBack()
     {
         session()->forget('kiosk_company_id');
-        return redirect()->route('kiosk.start');
+        return redirect()->route('kiosk.login');
     }
 
     public function getHistory(Request $request)
