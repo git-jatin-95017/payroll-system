@@ -12,7 +12,12 @@
             <video id="video" width="640" height="480" autoplay playsinline></video>
             <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
             <div class="face-guide-overlay">
-                <div class="face-guide"></div>
+                <div class="face-guide">
+                    <div class="face-guide-corner tl"></div>
+                    <div class="face-guide-corner tr"></div>
+                    <div class="face-guide-corner bl"></div>
+                    <div class="face-guide-corner br"></div>
+                </div>
                 <div class="face-status">Position your face in the frame</div>
             </div>
         </div>
@@ -43,6 +48,7 @@
         border: 2px solid #6f42c1;
         border-radius: 10px;
         overflow: hidden;
+        background: #000;
     }
 
     .scan-frame {
@@ -64,55 +70,58 @@
         right: 0;
         bottom: 0;
         pointer-events: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
+    /* New square border with open corners */
     .face-guide {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 300px;
-        height: 300px;
-        border: 2px solid #6f42c1;
-        border-radius: 50%;
-        box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+        position: relative;
+        width: 240px;
+        height: 240px;
+        border-radius: 24px;
+        /* No border, only corners */
     }
-
-    .face-guide::before {
-        content: '';
+    .face-guide-corner {
         position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 100px;
-        height: 100px;
-        border: 2px dashed rgba(255, 255, 255, 0.5);
-        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        border: 4px solid #6f42c1;
+        border-radius: 16px;
     }
-
-    .face-guide::after {
-        content: 'Position your entire face here';
-        position: absolute;
-        top: -30px;
-        left: 50%;
-        transform: translateX(-50%);
-        color: white;
-        font-size: 1.2em;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-        white-space: nowrap;
+    .face-guide-corner.tl {
+        top: 0; left: 0;
+        border-right: none;
+        border-bottom: none;
     }
-
+    .face-guide-corner.tr {
+        top: 0; right: 0;
+        border-left: none;
+        border-bottom: none;
+    }
+    .face-guide-corner.bl {
+        bottom: 0; left: 0;
+        border-right: none;
+        border-top: none;
+    }
+    .face-guide-corner.br {
+        bottom: 0; right: 0;
+        border-left: none;
+        border-top: none;
+    }
     .face-status {
         position: absolute;
         bottom: 20px;
         left: 0;
         right: 0;
         text-align: center;
-        color: white;
+        color: #6f42c1;
         font-size: 1.2em;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-        background: rgba(0, 0, 0, 0.5);
+        background: none;
+        text-shadow: none;
         padding: 10px;
+        font-weight: 500;
     }
 
     .face-guide.face-detected {
