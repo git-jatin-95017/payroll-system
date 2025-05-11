@@ -227,11 +227,15 @@ class KioskController extends Controller
         // Store the matched user ID in session
         session(['kiosk_user_id' => $bestMatch->id]);
 
+        session(['kiosk_captured_face' => $request->face_data]);
+
         \Log::info('Face verification successful', [
             'employee_id' => $bestMatch->id,
             'similarity' => $highestSimilarity,
             'threshold' => $threshold
         ]);
+
+        session()->forget('kiosk_captured_face');
 
         return response()->json([
             'success' => true,
@@ -435,5 +439,27 @@ class KioskController extends Controller
             'success' => true,
             'history' => $history
         ]);
+    }
+
+    public function showFaceConfirmation()
+    {
+        if (!session('kiosk_user_id')) {
+            return redirect()->route('kiosk.face-recognition');
+        }
+        $user = \App\Models\User::with('employeeProfile')->find(session('kiosk_user_id'));
+        return view('kiosk.face-confirmation', [
+            'user' => $user
+        ]);
+    }
+
+    public function handleFaceConfirmation(Request $request)
+    {
+        $request->validate(['confirm' => 'required|in:yes,no']);
+        if ($request->confirm === 'yes') {
+            return redirect()->route('kiosk.pin-verification');
+        } else {
+            session()->forget('kiosk_user_id');
+            return redirect()->route('kiosk.face-recognition');
+        }
     }
 } 
