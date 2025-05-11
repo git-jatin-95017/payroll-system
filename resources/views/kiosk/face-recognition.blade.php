@@ -2,15 +2,24 @@
 
 @section('content')
 <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
-    <div id="error-message" class="alert alert-danger" style="display: none;"></div>
     <div class="text-center mb-4">
-        <h1 class="fs-5 fw-semibold mb-1">Face Recognition</h1>
-        <p class="text-sm text-gray">Scan your face to verify identity</p>
+        <h1>Face Recognition</h1>
+        <p>Scan your face to verify identity</p>
     </div>
+
     <div class="face-scan-container mb-4">
         <div class="scan-frame">
-            <video id="video" width="400" height="350" autoplay playsinline></video>
-            <canvas id="canvas" width="400" height="350" style="display:none;"></canvas>
+            <video id="video" width="640" height="480" autoplay playsinline></video>
+            <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+            <div class="face-guide-overlay">
+                <div class="face-guide">
+                    <div class="face-guide-corner tl"></div>
+                    <div class="face-guide-corner tr"></div>
+                    <div class="face-guide-corner bl"></div>
+                    <div class="face-guide-corner br"></div>
+                </div>
+                <div class="face-status">Position your face in the frame</div>
+            </div>
         </div>
         <div id="loading" class="loading-overlay" style="display: none;">
             <div class="spinner-border text-primary" role="status">
@@ -30,13 +39,34 @@
         </a>
     </div>
 </div>
-@endsection
+
 @push('styles')
 <style>
+    .face-scan-container {
+        position: relative;
+        width: 400px;
+        max-width: 90vw;
+        height: 400px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 4px 24px rgba(80, 42, 134, 0.10), 0 1.5px 6px rgba(80, 42, 134, 0.08);
+        border: 1.5px solid #E5E5EF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     .scan-frame {
         position: relative;
-        width: 100%;
-        height: 100%;
+        width: 360px;
+        height: 360px;
+        background: transparent;
+        border-radius: 20px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .scan-frame video {
@@ -55,6 +85,22 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .kiosk-btn-primary {
+        background: #6366F1; /* Use your Figma blue */
+        color: #fff;
+        border: none;
+        border-radius: 12px; /* More rounded */
+        font-weight: 600;
+        font-size: 1.15rem;
+        padding: 0.85rem 2.5rem;
+        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.10);
+        transition: background 0.2s;
+    }
+    .kiosk-btn-primary:hover, .kiosk-btn-primary:focus {
+        background: #4F46E5; /* Slightly darker on hover */
+        color: #fff;
     }
 </style>
 @endpush
