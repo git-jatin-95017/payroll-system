@@ -375,6 +375,9 @@ class KioskController extends Controller
                 'note' => $request->note ?: $activeCheckin->note
             ]);
 
+            // Clear only kiosk_company_id from session
+            session()->forget('kiosk_company_id');
+            
             // Clear session
             session()->flush();
 
@@ -406,7 +409,7 @@ class KioskController extends Controller
     public function goBack()
     {
         session()->forget('kiosk_company_id');
-        return redirect()->route('kiosk.start');
+        return redirect()->route('kiosk.login');
     }
 
     public function getHistory(Request $request)

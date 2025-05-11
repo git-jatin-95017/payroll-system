@@ -30,4 +30,5 @@ Route::prefix('/')->name('kiosk.')->group(function () {
     Route::get('/history', [App\Http\Controllers\KioskController::class, 'getHistory'])->name('history');
     Route::post('/clock-in-out', [App\Http\Controllers\KioskController::class, 'clockInOut'])->name('clock-in-out');
     Route::get('/back', [App\Http\Controllers\KioskController::class, 'goBack'])->name('back');
+    Route::get('/kiosk/back', [\App\Http\Controllers\KioskController::class, 'goBack'])->name('kiosk.back');
 });
