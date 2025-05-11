@@ -76,3 +76,37 @@ body{
     font-weight: 500;
     text-decoration: none;
 }
+
+.text-gray{
+    color: #676767;
+}
+.text-lg{
+    font-size: 18px;
+}
+.text-sm{
+    font-size: 14px;
+}
+.text-xs{
+    font-size: 12px;
+}
+
+.face-scan-container {
+    position: relative;
+    width: 450px;
+    height: 350px;
+    border: 2px solid #cbcbcb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.scan-frame::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    border: 2px dashed #cbcbcb;
+    border-radius: 10px;
+}

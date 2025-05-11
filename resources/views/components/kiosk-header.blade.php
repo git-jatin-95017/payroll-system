@@ -1,6 +1,5 @@
 @if(session('kiosk_company_id'))
-
-<header class="header py-4">
+<header class="header py-3">
     <div class="container">
         <div class="row">
             <div class="col-6 d-flex gap-2 align-items-center">
