@@ -3,10 +3,10 @@
 @section('content')
 <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
     <div class="text-center mb-4">
-        <h1>Face Recognition</h1>
-        <p>Scan your face to verify identity</p>
+        <h1 class="fs-5 fw-semibold">Face Recognition</h1>
+        <p class="text-sm text-gray">Scan your face to verify identity</p>
     </div>
-
+    <div id="error-message" class="alert alert-danger" style="display: none;"></div>
     <div class="face-scan-container mb-4">
         <div class="scan-frame">
             <video id="video" width="640" height="480" autoplay playsinline></video>
@@ -27,21 +27,19 @@
             </div>
         </div>
     </div>
-
-    <div id="error-message" class="alert alert-danger" style="display: none;"></div>
-
-    <button class="btn btn-verify mb-3" id="startScan">
-        Get Started
-    </button>
-
-    <a href="{{ route('kiosk.back') }}" class="back-btn text-center d-flex align-items-center justify-content-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-        </svg>
-        Back
-    </a>
+    <div class="mb-4">
+        <button class="btn btn-verify mb-2" id="startScan">
+            Get Started
+        </button>
+        <a href="{{ route('kiosk.back') }}" class="back-btn text-center d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+            Back
+        </a>
+    </div>
 </div>
-
+@endsection
 @push('styles')
 <style>
     .face-scan-container {
@@ -97,34 +95,48 @@
         border-radius: 24px;
         /* No border, only corners */
     }
+
     .face-guide-corner {
         position: absolute;
-        width: 32px;   /* Adjust as per Figma */
+        width: 32px;
+        /* Adjust as per Figma */
         height: 32px;
-        border: 4px solid #B0B0B0; /* Grey color, adjust to Figma's value */
-        border-radius: 0;          /* No rounding, square corners */
-        box-shadow: none;          /* Remove any glow */
+        border: 4px solid #B0B0B0;
+        /* Grey color, adjust to Figma's value */
+        border-radius: 0;
+        /* No rounding, square corners */
+        box-shadow: none;
+        /* Remove any glow */
     }
+
     .face-guide-corner.tl {
-        top: 0; left: 0;
+        top: 0;
+        left: 0;
         border-right: none;
         border-bottom: none;
     }
+
     .face-guide-corner.tr {
-        top: 0; right: 0;
+        top: 0;
+        right: 0;
         border-left: none;
         border-bottom: none;
     }
+
     .face-guide-corner.bl {
-        bottom: 0; left: 0;
+        bottom: 0;
+        left: 0;
         border-right: none;
         border-top: none;
     }
+
     .face-guide-corner.br {
-        bottom: 0; right: 0;
+        bottom: 0;
+        right: 0;
         border-left: none;
         border-top: none;
     }
+
     .face-status {
         position: absolute;
         bottom: -32px;
@@ -145,9 +157,17 @@
     }
 
     @keyframes pulse {
-        0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
-        70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        0% {
+            box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4);
+        }
+
+        70% {
+            box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+        }
     }
 
     .loading-overlay {
@@ -163,18 +183,23 @@
     }
 
     .kiosk-btn-primary {
-        background: #6366F1; /* Use your Figma blue */
+        background: #6366F1;
+        /* Use your Figma blue */
         color: #fff;
         border: none;
-        border-radius: 12px; /* More rounded */
+        border-radius: 12px;
+        /* More rounded */
         font-weight: 600;
         font-size: 1.15rem;
         padding: 0.85rem 2.5rem;
         box-shadow: 0 2px 8px rgba(99, 102, 241, 0.10);
         transition: background 0.2s;
     }
-    .kiosk-btn-primary:hover, .kiosk-btn-primary:focus {
-        background: #4F46E5; /* Slightly darker on hover */
+
+    .kiosk-btn-primary:hover,
+    .kiosk-btn-primary:focus {
+        background: #4F46E5;
+        /* Slightly darker on hover */
         color: #fff;
     }
 </style>
