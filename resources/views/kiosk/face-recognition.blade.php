@@ -129,10 +129,10 @@ let stream = null;
 let detectionInterval = null;
 let faceDetected = false;
 let faceDetectionCount = 0;
-const REQUIRED_DETECTIONS = 8; // Reduced from 10 to 8
-const MIN_CONFIDENCE = 0.80; // Reduced from 0.85 to 0.80
+const REQUIRED_DETECTIONS = 6; // Reduced from 8 to 6
+const MIN_CONFIDENCE = 0.75; // Reduced from 0.80 to 0.75
 let lastDetectionTime = 0;
-const MIN_DETECTION_TIME = 800; // Reduced from 1000ms to 800ms
+const MIN_DETECTION_TIME = 600; // Reduced from 800ms to 600ms
 
 // Check for camera support
 function checkCameraSupport() {
@@ -377,6 +377,16 @@ async function captureAndVerifyFace(face) {
         // Extract features before converting to base64
         const features = await extractFaceFeatures(tempCanvas);
         
+        // Verify features before sending
+        if (!Array.isArray(features) || features.length !== 12) {
+            console.error('Invalid features before sending:', {
+                isArray: Array.isArray(features),
+                length: features ? features.length : 0,
+                features: features
+            });
+            throw new Error('Face feature extraction failed - please try again');
+        }
+
         // Convert to base64 with consistent quality
         const imageData = tempCanvas.toDataURL('image/jpeg', 0.7);
         
@@ -388,7 +398,8 @@ async function captureAndVerifyFace(face) {
             featureCount: features.length,
             detectionCount: faceDetectionCount,
             detectionDuration: Date.now() - lastDetectionTime,
-            verificationAttempts: attempts + 1
+            verificationAttempts: attempts + 1,
+            features: features // Log actual features
         });
 
         // Stop detection and video
@@ -398,6 +409,18 @@ async function captureAndVerifyFace(face) {
         document.getElementById('loading').style.display = 'flex';
         
         try {
+            // Prepare request data
+            const requestData = {
+                face_data: imageData,
+                face_features: features
+            };
+
+            // Log request data for debugging
+            console.log('Sending verification request:', {
+                featureCount: requestData.face_features.length,
+                features: requestData.face_features
+            });
+
             // Send to server for verification
             const response = await fetch('{{ route("kiosk.verify-face") }}', {
                 method: 'POST',
@@ -405,13 +428,13 @@ async function captureAndVerifyFace(face) {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                body: JSON.stringify({
-                    face_data: imageData,
-                    face_features: features
-                })
+                body: JSON.stringify(requestData)
             });
 
             const data = await response.json();
+            
+            // Log response for debugging
+            console.log('Verification response:', data);
             
             // Hide loading state
             document.getElementById('loading').style.display = 'none';
@@ -423,6 +446,7 @@ async function captureAndVerifyFace(face) {
                 document.getElementById('startScan').style.display = 'block';
             }
         } catch (err) {
+            console.error('Verification request error:', err);
             document.getElementById('loading').style.display = 'none';
             throw err;
         }
@@ -447,6 +471,9 @@ async function extractFaceFeatures(faceCanvas) {
         // Extract and normalize landmarks (12 features total - 6 landmarks x 2 coordinates)
         const features = [];
         
+        // Log raw landmarks for debugging
+        console.log('Raw face landmarks:', face.landmarks);
+        
         // Add all landmarks with normalized coordinates
         for (let i = 0; i < 6; i++) {
             if (face.landmarks[i]) {
@@ -454,14 +481,33 @@ async function extractFaceFeatures(faceCanvas) {
                 const x = face.landmarks[i][0] / faceCanvas.width;
                 const y = face.landmarks[i][1] / faceCanvas.height;
                 features.push(x, y);
+                
+                // Log each landmark for debugging
+                console.log(`Landmark ${i}:`, {
+                    raw: face.landmarks[i],
+                    normalized: [x, y]
+                });
+            } else {
+                console.warn(`Missing landmark ${i}`);
             }
+        }
+
+        // Verify we have exactly 12 features
+        if (features.length !== 12) {
+            console.error('Invalid feature count:', {
+                expected: 12,
+                actual: features.length,
+                features: features
+            });
+            throw new Error('Face feature extraction failed - invalid feature count');
         }
 
         // Log feature extraction for debugging
         console.log('Extracted features:', {
             count: features.length,
             confidence: face.probability[0],
-            landmarks: face.landmarks.length
+            landmarks: face.landmarks.length,
+            features: features
         });
         
         return features;
