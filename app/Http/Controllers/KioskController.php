@@ -39,7 +39,7 @@ class KioskController extends Controller
         }
 
         // Store company ID in session for later use
-        session(['kiosk_company_id' => $company->id]);
+        session(['kiosk_company_id' => $company->user_id]);
 
         return response()->json([
             'success' => true,
