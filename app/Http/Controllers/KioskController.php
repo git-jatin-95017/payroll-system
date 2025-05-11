@@ -227,7 +227,15 @@ class KioskController extends Controller
         // Store the matched user ID in session
         session(['kiosk_user_id' => $bestMatch->id]);
 
-        session(['kiosk_captured_face' => $request->face_data]);
+        // Prefer employee profile face_data image if available, else use the just-captured face
+        $profileFaceData = null;
+        if ($bestMatch->employeeProfile && $bestMatch->employeeProfile->face_data) {
+            $storedFaces = json_decode($bestMatch->employeeProfile->face_data, true);
+            if (is_array($storedFaces) && isset($storedFaces[0]['image'])) {
+                $profileFaceData = $storedFaces[0]['image'];
+            }
+        }
+        session(['kiosk_captured_face' => $profileFaceData ?: $request->face_data]);
 
         \Log::info('Face verification successful', [
             'employee_id' => $bestMatch->id,
