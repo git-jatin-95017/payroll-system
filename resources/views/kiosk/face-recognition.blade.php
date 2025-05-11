@@ -30,12 +30,15 @@
 
     <div id="error-message" class="alert alert-danger" style="display: none;"></div>
 
-    <button class="btn btn-primary btn-lg mb-3" id="startScan">
-        Start Camera
+    <button class="btn btn-verify mb-3" id="startScan">
+        Get Started
     </button>
 
-    <a href="{{ route('kiosk.back') }}" class="btn btn-link mt-4">
-        <i class="fas fa-arrow-left"></i> Cancel
+    <a href="{{ route('kiosk.back') }}" class="back-btn text-center d-flex align-items-center justify-content-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+        </svg>
+        Back
     </a>
 </div>
 
@@ -43,18 +46,29 @@
 <style>
     .face-scan-container {
         position: relative;
-        width: 640px;
-        height: 480px;
-        border: 2px solid #6f42c1;
-        border-radius: 10px;
-        overflow: hidden;
-        background: #000;
+        width: 400px;
+        max-width: 90vw;
+        height: 400px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 4px 24px rgba(80, 42, 134, 0.10), 0 1.5px 6px rgba(80, 42, 134, 0.08);
+        border: 1.5px solid #E5E5EF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .scan-frame {
         position: relative;
-        width: 100%;
-        height: 100%;
+        width: 360px;
+        height: 360px;
+        background: transparent;
+        border-radius: 20px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .scan-frame video {
@@ -85,10 +99,11 @@
     }
     .face-guide-corner {
         position: absolute;
-        width: 40px;
-        height: 40px;
-        border: 4px solid #6f42c1;
-        border-radius: 16px;
+        width: 32px;   /* Adjust as per Figma */
+        height: 32px;
+        border: 4px solid #B0B0B0; /* Grey color, adjust to Figma's value */
+        border-radius: 0;          /* No rounding, square corners */
+        box-shadow: none;          /* Remove any glow */
     }
     .face-guide-corner.tl {
         top: 0; left: 0;
@@ -112,7 +127,7 @@
     }
     .face-status {
         position: absolute;
-        bottom: 20px;
+        bottom: -32px;
         left: 0;
         right: 0;
         text-align: center;
@@ -145,6 +160,22 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .kiosk-btn-primary {
+        background: #6366F1; /* Use your Figma blue */
+        color: #fff;
+        border: none;
+        border-radius: 12px; /* More rounded */
+        font-weight: 600;
+        font-size: 1.15rem;
+        padding: 0.85rem 2.5rem;
+        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.10);
+        transition: background 0.2s;
+    }
+    .kiosk-btn-primary:hover, .kiosk-btn-primary:focus {
+        background: #4F46E5; /* Slightly darker on hover */
+        color: #fff;
     }
 </style>
 @endpush
