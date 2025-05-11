@@ -27,17 +27,19 @@
             </div>
         </div>
     </div>
-    <div class="mb-3">
-        <button class="btn btn-verify mb-3" id="startScan">
-            Start Camera
-        </button>
-        <a href="{{ route('kiosk.back') }}" class="back-btn text-center d-flex align-items-center justify-content-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-            </svg>
-            Back
-        </a>
-    </div>
+
+    <div id="error-message" class="alert alert-danger" style="display: none;"></div>
+
+    <button class="btn btn-verify mb-3" id="startScan">
+        Get Started
+    </button>
+
+    <a href="{{ route('kiosk.back') }}" class="back-btn text-center d-flex align-items-center justify-content-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+        </svg>
+        Back
+    </a>
 </div>
 
 @push('styles')
@@ -73,6 +75,79 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+    }
+
+    .face-guide-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* New square border with open corners */
+    .face-guide {
+        position: relative;
+        width: 240px;
+        height: 240px;
+        border-radius: 24px;
+        /* No border, only corners */
+    }
+    .face-guide-corner {
+        position: absolute;
+        width: 32px;   /* Adjust as per Figma */
+        height: 32px;
+        border: 4px solid #B0B0B0; /* Grey color, adjust to Figma's value */
+        border-radius: 0;          /* No rounding, square corners */
+        box-shadow: none;          /* Remove any glow */
+    }
+    .face-guide-corner.tl {
+        top: 0; left: 0;
+        border-right: none;
+        border-bottom: none;
+    }
+    .face-guide-corner.tr {
+        top: 0; right: 0;
+        border-left: none;
+        border-bottom: none;
+    }
+    .face-guide-corner.bl {
+        bottom: 0; left: 0;
+        border-right: none;
+        border-top: none;
+    }
+    .face-guide-corner.br {
+        bottom: 0; right: 0;
+        border-left: none;
+        border-top: none;
+    }
+    .face-status {
+        position: absolute;
+        bottom: -32px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: #6f42c1;
+        font-size: 1.2em;
+        background: none;
+        text-shadow: none;
+        padding: 10px;
+        font-weight: 500;
+    }
+
+    .face-guide.face-detected {
+        border-color: #28a745;
+        animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
     }
 
     .loading-overlay {
