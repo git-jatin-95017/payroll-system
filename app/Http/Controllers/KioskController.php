@@ -75,7 +75,11 @@ class KioskController extends Controller
         ]);
 
         // Log incoming feature vector size for debugging
-        \Log::info('Incoming face features count: ' . count($request->face_features));
+        \Log::info('Face verification attempt:', [
+            'feature_count' => count($request->face_features),
+            'company_id' => session('kiosk_company_id'),
+            'timestamp' => now()->toDateTimeString()
+        ]);
 
         // Get all employees created by the current company with face data
         $employees = User::where('created_by', session('kiosk_company_id'))
@@ -95,7 +99,7 @@ class KioskController extends Controller
         // Find the best match by comparing face features
         $bestMatch = null;
         $highestSimilarity = 0;
-        $threshold = 0.85; // Increased threshold for normalized coordinates
+        $threshold = 0.55; // Lowered threshold to account for variations in capture conditions
         $matchDetails = [];
 
         foreach ($employees as $employee) {
@@ -113,11 +117,6 @@ class KioskController extends Controller
                         continue;
                     }
 
-                    // Log feature vector sizes for comparison
-                    \Log::debug("Comparing features - Input: " . count($request->face_features) . 
-                              ", Stored: " . count($storedFace['features']) . 
-                              " for employee {$employee->id}");
-
                     // Only compare if feature counts match
                     if (count($request->face_features) !== count($storedFace['features'])) {
                         \Log::warning("Feature count mismatch for employee {$employee->id} - Input: " . 
@@ -126,10 +125,20 @@ class KioskController extends Controller
                         continue;
                     }
 
+                    // Calculate similarity first
                     $similarity = $this->calculateCosineSimilarity(
                         $request->face_features,
                         $storedFace['features']
                     );
+
+                    // Log feature vector sizes and similarity after calculation
+                    \Log::debug("Face comparison details:", [
+                        'employee_id' => $employee->id,
+                        'input_features_count' => count($request->face_features),
+                        'stored_features_count' => count($storedFace['features']),
+                        'similarity_score' => $similarity,
+                        'threshold' => $threshold
+                    ]);
 
                     // Log similarity score for debugging
                     $matchDetails[] = [
