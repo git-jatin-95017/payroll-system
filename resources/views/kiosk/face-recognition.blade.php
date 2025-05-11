@@ -9,17 +9,8 @@
     </div>
     <div class="face-scan-container mb-4">
         <div class="scan-frame">
-<<<<<<< HEAD
             <video id="video" width="400" height="350" autoplay playsinline></video>
             <canvas id="canvas" width="400" height="350" style="display:none;"></canvas>
-=======
-            <video id="video" width="640" height="480" autoplay playsinline></video>
-            <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
-            <div class="face-guide-overlay">
-                <div class="face-guide"></div>
-                <div class="face-status">Position your face in the frame</div>
-            </div>
->>>>>>> 16ed84232086aae647d679e54a5ba07f576b3a7a
         </div>
         <div id="loading" class="loading-overlay" style="display: none;">
             <div class="spinner-border text-primary" role="status">
