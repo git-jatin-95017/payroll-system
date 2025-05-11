@@ -31,4 +31,6 @@ Route::prefix('/')->name('kiosk.')->group(function () {
     Route::post('/clock-in-out', [App\Http\Controllers\KioskController::class, 'clockInOut'])->name('clock-in-out');
     Route::get('/back', [App\Http\Controllers\KioskController::class, 'goBack'])->name('back');
     Route::get('/kiosk/back', [\App\Http\Controllers\KioskController::class, 'goBack'])->name('kiosk.back');
+    Route::get('/face-confirmation', [App\Http\Controllers\KioskController::class, 'showFaceConfirmation'])->name('face-confirmation');
+    Route::post('/face-confirmation', [App\Http\Controllers\KioskController::class, 'handleFaceConfirmation'])->name('face-confirmation.post');
 });

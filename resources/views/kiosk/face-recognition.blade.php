@@ -524,7 +524,7 @@
                 document.getElementById('loading').style.display = 'none';
 
                 if (data.success) {
-                    window.location.href = '{{ route("kiosk.pin-verification") }}';
+                    window.location.href = '{{ route("kiosk.face-confirmation") }}';
                 } else {
                     showError(data.message || 'Face verification failed');
                     document.getElementById('startScan').style.display = 'block';
