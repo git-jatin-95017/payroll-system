@@ -1,10 +1,9 @@
 @extends('layouts.kiosk')
-
 @section('content')
 <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
-    <div class="text-center mb-4">
-        <h1>Employee not found</h1>
-        <p>Please enter your 4-digit PIN code to verify it's you</p>
+    <div class="text-center mb-2">
+        <h1 class="fs-5 fw-semibold mb-1">Employee not found</h1>
+        <p class="text-sm text-gray">Please enter your 4-digit PIN code to verify it's you</p>
     </div>
 
     <div class="pin-display mb-4">
@@ -35,7 +34,7 @@
         <div class="keypad-row">
             <button class="keypad-btn" data-number="0">0</button>
             <button class="keypad-btn" id="backspace">
-                <i class="fas fa-backspace"></i>
+                dddd
             </button>
         </div>
     </div>
@@ -48,7 +47,7 @@
         <i class="fas fa-arrow-left"></i> Cancel
     </a>
 </div>
-
+@endsection
 @push('styles')
 <style>
     .pin-display {
