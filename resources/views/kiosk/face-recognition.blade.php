@@ -71,11 +71,35 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 200px;
-        height: 200px;
+        width: 300px;
+        height: 300px;
         border: 2px solid #6f42c1;
         border-radius: 50%;
         box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+    }
+
+    .face-guide::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100px;
+        height: 100px;
+        border: 2px dashed rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+    }
+
+    .face-guide::after {
+        content: 'Position your entire face here';
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        font-size: 1.2em;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        white-space: nowrap;
     }
 
     .face-status {
@@ -129,10 +153,10 @@ let stream = null;
 let detectionInterval = null;
 let faceDetected = false;
 let faceDetectionCount = 0;
-const REQUIRED_DETECTIONS = 6; // Reduced from 8 to 6
-const MIN_CONFIDENCE = 0.75; // Reduced from 0.80 to 0.75
+const REQUIRED_DETECTIONS = 5;
+const MIN_CONFIDENCE = 0.70;
 let lastDetectionTime = 0;
-const MIN_DETECTION_TIME = 600; // Reduced from 800ms to 600ms
+const MIN_DETECTION_TIME = 500;
 
 // Check for camera support
 function checkCameraSupport() {
@@ -314,31 +338,37 @@ function resetFaceDetection() {
 async function captureAndVerifyFace(face) {
     try {
         // Add a small delay before capture to ensure stability
-        await new Promise(resolve => setTimeout(resolve, 300)); // Reduced from 500ms to 300ms
+        await new Promise(resolve => setTimeout(resolve, 300));
         
         // Draw video frame to canvas with consistent dimensions
         canvas.width = 640;
         canvas.height = 480;
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         
-        // Get face region with larger padding for better detection
-        const padding = 60; // Increased from 40 to 60 pixels
+        // Calculate face region with larger padding
+        const faceWidth = Math.round(face.bottomRight[0] - face.topLeft[0]);
+        const faceHeight = Math.round(face.bottomRight[1] - face.topLeft[1]);
+        
+        // Use a percentage of face size for padding (50% of face width)
+        const padding = Math.max(60, Math.round(faceWidth * 0.5));
+        
+        // Calculate crop region ensuring we get the full face
         const x = Math.max(0, Math.round(face.topLeft[0]) - padding);
         const y = Math.max(0, Math.round(face.topLeft[1]) - padding);
         const width = Math.min(canvas.width - x, Math.round(face.bottomRight[0] - face.topLeft[0]) + (padding * 2));
         const height = Math.min(canvas.height - y, Math.round(face.bottomRight[1] - face.topLeft[1]) + (padding * 2));
 
-        // Log original face detection details
-        console.log('Original face detection:', {
-            topLeft: face.topLeft,
-            bottomRight: face.bottomRight,
-            confidence: face.probability[0],
-            padding: padding,
-            cropRegion: { x, y, width, height }
+        // Log face detection and crop details
+        console.log('Face detection details:', {
+            faceWidth,
+            faceHeight,
+            padding,
+            cropRegion: { x, y, width, height },
+            confidence: face.probability[0]
         });
 
         // Verify face is still in frame after capture
-        if (width < 80 || height < 80) { // Reduced from 100 to 80
+        if (width < 120 || height < 120) { // Increased minimum size
             console.warn('Face region too small:', { width, height });
             throw new Error('Please move closer to the camera');
         }
