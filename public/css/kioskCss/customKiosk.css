@@ -110,3 +110,21 @@ body{
     border: 2px dashed #cbcbcb;
     border-radius: 10px;
 }
+
+.keypad-btn {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: none;
+    background-color: #E3E3E3;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.pin-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #E3E3E3;
+    transition: background-color 0.2s;
+}
