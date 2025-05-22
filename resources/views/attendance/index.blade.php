@@ -1,131 +1,125 @@
-@extends('layouts.app')
+@php
+   if(auth()->user()->role_id == 3) {
+      $layoutDirectory = 'layouts.new_layout';
+   } else {
+      $layoutDirectory = 'layouts.new_layout';
+   }
+@endphp
+
+@extends($layoutDirectory)
+
 @push('page_css')
-	<style>
-		thead input.top-filter {
-	        width: 100%;
-	    }
-	</style>
-	<link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/responsive.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css">
 @endpush
+
 @section('content')
-	<div class="content-header">
-		<div class="container-fluid">
-			<div class="row mb-2">
-				<div class="col-sm-6">
-					<h1 class="m-0">Attendance</h1>
-				</div>
-				<div class="col-sm-6">
-					<ol class="breadcrumb float-sm-right">
-						<li class="breadcrumb-item"><a href="#">Home</a></li>
-						<li class="breadcrumb-item active">Attendance</li>
-					</ol>
-				</div>
-			</div>
-		</div>
-	</div>
-	<section class="content">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-12">
-					@if (session('message'))
-						<div class="row">
-							<div class="col-md-12">
-								<div class="alert alert-success alert-dismissible">
-									<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-									{{ session('message') }}
-								</div>
-							</div>
-						</div>
-					@elseif (session('error'))
-						<div class="row">
-							<div class="col-md-12">
-								<div class="alert alert-danger alert-dismissible">
-									<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-									{{ session('error') }}
-								</div>
-							</div>
-						</div>
-					@endif
-					<div class="card">
-						<div class="card-header">
-							<h3 class="card-title">Employee Attendance</h3>							
-						</div>
-						
-						<div class="card-body">
-							<table class="table table-bordered table-hover nowrap" id="dataTableBuilder">
-								<thead>
-									<tr>
-										<th>Date</th>
-										<!-- <th>Emp Code</th> -->
-										<th>Name</th>
-										<th>Punch-In</th>
-										<th>Punch-In Message</th>
-										<th>Punch-Out</th>
-										<th>Punch-Out Message</th>
-										<th>Work Hours</th>
-									</tr>
-								</thead>
-							</table>
-						</div>
-					  </div>
-				</div>
-			</div>
-		</div>
-	</section>    
+<div>
+    <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
+        <div>
+            <h3>Attendance</h3>
+            <p class="mb-0">Track and manage employee attendance here</p>
+        </div>
+    </div>
+
+    <div class="d-flex gap-3 align-items-center justify-content-between mb-4">
+        <form method="GET" action="{{ route('attendance.index') }}" class="d-flex gap-3 align-items-center justify-content-between mb-4">
+            <div class="search-container">
+                <div class="d-flex align-items-center gap-3">
+                    <p class="mb-0 position-relative search-input-container">
+                        <x-heroicon-o-magnifying-glass class="search-icon" />
+                        <input type="search" class="form-control" name="search" placeholder="Type here" value="{{request()->search ?? ''}}">
+                    </p>
+                    <button type="submit" class="btn search-btn">
+                        <x-bx-filter class="w-20 h-20"/>
+                        Search
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    @if (session('message'))
+    <div>
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {{ session('message') }}
+        </div>
+    </div>
+    @elseif (session('error'))
+    <div>
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {{ session('error') }}
+        </div>
+    </div>
+    @endif
+
+    <div class="bg-white p-4">
+        <div class="table-responsive">
+            <table class="table db-custom-table" id="dataTableBuilder">
+                <thead>
+                    <tr>
+                        <th data-column="checked_in_at">Date</th>
+                        <th data-column="name">Employee</th>
+                        <th data-column="checked_in_at">Check In</th>
+                        <th data-column="checked_out_at">Check Out</th>
+                        <th data-column="duration">Duration</th>
+                        <th data-column="note">Note</th>
+                        <th data-column="status">Status</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('page_scripts')
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-	<script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
-	<script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
-	<script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
-	<script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>	
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.js"></script>
 
-	<script type="text/javascript">
-		$(document).ready( function () {
-			$.ajaxSetup({
-				headers: {
-					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-				}
-			});
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
-		  	var table = $('#dataTableBuilder').DataTable({
-					processing: true,
-					serverSide: true,
-					// autoWidth: true,
-					// scrollX: true,
-					scrollY: "400px",
-					ajax: {
-						url: "{{route('attendance.getData')}}",
-					  	type: 'GET',
-					  	data: function (d) {
-					  		//d.start_date = $('#start_date').val();
-					  		//d.end_date = $('#end_date').val();
-					  	}
-					},	
-					//"order": [0, 'desc'],	
-					columns: [
-			           	// {data: 'action', name: 'Action', orderable: false, searchable: false},
-						{data:'attendance_date'},						
-						// {data:'user_code'},
-						{data:'name'},						
-						{data:'punchin'},						
-						{data:'punchin_message'},						
-						{data:'punchout'},						
-						{data:'punchout_message'},						
-						{data:'work_hrs'},
-			        ],
-					"columnDefs": [{
-		                "targets": 0,
-		                "className": "dt-center"
-		            }, {
-		                "targets": 1,
-		                "className": "dt-center"
-		            }],			
-			        orderCellsTop: true
-        			// fixedHeader: true,			       
-			  	});
-		   });
-	</script>		
+        var table = $('#dataTableBuilder').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "400px",
+            ajax: {
+                url: "{{route('attendance.getData')}}",
+                type: 'GET',
+                data: function(d) {
+                    d.search = $('input[name="search"]').val();
+                }
+            },
+            columns: [
+                {data: 'date', name: 'checked_in_at'},
+                {data: 'employee', name: 'name'},
+                {data: 'check_in', name: 'checked_in_at'},
+                {data: 'check_out', name: 'checked_out_at'},
+                {data: 'duration', name: 'duration', orderable: false},
+                {data: 'note', name: 'note'},
+                {data: 'status', name: 'status', orderable: false}
+            ],
+            "columnDefs": [{
+                "targets": [0, 1],
+                "className": "dt-center"
+            }],
+            orderCellsTop: true
+        });
+
+        // Handle search form submission
+        $('form').on('submit', function(e) {
+            e.preventDefault();
+            table.draw();
+        });
+    });
+</script>
 @endpush

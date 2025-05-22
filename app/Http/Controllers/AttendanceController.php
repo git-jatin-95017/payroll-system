@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\Attendance;
+use App\Models\Checkin;
+use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
@@ -23,99 +24,138 @@ class AttendanceController extends Controller
     }
 
     public function getData(Request $request) { 
-
         if ($request->ajax()) {
-            $requestData = $request->all();
+            try {
+                $requestData = $request->all();
 
-            $draw = $request->get('draw');
-            $start = $request->get("start");
-            $rowperpage = $request->get("length"); // total number of rows per page
+                $draw = $request->get('draw');
+                $start = $request->get("start");
+                $rowperpage = $request->get("length"); // total number of rows per page
 
-            $columnIndex_arr = $request->get('order');
-            $columnName_arr = $request->get('columns');
-            $order_arr = $request->get('order');
-            $search_arr = $request->get('search');
+                $columnIndex_arr = $request->get('order');
+                $columnName_arr = $request->get('columns');
+                $order_arr = $request->get('order');
+                $search_arr = $request->get('search');
 
-            $columnIndex = $columnIndex_arr[0]['column']; // Column index
-            $columnName = $columnName_arr[$columnIndex]['data']; // Column name
-            $columnSortOrder = $order_arr[0]['dir']; // asc or desc
-            $searchValue = $search_arr['value']; // Search value
+                // Set default values if arrays are empty
+                $columnIndex = isset($columnIndex_arr[0]['column']) ? $columnIndex_arr[0]['column'] : 0;
+                $columnName = isset($columnName_arr[$columnIndex]['name']) ? $columnName_arr[$columnIndex]['name'] : 'checked_in_at';
+                $columnSortOrder = isset($order_arr[0]['dir']) ? $order_arr[0]['dir'] : 'desc';
+                $searchValue = isset($search_arr['value']) ? $search_arr['value'] : '';
 
-            $folder = date('Y-m-d', strtotime($request->filter_date));
+                // Total records
+                $totalRecords = Checkin::select('count(*) as allcount')
+                    ->join('users', function($join) {
+                        $join->on('users.id', '=', 'checkins.user_id')
+                            ->where('users.created_by', auth()->user()->id);
+                    })
+                    ->count();
 
-            // Total records
-            $totalRecords = Attendance::select('count(*) as allcount')->join('users', function($join) {
-                $join->on('users.id', '=', 'attendances.user_id')->where('users.created_by', auth()->user()->id);
-            })->count();
-            $totalRecordswithFilter = Attendance::select('count(*) as allcount')->join('users', function($join) {
-                $join->on('users.id', '=', 'attendances.user_id')->where('users.created_by', auth()->user()->id);
-            })
-            // ->where('users.email', 'like', '%' . $searchValue . '%')
-            ->count();
+                $totalRecordswithFilter = Checkin::select('count(*) as allcount')
+                    ->join('users', function($join) {
+                        $join->on('users.id', '=', 'checkins.user_id')
+                            ->where('users.created_by', auth()->user()->id);
+                    })
+                    ->when($searchValue, function($query) use ($searchValue) {
+                        return $query->where(function($q) use ($searchValue) {
+                            $q->where(DB::raw("CONCAT(employee_profile.first_name, ' ', employee_profile.last_name)"), 'like', '%' . $searchValue . '%')
+                              ->orWhere('users.user_code', 'like', '%' . $searchValue . '%')
+                              ->orWhereDate('checkins.checked_in_at', 'like', '%' . $searchValue . '%');
+                        });
+                    })
+                    ->count();
 
-            // Get records, also we have included search filter as well
-            $records = Attendance::orderBy($columnName, $columnSortOrder)
-                ->select(
+                // Get records
+                $query = Checkin::select(
                     'users.id',
                     'users.user_code',
-                    'attendances.attendance_date',
-                    DB::raw("CONCAT(employee_profile.first_name, ' ' , employee_profile.last_name) AS name"),                                    
-                    DB::raw('GROUP_CONCAT(attendances.action_time) as times'),
-                    DB::raw('GROUP_CONCAT(attendances.emp_desc) as descs')
+                    'checkins.checked_in_at',
+                    'checkins.checked_out_at',
+                    'checkins.note',
+                    DB::raw("CONCAT(employee_profile.first_name, ' ' , employee_profile.last_name) AS name")
                 )
-                // ->selectRaw('GROUP_CONCAT(attendances.action_time) as times')
-                // ->selectRaw('GROUP_CONCAT(attendances.emp_desc) as descs')
                 ->join('users', function($join) {
-                    $join->on('users.id', '=', 'attendances.user_id')->where('users.created_by', auth()->user()->id);
+                    $join->on('users.id', '=', 'checkins.user_id')
+                        ->where('users.created_by', auth()->user()->id);
                 }) 
                 ->join('employee_profile', function($join) {
                     $join->on('users.id', '=', 'employee_profile.user_id');
-                })                         
-                ->orWhere(DB::raw("CONCAT(employee_profile.first_name, ' ', employee_profile.last_name)"), 'like', '%' . $searchValue . '%')
-                ->orWhere('users.user_code', 'like', '%' . $searchValue . '%')
-                ->orWhereDate('attendances.attendance_date', 'like', '%' . $searchValue . '%')
-                ->groupBy(
-                    'users.user_code', 
-                    'attendance_date'
-                )
-                ->having('times', 'like', '%' . $searchValue . '%')
-                ->having('descs', 'like', '%' . $searchValue . '%')
-                ->skip($start)
-                ->take($rowperpage)
-                ->get();
-               
-            $data = array();
+                });
 
-            foreach($records as $k => $row) {
-                $nestedData = array();
-                $nestedData['attendance_date'] = date('m/d/Y', strtotime($row['attendance_date']));
-                $nestedData['user_code'] = $row["user_code"];
-                $nestedData['name'] = '<a target="_blank" href="' . '/' . 'reports/' . $row["emp_code"] . '/">' . $row["name"] . '</a>';
-                $times = explode(',', $row["times"]);
-                $descs = explode(',', $row["descs"]);
-                $nestedData['punchin'] = isset($times[0]) ? date('h:i:s A', strtotime($times[0])) : '';
-                $nestedData['punchin_message'] = isset($descs[0]) ? $descs[0] : '';
-                $nestedData['punchout'] = isset($times[1]) ? date('h:i:s A', strtotime($times[1])) : '';
-                $nestedData['punchout_message'] = isset($descs[1]) ? $descs[1] : '';
-
-                if (!empty($times[0]) && !empty($times[1])) {            
-                    $datetime1 = new \DateTime($times[0]);
-                    $datetime2 = new \DateTime($times[1]);
-                    $interval = $datetime1->diff($datetime2);
-                $nestedData['work_hrs'] = (isset($times[0]) && isset($times[1])) ? $interval->format('%h') . " Hrs  | " . $interval->format('%i') . " Min" : 0 . "H";
+                // Apply search
+                if ($searchValue) {
+                    $query->where(function($q) use ($searchValue) {
+                        $q->where(DB::raw("CONCAT(employee_profile.first_name, ' ', employee_profile.last_name)"), 'like', '%' . $searchValue . '%')
+                          ->orWhere('users.user_code', 'like', '%' . $searchValue . '%')
+                          ->orWhereDate('checkins.checked_in_at', 'like', '%' . $searchValue . '%');
+                    });
                 }
 
-                $data[] = $nestedData;
-            }
-            
-            $response = array(
-                "draw" => intval($draw),
-                "iTotalRecords" => $totalRecords,
-                "iTotalDisplayRecords" => $totalRecordswithFilter,
-                "aaData" => $data,
-            );
+                // Apply sorting
+                if ($columnName === 'name') {
+                    $query->orderBy(DB::raw("CONCAT(employee_profile.first_name, ' ', employee_profile.last_name)"), $columnSortOrder);
+                } else {
+                    $query->orderBy($columnName, $columnSortOrder);
+                }
 
-            return response()->json($response);
-        }      
+                $records = $query->skip($start)
+                    ->take($rowperpage)
+                    ->get();
+                   
+                $data = array();
+
+                foreach($records as $row) {
+                    $nestedData = array();
+                    
+                    // Format date
+                    $nestedData['date'] = Carbon::parse($row['checked_in_at'])->format('m/d/Y');
+                    
+                    // Employee name with code
+                    $nestedData['employee'] = $row["name"];// . ' (' . $row["user_code"] . ')';
+                    
+                    // Check in time
+                    $nestedData['check_in'] = Carbon::parse($row['checked_in_at'])->format('h:i:s A');
+                    
+                    // Check out time
+                    $nestedData['check_out'] = $row['checked_out_at'] ? Carbon::parse($row['checked_out_at'])->format('h:i:s A') : '-';
+                    
+                    // Calculate duration
+                    if ($row['checked_out_at']) {
+                        $checkIn = Carbon::parse($row['checked_in_at']);
+                        $checkOut = Carbon::parse($row['checked_out_at']);
+                        $duration = $checkIn->diff($checkOut);
+                        $nestedData['duration'] = $duration->format('%h Hrs | %i Min');
+                    } else {
+                        $nestedData['duration'] = '-';
+                    }
+                    
+                    // Note
+                    $nestedData['note'] = $row['note'] ?? '-';
+                    
+                    // Status
+                    $nestedData['status'] = $row['checked_out_at'] ? 
+                        '<span class="badge bg-success">Completed</span>' : 
+                        '<span class="badge bg-warning">In Progress</span>';
+
+                    $data[] = $nestedData;
+                }
+                
+                return response()->json([
+                    "draw" => intval($draw),
+                    "iTotalRecords" => $totalRecords,
+                    "iTotalDisplayRecords" => $totalRecordswithFilter,
+                    "aaData" => $data,
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    "draw" => intval($draw ?? 1),
+                    "iTotalRecords" => 0,
+                    "iTotalDisplayRecords" => 0,
+                    "aaData" => [],
+                    "error" => $e->getMessage()
+                ], 500);
+            }
+        }
+        return response()->json(['error' => 'Invalid request'], 400);
     }
 }

@@ -33,6 +33,12 @@
 				<span>Leave</span>
 			</a>
 		</li>
+		<li class="{{ request()->is('client/attendance*') ? 'active' : '' }}">
+			<a href="{{ route('attendance.index') }}">
+				<x-bxs-time class="w-20 h-20"/>
+				<span>Attendance</span>
+			</a>
+		</li>
 		<li class="{{ Request::routeIs('payroll.create', 'payroll.create', 'payroll.edit') ? 'active' : '' }}">
 			<a href="{{ route('payroll.create', ['week_search' => 2]) }}">
 				<x-bxs-time class="w-20 h-20"/>
