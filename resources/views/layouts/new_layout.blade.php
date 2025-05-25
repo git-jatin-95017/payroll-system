@@ -27,6 +27,32 @@
         body {
             background: #F6F6F4;
         }
+        .sub-menu {
+            position: relative;
+            background: #fff;
+            min-width: 200px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: none;
+            padding: 10px 0;
+            margin-left: 20px;
+        }
+        .has-sub:hover .sub-menu {
+            display: block;
+        }
+        .sub-menu li a {
+            padding: 8px 15px;
+            display: block;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .sub-menu li a:hover {
+            background: #f5f5f5;
+        }
+        .has-sub {
+            position: relative;
+        }
     </style>
     @stack('styles')
 </head>

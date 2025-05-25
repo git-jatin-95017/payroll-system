@@ -51,6 +51,18 @@
 				<span>Payroll </span>
 			</a>
 		</li>
+		<li class="has-sub {{ Request::routeIs('payroll.reports.*') ? 'active' : '' }}">
+			<a href="#">
+				<x-bxs-file class="w-20 h-20"/>
+				<span>Reports</span>
+			</a>
+			<ul class="list-unstyled sub-menu">
+				<li><a href="{{ route('payroll.reports.employee-earnings') }}">Employee Earnings</a></li>
+				<li><a href="{{ route('payroll.reports.employer-payments') }}">Employer Payments</a></li>
+				<!-- <li><a href="{{ route('payroll.reports.taxes') }}">Taxes</a></li> -->
+				<!-- <li><a href="{{ route('payroll.reports.summary') }}">Summary</a></li> -->
+			</ul>
+		</li>
 		<li class="{{ Request::routeIs('notice.index', 'notice.create', 'notice.edit') ? 'active' : '' }}">
 			<a href="{{ route('notice.index') }}">
 				<x-bxs-plane-take-off class="w-20 h-20"/>
@@ -68,6 +80,7 @@
 				<li><a href="{{ route('leave-type.index') }}">Leave Polices</a></li>
 			</ul>
 		</li>
+		
 	</ul>
 </div>
 <div class="bottom-nav auto">

@@ -151,8 +151,8 @@ Route::prefix('client')->group(function () {
 	Route::resource('notice', NoticeController::class);
 
 	// Payroll Reports
-	// Route::get('payroll/reports/summary', [PayrollReportController::class, 'summary'])->name('payroll.reports.summary');
-	// Route::get('payroll/reports/taxes', [PayrollReportController::class, 'taxes'])->name('payroll.reports.taxes');
+	Route::get('payroll/reports/summary', [PayrollReportController::class, 'summary'])->name('payroll.reports.summary');
+	Route::get('payroll/reports/taxes', [PayrollReportController::class, 'taxes'])->name('payroll.reports.taxes');
 	Route::get('reports/employee-earnings', [PayrollReportController::class, 'employeeEarnings'])->name('payroll.reports.employee-earnings');
 	Route::get('reports/employer-payments', [PayrollReportController::class, 'employerPayments'])->name('payroll.reports.employer-payments');
 	Route::get('reports/download-pdf/{type}', [PayrollReportController::class, 'downloadPdf'])->name('payroll.reports.download-pdf');
