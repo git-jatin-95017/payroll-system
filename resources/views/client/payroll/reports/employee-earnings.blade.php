@@ -109,6 +109,7 @@
                             <thead>
                                 <tr>
                                     <th>Employee</th>
+                                    <th>Pay Period</th>
                                     <th>Gross Pay</th>
                                     <th>Medical Benefits</th>
                                     <th>Social Security</th>
@@ -121,32 +122,13 @@
                                 @foreach($payrolls as $payroll)
                                 <tr>
                                     <td>{{ $payroll->user->name }}</td>
+                                    <td>{{ date('M d, Y', strtotime($payroll->start_date)) }} - {{ date('M d, Y', strtotime($payroll->end_date)) }}</td>
                                     <td>${{ number_format($payroll->gross, 2) }}</td>
                                     <td>${{ number_format($payroll->medical, 2) }}</td>
                                     <td>${{ number_format($payroll->security, 2) }}</td>
                                     <td>${{ number_format($payroll->edu_levy, 2) }}</td>
-                                    <td>
-                                        @php
-                                            $nothingAdditionTonetPay = 0;
-                                            foreach($payroll->additionalEarnings as $val) {
-                                                if($val->payhead->pay_type == 'nothing') {
-                                                    $nothingAdditionTonetPay += $val->amount;
-                                                }
-                                            }
-                                        @endphp
-                                        ${{ number_format($nothingAdditionTonetPay, 2) }}
-                                    </td>
-                                    <td>
-                                        @php
-                                            $deductions = 0;
-                                            foreach($payroll->additionalEarnings as $val) {
-                                                if($val->payhead->pay_type == 'deductions') {
-                                                    $deductions += $val->amount;
-                                                }
-                                            }
-                                        @endphp
-                                        ${{ number_format($deductions, 2) }}
-                                    </td>
+                                    <td>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2) }}</td>
+                                    <td>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2) }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>

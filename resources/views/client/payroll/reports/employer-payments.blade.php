@@ -8,11 +8,11 @@
                     <h3>Employer Payments Report</h3>
                     <!-- <p class="mb-0">What Employer pays?</p> -->
                 </div>
-                <div>
+                <!-- <div>
                     <a href="{{ route('payroll.reports.download-pdf', 'employer-payments') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
                         <i class="fas fa-download"></i> Download PDF
                     </a>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -109,6 +109,7 @@
                             <thead>
                                 <tr>
                                     <th>Employee</th>
+                                    <th>Pay Period</th>
                                     <th>Employee Pay</th>
                                     <th>Employee Taxes</th>
                                     <th>Employer Taxes</th>
@@ -126,6 +127,7 @@
                                 @endphp
                                 <tr>
                                     <td>{{ $payroll->user->name }}</td>
+                                    <td>{{ date('M d, Y', strtotime($payroll->start_date)) }} - {{ date('M d, Y', strtotime($payroll->end_date)) }}</td>
                                     <td>${{ number_format($employeePay, 2) }}</td>
                                     <td>${{ number_format($payroll->medical + $payroll->security + $payroll->edu_levy, 2) }}</td>
                                     <td>${{ number_format($payroll->medical + $payroll->security_employer, 2) }}</td>
