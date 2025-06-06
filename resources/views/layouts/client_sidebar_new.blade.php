@@ -51,15 +51,15 @@
 				<span>Payroll </span>
 			</a>
 		</li>
-		<li class="has-sub {{ Request::routeIs('payroll.reports.*') ? 'active' : '' }}">
-			<a href="#">
+		<li class="{{ Request::routeIs('payroll.reports.*') ? 'active' : '' }}">
+			<a href="{{ route('payroll.reports.employee-earnings') }}">
 				<x-bxs-file class="w-20 h-20"/>
 				<span>Reports</span>
 			</a>
 			<ul class="list-unstyled sub-menu">
-				<li><a href="{{ route('payroll.reports.employee-earnings') }}">Employee Earnings</a></li>
-				<li><a href="{{ route('payroll.reports.employer-payments') }}">Employer Payments</a></li>
-				<!-- <li><a href="{{ route('payroll.reports.taxes') }}">Taxes</a></li> -->
+				<!--<li><a href="{{ route('payroll.reports.employee-earnings') }}"><x-bxs-plane-take-off class="w-20 h-20"/><span>Employee Earnings</span></a></li>
+				<li><a href="{{ route('payroll.reports.employer-payments') }}"><x-bxs-user class="w-20 h-20"/><span>Employer Payments</span></a></li>
+				 <li><a href="{{ route('payroll.reports.taxes') }}">Taxes</a></li> -->
 				<!-- <li><a href="{{ route('payroll.reports.summary') }}">Summary</a></li> -->
 			</ul>
 		</li>
