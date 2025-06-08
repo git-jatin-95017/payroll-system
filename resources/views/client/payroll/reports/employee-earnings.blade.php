@@ -9,15 +9,15 @@
                     <!-- <p class="mb-0">What do employees get?</p> -->
                 </div>
 				<div>
-				 <select class="form-select" name="reports">
+				 <select class="form-select" name="reports" id="reportSelect">
                                 <option value="">Reports</option>
-                                    <option value="" selected>Employee Earnings </option>
-                                    <option value="">Employee Gross Earnings </option>
-                                    <option value="">Employer Earnings </option>
-                                    <option value="">Statutory Deduction </option>
-                                    <option value="">Additions & Deductions </option>
-                                    <option value="">Leave </option>
-                                    <option value="">Attendance </option>
+                                    <option value="{{ route('payroll.reports.employee-earnings') }}" selected>Employee Earnings</option>
+                                    <option value="">Employee Gross Earnings</option>
+                                    <option value="{{ route('payroll.reports.employer-payments') }}">Employer Earnings</option>
+                                    <option value="">Statutory Deduction</option>
+                                    <option value="">Additions & Deductions</option>
+                                    <option value="">Leave</option>
+                                    <option value="{{ route('reports.attendance-report') }}">Attendance</option>
                             </select>
 				</div>
 				 
@@ -183,4 +183,15 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection
+
+@push('scripts')
+<script>
+    document.getElementById('reportSelect').addEventListener('change', function() {
+        const selectedUrl = this.value;
+        if (selectedUrl) {
+            window.location.href = selectedUrl;
+        }
+    });
+</script>
+@endpush 

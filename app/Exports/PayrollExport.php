@@ -9,10 +9,12 @@ use Illuminate\Support\Collection;
 class PayrollExport implements FromCollection, WithHeadings
 {
    protected $data;
+   protected $headings;
 
-    public function __construct(array $data)
+    public function __construct(array $data, array $headings = [])
     {
         $this->data = $data;
+        $this->headings = $headings;
     }
 
     public function collection(): Collection
@@ -22,6 +24,6 @@ class PayrollExport implements FromCollection, WithHeadings
 
     public function headings(): array
     {
-        return ["Employee", "Pay Period", "Gross Pay", "Medical Benefits", "Social Security", "Education Levy", "Additions", "Deductions"]; // Customize your headings
+        return $this->headings;
     }
 }

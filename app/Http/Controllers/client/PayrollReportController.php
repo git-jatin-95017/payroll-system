@@ -14,6 +14,8 @@ use PDF;
 use App\Exports\PayrollExport;
 use Maatwebsite\Excel\Facades\Excel;
 use DB;
+use App\Models\Attendance;
+use App\Models\Checkin;
 
 class PayrollReportController extends Controller
 {
@@ -396,7 +398,9 @@ dd($query);*/
 		$item1["Deductions"] = number_format($deductions, 2);
 		$data[] = $item1;
         
-        return Excel::download(new PayrollExport($data),$type . '-report.xlsx');
+        $headings = ["Employee", "Pay Period", "Gross Pay", "Medical Benefits", "Social Security", "Education Levy", "Additions", "Deductions"];
+
+        return Excel::download(new PayrollExport($data, $headings),$type . '-report.xlsx');
     }
 	
 	public function downloadPdf($type)
@@ -442,5 +446,122 @@ dd($query);*/
         
         $pdf = PDF::loadView('client.payroll.reports.pdf.' . $type, compact('payrolls', 'totals'));
         return $pdf->download($type . '-report.pdf');
+    }
+
+    public function attendance(Request $request)
+    {
+        $query = Checkin::with('user')
+            ->whereHas('user', function($q) {
+                $q->where('created_by', auth()->user()->id);
+            });
+
+        // Apply date filters
+        if ($request->filled('start_date')) {
+            $query->whereDate('checked_in_at', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('checked_in_at', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+        }
+
+        // Apply department filter
+        if ($request->filled('department_id')) {
+            $query->whereHas('user.employeeProfile', function($q) use ($request) {
+                $q->where('department', $request->department_id);
+            });
+        }
+
+        // Apply employee filter
+        if ($request->filled('employee_id')) {
+            $query->where('user_id', $request->employee_id);
+        }
+
+        $attendances = $query->get();
+        $departments = Department::where('created_by', auth()->user()->id)->get();
+        $employees = User::where('created_by', auth()->user()->id)->where('role_id', 3)->get();
+
+        return view('client.payroll.reports.attendance', compact('attendances', 'departments', 'employees'));
+    }
+
+    public function downloadAttendanceReportExcel($type)
+    {
+        $query = Checkin::with('user')
+            ->whereHas('user', function($q) {
+                $q->where('created_by', auth()->user()->id);
+            });
+
+        // Apply date filters
+        if (request()->filled('start_date')) {
+            $query->whereDate('checked_in_at', '>=', Carbon::parse(request('start_date'))->format('Y-m-d'));
+        }
+        if (request()->filled('end_date')) {
+            $query->whereDate('checked_in_at', '<=', Carbon::parse(request('end_date'))->format('Y-m-d'));
+        }
+
+        // Apply department filter
+        if (request()->filled('department_id')) {
+            $query->whereHas('user.employeeProfile', function($q) {
+                $q->where('department', request('department_id'));
+            });
+        }
+
+        // Apply employee filter
+        if (request()->filled('employee_id')) {
+            $query->where('user_id', request('employee_id'));
+        }
+
+        $attendances = $query->get();
+        
+        $data = [];
+        foreach ($attendances as $attendance) {
+            $item = [];
+            $item['Employee'] = $attendance->user->name;
+            $item['Date'] = date('M d, Y', strtotime($attendance->checked_in_at));
+            $item['Check In'] = $attendance->checked_in_at ? date('h:i A', strtotime($attendance->checked_in_at)) : '-';
+            $item['Check Out'] = $attendance->checked_out_at ? date('h:i A', strtotime($attendance->checked_out_at)) : '-';
+            $item['Duration'] = ($attendance->checked_in_at && $attendance->checked_out_at) ? 
+                \Carbon\Carbon::parse($attendance->checked_in_at)->diffInHours(\Carbon\Carbon::parse($attendance->checked_out_at)) . ' hours' : '-';
+            $item['Note'] = $attendance->note ?? '-';
+            $item['Status'] = 'Completed';
+            $data[] = $item;
+        }
+        
+        $headings = ["Employee", "Date", "Check In", "Check Out", "Duration", "Note", "Status"];
+
+        return Excel::download(new PayrollExport($data, $headings), 'attendance-report.xlsx');
+    }
+
+    public function downloadAttendanceReportPdf($type)
+    {
+        $query = Checkin::with('user')
+            ->whereHas('user', function($q) {
+                $q->where('created_by', auth()->user()->id);
+            });
+
+        // Apply date filters
+        if (request()->filled('start_date')) {
+            $query->whereDate('checked_in_at', '>=', Carbon::parse(request('start_date'))->format('Y-m-d'));
+        }
+        if (request()->filled('end_date')) {
+            $query->whereDate('checked_in_at', '<=', Carbon::parse(request('end_date'))->format('Y-m-d'));
+        }
+
+        // Apply department filter
+        if (request()->filled('department_id')) {
+            $query->whereHas('user.employeeProfile', function($q) {
+                $q->where('department', request('department_id'));
+            });
+        }
+
+        // Apply employee filter
+        if (request()->filled('employee_id')) {
+            $query->where('user_id', request('employee_id'));
+        }
+
+        $attendances = $query->get();
+        $departments = Department::where('created_by', auth()->user()->id)->get();
+        $employees = User::where('created_by', auth()->user()->id)->where('role_id', 3)->get();
+        
+        $pdf = PDF::loadView('client.payroll.reports.pdf.attendance', compact('attendances', 'departments', 'employees'));
+        return $pdf->download('attendance-report.pdf');
     }
 } 

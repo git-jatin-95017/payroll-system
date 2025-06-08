@@ -159,6 +159,14 @@ Route::prefix('client')->group(function () {
 	Route::get('payroll/reports/download-report-pdf/{type}', [PayrollReportController::class, 'downloadReportPdf'])->name('payroll.reports.download-report-pdf');
 	Route::get('payroll/reports/download-report-excel/{type}', [PayrollReportController::class, 'downloadReportExcel'])->name('payroll.reports.download-report-excel');
 
+	// Reports Routes
+	Route::prefix('reports')->name('reports.')->group(function () {
+		//Atttendence Report
+		Route::get('/attendance', [PayrollReportController::class, 'attendance'])->name('attendance-report');
+		Route::get('/download-report-excel/{type}', [PayrollReportController::class, 'downloadAttendanceReportExcel'])->name('download-attendance-report-excel');
+		Route::get('/download-report-pdf/{type}', [PayrollReportController::class, 'downloadAttendanceReportPdf'])->name('download-attendance-report-pdf');
+	});
+
 });
 
 Route::prefix('employee')->group(function () {
