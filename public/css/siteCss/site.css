@@ -1562,3 +1562,10 @@ span.payroll-emp-name {
         display: none;
     }
 }
+/*#left-menu li.has-sub ul {
+  height: auto !important;
+}
+
+#left-menu li.has-sub ul li a{
+  font-size: 13px !important;
+}*/

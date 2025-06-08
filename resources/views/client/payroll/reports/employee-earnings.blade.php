@@ -5,14 +5,30 @@
         <div class="col-12">
             <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-4">
                 <div>
-                    <h3>Employee Earnings Report</h3>
+                    <h3>Reports</h3>
                     <!-- <p class="mb-0">What do employees get?</p> -->
                 </div>
-                <!-- <div>
-                    <a href="{{ route('payroll.reports.download-pdf', 'employee-earnings') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
-                        <i class="fas fa-download"></i> Download PDF
+				<div>
+				 <select class="form-select" name="reports">
+                                <option value="">Reports</option>
+                                    <option value="" selected>Employee Earnings </option>
+                                    <option value="">Employee Gross Earnings </option>
+                                    <option value="">Employer Earnings </option>
+                                    <option value="">Statutory Deduction </option>
+                                    <option value="">Additions & Deductions </option>
+                                    <option value="">Leave </option>
+                                    <option value="">Attendance </option>
+                            </select>
+				</div>
+				 
+                <div>
+					<a href="{{ route('payroll.reports.download-report-excel', 'employee-earnings') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
+                        <i class="fas fa-download"></i>  Excel
                     </a>
-                </div> -->
+                    <a href="{{ route('payroll.reports.download-report-pdf', 'employee-earnings') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
+                        <i class="fas fa-download"></i>  PDF
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -68,8 +84,8 @@
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-title">Total Gross Pay</h6>
-                    <h3 class="mb-0">${{ number_format($payrolls->sum('gross'), 2) }}</h3>
+                    <h6 class="card-title">Total Pay</h6>
+                    <h3 class="mb-0">${{ number_format($payrolls->sum('net_pay'), 2) }}</h3>
                 </div>
             </div>
         </div>
@@ -114,23 +130,51 @@
                                     <th>Medical Benefits</th>
                                     <th>Social Security</th>
                                     <th>Education Levy</th>
-                                    <th>Addition to Net Pay</th>
+                                    <th>Additions</th>
                                     <th>Deductions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($payrolls as $payroll)
-                                <tr>
-                                    <td>{{ $payroll->user->name }}</td>
-                                    <td>{{ date('M d, Y', strtotime($payroll->start_date)) }} - {{ date('M d, Y', strtotime($payroll->end_date)) }}</td>
-                                    <td>${{ number_format($payroll->gross, 2) }}</td>
-                                    <td>${{ number_format($payroll->medical, 2) }}</td>
-                                    <td>${{ number_format($payroll->security, 2) }}</td>
-                                    <td>${{ number_format($payroll->edu_levy, 2) }}</td>
-                                    <td>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2) }}</td>
-                                    <td>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2) }}</td>
-                                </tr>
-                                @endforeach
+							@php
+							$grosspay =0;
+							$medicalbenefits =0;
+							$socialsecurity =0;
+							$educationlevy =0;
+							$additions = 0;
+							$deductions = 0;
+							
+                                foreach($payrolls as $payroll) {
+									$grosspay += $payroll->gross;
+									$medicalbenefits += $payroll->medical;
+									$socialsecurity += $payroll->security;
+									$educationlevy += $payroll->edu_levy;
+									$add =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2);
+									$ded =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2);
+									$additions += $add;
+									$deductions += $ded;
+							@endphp		
+									<tr>
+										<td>{{ $payroll->user->name }}</td>
+										<td>{{ date('M d, Y', strtotime($payroll->start_date)) }} - {{ date('M d, Y', strtotime($payroll->end_date)) }}</td>
+										<td>${{ number_format($payroll->gross, 2) }}</td>
+										<td>${{ number_format($payroll->medical, 2) }}</td>
+										<td>${{ number_format($payroll->security, 2) }}</td>
+										<td>${{ number_format($payroll->edu_levy, 2) }}</td>
+										<td>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2) }}</td>
+										<td>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2) }}</td>
+									</tr>
+								@php
+								}
+								@endphp
+								<tr>
+									<td colspan="2" align="center"><strong>Total</strong></td>
+									<td><strong>${{ number_format($grosspay, 2) }}</strong></td>
+									<td><strong>${{ number_format($medicalbenefits, 2) }}</strong></td>
+									<td><strong>${{ number_format($socialsecurity, 2) }}</strong></td>
+									<td><strong>${{ number_format($educationlevy, 2) }}</strong></td>
+									<td><strong>${{ number_format($additions) }}</strong></td>
+									<td><strong>${{ number_format($deductions, 2) }}</strong></td>
+								</tr>
                             </tbody>
                         </table>
                     </div>

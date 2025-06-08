@@ -11,6 +11,9 @@ use App\Models\Setting;
 use App\Traits\PayrollCalculationTrait;
 use Carbon\Carbon;
 use PDF;
+use App\Exports\PayrollExport;
+use Maatwebsite\Excel\Facades\Excel;
+use DB;
 
 class PayrollReportController extends Controller
 {
@@ -151,7 +154,8 @@ class PayrollReportController extends Controller
 
     public function employeeEarnings(Request $request)
     {
-        $query = PayrollAmount::with(['user.employeeProfile', 'user.departments.department', 'additionalEarnings.payhead']);
+		DB::enableQueryLog();
+		$query = PayrollAmount::with(['user.employeeProfile', 'user.departments.department', 'additionalEarnings.payhead']);
 
         // Get default dates if not provided
         $defaultDates = $this->getDefaultDateRange();
@@ -178,13 +182,16 @@ class PayrollReportController extends Controller
         }
 
         $payrolls = $query->where('payroll_amounts.created_by', auth()->user()->id)->where('status', 1)->get();
+		/*$query = DB::getQueryLog($payrolls);
+$query = end($query);
+dd($query);*/
         $settings = Setting::first();
         
         $totalGrossPay = 0;
         $totalNetPay = 0;
         $totalPaidTimeOff = 0;
         $totalEmployees = $payrolls->unique('user_id')->count();
-
+//echo '<pre>'; print_r($payrolls); die;
         foreach ($payrolls as $payroll) {
             $amounts = $this->calculatePayrollAmounts($payroll, $settings);
             $totalGrossPay += $amounts['gross'];
@@ -261,7 +268,138 @@ class PayrollReportController extends Controller
         ));
     }
 
-    public function downloadPdf($type)
+    public function downloadReportPdf($type)
+    {
+	   $query = PayrollAmount::with(['user.employeeProfile', 'user.departments.department', 'additionalEarnings.payhead']);
+        
+        // Apply the same filters as in the view
+        if (request()->filled('start_date')) {
+            $query->whereDate('created_at', '>=', Carbon::parse(request('start_date')));
+        }
+        if (request()->filled('end_date')) {
+            $query->whereDate('created_at', '<=', Carbon::parse(request('end_date')));
+        }
+        if (request()->filled('department_id')) {
+            $query->whereHas('user.departments', function($q) {
+                $q->where('department_id', request('department_id'));
+            });
+        }
+        if (request()->filled('employee_id')) {
+            $query->where('user_id', request('employee_id'));
+        }
+
+        $payrolls = $query->where('payroll_amounts.created_by', auth()->user()->id)->where('status', 1)->get();
+		
+        $settings = Setting::first();
+        
+        $totalGrossPay = 0;
+        $totalNetPay = 0;
+        $totalPaidTimeOff = 0;
+        $totalEmployees = $payrolls->unique('user_id')->count();
+
+        foreach ($payrolls as $payroll) {
+            $amounts = $this->calculatePayrollAmounts($payroll, $settings);
+            $totalGrossPay += $amounts['gross'];
+            $totalNetPay += $amounts['net_pay'];
+            $totalPaidTimeOff += $payroll->paid_time_off;
+        }
+
+        $departments = Department::where('created_by', auth()->user()->id)->get();
+        $employees = User::where('role_id', 3)->where('created_by', auth()->user()->id)->get();
+        
+        $pdf = PDF::loadView('client.payroll.reports.pdf.' . $type, compact('payrolls', 
+            'departments', 
+            'employees',
+            'totalGrossPay',
+            'totalNetPay',
+            'totalPaidTimeOff',
+            'totalEmployees'));
+        return $pdf->download($type . '-report.pdf');
+    }
+	
+	
+	public function view(): View
+    {
+        return view('exports.invoices', [
+            'invoices' => Invoice::all()
+        ]);
+    }
+	public function downloadReportExcel($type)
+    {
+		/*return Excel::download($type, $type . '-report.xlsx');
+		die('excel');*/
+	  $query = PayrollAmount::with(['user.employeeProfile', 'user.departments.department', 'additionalEarnings.payhead']);
+        
+        // Apply the same filters as in the view
+        if (request()->filled('start_date')) {
+            $query->whereDate('created_at', '>=', Carbon::parse(request('start_date')));
+        }
+        if (request()->filled('end_date')) {
+            $query->whereDate('created_at', '<=', Carbon::parse(request('end_date')));
+        }
+        if (request()->filled('department_id')) {
+            $query->whereHas('user.departments', function($q) {
+                $q->where('department_id', request('department_id'));
+            });
+        }
+        if (request()->filled('employee_id')) {
+            $query->where('user_id', request('employee_id'));
+        }
+
+        $payrolls = $query->where('payroll_amounts.created_by', auth()->user()->id)->where('status', 1)->get();
+		
+        $settings = Setting::first();
+        
+        $totalGrossPay = 0;
+        $totalNetPay = 0;
+        $totalPaidTimeOff = 0;
+        $totalEmployees = $payrolls->unique('user_id')->count();
+
+		
+		$data = [];
+		$grosspay =0;
+		$medicalbenefits =0;
+		$socialsecurity =0;
+		$educationlevy =0;
+		$additions = 0;
+		$deductions = 0;
+        foreach ($payrolls as $payroll) {
+			
+			$grosspay += $payroll->gross;
+			$medicalbenefits += $payroll->medical;
+			$socialsecurity += $payroll->security;
+			$educationlevy += $payroll->edu_levy;
+			$add =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2);
+			$ded =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2);
+			$additions += $add;
+			$deductions += $ded;
+			
+            $item = [];
+			$item['Employee'] = $payroll->user->name;
+			$item["Pay Period"] = Carbon::createFromFormat('Y-m-d', $payroll->start_date)->format('M d, Y')  ."-".  Carbon::createFromFormat('Y-m-d', $payroll->end_date)->format('M d, Y');
+			$item["Gross Pay"] = number_format($payroll->gross, 2);
+			$item["Medical Benefits"] = number_format($payroll->medical, 2);
+			$item["Social Security"] = number_format($payroll->security, 2);
+			$item["Education Levy"] = number_format($payroll->edu_levy, 2);
+			$item["Additions"] = number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2);
+			$item["Deductions"] = number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2);
+            $data[] = $item;
+        }
+		$item1 = [];
+		$item1['Employee'] = "";
+		$item1["Pay Period"] = "Total";
+		$item1["Gross Pay"] = number_format($grosspay, 2);
+		$item1["Medical Benefits"] = number_format($medicalbenefits, 2);
+		$item1["Social Security"] = number_format($socialsecurity, 2);
+		$item1["Education Levy"] = number_format($educationlevy, 2);
+		$item1["Additions"] = number_format($additions, 2);
+		$item1["Deductions"] = number_format($deductions, 2);
+		$data[] = $item1;
+        
+        return Excel::download(new PayrollExport($data),$type . '-report.xlsx');
+    }
+	
+	public function downloadPdf($type)
     {
         $query = PayrollAmount::with(['user.employeeProfile', 'user.departments.department', 'additionalEarnings.payhead']);
         

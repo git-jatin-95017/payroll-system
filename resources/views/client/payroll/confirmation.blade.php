@@ -876,7 +876,7 @@
             const y = chart.getDatasetMeta(0).data[0].y;
 
             // First line
-            ctx.fillText("Total Gross Pay:", x, y - 10);
+            ctx.fillText("Total Pay:", x, y - 10); 
 
             // Second line
             ctx.fillText(`$${grossFinal}`, x, y + 15);

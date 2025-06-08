@@ -156,6 +156,8 @@ Route::prefix('client')->group(function () {
 	Route::get('reports/employee-earnings', [PayrollReportController::class, 'employeeEarnings'])->name('payroll.reports.employee-earnings');
 	Route::get('reports/employer-payments', [PayrollReportController::class, 'employerPayments'])->name('payroll.reports.employer-payments');
 	Route::get('reports/download-pdf/{type}', [PayrollReportController::class, 'downloadPdf'])->name('payroll.reports.download-pdf');
+	Route::get('payroll/reports/download-report-pdf/{type}', [PayrollReportController::class, 'downloadReportPdf'])->name('payroll.reports.download-report-pdf');
+	Route::get('payroll/reports/download-report-excel/{type}', [PayrollReportController::class, 'downloadReportExcel'])->name('payroll.reports.download-report-excel');
 
 });
 
