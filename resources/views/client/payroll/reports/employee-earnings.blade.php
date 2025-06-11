@@ -132,6 +132,7 @@
                                     <th>Education Levy</th>
                                     <th>Additions</th>
                                     <th>Deductions</th>
+                                    <th>Employee Pay</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -142,7 +143,7 @@
 							$educationlevy =0;
 							$additions = 0;
 							$deductions = 0;
-							
+							$totalemppay = 0;
                                 foreach($payrolls as $payroll) {
 									$grosspay += $payroll->gross;
 									$medicalbenefits += $payroll->medical;
@@ -150,8 +151,10 @@
 									$educationlevy += $payroll->edu_levy;
 									$add =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2);
 									$ded =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2);
+									$nothing =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2);
 									$additions += $add;
 									$deductions += $ded;
+									$totalemppay += $payroll->employee_pay; 
 							@endphp		
 									<tr>
 										<td>{{ $payroll->user->name }}</td>
@@ -162,6 +165,7 @@
 										<td>${{ number_format($payroll->edu_levy, 2) }}</td>
 										<td>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2) }}</td>
 										<td>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2) }}</td>
+										<td>${{ number_format($payroll->employee_pay, 2) }}</td>
 									</tr>
 								@php
 								}
@@ -174,6 +178,7 @@
 									<td><strong>${{ number_format($educationlevy, 2) }}</strong></td>
 									<td><strong>${{ number_format($additions) }}</strong></td>
 									<td><strong>${{ number_format($deductions, 2) }}</strong></td>
+									<td><strong>${{ number_format($totalemppay, 2) }}</strong></td>
 								</tr>
                             </tbody>
                         </table>

@@ -193,12 +193,14 @@ dd($query);*/
         $totalNetPay = 0;
         $totalPaidTimeOff = 0;
         $totalEmployees = $payrolls->unique('user_id')->count();
-//echo '<pre>'; print_r($payrolls); die;
+$i = 0;
         foreach ($payrolls as $payroll) {
             $amounts = $this->calculatePayrollAmounts($payroll, $settings);
             $totalGrossPay += $amounts['gross'];
             $totalNetPay += $amounts['net_pay'];
             $totalPaidTimeOff += $payroll->paid_time_off;
+			$payrolls[$i]['employee_pay'] = $amounts['employee_pay'];
+			$i++;
         }
 
         $departments = Department::where('created_by', auth()->user()->id)->get();
@@ -298,12 +300,16 @@ dd($query);*/
         $totalNetPay = 0;
         $totalPaidTimeOff = 0;
         $totalEmployees = $payrolls->unique('user_id')->count();
-
+		$totalemppay = 0;
+		$i=0;
         foreach ($payrolls as $payroll) {
             $amounts = $this->calculatePayrollAmounts($payroll, $settings);
+			
             $totalGrossPay += $amounts['gross'];
             $totalNetPay += $amounts['net_pay'];
             $totalPaidTimeOff += $payroll->paid_time_off;
+			$payrolls[$i]['employee_pay'] = $amounts['employee_pay'];
+			$i++;
         }
 
         $departments = Department::where('created_by', auth()->user()->id)->get();
@@ -365,8 +371,10 @@ dd($query);*/
 		$educationlevy =0;
 		$additions = 0;
 		$deductions = 0;
+		$totalemppay = 0;
+		$i=0;
         foreach ($payrolls as $payroll) {
-			
+		    $amounts = $this->calculatePayrollAmounts($payroll, $settings);
 			$grosspay += $payroll->gross;
 			$medicalbenefits += $payroll->medical;
 			$socialsecurity += $payroll->security;
@@ -375,6 +383,10 @@ dd($query);*/
 			$ded =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2);
 			$additions += $add;
 			$deductions += $ded;
+			//$payrolls[$i]['employee_pay'] = $amounts['employee_pay'];
+			
+			$totalemppay += $amounts['employee_pay']; 
+			
 			
             $item = [];
 			$item['Employee'] = $payroll->user->name;
@@ -385,7 +397,9 @@ dd($query);*/
 			$item["Education Levy"] = number_format($payroll->edu_levy, 2);
 			$item["Additions"] = number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2);
 			$item["Deductions"] = number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2);
+			$item["Employee Pay"] = number_format($amounts['employee_pay'], 2);
             $data[] = $item;
+			$i++;
         }
 		$item1 = [];
 		$item1['Employee'] = "";
@@ -396,9 +410,10 @@ dd($query);*/
 		$item1["Education Levy"] = number_format($educationlevy, 2);
 		$item1["Additions"] = number_format($additions, 2);
 		$item1["Deductions"] = number_format($deductions, 2);
+		$item1["Employee Pay"] = number_format($totalemppay, 2);
 		$data[] = $item1;
         
-        $headings = ["Employee", "Pay Period", "Gross Pay", "Medical Benefits", "Social Security", "Education Levy", "Additions", "Deductions"];
+        $headings = ["Employee", "Pay Period", "Gross Pay", "Medical Benefits", "Social Security", "Education Levy", "Additions", "Deductions","Employee Pay"];
 
         return Excel::download(new PayrollExport($data, $headings),$type . '-report.xlsx');
     }

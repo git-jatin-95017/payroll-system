@@ -19,6 +19,30 @@
          size: a4 landscape;
         }
     </style>
+	<style>
+        body {
+            font-family: sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .filters {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body style="font-family: Arial, Helvetica, sans-serif; font-size: 13px;">
 <table style="width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 10px;">
@@ -45,6 +69,7 @@
             <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;  color: #000;">Education Levy </th> 
             <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;  color: #000;">Additions </th> 
             <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;  color: #000;">Deductions </th> 
+            <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;  color: #000;">Employee Pay </th> 
        </thead>
     </tr>
     <tbody style="border-bottom: 1px solid #ddd;">
@@ -56,7 +81,7 @@
 			$educationlevy =0;
 			$additions = 0;
 			$deductions = 0;
-			
+			$totalemppay = 0;
             if (count($payrolls) > 0) {
                 foreach($payrolls as $payroll) {
                     
@@ -68,7 +93,7 @@
 					$ded =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2);
 					$additions += $add;
 					$deductions += $ded;
-                   
+                    $totalemppay += $payroll->employee_pay; 
         @endphp
             <tr>    
                                     <td>{{ $payroll->user->name }}</td>
@@ -79,6 +104,7 @@
                                     <td>${{ number_format($payroll->edu_levy, 2) }}</td>
                                     <td>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2) }}</td>
                                     <td>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2) }}</td>
+									<td>${{ number_format($payroll->employee_pay, 2) }}</td>
             </tr>
         @php                                                     
                 }
@@ -91,6 +117,7 @@
 		<td><strong>${{ number_format($educationlevy, 2) }}</strong></td>
 		<td><strong>${{ number_format($additions) }}</strong></td>
 		<td><strong>${{ number_format($deductions, 2) }}</strong></td>
+		<td><strong>${{ number_format($totalemppay, 2) }}</strong></td>
 		</tr>
 		@php
             }
