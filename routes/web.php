@@ -165,6 +165,26 @@ Route::prefix('client')->group(function () {
 		Route::get('/attendance', [PayrollReportController::class, 'attendance'])->name('attendance-report');
 		Route::get('/download-report-excel/{type}', [PayrollReportController::class, 'downloadAttendanceReportExcel'])->name('download-attendance-report-excel');
 		Route::get('/download-report-pdf/{type}', [PayrollReportController::class, 'downloadAttendanceReportPdf'])->name('download-attendance-report-pdf');
+		
+		//Employee Gross Earnings Report
+		Route::get('/employee-gross-earnings', [PayrollReportController::class, 'employeeGrossEarnings'])->name('employee-gross-earnings');
+		Route::get('/download-employee-gross-earnings-excel', [PayrollReportController::class, 'downloadEmployeeGrossEarningsExcel'])->name('download-employee-gross-earnings-excel');
+		Route::get('/download-employee-gross-earnings-pdf', [PayrollReportController::class, 'downloadEmployeeGrossEarningsPdf'])->name('download-employee-gross-earnings-pdf');
+
+		// Statutory Deductions Report
+		Route::get('/statutory-deductions', [PayrollReportController::class, 'statutoryDeductions'])->name('statutory-deductions');
+		Route::get('/download-statutory-deductions-excel', [PayrollReportController::class, 'downloadStatutoryDeductionsExcel'])->name('download-statutory-deductions-excel');
+		Route::get('/download-statutory-deductions-pdf', [PayrollReportController::class, 'downloadStatutoryDeductionsPdf'])->name('download-statutory-deductions-pdf');
+
+		// Additions & Deductions Report
+		Route::get('/additions-deductions', [PayrollReportController::class, 'additionsDeductions'])->name('additions-deductions');
+		Route::get('/download-additions-deductions-excel', [PayrollReportController::class, 'downloadAdditionsDeductionsExcel'])->name('download-additions-deductions-excel');
+		Route::get('/download-additions-deductions-pdf', [PayrollReportController::class, 'downloadAdditionsDeductionsPdf'])->name('download-additions-deductions-pdf');
+
+		// Leave Report
+		Route::get('/leave', [PayrollReportController::class, 'leave'])->name('leave');
+		Route::get('/download-leave-excel', [PayrollReportController::class, 'downloadLeaveExcel'])->name('download-leave-excel');
+		Route::get('/download-leave-pdf', [PayrollReportController::class, 'downloadLeavePdf'])->name('download-leave-pdf');
 	});
 
 });

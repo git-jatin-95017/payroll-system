@@ -16,6 +16,16 @@ use Maatwebsite\Excel\Facades\Excel;
 use DB;
 use App\Models\Attendance;
 use App\Models\Checkin;
+use App\Models\Payroll;
+use App\Exports\EmployeeGrossEarningsExport;
+use App\Exports\StatutoryDeductionsExport;
+use App\Models\Payhead;
+use App\Exports\AdditionsDeductionsExport;
+use App\Models\LeaveType;
+use App\Exports\LeaveReportExport;
+use App\Models\Leave;
+use App\Models\AssignLeave;
+use App\Exports\EmployerPaymentsExport;
 
 class PayrollReportController extends Controller
 {
@@ -193,7 +203,7 @@ dd($query);*/
         $totalNetPay = 0;
         $totalPaidTimeOff = 0;
         $totalEmployees = $payrolls->unique('user_id')->count();
-$i = 0;
+        $i = 0;
         foreach ($payrolls as $payroll) {
             $amounts = $this->calculatePayrollAmounts($payroll, $settings);
             $totalGrossPay += $amounts['gross'];
@@ -334,9 +344,7 @@ $i = 0;
     }
 	public function downloadReportExcel($type)
     {
-		/*return Excel::download($type, $type . '-report.xlsx');
-		die('excel');*/
-	  $query = PayrollAmount::with(['user.employeeProfile', 'user.departments.department', 'additionalEarnings.payhead']);
+        $query = PayrollAmount::with(['user.employeeProfile', 'user.departments.department', 'additionalEarnings.payhead']);
         
         // Apply the same filters as in the view
         if (request()->filled('start_date')) {
@@ -355,7 +363,31 @@ $i = 0;
         }
 
         $payrolls = $query->where('payroll_amounts.created_by', auth()->user()->id)->where('status', 1)->get();
-		
+        
+        if ($type === 'employer-payments') {
+            $data = [];
+            foreach ($payrolls as $payroll) {
+                $gross = $payroll->gross + $payroll->paid_time_off;
+                $mbse_deductions = $payroll->medical + $payroll->security + $payroll->edu_levy;
+                $nothingAdditionTonetPay = $payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount');
+                $deductions = $payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount');
+                $employeePay = $gross - $mbse_deductions + $nothingAdditionTonetPay - $deductions;
+                $employeeTaxes = $payroll->medical + $payroll->security + $payroll->edu_levy;
+                $employerTaxes = $payroll->medical + $payroll->security_employer;
+                $subtotal = $employeePay + $employeeTaxes + $employerTaxes;
+
+                $data[] = [
+                    'employee' => $payroll->user->name,
+                    'pay_period' => Carbon::createFromFormat('Y-m-d', $payroll->start_date)->format('M d, Y') . ' - ' . Carbon::createFromFormat('Y-m-d', $payroll->end_date)->format('M d, Y'),
+                    'employee_pay' => number_format($employeePay, 2),
+                    'employee_taxes' => number_format($employeeTaxes, 2),
+                    'employer_taxes' => number_format($employerTaxes, 2),
+                    'subtotal' => number_format($subtotal, 2)
+                ];
+            }
+            return Excel::download(new EmployerPaymentsExport($data), 'employer-payments-report.xlsx');
+        }
+        
         $settings = Setting::first();
         
         $totalGrossPay = 0;
@@ -439,6 +471,12 @@ $i = 0;
         }
 
         $payrolls = $query->where('payroll_amounts.created_by', auth()->user()->id)->where('status', 1)->get();
+        
+        if ($type === 'employer-payments') {
+            $pdf = PDF::loadView('client.payroll.reports.pdf.employer-payments', compact('payrolls'));
+            return $pdf->download('employer-payments-report.pdf');
+        }
+        
         $settings = Setting::first();
         
         // Calculate totals based on report type
@@ -578,5 +616,675 @@ $i = 0;
         
         $pdf = PDF::loadView('client.payroll.reports.pdf.attendance', compact('attendances', 'departments', 'employees'));
         return $pdf->download('attendance-report.pdf');
+    }
+
+    public function employeeGrossEarnings(Request $request)
+    {
+        $query = PayrollAmount::with(['user.employeeProfile', 'user.departments.department', 'additionalEarnings.payhead'])
+            ->where('created_by', auth()->user()->id)
+            ->where('status', 1);
+
+        // Apply filters if any
+        if ($request->filled('start_date')) {
+            $query->whereDate('start_date', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+        }
+        if ($request->filled('department_id')) {
+            $query->whereHas('user.employeeProfile', function($q) use ($request) {
+                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            });
+        }
+        if ($request->filled('employee_id')) {
+            $query->where('user_id', $request->employee_id);
+        }
+
+        $earnings = $query->get();
+        $departments = Department::where('created_by', auth()->user()->id)->get();
+        $employees = User::where('role_id', 3)->where('created_by', auth()->user()->id)->get();
+
+        return view('client.payroll.reports.employee-gross-earnings', compact('earnings', 'departments', 'employees'));
+    }
+
+    public function downloadEmployeeGrossEarningsExcel(Request $request)
+    {
+        $query = PayrollAmount::with(['user.employeeProfile', 'user.departments.department', 'additionalEarnings.payhead'])
+            ->where('created_by', auth()->user()->id)
+            ->where('status', 1);
+
+        // Apply filters if any
+        if ($request->filled('start_date')) {
+            $query->whereDate('start_date', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+        }
+        if ($request->filled('department_id')) {
+            $query->whereHas('user.employeeProfile', function($q) use ($request) {
+                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            });
+        }
+        if ($request->filled('employee_id')) {
+            $query->where('user_id', $request->employee_id);
+        }
+
+        $earnings = $query->get();
+
+        return Excel::download(new EmployeeGrossEarningsExport($earnings), 'employee-gross-earnings.xlsx');
+    }
+
+    public function downloadEmployeeGrossEarningsPdf(Request $request)
+    {
+        $query = PayrollAmount::with(['user.employeeProfile', 'user.departments.department', 'additionalEarnings.payhead'])
+            ->where('created_by', auth()->user()->id)
+            ->where('status', 1);
+
+        // Apply filters if any
+        if ($request->filled('start_date')) {
+            $query->whereDate('start_date', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+        }
+        if ($request->filled('department_id')) {
+            $query->whereHas('user.employeeProfile', function($q) use ($request) {
+                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            });
+        }
+        if ($request->filled('employee_id')) {
+            $query->where('user_id', $request->employee_id);
+        }
+
+        $earnings = $query->get();
+
+        $pdf = PDF::loadView('client.payroll.reports.employee-gross-earnings-pdf', compact('earnings'));
+        return $pdf->download('employee-gross-earnings.pdf');
+    }
+
+    public function statutoryDeductions(Request $request)
+    {
+        $query = PayrollAmount::with(['user.employeeProfile', 'user.departments.department', 'additionalEarnings.payhead'])
+            ->where('created_by', auth()->user()->id)
+            ->where('status', 1);
+
+        // Apply filters if any
+        if ($request->filled('start_date')) {
+            $query->whereDate('start_date', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+        }
+        if ($request->filled('department_id')) {
+            $query->whereHas('user.employeeProfile', function($q) use ($request) {
+                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            });
+        }
+        if ($request->filled('employee_id')) {
+            $query->where('user_id', $request->employee_id);
+        }
+
+        $earnings = $query->get();
+        $departments = Department::where('created_by', auth()->user()->id)->get();
+        $employees = User::where('role_id', 3)->where('created_by', auth()->user()->id)->get();
+
+        return view('client.payroll.reports.statutory-deductions', compact('earnings', 'departments', 'employees'));
+    }
+
+    public function downloadStatutoryDeductionsExcel(Request $request)
+    {
+        $query = PayrollAmount::with(['user.employeeProfile', 'user.departments.department', 'additionalEarnings.payhead'])
+            ->where('created_by', auth()->user()->id)
+            ->where('status', 1);
+
+        // Apply filters if any
+        if ($request->filled('start_date')) {
+            $query->whereDate('start_date', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+        }
+        if ($request->filled('department_id')) {
+            $query->whereHas('user.employeeProfile', function($q) use ($request) {
+                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            });
+        }
+        if ($request->filled('employee_id')) {
+            $query->where('user_id', $request->employee_id);
+        }
+
+        $earnings = $query->get();
+
+        return Excel::download(new StatutoryDeductionsExport($earnings), 'statutory-deductions.xlsx');
+    }
+
+    public function downloadStatutoryDeductionsPdf(Request $request)
+    {
+        $query = PayrollAmount::with(['user.employeeProfile', 'user.departments.department', 'additionalEarnings.payhead'])
+            ->where('created_by', auth()->user()->id)
+            ->where('status', 1);
+
+        // Apply filters if any
+        if ($request->filled('start_date')) {
+            $query->whereDate('start_date', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+        }
+        if ($request->filled('department_id')) {
+            $query->whereHas('user.employeeProfile', function($q) use ($request) {
+                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            });
+        }
+        if ($request->filled('employee_id')) {
+            $query->where('user_id', $request->employee_id);
+        }
+
+        $earnings = $query->get();
+
+        $pdf = PDF::loadView('client.payroll.reports.pdf.statutory-deductions-pdf', compact('earnings'));
+        return $pdf->download('statutory-deductions.pdf');
+    }
+
+    public function additionsDeductions(Request $request)
+    {
+        $query = PayrollAmount::with(['user.employeeProfile', 'user.departments.department', 'additionalEarnings.payhead'])
+            ->where('created_by', auth()->user()->id)
+            ->where('status', 1);
+
+        // Apply filters if any
+        if ($request->filled('start_date')) {
+            $query->whereDate('start_date', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+        }
+        if ($request->filled('department_id')) {
+            $query->whereHas('user.employeeProfile', function($q) use ($request) {
+                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            });
+        }
+        if ($request->filled('employee_id')) {
+            $query->where('user_id', $request->employee_id);
+        }
+        if ($request->filled('pay_label')) {
+            $query->whereHas('additionalEarnings.payhead', function($q) use ($request) {
+                $q->where('id', $request->pay_label);
+            });
+        }
+
+        $earnings = $query->get();
+        $departments = Department::where('created_by', auth()->user()->id)->get();
+        $employees = User::where('role_id', 3)->where('created_by', auth()->user()->id)->get();
+        $payLabels = Payhead::where('created_by', auth()->user()->id)->get();
+
+        return view('client.payroll.reports.additions-deductions', compact('earnings', 'departments', 'employees', 'payLabels'));
+    }
+
+    public function downloadAdditionsDeductionsExcel(Request $request)
+    {
+        $query = PayrollAmount::with(['user.employeeProfile', 'user.departments.department', 'additionalEarnings.payhead'])
+            ->where('created_by', auth()->user()->id)
+            ->where('status', 1);
+
+        // Apply filters if any
+        if ($request->filled('start_date')) {
+            $query->whereDate('start_date', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+        }
+        if ($request->filled('department_id')) {
+            $query->whereHas('user.employeeProfile', function($q) use ($request) {
+                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            });
+        }
+        if ($request->filled('employee_id')) {
+            $query->where('user_id', $request->employee_id);
+        }
+        if ($request->filled('pay_label')) {
+            $query->whereHas('additionalEarnings.payhead', function($q) use ($request) {
+                $q->where('id', $request->pay_label);
+            });
+        }
+
+        $earnings = $query->get();
+
+        return Excel::download(new AdditionsDeductionsExport($earnings), 'additions-deductions.xlsx');
+    }
+
+    public function downloadAdditionsDeductionsPdf(Request $request)
+    {
+        $query = PayrollAmount::with(['user.employeeProfile', 'user.departments.department', 'additionalEarnings.payhead'])
+            ->where('created_by', auth()->user()->id)
+            ->where('status', 1);
+
+        // Apply filters if any
+        if ($request->filled('start_date')) {
+            $query->whereDate('start_date', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+        }
+        if ($request->filled('department_id')) {
+            $query->whereHas('user.employeeProfile', function($q) use ($request) {
+                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            });
+        }
+        if ($request->filled('employee_id')) {
+            $query->where('user_id', $request->employee_id);
+        }
+        if ($request->filled('pay_label')) {
+            $query->whereHas('additionalEarnings.payhead', function($q) use ($request) {
+                $q->where('id', $request->pay_label);
+            });
+        }
+
+        $earnings = $query->get();
+
+        $pdf = PDF::loadView('client.payroll.reports.pdf.additions-deductions-pdf', compact('earnings'));
+        return $pdf->download('additions-deductions.pdf');
+    }
+
+    public function leave(Request $request)
+    {
+        $query = PayrollAmount::with([
+            'user.employeeProfile', 
+            'user.departments.department', 
+            'additionalPaids.leaveType', 
+            'additionalPaids.leaveBalance',
+            'additionalUnpaids.leaveType',
+            'additionalUnpaids.leaveBalance'
+        ])
+            ->whereHas('user', function($q) {
+                $q->where('created_by', auth()->user()->id);
+            });
+
+        // Apply filters if any
+        if ($request->filled('start_date')) {
+            $query->whereDate('start_date', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+        }
+        if ($request->filled('department_id')) {
+            $query->whereHas('user.employeeProfile', function($q) use ($request) {
+                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            });
+        }
+        if ($request->filled('employee_id')) {
+            $query->where('user_id', $request->employee_id);
+        }
+        if ($request->filled('leave_type_id')) {
+            $query->where(function($q) use ($request) {
+                $q->whereHas('additionalPaids', function($q) use ($request) {
+                    $q->where('leave_type_id', $request->leave_type_id);
+                })
+                ->orWhereHas('additionalUnpaids', function($q) use ($request) {
+                    $q->where('leave_type_id', $request->leave_type_id);
+                });
+            });
+        }
+
+        $payrolls = $query->get();
+
+        $leaveRequests = collect();
+        foreach ($payrolls as $payroll) {
+            $payPeriodStart = Carbon::parse($request->start_date)->format('Y-m-d'); //$payroll->start_date;
+            $payPeriodEnd = Carbon::parse($request->end_date)->format('Y-m-d'); //$payroll->end_date;
+            $leaveYear = date('Y', strtotime($payroll->start_date));
+
+            // Paid leaves
+            foreach ($payroll->additionalPaids as $paid) {
+                $leaveType = $paid->leaveType;
+                $carryOver = $leaveType->carry_over_amount ?? 0;
+                $leaveDays = $leaveType->leave_day ?? 0;
+                $total_hours_allowed = ($leaveDays * 8) ; //+ ($carryOver * 8);
+
+                // Requests: sum of leave_duration from leaves table for this user, type, pay period, approved
+                $total_requests = \App\Models\Leave::where('user_id', $payroll->user_id)
+                    ->where('type_id', $paid->leave_type_id)
+                    // ->where('leave_status', 'approved')
+                    ->where(function($q) use ($payPeriodStart, $payPeriodEnd) {
+                        $q->whereBetween('start_date', [$payPeriodStart, $payPeriodEnd]);
+                    })
+                    ->count('id');
+
+                $total_used = \App\Models\Leave::where('user_id', $payroll->user_id)
+                    ->where('type_id', $paid->leave_type_id)
+                    // ->where('leave_status', 'approved')
+                    ->where(function($q) use ($payPeriodStart, $payPeriodEnd) {
+                        $q->whereBetween('start_date', [$payPeriodStart, $payPeriodEnd]);
+                    })
+                    ->sum('leave_duration');
+
+                // Leave Balance: from leave_balances table for this user, type, and year
+                $leaveBalance = \App\Models\LeaveBalance::where('user_id', $payroll->user_id)
+                    ->where('leave_type_id', $paid->leave_type_id)
+                    ->where('leave_year', $leaveYear)
+                    ->first();
+
+                $leaveRequests->push((object)[
+                    'user' => $payroll->user,
+                    'pay_period' => Carbon::createFromFormat('Y-m-d', $payroll->start_date)->format('M d, Y') . ' - ' . Carbon::createFromFormat('Y-m-d', $payroll->end_date)->format('M d, Y'),
+                    'requests' => $total_requests,
+                    'leave_status' => 'approved',
+                    'leave_type' => 'Paid',
+                    'leaveType' => $paid->leaveType,
+                    'hours_allowed' => $total_hours_allowed,
+                    'total_used' => $total_used,
+                    'leave_balance' => $leaveBalance ? $leaveBalance->balance : 0,
+                ]);
+            }
+
+            // Unpaid leaves
+            foreach ($payroll->additionalUnpaids as $unpaid) {
+                $leaveType = $unpaid->leaveType;
+                $carryOver = $leaveType->carry_over_amount ?? 0;
+                $leaveDays = $leaveType->leave_day ?? 0;
+                $total_hours_allowed = ($leaveDays * 8); // + ($carryOver * 8);
+
+                $total_requests = \App\Models\Leave::where('user_id', $payroll->user_id)
+                    ->where('type_id', $unpaid->leave_type_id)
+                    // ->where('leave_status', 'approved')
+                    ->where(function($q) use ($payPeriodStart, $payPeriodEnd) {
+                        $q->whereBetween('start_date', [$payPeriodStart, $payPeriodEnd]);
+                    })
+                    ->count('id');
+
+                $total_used = \App\Models\Leave::where('user_id', $payroll->user_id)
+                    ->where('type_id', $unpaid->leave_type_id)
+                    // ->where('leave_status', 'approved')
+                    ->where(function($q) use ($payPeriodStart, $payPeriodEnd) {
+                        $q->whereBetween('start_date', [$payPeriodStart, $payPeriodEnd]);
+                    })
+                    ->sum('leave_duration');
+
+                $leaveBalance = \App\Models\LeaveBalance::where('user_id', $payroll->user_id)
+                    ->where('leave_type_id', $unpaid->leave_type_id)
+                    ->where('leave_year', $leaveYear)
+                    ->first();
+
+                $leaveRequests->push((object)[
+                    'user' => $payroll->user,
+                    'pay_period' => Carbon::createFromFormat('Y-m-d', $payroll->start_date)->format('M d, Y') . ' - ' . Carbon::createFromFormat('Y-m-d', $payroll->end_date)->format('M d, Y'),
+                    'requests' => $total_requests,
+                    'leave_status' => 'approved',
+                    'leave_type' => 'Unpaid',
+                    'leaveType' => $unpaid->leaveType,
+                    'hours_allowed' => $total_hours_allowed,
+                    'total_used' => $total_used,
+                    'leave_balance' => $leaveBalance ? $leaveBalance->balance : 0,
+                ]);
+            }
+        }
+        $departments = Department::where('created_by', auth()->user()->id)->get();
+        $employees = User::where('role_id', 3)->where('created_by', auth()->user()->id)->get();
+        $leaveTypes = LeaveType::where('created_by', auth()->user()->id)->get();
+
+        return view('client.payroll.reports.leave', compact('leaveRequests', 'departments', 'employees', 'leaveTypes'));
+    }
+
+    public function downloadLeaveExcel(Request $request)
+    {
+        // Build $leaveRequests as in the leave() method
+        $query = PayrollAmount::with([
+            'user.employeeProfile', 
+            'user.departments.department', 
+            'additionalPaids.leaveType', 
+            'additionalPaids.leaveBalance',
+            'additionalUnpaids.leaveType',
+            'additionalUnpaids.leaveBalance'
+        ])
+            ->whereHas('user', function($q) {
+                $q->where('created_by', auth()->user()->id);
+            });
+
+        // Apply filters if any
+        if ($request->filled('start_date')) {
+            $query->whereDate('start_date', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+        }
+        if ($request->filled('department_id')) {
+            $query->whereHas('user.employeeProfile', function($q) use ($request) {
+                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            });
+        }
+        if ($request->filled('employee_id')) {
+            $query->where('user_id', $request->employee_id);
+        }
+        if ($request->filled('leave_type_id')) {
+            $query->where(function($q) use ($request) {
+                $q->whereHas('additionalPaids', function($q) use ($request) {
+                    $q->where('leave_type_id', $request->leave_type_id);
+                })
+                ->orWhereHas('additionalUnpaids', function($q) use ($request) {
+                    $q->where('leave_type_id', $request->leave_type_id);
+                });
+            });
+        }
+
+        $payrolls = $query->get();
+
+        $leaveRequests = collect();
+        foreach ($payrolls as $payroll) {
+            $payPeriodStart = $request->filled('start_date') ? Carbon::parse($request->start_date)->format('Y-m-d') : $payroll->start_date;
+            $payPeriodEnd = $request->filled('end_date') ? Carbon::parse($request->end_date)->format('Y-m-d') : $payroll->end_date;
+            $leaveYear = date('Y', strtotime($payroll->start_date));
+
+            // Paid leaves
+            foreach ($payroll->additionalPaids as $paid) {
+                $leaveType = $paid->leaveType;
+                $carryOver = $leaveType->carry_over_amount ?? 0;
+                $leaveDays = $leaveType->leave_day ?? 0;
+                $total_hours_allowed = ($leaveDays * 8);
+
+                $total_requests = \App\Models\Leave::where('user_id', $payroll->user_id)
+                    ->where('type_id', $paid->leave_type_id)
+                    ->where(function($q) use ($payPeriodStart, $payPeriodEnd) {
+                        $q->whereBetween('start_date', [$payPeriodStart, $payPeriodEnd]);
+                    })
+                    ->count('id');
+
+                $total_used = \App\Models\Leave::where('user_id', $payroll->user_id)
+                    ->where('type_id', $paid->leave_type_id)
+                    ->where(function($q) use ($payPeriodStart, $payPeriodEnd) {
+                        $q->whereBetween('start_date', [$payPeriodStart, $payPeriodEnd]);
+                    })
+                    ->sum('leave_duration');
+
+                $leaveBalance = \App\Models\LeaveBalance::where('user_id', $payroll->user_id)
+                    ->where('leave_type_id', $paid->leave_type_id)
+                    ->where('leave_year', $leaveYear)
+                    ->first();
+
+                $leaveRequests->push((object)[
+                    'user' => $payroll->user,
+                    'pay_period' => Carbon::createFromFormat('Y-m-d', $payroll->start_date)->format('M d, Y') . ' - ' . Carbon::createFromFormat('Y-m-d', $payroll->end_date)->format('M d, Y'),
+                    'requests' => $total_requests,
+                    'leave_status' => 'approved',
+                    'leave_type' => 'Paid',
+                    'leaveType' => $paid->leaveType,
+                    'hours_allowed' => $total_hours_allowed,
+                    'total_used' => $total_used,
+                    'leave_balance' => $leaveBalance ? $leaveBalance->balance : 0,
+                ]);
+            }
+
+            // Unpaid leaves
+            foreach ($payroll->additionalUnpaids as $unpaid) {
+                $leaveType = $unpaid->leaveType;
+                $carryOver = $leaveType->carry_over_amount ?? 0;
+                $leaveDays = $leaveType->leave_day ?? 0;
+                $total_hours_allowed = ($leaveDays * 8);
+
+                $total_requests = \App\Models\Leave::where('user_id', $payroll->user_id)
+                    ->where('type_id', $unpaid->leave_type_id)
+                    ->where(function($q) use ($payPeriodStart, $payPeriodEnd) {
+                        $q->whereBetween('start_date', [$payPeriodStart, $payPeriodEnd]);
+                    })
+                    ->count('id');
+
+                $total_used = \App\Models\Leave::where('user_id', $payroll->user_id)
+                    ->where('type_id', $unpaid->leave_type_id)
+                    ->where(function($q) use ($payPeriodStart, $payPeriodEnd) {
+                        $q->whereBetween('start_date', [$payPeriodStart, $payPeriodEnd]);
+                    })
+                    ->sum('leave_duration');
+
+                $leaveBalance = \App\Models\LeaveBalance::where('user_id', $payroll->user_id)
+                    ->where('leave_type_id', $unpaid->leave_type_id)
+                    ->where('leave_year', $leaveYear)
+                    ->first();
+
+                $leaveRequests->push((object)[
+                    'user' => $payroll->user,
+                    'pay_period' => Carbon::createFromFormat('Y-m-d', $payroll->start_date)->format('M d, Y') . ' - ' . Carbon::createFromFormat('Y-m-d', $payroll->end_date)->format('M d, Y'),
+                    'requests' => $total_requests,
+                    'leave_status' => 'approved',
+                    'leave_type' => 'Unpaid',
+                    'leaveType' => $unpaid->leaveType,
+                    'hours_allowed' => $total_hours_allowed,
+                    'total_used' => $total_used,
+                    'leave_balance' => $leaveBalance ? $leaveBalance->balance : 0,
+                ]);
+            }
+        }
+
+        return Excel::download(new \App\Exports\LeaveReportExport($leaveRequests), 'leave-report.xlsx');
+    }
+
+    public function downloadLeavePdf(Request $request)
+    {
+        // Build $leaveRequests as in the leave() method
+        $query = PayrollAmount::with([
+            'user.employeeProfile', 
+            'user.departments.department', 
+            'additionalPaids.leaveType', 
+            'additionalPaids.leaveBalance',
+            'additionalUnpaids.leaveType',
+            'additionalUnpaids.leaveBalance'
+        ])
+            ->whereHas('user', function($q) {
+                $q->where('created_by', auth()->user()->id);
+            });
+
+        // Apply filters if any
+        if ($request->filled('start_date')) {
+            $query->whereDate('start_date', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+        }
+        if ($request->filled('department_id')) {
+            $query->whereHas('user.employeeProfile', function($q) use ($request) {
+                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            });
+        }
+        if ($request->filled('employee_id')) {
+            $query->where('user_id', $request->employee_id);
+        }
+        if ($request->filled('leave_type_id')) {
+            $query->where(function($q) use ($request) {
+                $q->whereHas('additionalPaids', function($q) use ($request) {
+                    $q->where('leave_type_id', $request->leave_type_id);
+                })
+                ->orWhereHas('additionalUnpaids', function($q) use ($request) {
+                    $q->where('leave_type_id', $request->leave_type_id);
+                });
+            });
+        }
+
+        $payrolls = $query->get();
+
+        $leaveRequests = collect();
+        foreach ($payrolls as $payroll) {
+            $payPeriodStart = $request->filled('start_date') ? Carbon::parse($request->start_date)->format('Y-m-d') : $payroll->start_date;
+            $payPeriodEnd = $request->filled('end_date') ? Carbon::parse($request->end_date)->format('Y-m-d') : $payroll->end_date;
+            $leaveYear = date('Y', strtotime($payroll->start_date));
+
+            // Paid leaves
+            foreach ($payroll->additionalPaids as $paid) {
+                $leaveType = $paid->leaveType;
+                $carryOver = $leaveType->carry_over_amount ?? 0;
+                $leaveDays = $leaveType->leave_day ?? 0;
+                $total_hours_allowed = ($leaveDays * 8);
+
+                $total_requests = \App\Models\Leave::where('user_id', $payroll->user_id)
+                    ->where('type_id', $paid->leave_type_id)
+                    ->where(function($q) use ($payPeriodStart, $payPeriodEnd) {
+                        $q->whereBetween('start_date', [$payPeriodStart, $payPeriodEnd]);
+                    })
+                    ->count('id');
+
+                $total_used = \App\Models\Leave::where('user_id', $payroll->user_id)
+                    ->where('type_id', $paid->leave_type_id)
+                    ->where(function($q) use ($payPeriodStart, $payPeriodEnd) {
+                        $q->whereBetween('start_date', [$payPeriodStart, $payPeriodEnd]);
+                    })
+                    ->sum('leave_duration');
+
+                $leaveBalance = \App\Models\LeaveBalance::where('user_id', $payroll->user_id)
+                    ->where('leave_type_id', $paid->leave_type_id)
+                    ->where('leave_year', $leaveYear)
+                    ->first();
+
+                $leaveRequests->push((object)[
+                    'user' => $payroll->user,
+                    'pay_period' => Carbon::createFromFormat('Y-m-d', $payroll->start_date)->format('M d, Y') . ' - ' . Carbon::createFromFormat('Y-m-d', $payroll->end_date)->format('M d, Y'),
+                    'requests' => $total_requests,
+                    'leave_status' => 'approved',
+                    'leave_type' => 'Paid',
+                    'leaveType' => $paid->leaveType,
+                    'hours_allowed' => $total_hours_allowed,
+                    'total_used' => $total_used,
+                    'leave_balance' => $leaveBalance ? $leaveBalance->balance : 0,
+                ]);
+            }
+
+            // Unpaid leaves
+            foreach ($payroll->additionalUnpaids as $unpaid) {
+                $leaveType = $unpaid->leaveType;
+                $carryOver = $leaveType->carry_over_amount ?? 0;
+                $leaveDays = $leaveType->leave_day ?? 0;
+                $total_hours_allowed = ($leaveDays * 8);
+
+                $total_requests = \App\Models\Leave::where('user_id', $payroll->user_id)
+                    ->where('type_id', $unpaid->leave_type_id)
+                    ->where(function($q) use ($payPeriodStart, $payPeriodEnd) {
+                        $q->whereBetween('start_date', [$payPeriodStart, $payPeriodEnd]);
+                    })
+                    ->count('id');
+
+                $total_used = \App\Models\Leave::where('user_id', $payroll->user_id)
+                    ->where('type_id', $unpaid->leave_type_id)
+                    ->where(function($q) use ($payPeriodStart, $payPeriodEnd) {
+                        $q->whereBetween('start_date', [$payPeriodStart, $payPeriodEnd]);
+                    })
+                    ->sum('leave_duration');
+
+                $leaveBalance = \App\Models\LeaveBalance::where('user_id', $payroll->user_id)
+                    ->where('leave_type_id', $unpaid->leave_type_id)
+                    ->where('leave_year', $leaveYear)
+                    ->first();
+
+                $leaveRequests->push((object)[
+                    'user' => $payroll->user,
+                    'pay_period' => Carbon::createFromFormat('Y-m-d', $payroll->start_date)->format('M d, Y') . ' - ' . Carbon::createFromFormat('Y-m-d', $payroll->end_date)->format('M d, Y'),
+                    'requests' => $total_requests,
+                    'leave_status' => 'approved',
+                    'leave_type' => 'Unpaid',
+                    'leaveType' => $unpaid->leaveType,
+                    'hours_allowed' => $total_hours_allowed,
+                    'total_used' => $total_used,
+                    'leave_balance' => $leaveBalance ? $leaveBalance->balance : 0,
+                ]);
+            }
+        }
+
+        $pdf = PDF::loadView('client.payroll.reports.pdf.leave-pdf', compact('leaveRequests'));
+        return $pdf->download('leave-report.pdf');
     }
 } 

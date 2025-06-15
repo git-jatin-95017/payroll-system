@@ -22,7 +22,16 @@ class Leave extends Model
 	protected $guarded = [];
 	
 	public function leaveType() {
-        return $this->belongsTo(LeaveType::class, 'type_id');
+        return $this->belongsTo(LeaveType::class, 'type_id', 'id');
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function leaveBalance() {
+        return $this->hasOne(LeaveBalance::class, 'leave_type_id', 'type_id')
+            ->where('user_id', $this->user_id);
     }
 
     public static function boot()

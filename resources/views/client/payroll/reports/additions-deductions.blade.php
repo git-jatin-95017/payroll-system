@@ -20,10 +20,10 @@
                     </select>
                 </div>
                 <div>
-                    <a href="{{ route('reports.download-attendance-report-excel', 'attendance') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
+                    <a href="{{ route('reports.download-additions-deductions-excel') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
                         <i class="fas fa-download"></i> Excel
                     </a>
-                    <a href="{{ route('reports.download-attendance-report-pdf', 'attendance') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
+                    <a href="{{ route('reports.download-additions-deductions-pdf') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
                         <i class="fas fa-download"></i> PDF
                     </a>
                 </div>
@@ -36,7 +36,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('reports.attendance-report') }}" method="GET" class="row g-3">
+                    <form action="{{ route('reports.additions-deductions') }}" method="GET" class="row g-3">
                         <div class="col-md-3">
                             <label class="form-label">Start Date</label>
                             <input type="date" class="form-control" name="start_date" value="{{ request('start_date', date('Y-m-d', strtotime('-1 week'))) }}">
@@ -45,7 +45,7 @@
                             <label class="form-label">End Date</label>
                             <input type="date" class="form-control" name="end_date" value="{{ request('end_date', date('Y-m-d')) }}">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label">Department</label>
                             <select class="form-select" name="department_id">
                                 <option value="">All Departments</option>
@@ -56,7 +56,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label">Employee</label>
                             <select class="form-select" name="employee_id">
                                 <option value="">All Employees</option>
@@ -67,50 +67,25 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Pay Label</label>
+                            <select class="form-select" name="pay_label">
+                                <option value="">All Pay Labels</option>
+                                @foreach($payLabels as $label)
+                                    <option value="{{ $label->id }}" {{ request('pay_label') == $label->id ? 'selected' : '' }}>
+                                        {{ $label->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Apply Filters</button>
-                            <a href="{{ route('reports.attendance-report') }}" class="btn btn-secondary">Reset</a>
+                            <a href="{{ route('reports.additions-deductions') }}" class="btn btn-secondary">Reset</a>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Summary Statistics -->
-    <div class="row mb-4">
-        <!-- <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h6 class="card-title">Total Present Days</h6>
-                    <h3 class="mb-0">{{ $attendances->where('status', 'present')->count() }}</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h6 class="card-title">Total Absent Days</h6>
-                    <h3 class="mb-0">{{ $attendances->where('status', 'absent')->count() }}</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h6 class="card-title">Total Late Days</h6>
-                    <h3 class="mb-0">{{ $attendances->where('status', 'late')->count() }}</h3>
-                </div>
-            </div>
-        </div> -->
-        <!-- <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h6 class="card-title">Total Employees</h6>
-                    <h3 class="mb-0">{{ $attendances->unique('user_id')->count() }}</h3>
-                </div>
-            </div>
-        </div> -->
     </div>
 
     <!-- Detailed Table -->
@@ -123,37 +98,42 @@
                             <thead>
                                 <tr>
                                     <th>Employee</th>
-                                    <th>Date</th>
-                                    <th>Check In</th>
-                                    <th>Check Out</th>
-                                    <th>Duration</th>
-                                    <th>Note</th>
-                                    <th>Status</th>
+                                    <th>Pay Period</th>
+                                    <th>Pay Label</th>
+                                    <th>Addition/Deduction</th>
+                                    <th>Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($attendances as $attendance)
-                                <tr>
-                                    <td>{{ $attendance->user->name }}</td>
-                                    <td>{{ date('M d, Y', strtotime($attendance->checked_in_at)) }}</td>
-                                    <td>{{ $attendance->checked_in_at ? date('h:i A', strtotime($attendance->checked_in_at)) : '-' }}</td>
-                                    <td>{{ $attendance->checked_out_at ? date('h:i A', strtotime($attendance->checked_out_at)) : '-' }}</td>
-                                    <td>
-                                        @if($attendance->checked_in_at && $attendance->checked_out_at)
-                                            {{ \Carbon\Carbon::parse($attendance->checked_in_at)->diffInHours(\Carbon\Carbon::parse($attendance->checked_out_at)) }} hours
-                                        @else
-                                            -
-                                        @endif
-                                    </td>
-                                    <td>{{ $attendance->note ?? '-' }}</td>
-                                    <td>
-                                        <span class="badge bg-{{ $attendance->status == 'present' ? 'success' : ($attendance->status == 'late' ? 'warning' : 'danger') }}">
-                                             Completed
-                                        </span>
-                                    </td>
-                                </tr>
+                                @php
+                                    $totals = [];
+                                @endphp
+                                @foreach($earnings as $earning)
+                                    @foreach($earning->additionalEarnings as $additional)
+                                        <tr>
+                                            <td>{{ $earning->user->name }}</td>
+                                            <td>{{ date('M d, Y', strtotime($earning->start_date)) }} - {{ date('M d, Y', strtotime($earning->end_date)) }}</td>
+                                            <td>{{ $additional->payhead->name }}</td>
+                                            <td>{{ $additional->payhead->pay_type == 'nothing' ? 'Addition' : 'Deduction' }}</td>
+                                            <td>${{ number_format($additional->amount, 2) }}</td>
+                                        </tr>
+                                        @php
+                                            $payLabel = $additional->payhead->pay_label;
+                                            $totals[$payLabel] = ($totals[$payLabel] ?? 0) + $additional->amount;
+                                        @endphp
+                                    @endforeach
                                 @endforeach
                             </tbody>
+                            <tfoot>
+                                <tr class="fw-bold">
+                                    <td colspan="4" class="text-end">Subtotals:</td>
+                                    <td>
+                                        @foreach($totals as $label => $total)
+                                            <div>{{ $label }}: ${{ number_format($total, 2) }}</div>
+                                        @endforeach
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -164,16 +144,12 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    var reportSelect = document.getElementById('reportSelect');
-    if (reportSelect) {
-        reportSelect.addEventListener('change', function() {
-            if (this.value) {
-                window.location.href = this.value;
-            }
-        });
-    }
-});
+    document.getElementById('reportSelect').addEventListener('change', function() {
+        const selectedUrl = this.value;
+        if (selectedUrl) {
+            window.location.href = selectedUrl;
+        }
+    });
 </script>
 @endpush
 @endsection 

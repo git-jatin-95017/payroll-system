@@ -5,14 +5,29 @@
         <div class="col-12">
             <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-4">
                 <div>
-                    <h3>Employer Payments Report</h3>
+                    <h3>Reports</h3>
                     <!-- <p class="mb-0">What Employer pays?</p> -->
                 </div>
-                <!-- <div>
-                    <a href="{{ route('payroll.reports.download-pdf', 'employer-payments') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
-                        <i class="fas fa-download"></i> Download PDF
+                <div>
+                    <select class="form-select" name="reports" id="reportSelect">
+                        <option value="">Reports</option>
+                        <option value="{{ route('payroll.reports.employee-earnings') }}" {{ request()->routeIs('payroll.reports.employee-earnings') ? 'selected' : '' }}>Employee Earnings</option>
+                        <option value="{{ route('reports.employee-gross-earnings', request()->query()) }}" {{ request()->routeIs('reports.employee-gross-earnings') ? 'selected' : '' }}>Employee Gross Earnings</option>
+                        <option value="{{ route('payroll.reports.employer-payments') }}" {{ request()->routeIs('payroll.reports.employer-payments') ? 'selected' : '' }}>Employer Earnings</option>
+                        <option value="{{ route('reports.statutory-deductions', request()->query()) }}" {{ request()->routeIs('reports.statutory-deductions') ? 'selected' : '' }}>Statutory Deductions</option>
+                        <option value="{{ route('reports.additions-deductions', request()->query()) }}" {{ request()->routeIs('reports.additions-deductions') ? 'selected' : '' }}>Additions & Deductions</option>
+                        <option value="{{ route('reports.leave', request()->query()) }}" {{ request()->routeIs('reports.leave') ? 'selected' : '' }}>Leave</option>
+                        <option value="{{ route('reports.attendance-report', request()->query()) }}" {{ request()->routeIs('reports.attendance-report') ? 'selected' : '' }}>Attendance</option>
+                    </select>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{{ route('payroll.reports.download-report-excel', 'employer-payments') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
+                        <i class="fas fa-file-excel"></i> Export Excel
                     </a>
-                </div> -->
+                    <a href="{{ route('payroll.reports.download-pdf', 'employer-payments') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -142,4 +157,19 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var reportSelect = document.getElementById('reportSelect');
+    if (reportSelect) {
+        reportSelect.addEventListener('change', function() {
+            if (this.value) {
+                window.location.href = this.value;
+            }
+        });
+    }
+});
+</script>
+@endpush 

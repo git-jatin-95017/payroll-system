@@ -20,10 +20,10 @@
                     </select>
                 </div>
                 <div>
-                    <a href="{{ route('reports.download-attendance-report-excel', 'attendance') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
+                    <a href="{{ route('reports.download-statutory-deductions-excel') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
                         <i class="fas fa-download"></i> Excel
                     </a>
-                    <a href="{{ route('reports.download-attendance-report-pdf', 'attendance') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
+                    <a href="{{ route('reports.download-statutory-deductions-pdf') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
                         <i class="fas fa-download"></i> PDF
                     </a>
                 </div>
@@ -36,7 +36,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('reports.attendance-report') }}" method="GET" class="row g-3">
+                    <form action="{{ route('reports.statutory-deductions') }}" method="GET" class="row g-3">
                         <div class="col-md-3">
                             <label class="form-label">Start Date</label>
                             <input type="date" class="form-control" name="start_date" value="{{ request('start_date', date('Y-m-d', strtotime('-1 week'))) }}">
@@ -69,7 +69,7 @@
                         </div>
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Apply Filters</button>
-                            <a href="{{ route('reports.attendance-report') }}" class="btn btn-secondary">Reset</a>
+                            <a href="{{ route('reports.statutory-deductions') }}" class="btn btn-secondary">Reset</a>
                         </div>
                     </form>
                 </div>
@@ -78,40 +78,40 @@
     </div>
 
     <!-- Summary Statistics -->
-    <div class="row mb-4">
-        <!-- <div class="col-md-3">
+    <!-- <div class="row mb-4">
+        <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-title">Total Present Days</h6>
-                    <h3 class="mb-0">{{ $attendances->where('status', 'present')->count() }}</h3>
+                    <h6 class="card-title">Total Employee Medical Benefits</h6>
+                    <h3 class="mb-0">${{ number_format($earnings->sum('medical'), 2) }}</h3>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-title">Total Absent Days</h6>
-                    <h3 class="mb-0">{{ $attendances->where('status', 'absent')->count() }}</h3>
+                    <h6 class="card-title">Total Employee Social Security</h6>
+                    <h3 class="mb-0">${{ number_format($earnings->sum('security'), 2) }}</h3>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-title">Total Late Days</h6>
-                    <h3 class="mb-0">{{ $attendances->where('status', 'late')->count() }}</h3>
+                    <h6 class="card-title">Total Employee Education Levy</h6>
+                    <h3 class="mb-0">${{ number_format($earnings->sum('edu_levy'), 2) }}</h3>
                 </div>
             </div>
-        </div> -->
-        <!-- <div class="col-md-3">
+        </div>
+        <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-title">Total Employees</h6>
-                    <h3 class="mb-0">{{ $attendances->unique('user_id')->count() }}</h3>
+                    <h6 class="card-title">Total Employer Contributions</h6>
+                    <h3 class="mb-0">${{ number_format($earnings->sum('medical') + $earnings->sum('security') + $earnings->sum('edu_levy'), 2) }}</h3>
                 </div>
             </div>
-        </div> -->
-    </div>
+        </div>
+    </div> -->
 
     <!-- Detailed Table -->
     <div class="row">
@@ -123,37 +123,61 @@
                             <thead>
                                 <tr>
                                     <th>Employee</th>
-                                    <th>Date</th>
-                                    <th>Check In</th>
-                                    <th>Check Out</th>
-                                    <th>Duration</th>
-                                    <th>Note</th>
-                                    <th>Status</th>
+                                    <th>Pay Period</th>
+                                    <th>Employee Medical Benefits</th>
+                                    <th>Employee Social Security</th>
+                                    <th>Employee Education Levy</th>
+                                    <th>Employer Medical Benefits</th>
+                                    <th>Employer Social Security</th>
+                                    <th>Employer Education Levy</th>
+                                    <th>Total</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($attendances as $attendance)
-                                <tr>
-                                    <td>{{ $attendance->user->name }}</td>
-                                    <td>{{ date('M d, Y', strtotime($attendance->checked_in_at)) }}</td>
-                                    <td>{{ $attendance->checked_in_at ? date('h:i A', strtotime($attendance->checked_in_at)) : '-' }}</td>
-                                    <td>{{ $attendance->checked_out_at ? date('h:i A', strtotime($attendance->checked_out_at)) : '-' }}</td>
-                                    <td>
-                                        @if($attendance->checked_in_at && $attendance->checked_out_at)
-                                            {{ \Carbon\Carbon::parse($attendance->checked_in_at)->diffInHours(\Carbon\Carbon::parse($attendance->checked_out_at)) }} hours
-                                        @else
-                                            -
-                                        @endif
-                                    </td>
-                                    <td>{{ $attendance->note ?? '-' }}</td>
-                                    <td>
-                                        <span class="badge bg-{{ $attendance->status == 'present' ? 'success' : ($attendance->status == 'late' ? 'warning' : 'danger') }}">
-                                             Completed
-                                        </span>
-                                    </td>
-                                </tr>
+                                @php
+                                    $totalEmployeeMedical = 0;
+                                    $totalEmployeeSecurity = 0;
+                                    $totalEmployeeEduLevy = 0;
+                                    $totalEmployerMedical = 0;
+                                    $totalEmployerSecurity = 0;
+                                    $totalEmployerEduLevy = 0;
+                                    $totalOverall = 0;
+                                @endphp
+                                @foreach($earnings as $earning)
+                                    <tr>
+                                        <td>{{ $earning->user->name }}</td>
+                                        <td>{{ date('M d, Y', strtotime($earning->start_date)) }} - {{ date('M d, Y', strtotime($earning->end_date)) }}</td>
+                                        <td>${{ number_format($earning->medical, 2) }}</td>
+                                        <td>${{ number_format($earning->security, 2) }}</td>
+                                        <td>${{ number_format($earning->edu_levy, 2) }}</td>
+                                        <td>${{ number_format($earning->medical, 2) }}</td>
+                                        <td>${{ number_format($earning->security, 2) }}</td>
+                                        <td>${{ number_format($earning->edu_levy, 2) }}</td>
+                                        <td>${{ number_format($earning->medical * 2 + $earning->security * 2 + $earning->edu_levy * 2, 2) }}</td>
+                                    </tr>
+                                    @php
+                                        $totalEmployeeMedical += $earning->medical;
+                                        $totalEmployeeSecurity += $earning->security;
+                                        $totalEmployeeEduLevy += $earning->edu_levy;
+                                        $totalEmployerMedical += $earning->medical;
+                                        $totalEmployerSecurity += $earning->security;
+                                        $totalEmployerEduLevy += $earning->edu_levy;
+                                        $totalOverall += ($earning->medical * 2 + $earning->security * 2 + $earning->edu_levy * 2);
+                                    @endphp
                                 @endforeach
                             </tbody>
+                            <tfoot>
+                                <tr class="fw-bold">
+                                    <td colspan="2" class="text-end">Subtotals:</td>
+                                    <td>${{ number_format($totalEmployeeMedical, 2) }}</td>
+                                    <td>${{ number_format($totalEmployeeSecurity, 2) }}</td>
+                                    <td>${{ number_format($totalEmployeeEduLevy, 2) }}</td>
+                                    <td>${{ number_format($totalEmployerMedical, 2) }}</td>
+                                    <td>${{ number_format($totalEmployerSecurity, 2) }}</td>
+                                    <td>${{ number_format($totalEmployerEduLevy, 2) }}</td>
+                                    <td>${{ number_format($totalOverall, 2) }}</td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>

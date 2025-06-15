@@ -20,10 +20,10 @@
                     </select>
                 </div>
                 <div>
-                    <a href="{{ route('reports.download-attendance-report-excel', 'attendance') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
+                    <a href="{{ route('reports.download-leave-excel') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
                         <i class="fas fa-download"></i> Excel
                     </a>
-                    <a href="{{ route('reports.download-attendance-report-pdf', 'attendance') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
+                    <a href="{{ route('reports.download-leave-pdf') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary">
                         <i class="fas fa-download"></i> PDF
                     </a>
                 </div>
@@ -36,7 +36,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('reports.attendance-report') }}" method="GET" class="row g-3">
+                    <form action="{{ route('reports.leave') }}" method="GET" class="row g-3">
                         <div class="col-md-3">
                             <label class="form-label">Start Date</label>
                             <input type="date" class="form-control" name="start_date" value="{{ request('start_date', date('Y-m-d', strtotime('-1 week'))) }}">
@@ -67,9 +67,20 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Leave Policy</label>
+                            <select class="form-select" name="leave_type_id">
+                                <option value="">All Leave Policies</option>
+                                @foreach($leaveTypes as $type)
+                                    <option value="{{ $type->id }}" {{ request('leave_type_id') == $type->id ? 'selected' : '' }}>
+                                        {{ $type->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Apply Filters</button>
-                            <a href="{{ route('reports.attendance-report') }}" class="btn btn-secondary">Reset</a>
+                            <a href="{{ route('reports.leave') }}" class="btn btn-secondary">Reset</a>
                         </div>
                     </form>
                 </div>
@@ -78,40 +89,40 @@
     </div>
 
     <!-- Summary Statistics -->
-    <div class="row mb-4">
-        <!-- <div class="col-md-3">
+    <!-- <div class="row mb-4">
+        <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-title">Total Present Days</h6>
-                    <h3 class="mb-0">{{ $attendances->where('status', 'present')->count() }}</h3>
+                    <h6 class="card-title">Total Leave Requests</h6>
+                    <h3 class="mb-0">{{ $leaveRequests->count() }}</h3>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-title">Total Absent Days</h6>
-                    <h3 class="mb-0">{{ $attendances->where('status', 'absent')->count() }}</h3>
+                    <h6 class="card-title">Total Paid Leave Days</h6>
+                    <h3 class="mb-0">{{ $leaveRequests->where('status', 1)->sum('days') }}</h3>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-title">Total Late Days</h6>
-                    <h3 class="mb-0">{{ $attendances->where('status', 'late')->count() }}</h3>
+                    <h6 class="card-title">Total Unpaid Leave Days</h6>
+                    <h3 class="mb-0">{{ $leaveRequests->where('status', 0)->sum('days') }}</h3>
                 </div>
             </div>
-        </div> -->
-        <!-- <div class="col-md-3">
+        </div>
+        <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
                     <h6 class="card-title">Total Employees</h6>
-                    <h3 class="mb-0">{{ $attendances->unique('user_id')->count() }}</h3>
+                    <h3 class="mb-0">{{ $leaveRequests->unique('user_id')->count() }}</h3>
                 </div>
             </div>
-        </div> -->
-    </div>
+        </div>
+    </div> -->
 
     <!-- Detailed Table -->
     <div class="row">
@@ -123,35 +134,31 @@
                             <thead>
                                 <tr>
                                     <th>Employee</th>
-                                    <th>Date</th>
-                                    <th>Check In</th>
-                                    <th>Check Out</th>
-                                    <th>Duration</th>
-                                    <th>Note</th>
+                                    <th>Pay Period</th>
+                                    <th>Requests</th>
                                     <th>Status</th>
+                                    <th>Paid/Unpaid</th>
+                                    <th>Leave Policy</th>
+                                    <th>Total Used</th>
+                                    <th>Total Remaining</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($attendances as $attendance)
-                                <tr>
-                                    <td>{{ $attendance->user->name }}</td>
-                                    <td>{{ date('M d, Y', strtotime($attendance->checked_in_at)) }}</td>
-                                    <td>{{ $attendance->checked_in_at ? date('h:i A', strtotime($attendance->checked_in_at)) : '-' }}</td>
-                                    <td>{{ $attendance->checked_out_at ? date('h:i A', strtotime($attendance->checked_out_at)) : '-' }}</td>
-                                    <td>
-                                        @if($attendance->checked_in_at && $attendance->checked_out_at)
-                                            {{ \Carbon\Carbon::parse($attendance->checked_in_at)->diffInHours(\Carbon\Carbon::parse($attendance->checked_out_at)) }} hours
-                                        @else
-                                            -
-                                        @endif
-                                    </td>
-                                    <td>{{ $attendance->note ?? '-' }}</td>
-                                    <td>
-                                        <span class="badge bg-{{ $attendance->status == 'present' ? 'success' : ($attendance->status == 'late' ? 'warning' : 'danger') }}">
-                                             Completed
-                                        </span>
-                                    </td>
-                                </tr>
+                                @foreach($leaveRequests as $request)
+                                    <tr>
+                                        <td>{{ $request->user->name }}</td>
+                                        <td>{{ $request->pay_period }}</td>
+                                        <td>{{ $request->requests }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ $request->leave_status == 'approved' ? 'success' : ($request->leave_status == 'pending' ? 'warning' : 'danger') }}">
+                                                {{ ucfirst($request->leave_status) }}
+                                            </span>
+                                        </td>
+                                        <td>{{ $request->leave_type }}</td>
+                                        <td>{{ $request->leaveType->name }}</td>
+                                        <td>{{ $request->total_used }} hrs</td>
+                                        <td>{{ $request->leave_balance }} hrs</td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>

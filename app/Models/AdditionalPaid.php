@@ -18,7 +18,12 @@ class AdditionalPaid extends Model
      */
     protected $guarded = [];
     
-    public function leaveTypes() {
-        return $this->belongsTo(LeaveType::class, 'leave_type_id');
+    public function leaveType() {
+        return $this->belongsTo(LeaveType::class, 'leave_type_id', 'id');
+    }
+
+    public function leaveBalance() {
+        return $this->hasOne(LeaveBalance::class, 'leave_type_id', 'leave_type_id')
+            ->where('user_id', $this->user_id);
     }
 }

@@ -11,13 +11,13 @@
 				<div>
 				 <select class="form-select" name="reports" id="reportSelect">
                                 <option value="">Reports</option>
-                                    <option value="{{ route('payroll.reports.employee-earnings') }}" selected>Employee Earnings</option>
-                                    <option value="">Employee Gross Earnings</option>
-                                    <option value="{{ route('payroll.reports.employer-payments') }}">Employer Earnings</option>
-                                    <option value="">Statutory Deduction</option>
-                                    <option value="">Additions & Deductions</option>
-                                    <option value="">Leave</option>
-                                    <option value="{{ route('reports.attendance-report') }}">Attendance</option>
+                                    <option value="{{ route('payroll.reports.employee-earnings') }}" {{ request()->routeIs('payroll.reports.employee-earnings') ? 'selected' : '' }}>Employee Earnings</option>
+                                    <option value="{{ route('reports.employee-gross-earnings', request()->query()) }}" {{ request()->routeIs('reports.employee-gross-earnings') ? 'selected' : '' }}>Employee Gross Earnings</option>
+                                    <option value="{{ route('payroll.reports.employer-payments') }}" {{ request()->routeIs('payroll.reports.employer-payments') ? 'selected' : '' }}>Employer Earnings</option>
+                                    <option value="{{ route('reports.statutory-deductions', request()->query()) }}" {{ request()->routeIs('reports.statutory-deductions') ? 'selected' : '' }}>Statutory Deductions</option>
+                                    <option value="{{ route('reports.additions-deductions', request()->query()) }}" {{ request()->routeIs('reports.additions-deductions') ? 'selected' : '' }}>Additions & Deductions</option>
+                                    <option value="{{ route('reports.leave', request()->query()) }}" {{ request()->routeIs('reports.leave') ? 'selected' : '' }}>Leave</option>
+                                    <option value="{{ route('reports.attendance-report', request()->query()) }}" {{ request()->routeIs('reports.attendance-report') ? 'selected' : '' }}>Attendance</option>
                             </select>
 				</div>
 				 
@@ -81,14 +81,14 @@
 
     <!-- Summary Statistics -->
     <div class="row mb-4">
-        <div class="col-md-3">
+        <!-- <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
                     <h6 class="card-title">Total Pay</h6>
                     <h3 class="mb-0">${{ number_format($payrolls->sum('net_pay'), 2) }}</h3>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
@@ -105,14 +105,14 @@
                 </div>
             </div>
         </div> -->
-        <div class="col-md-3">
+        <!-- <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
                     <h6 class="card-title">Total Employees</h6>
                     <h3 class="mb-0">{{ $payrolls->unique('user_id')->count() }}</h3>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <!-- Detailed Table -->
@@ -192,11 +192,15 @@
 
 @push('scripts')
 <script>
-    document.getElementById('reportSelect').addEventListener('change', function() {
-        const selectedUrl = this.value;
-        if (selectedUrl) {
-            window.location.href = selectedUrl;
-        }
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    var reportSelect = document.getElementById('reportSelect');
+    if (reportSelect) {
+        reportSelect.addEventListener('change', function() {
+            if (this.value) {
+                window.location.href = this.value;
+            }
+        });
+    }
+});
 </script>
 @endpush 
