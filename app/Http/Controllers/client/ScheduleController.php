@@ -40,7 +40,12 @@ class ScheduleController extends Controller
         // Regular view request
         $start = $request->input('start_date', now()->startOfMonth()->toDateString());
         $end = $request->input('end_date', now()->endOfMonth()->toDateString());
-        $employees = User::with('employeeProfile')->get();
+        
+        // Get only employees created by the logged-in user
+        $employees = User::with('employeeProfile')
+                        ->where('created_by', auth()->user()->id)
+                        ->get();
+        
         $schedules = Schedule::whereBetween('start_date', [$start, $end])->get();
         
         // Check if this is an AJAX request for tab content
