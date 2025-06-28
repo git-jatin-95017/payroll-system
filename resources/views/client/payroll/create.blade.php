@@ -309,8 +309,14 @@
 			</div>
 		</div>
 		<div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
-			<div class="sub-text-heading pb-4">
-				<h3 class="mb-1">This Section is coming soon</h3>
+			<div class="schedule-container">
+				<div class="text-center" id="schedule-loading">
+					<div class="spinner-border text-primary" role="status">
+						<span class="visually-hidden">Loading...</span>
+					</div>
+					<p class="mt-2">Loading schedule manager...</p>
+				</div>
+				<div id="schedule-content" style="display: none;"></div>
 			</div>
 		</div>
 	</div>
@@ -529,6 +535,239 @@
 				// alert('Record Saved Successfully.');
 			}
 		});
+	});
+</script>
+
+<script>
+	// Load schedule content when Schedule tab is clicked
+	$(document).ready(function() {
+		$('#payment-tab').on('click', function() {
+			if ($('#schedule-content').is(':empty')) {
+				$.ajax({
+					url: '/client/schedule',
+					method: 'GET',
+					success: function(response) {
+						$('#schedule-loading').hide();
+						$('#schedule-content').html(response).show();
+						
+						// Load required CSS and JS files dynamically
+						loadScheduleDependencies();
+					},
+					error: function() {
+						$('#schedule-loading').html('<div class="alert alert-danger">Error loading schedule manager. Please try again.</div>');
+					}
+				});
+			}
+		});
+		
+		function loadScheduleDependencies() {
+			// Load CSS files
+			if (!$('link[href*="fullcalendar"]').length) {
+				$('head').append('<link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/index.global.min.css" rel="stylesheet">');
+				$('head').append('<link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/index.global.min.css" rel="stylesheet">');
+			}
+			if (!$('link[href*="select2"]').length) {
+				$('head').append('<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">');
+			}
+			
+			// Load JS files in order
+			loadScript('https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/index.global.min.js', function() {
+				loadScript('https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/index.global.min.js', function() {
+					loadScript('https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.10/index.global.min.js', function() {
+						loadScript('https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', function() {
+							// Initialize schedule functionality
+							initializeSchedule();
+						});
+					});
+				});
+			});
+		}
+		
+		function loadScript(src, callback) {
+			if (document.querySelector('script[src="' + src + '"]')) {
+				callback();
+				return;
+			}
+			
+			var script = document.createElement('script');
+			script.src = src;
+			script.onload = callback;
+			document.head.appendChild(script);
+		}
+		
+		function initializeSchedule() {
+			// Initialize Select2
+			$('#employeeSelect').select2({
+				placeholder: 'All Employees',
+				allowClear: true,
+				width: '100%'
+			});
+			
+			$('#modal_employee_id').select2({
+				placeholder: 'Choose an employee...',
+				allowClear: true,
+				width: '100%',
+				dropdownParent: $('#scheduleModal')
+			});
+			
+			// Initialize FullCalendar
+			var calendarEl = document.getElementById('calendar');
+			if (calendarEl && typeof FullCalendar !== 'undefined') {
+				var calendar = new FullCalendar.Calendar(calendarEl, {
+					initialView: 'dayGridMonth',
+					headerToolbar: {
+						right: 'prev,next',
+						left: 'title',
+						center: ''
+					},
+					dayMaxEventRows: 0,
+					eventDisplay: 'list-item',
+					selectable: true,
+					select: function(info) {
+						$('#selected_date').val(info.startStr);
+						$('#start_date').val(info.startStr);
+						$('#end_date').val(info.startStr);
+						$('#modal_employee_id').val($('#employeeSelect').val()).trigger('change');
+						$('#scheduleForm')[0].reset();
+						// Reset the form but keep the dates we just set
+						$('#start_date').val(info.startStr);
+						$('#end_date').val(info.startStr);
+						$('#deleteScheduleBtn').addClass('d-none');
+						$('#scheduleModalLabel').text('Add Schedule');
+						// Clear any existing schedule ID
+						$('#scheduleForm').removeData('schedule-id');
+						$('#scheduleModal').modal('show');
+					},
+					eventClick: function(info) {
+						// Store the schedule ID for editing/deleting
+						$('#scheduleForm').data('schedule-id', info.event.id);
+						$('#modal_employee_id').val(info.event.extendedProps.employee_id).trigger('change');
+						$('#title').val(info.event.title);
+						$('#start_date').val(info.event.startStr);
+						// Handle end date - if no end date, use start date
+						const endDate = info.event.end ? info.event.endStr : info.event.startStr;
+						$('#end_date').val(endDate);
+						$('#description').val(info.event.extendedProps.description);
+						$('#deleteScheduleBtn').removeClass('d-none');
+						$('#scheduleModalLabel').text('Edit Schedule');
+						$('#scheduleModal').modal('show');
+					},
+					events: function (fetchInfo, successCallback, failureCallback) {
+						const employeeId = $('#employeeSelect').val();
+						$.ajax({
+							url: '/client/schedule',
+							method: 'GET',
+							data: {
+								start_date: fetchInfo.startStr,
+								end_date: fetchInfo.endStr,
+								employee_id: employeeId,
+								_token: $('meta[name="csrf-token"]').attr('content')
+							},
+							success: function (data) {
+								const events = data.schedules.map(schedule => ({
+									id: schedule.id,
+									title: schedule.title,
+									start: schedule.start_date,
+									end: schedule.end_date,
+									backgroundColor: '#5E5ADB',
+									borderColor: '#5E5ADB',
+									extendedProps: {
+										description: schedule.description,
+										employee_id: schedule.employee_id
+									}
+								}));
+								successCallback(events);
+							},
+							error: function () {
+								failureCallback();
+							}
+						});
+					}
+				});
+				
+				calendar.render();
+				
+				// Store calendar reference globally
+				window.scheduleCalendar = calendar;
+			}
+			
+			// Event handlers
+			$('#employeeSelect').on('change', function() {
+				if (window.scheduleCalendar) {
+					window.scheduleCalendar.refetchEvents();
+				}
+			});
+			
+			$('#scheduleForm').on('submit', function(e) {
+				e.preventDefault();
+				
+				const employeeId = $('#modal_employee_id').val();
+				if (!employeeId) {
+					alert('Please select an employee first.');
+					return;
+				}
+				
+				let formDataString = $(this).serialize();
+				formDataString += '&_token=' + $('meta[name="csrf-token"]').attr('content');
+				let url = '/client/schedule';
+				let method = 'POST';
+				
+				// Check if we're editing an existing schedule
+				const scheduleId = $(this).data('schedule-id');
+				if (scheduleId) {
+					url += '/' + scheduleId;
+					method = 'PUT';
+				}
+				
+				$.ajax({
+					url: url,
+					method: method,
+					data: formDataString,
+					success: function(response) {
+						alert('Schedule saved successfully!');
+						$('#scheduleModal').modal('hide');
+						// Clear the schedule ID after successful save
+						$('#scheduleForm').removeData('schedule-id');
+						if (window.scheduleCalendar) {
+							window.scheduleCalendar.refetchEvents();
+						}
+					},
+					error: function(xhr) {
+						if (xhr.responseJSON && xhr.responseJSON.errors) {
+							let errorMessage = 'Please fix the following errors:\n';
+							Object.keys(xhr.responseJSON.errors).forEach(function(key) {
+								errorMessage += '- ' + xhr.responseJSON.errors[key][0] + '\n';
+							});
+							alert(errorMessage);
+						} else {
+							alert('Error saving schedule.');
+						}
+					}
+				});
+			});
+			
+			$('#deleteScheduleBtn').on('click', function() {
+				if (confirm('Are you sure you want to delete this schedule?')) {
+					$.ajax({
+						url: '/client/schedule/' + $('#scheduleForm').data('schedule-id'),
+						method: 'DELETE',
+						data: { 
+							_token: $('meta[name="csrf-token"]').attr('content') 
+						},
+						success: function(response) {
+							alert('Schedule deleted successfully!');
+							$('#scheduleModal').modal('hide');
+							if (window.scheduleCalendar) {
+								window.scheduleCalendar.refetchEvents();
+							}
+						},
+						error: function(xhr) {
+							alert('Error deleting schedule.');
+						}
+					});
+				}
+			});
+		}
 	});
 </script>
 

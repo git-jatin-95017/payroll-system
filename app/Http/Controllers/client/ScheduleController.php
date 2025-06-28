@@ -42,6 +42,12 @@ class ScheduleController extends Controller
         $end = $request->input('end_date', now()->endOfMonth()->toDateString());
         $employees = User::with('employeeProfile')->get();
         $schedules = Schedule::whereBetween('start_date', [$start, $end])->get();
+        
+        // Check if this is an AJAX request for tab content
+        if ($request->ajax()) {
+            return view('client.payroll.schedule_content', compact('employees', 'schedules', 'start', 'end'));
+        }
+        
         return view('client.payroll.schedule', compact('employees', 'schedules', 'start', 'end'));
     }
 
