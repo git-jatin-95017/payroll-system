@@ -215,8 +215,8 @@ Route::prefix('employee')->group(function () {
 	Route::get('download-pdf', [MyProfileController::class, 'downloadPdf'])->name('empdownload.pdf');
 	
 	// Employee Schedules
-	Route::get('my-schedules', [App\Http\Controllers\Employee\EmployeeScheduleController::class, 'index'])->name('my-schedules');
-	Route::get('my-schedules/{id}', [App\Http\Controllers\Employee\EmployeeScheduleController::class, 'show'])->name('my-schedules.show');
+	Route::get('my-schedules', [App\Http\Controllers\employee\EmployeeScheduleController::class, 'index'])->name('my-schedules');
+	Route::get('my-schedules/{id}', [App\Http\Controllers\employee\EmployeeScheduleController::class, 'show'])->name('my-schedules.show');
 });
 
 Route::resource('edit-my-profile', ProfileController::class);
