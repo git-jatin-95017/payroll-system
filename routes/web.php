@@ -26,6 +26,7 @@ use App\Http\Middleware\CheckPunchin;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
 use App\Http\Controllers\client\PayrollReportController;
+use App\Http\Controllers\client\ScheduleController;
 
 
 /*
@@ -186,6 +187,8 @@ Route::prefix('client')->group(function () {
 		Route::get('/download-leave-excel', [PayrollReportController::class, 'downloadLeaveExcel'])->name('download-leave-excel');
 		Route::get('/download-leave-pdf', [PayrollReportController::class, 'downloadLeavePdf'])->name('download-leave-pdf');
 	});
+
+	Route::resource('schedule', ScheduleController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
 
 });
 
