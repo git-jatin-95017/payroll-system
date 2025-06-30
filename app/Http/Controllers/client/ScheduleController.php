@@ -16,37 +16,41 @@ class ScheduleController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->ajax() && $request->has('employee_id')) {
-            // AJAX request for calendar events
-            $start = $request->input('start_date');
-            $end = $request->input('end_date');
-            $employeeId = $request->input('employee_id');
-            
-            $query = Schedule::with('employee');
-            
-            if ($employeeId) {
-                $query->where('employee_id', $employeeId);
-            }
-            
-            if ($start && $end) {
-                $query->whereBetween('start_date', [$start, $end]);
-            }
-            
-            $schedules = $query->get();
-            
-            return response()->json(['schedules' => $schedules]);
+        if ($request->ajax()) {
+            $start = $request->input('start_datetime', now()->startOfWeek()->toDateTimeString());
+            $end = $request->input('end_datetime', now()->endOfWeek()->toDateTimeString());
+            // Get all employees for the logged-in client
+            $employees = User::with('employeeProfile')
+                ->where('created_by', auth()->user()->id)
+                ->get()
+                ->map(function($emp) {
+                    return [
+                        'id' => $emp->id,
+                        'name' => $emp->name,
+                        'avatar' => $emp->employeeProfile->file ?? null,
+                        'designation' => $emp->employeeProfile->designation ?? '',
+                    ];
+                });
+            // Get all schedules for those employees in the date range
+            $schedules = Schedule::whereIn('employee_id', $employees->pluck('id'))
+                ->whereBetween('start_datetime', [$start, $end])
+                ->get();
+            return response()->json([
+                'employees' => $employees,
+                'schedules' => $schedules
+            ]);
         }
         
         // Regular view request
-        $start = $request->input('start_date', now()->startOfMonth()->toDateString());
-        $end = $request->input('end_date', now()->endOfMonth()->toDateString());
+        $start = $request->input('start_datetime', now()->startOfMonth()->toDateTimeString());
+        $end = $request->input('end_datetime', now()->endOfMonth()->toDateTimeString());
         
         // Get only employees created by the logged-in user
         $employees = User::with('employeeProfile')
                         ->where('created_by', auth()->user()->id)
                         ->get();
         
-        $schedules = Schedule::whereBetween('start_date', [$start, $end])->get();
+        $schedules = Schedule::whereBetween('start_datetime', [$start, $end])->get();
         
         // Check if this is an AJAX request for tab content
         if ($request->ajax()) {
@@ -77,8 +81,8 @@ class ScheduleController extends Controller
         $data = $request->validate([
             'employee_id' => 'required|exists:users,id',
             'title' => 'required|string|max:255',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
+            'start_datetime' => 'required|date',
+            'end_datetime' => 'required|date|after_or_equal:start_datetime',
             'description' => 'nullable|string',
         ]);
         $schedule = Schedule::create($data);
@@ -120,8 +124,8 @@ class ScheduleController extends Controller
         $data = $request->validate([
             'employee_id' => 'required|exists:users,id',
             'title' => 'required|string|max:255',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
+            'start_datetime' => 'required|date',
+            'end_datetime' => 'required|date|after_or_equal:start_datetime',
             'description' => 'nullable|string',
         ]);
         

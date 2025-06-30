@@ -56,6 +56,64 @@
 	.db-text-success {
 		color: #33ba5d !important;
 	}
+
+	/* Calendar-like grid styles */
+	.schedule-calendar-table th, .schedule-calendar-table td {
+		text-align: center;
+		vertical-align: top;
+		min-width: 120px;
+		border: 1px solid #e0e0e0;
+		background: #fff;
+	}
+	.schedule-calendar-table th.date-header {
+		background: #f5f6fa;
+		font-weight: bold;
+		font-size: 15px;
+		border-bottom: 2px solid #bdbdbd;
+	}
+	.schedule-calendar-table td {
+		position: relative;
+		height: 70px;
+	}
+	.schedule-employee-cell {
+		text-align: left;
+		min-width: 180px;
+		background: #f8f9fb;
+		font-weight: 500;
+		border-right: 2px solid #bdbdbd;
+	}
+	.schedule-avatar {
+		width: 32px; height: 32px; border-radius: 50%; object-fit: cover; margin-right: 8px;
+	}
+	.schedule-event-chip {
+		display: inline-block;
+		background: #5e72e4;
+		color: #fff;
+		border-radius: 12px;
+		padding: 2px 10px;
+		font-size: 13px;
+		margin-bottom: 2px;
+		margin-right: 2px;
+		cursor: pointer;
+		white-space: nowrap;
+	}
+	.schedule-plus-btn {
+		position: absolute;
+		bottom: 4px;
+		right: 4px;
+		font-size: 18px;
+		color: #5e72e4;
+		background: #f5f6fa;
+		border: none;
+		border-radius: 50%;
+		width: 28px; height: 28px;
+		display: flex; align-items: center; justify-content: center;
+		cursor: pointer;
+		transition: background 0.2s;
+	}
+	.schedule-plus-btn:hover {
+		background: #e0e0e0;
+	}
 </style>
 <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 	<div>
@@ -309,14 +367,63 @@
 			</div>
 		</div>
 		<div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
-			<div class="schedule-container">
-				<div class="text-center" id="schedule-loading">
-					<div class="spinner-border text-primary" role="status">
-						<span class="visually-hidden">Loading...</span>
-					</div>
-					<p class="mt-2">Loading schedule manager...</p>
+			<div class="schedule-grid-container">
+				<form id="schedule-date-range-form" class="mb-3 d-flex align-items-center gap-2">
+					<input type="text" id="schedule-daterange" class="form-control" style="max-width: 250px;" readonly />
+					<button type="submit" class="btn btn-primary">Go</button>
+				</form>
+				<div class="table-responsive" style="max-height: 500px; overflow: auto;">
+					<table class="table table-bordered align-middle" id="schedule-grid-table">
+						<thead>
+							<tr>
+								<th>Employee</th>
+								<!-- Dates will be injected here by JS -->
+							</tr>
+						</thead>
+						<tbody>
+							<!-- Rows will be injected here by JS -->
+						</tbody>
+					</table>
 				</div>
-				<div id="schedule-content" style="display: none;"></div>
+			</div>
+			<!-- Schedule Modal -->
+			<div class="modal fade" id="scheduleModal" tabindex="-1" aria-labelledby="scheduleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="scheduleModalLabel">Add/Edit Schedule</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<form id="scheduleForm">
+							<div class="modal-body">
+								<input type="hidden" id="schedule_id" name="schedule_id">
+								<input type="hidden" id="employee_id" name="employee_id">
+								<input type="hidden" id="schedule_date" name="schedule_date">
+								<div class="mb-3">
+									<label for="title" class="form-label">Title</label>
+									<input type="text" class="form-control" id="title" name="title" required>
+								</div>
+								<div class="mb-3">
+									<label for="start_datetime" class="form-label">Start Date & Time</label>
+									<input type="datetime-local" class="form-control" id="start_datetime" name="start_datetime" required>
+								</div>
+								<div class="mb-3">
+									<label for="end_datetime" class="form-label">End Date & Time</label>
+									<input type="datetime-local" class="form-control" id="end_datetime" name="end_datetime" required>
+								</div>
+								<div class="mb-3">
+									<label for="description" class="form-label">Notes</label>
+									<textarea class="form-control" id="description" name="description"></textarea>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-success">Save</button>
+								<button type="button" class="btn btn-danger d-none" id="deleteScheduleBtn">Delete</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+							</div>
+						</form>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -539,236 +646,182 @@
 </script>
 
 <script>
-	// Load schedule content when Schedule tab is clicked
 	$(document).ready(function() {
-		$('#payment-tab').on('click', function() {
-			if ($('#schedule-content').is(':empty')) {
-				$.ajax({
-					url: '/client/schedule',
-					method: 'GET',
-					success: function(response) {
-						$('#schedule-loading').hide();
-						$('#schedule-content').html(response).show();
-						
-						// Load required CSS and JS files dynamically
-						loadScheduleDependencies();
-					},
-					error: function() {
-						$('#schedule-loading').html('<div class="alert alert-danger">Error loading schedule manager. Please try again.</div>');
-					}
-				});
-			}
+		// --- Date Range Picker for Schedule Grid ---
+		let startDate = moment().startOf('week');
+		let endDate = moment().endOf('week');
+		$('#schedule-daterange').daterangepicker({
+			startDate: startDate,
+			endDate: endDate,
+			locale: { format: 'YYYY-MM-DD' }
 		});
-		
-		function loadScheduleDependencies() {
-			// Load CSS files
-			if (!$('link[href*="fullcalendar"]').length) {
-				$('head').append('<link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/index.global.min.css" rel="stylesheet">');
-				$('head').append('<link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/index.global.min.css" rel="stylesheet">');
-			}
-			if (!$('link[href*="select2"]').length) {
-				$('head').append('<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">');
-			}
-			
-			// Load JS files in order
-			loadScript('https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/index.global.min.js', function() {
-				loadScript('https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/index.global.min.js', function() {
-					loadScript('https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.10/index.global.min.js', function() {
-						loadScript('https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', function() {
-							// Initialize schedule functionality
-							initializeSchedule();
-						});
-					});
-				});
+
+		// Initial load
+		loadScheduleGrid();
+
+		// On date range change
+		$('#schedule-date-range-form').on('submit', function(e) {
+			e.preventDefault();
+			const drp = $('#schedule-daterange').data('daterangepicker');
+			startDate = drp.startDate;
+			endDate = drp.endDate;
+			loadScheduleGrid();
+		});
+
+		function pastelColor(seed) {
+			// Generate a pastel color based on a string seed
+			let hash = 0;
+			for (let i = 0; i < seed.length; i++) hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+			const h = Math.abs(hash) % 360;
+			return `hsl(${h}, 70%, 85%)`;
+		}
+
+		function showToast(msg, type = 'success') {
+			const toast = $(`<div class='toast align-items-center text-bg-${type === 'success' ? 'success' : 'danger'} border-0 show' role='alert' aria-live='assertive' aria-atomic='true' style='position:fixed;top:20px;right:20px;z-index:9999;'><div class='d-flex'><div class='toast-body'>${msg}</div><button type='button' class='btn-close btn-close-white me-2 m-auto' data-bs-dismiss='toast' aria-label='Close'></button></div></div>`);
+			$('body').append(toast);
+			setTimeout(() => toast.fadeOut(400,()=>toast.remove()), 2500);
+		}
+
+		function loadScheduleGrid() {
+			$.ajax({
+				url: '/client/schedule',
+				method: 'GET',
+				data: {
+					start_datetime: startDate.format('YYYY-MM-DD 00:00:00'),
+					end_datetime: endDate.format('YYYY-MM-DD 23:59:59'),
+				},
+				success: function(response) {
+					renderScheduleGrid(response.employees, response.schedules);
+				},
+				error: function() {
+					$('#schedule-grid-table tbody').html('<tr><td colspan="100%" class="text-danger">Error loading schedules.</td></tr>');
+				}
 			});
 		}
-		
-		function loadScript(src, callback) {
-			if (document.querySelector('script[src="' + src + '"]')) {
-				callback();
-				return;
+
+		function renderScheduleGrid(employees, schedules) {
+			// Build date columns
+			let dateColumns = [];
+			let dayNames = [];
+			let current = moment(startDate);
+			while (current <= endDate) {
+				dateColumns.push(current.format('YYYY-MM-DD'));
+				dayNames.push(current.format('ddd'));
+				current.add(1, 'days');
 			}
-			
-			var script = document.createElement('script');
-			script.src = src;
-			script.onload = callback;
-			document.head.appendChild(script);
-		}
-		
-		function initializeSchedule() {
-			// Initialize Select2
-			$('#employeeSelect').select2({
-				placeholder: 'All Employees',
-				allowClear: true,
-				width: '100%'
+			// Render table header
+			let thead = '<tr><th class="schedule-employee-cell"></th>';
+			dateColumns.forEach((date, idx) => {
+				const d = moment(date);
+				thead += `<th class="date-header"><span style='font-weight:bold;font-size:16px;'>${d.format('ddd')}</span><br><span style='font-size:15px;'>${d.format('DD MMM')}</span></th>`;
 			});
-			
-			$('#modal_employee_id').select2({
-				placeholder: 'Choose an employee...',
-				allowClear: true,
-				width: '100%',
-				dropdownParent: $('#scheduleModal')
-			});
-			
-			// Initialize FullCalendar
-			var calendarEl = document.getElementById('calendar');
-			if (calendarEl && typeof FullCalendar !== 'undefined') {
-				var calendar = new FullCalendar.Calendar(calendarEl, {
-					initialView: 'dayGridMonth',
-					headerToolbar: {
-						right: 'prev,next',
-						left: 'title',
-						center: ''
-					},
-					dayMaxEventRows: 0,
-					eventDisplay: 'list-item',
-					selectable: true,
-					select: function(info) {
-						$('#selected_date').val(info.startStr);
-						$('#start_date').val(info.startStr);
-						$('#end_date').val(info.startStr);
-						$('#modal_employee_id').val($('#employeeSelect').val()).trigger('change');
-						$('#scheduleForm')[0].reset();
-						// Reset the form but keep the dates we just set
-						$('#start_date').val(info.startStr);
-						$('#end_date').val(info.startStr);
-						$('#deleteScheduleBtn').addClass('d-none');
-						$('#scheduleModalLabel').text('Add Schedule');
-						// Clear any existing schedule ID
-						$('#scheduleForm').removeData('schedule-id');
-						$('#scheduleModal').modal('show');
-					},
-					eventClick: function(info) {
-						// Store the schedule ID for editing/deleting
-						$('#scheduleForm').data('schedule-id', info.event.id);
-						$('#modal_employee_id').val(info.event.extendedProps.employee_id).trigger('change');
-						$('#title').val(info.event.title);
-						$('#start_date').val(info.event.startStr);
-						// Handle end date - if no end date, use start date
-						const endDate = info.event.end ? info.event.endStr : info.event.startStr;
-						$('#end_date').val(endDate);
-						$('#description').val(info.event.extendedProps.description);
-						$('#deleteScheduleBtn').removeClass('d-none');
-						$('#scheduleModalLabel').text('Edit Schedule');
-						$('#scheduleModal').modal('show');
-					},
-					events: function (fetchInfo, successCallback, failureCallback) {
-						const employeeId = $('#employeeSelect').val();
-						$.ajax({
-							url: '/client/schedule',
-							method: 'GET',
-							data: {
-								start_date: fetchInfo.startStr,
-								end_date: fetchInfo.endStr,
-								employee_id: employeeId,
-								_token: $('meta[name="csrf-token"]').attr('content')
-							},
-							success: function (data) {
-								const events = data.schedules.map(schedule => ({
-									id: schedule.id,
-									title: schedule.title,
-									start: schedule.start_date,
-									end: schedule.end_date,
-									backgroundColor: '#5E5ADB',
-									borderColor: '#5E5ADB',
-									extendedProps: {
-										description: schedule.description,
-										employee_id: schedule.employee_id
-									}
-								}));
-								successCallback(events);
-							},
-							error: function () {
-								failureCallback();
-							}
+			thead += '</tr>';
+			$('#schedule-grid-table thead').html(thead);
+			// Render table body
+			let tbody = '';
+			employees.forEach(emp => {
+				tbody += `<tr><td class="schedule-employee-cell">`;
+				if (emp.avatar) {
+					tbody += `<img src="/files/${emp.avatar}" class="schedule-avatar" alt="avatar">`;
+				} else {
+					tbody += `<span class="schedule-avatar" style="background:#e0e0e0;display:inline-block;"></span>`;
+				}
+				tbody += `<span>${emp.name}</span><br><small class="text-muted">${emp.designation || ''}</small></td>`;
+				dateColumns.forEach(date => {
+					// Find schedules for this employee/date
+					const cellSchedules = schedules.filter(s => s.employee_id === emp.id && s.start_datetime.startsWith(date));
+					tbody += '<td style="position:relative">';
+					if (cellSchedules.length > 0) {
+						cellSchedules.forEach(sch => {
+							const color = pastelColor(sch.title+sch.id);
+							tbody += `<div class="schedule-event-chip edit-schedule-btn" data-schedule='${JSON.stringify(sch)}' style="background:${color}" title="${sch.title}\n${sch.start_datetime.substr(11,5)} - ${sch.end_datetime.substr(11,5)}\n${sch.description||''}">${sch.title} <span style='font-size:11px;'>${sch.start_datetime.substr(11,5)}-${sch.end_datetime.substr(11,5)}</span></div>`;
 						});
 					}
+					tbody += `<button class="schedule-plus-btn add-schedule-btn" data-empid="${emp.id}" data-date="${date}" title="Add schedule">+</button>`;
+					tbody += '</td>';
 				});
-				
-				calendar.render();
-				
-				// Store calendar reference globally
-				window.scheduleCalendar = calendar;
-			}
-			
-			// Event handlers
-			$('#employeeSelect').on('change', function() {
-				if (window.scheduleCalendar) {
-					window.scheduleCalendar.refetchEvents();
-				}
+				tbody += '</tr>';
 			});
-			
-			$('#scheduleForm').on('submit', function(e) {
-				e.preventDefault();
-				
-				const employeeId = $('#modal_employee_id').val();
-				if (!employeeId) {
-					alert('Please select an employee first.');
-					return;
-				}
-				
-				let formDataString = $(this).serialize();
-				formDataString += '&_token=' + $('meta[name="csrf-token"]').attr('content');
-				let url = '/client/schedule';
-				let method = 'POST';
-				
-				// Check if we're editing an existing schedule
-				const scheduleId = $(this).data('schedule-id');
-				if (scheduleId) {
-					url += '/' + scheduleId;
-					method = 'PUT';
-				}
-				
-				$.ajax({
-					url: url,
-					method: method,
-					data: formDataString,
-					success: function(response) {
-						alert('Schedule saved successfully!');
-						$('#scheduleModal').modal('hide');
-						// Clear the schedule ID after successful save
-						$('#scheduleForm').removeData('schedule-id');
-						if (window.scheduleCalendar) {
-							window.scheduleCalendar.refetchEvents();
-						}
-					},
-					error: function(xhr) {
-						if (xhr.responseJSON && xhr.responseJSON.errors) {
-							let errorMessage = 'Please fix the following errors:\n';
-							Object.keys(xhr.responseJSON.errors).forEach(function(key) {
-								errorMessage += '- ' + xhr.responseJSON.errors[key][0] + '\n';
-							});
-							alert(errorMessage);
-						} else {
-							alert('Error saving schedule.');
-						}
-					}
-				});
-			});
-			
-			$('#deleteScheduleBtn').on('click', function() {
-				if (confirm('Are you sure you want to delete this schedule?')) {
-					$.ajax({
-						url: '/client/schedule/' + $('#scheduleForm').data('schedule-id'),
-						method: 'DELETE',
-						data: { 
-							_token: $('meta[name="csrf-token"]').attr('content') 
-						},
-						success: function(response) {
-							alert('Schedule deleted successfully!');
-							$('#scheduleModal').modal('hide');
-							if (window.scheduleCalendar) {
-								window.scheduleCalendar.refetchEvents();
-							}
-						},
-						error: function(xhr) {
-							alert('Error deleting schedule.');
-						}
-					});
-				}
-			});
+			$('#schedule-grid-table').addClass('schedule-calendar-table');
+			$('#schedule-grid-table tbody').html(tbody);
 		}
+
+		// Modal open for add
+		$(document).on('click', '.add-schedule-btn', function() {
+			$('#scheduleForm')[0].reset();
+			$('#schedule_id').val('');
+			$('#employee_id').val($(this).data('empid'));
+			$('#schedule_date').val($(this).data('date'));
+			$('#start_datetime').val($(this).data('date') + 'T09:00');
+			$('#end_datetime').val($(this).data('date') + 'T18:00');
+			$('#deleteScheduleBtn').addClass('d-none');
+			$('#scheduleModalLabel').text('Add Schedule');
+			$('#scheduleModal').modal('show');
+		});
+		// Modal open for edit
+		$(document).on('click', '.edit-schedule-btn', function() {
+			const sch = $(this).data('schedule');
+			$('#scheduleForm')[0].reset();
+			$('#schedule_id').val(sch.id);
+			$('#employee_id').val(sch.employee_id);
+			$('#schedule_date').val(sch.start_datetime.substr(0,10));
+			$('#title').val(sch.title);
+			$('#start_datetime').val(sch.start_datetime.replace(' ', 'T'));
+			$('#end_datetime').val(sch.end_datetime.replace(' ', 'T'));
+			$('#description').val(sch.description);
+			$('#deleteScheduleBtn').removeClass('d-none');
+			$('#scheduleModalLabel').text('Edit Schedule');
+			$('#scheduleModal').modal('show');
+		});
+		// AJAX for save
+		$('#scheduleForm').on('submit', function(e) {
+			e.preventDefault();
+			const id = $('#schedule_id').val();
+			const url = id ? `/client/schedule/${id}` : '/client/schedule';
+			const method = id ? 'PUT' : 'POST';
+			const data = $(this).serialize();
+			$.ajax({
+				url: url,
+				method: method,
+				data: data,
+				success: function() {
+					$('#scheduleModal').modal('hide');
+					showToast('Schedule saved!','success');
+					loadScheduleGrid();
+				},
+				error: function(xhr) {
+					showToast('Error saving schedule','danger');
+				}
+			});
+		});
+		// AJAX for delete
+		$('#deleteScheduleBtn').on('click', function() {
+			if (!confirm('Delete this schedule?')) return;
+			const id = $('#schedule_id').val();
+			$.ajax({
+				url: `/client/schedule/${id}`,
+				method: 'DELETE',
+				data: { _token: $('meta[name="csrf-token"]').attr('content') },
+				success: function() {
+					$('#scheduleModal').modal('hide');
+					showToast('Schedule deleted!','success');
+					loadScheduleGrid();
+				},
+				error: function() {
+					showToast('Error deleting schedule','danger');
+				}
+			});
+		});
 	});
+</script>
+
+<script>
+// Ensure CSRF token is sent with all AJAX requests
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
 </script>
 
 @endpush
