@@ -15,13 +15,13 @@ class EmployeeScheduleController extends Controller
         
         // Get schedules for the logged-in employee
         $schedules = Schedule::where('employee_id', $employee->id)
-            ->when($request->filled('start_date') && $request->filled('end_date'), function($query) use ($request) {
+            ->when($request->filled('start_datetime') && $request->filled('end_datetime'), function($query) use ($request) {
                 return $query->where(function($q) use ($request) {
-                    $q->whereBetween('start_date', [$request->start_date, $request->end_date])
-                      ->orWhereBetween('end_date', [$request->start_date, $request->end_date])
+                    $q->whereBetween('start_datetime', [$request->start_datetime, $request->end_datetime])
+                      ->orWhereBetween('end_datetime', [$request->start_datetime, $request->end_datetime])
                       ->orWhere(function($subQ) use ($request) {
-                          $subQ->where('start_date', '<=', $request->start_date)
-                               ->where('end_date', '>=', $request->end_date);
+                          $subQ->where('start_datetime', '<=', $request->start_datetime)
+                               ->where('end_datetime', '>=', $request->end_datetime);
                       });
                 });
             })

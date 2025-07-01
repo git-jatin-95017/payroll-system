@@ -94,8 +94,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         const events = data.schedules.map(schedule => ({
                             id: schedule.id,
                             title: schedule.title,
-                            start: schedule.start_date,
-                            end: schedule.end_date,
+                            start: schedule.start_datetime,
+                            end: schedule.end_datetime,
                             backgroundColor: '#5E5ADB',
                             borderColor: '#5E5ADB',
                             extendedProps: {
