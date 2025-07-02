@@ -59,17 +59,19 @@
 
 	/* Calendar-like grid styles */
 	.schedule-calendar-table th, .schedule-calendar-table td {
-		text-align: center;
+		/* text-align: center; */
 		vertical-align: top;
 		min-width: 120px;
 		border: 1px solid #e0e0e0;
 		background: #fff;
 	}
 	.schedule-calendar-table th.date-header {
-		background: #f5f6fa;
-		font-weight: bold;
-		font-size: 15px;
-		border-bottom: 2px solid #bdbdbd;
+		/* background: #f5f6fa; */
+		color: #fff;
+		background-color: #4f4bc3;
+		font-weight: normal;
+		font-size: 12px;
+		border-bottom: 2px solid #4f4bc3;
 	}
 	.schedule-calendar-table td {
 		position: relative;
@@ -368,9 +370,26 @@
 		</div>
 		<div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
 			<div class="schedule-grid-container">
-				<form id="schedule-date-range-form" class="mb-3 d-flex align-items-center gap-2">
-					<input type="text" id="schedule-daterange" class="form-control" style="max-width: 250px;" readonly />
-					<button type="submit" class="btn btn-primary">Go</button>
+				<form id="schedule-date-range-form" class="form-horizontal">
+					<div class="row">
+						<div class="col daterange-container-main">
+							<div class="form-group">
+								<p class="mb-0 position-relative daterange-container">
+									<input type="text" name="daterange" id="schedule-daterange" class="form-control db-custom-input" value="{{date('m/d/Y', strtotime($request->start_date)).' - '.date('m/d/Y', strtotime($request->end_date))}}">
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+										<path stroke-linecap="round" stroke-linejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z"></path>
+									</svg>
+								</p>
+							</div>
+						</div>
+						<div class="col ps-0">
+							<div class="form-group">
+								<button type="submit" id="submit-button" class="btn btn-primary btn-search">Search</button>
+							</div>
+						</div>							
+					</div>
+					<!-- <input type="text" id="schedule-daterange" class="form-control" style="max-width: 250px;" readonly /> -->
+					<!-- <button type="submit" class="btn btn-primary">Go</button> -->
 				</form>
 				<div class="table-responsive" style="max-height: 500px; overflow: auto;">
 					<table class="table table-bordered align-middle" id="schedule-grid-table">
@@ -653,7 +672,7 @@
 		$('#schedule-daterange').daterangepicker({
 			startDate: startDate,
 			endDate: endDate,
-			locale: { format: 'YYYY-MM-DD' }
+			locale: { format: 'MM/DD/YYYY' }
 		});
 
 		// Initial load
@@ -710,10 +729,10 @@
 				current.add(1, 'days');
 			}
 			// Render table header
-			let thead = '<tr><th class="schedule-employee-cell"></th>';
+			let thead = '<tr><th class="schedule-employee-cell" style="background-color: #4f4bc3;border-bottom: 2px solid #4f4bc3;"></th>';
 			dateColumns.forEach((date, idx) => {
 				const d = moment(date);
-				thead += `<th class="date-header"><span style='font-weight:bold;font-size:16px;'>${d.format('ddd')}</span><br><span style='font-size:15px;'>${d.format('DD MMM')}</span></th>`;
+				thead += `<th class="date-header"><span style='font-weight:bold;font-size:12px;'>${d.format('ddd')}</span><br><span style='font-size:12px;'>${d.format('DD MMM')}</span></th>`;
 			});
 			thead += '</tr>';
 			$('#schedule-grid-table thead').html(thead);
@@ -721,12 +740,21 @@
 			let tbody = '';
 			employees.forEach(emp => {
 				tbody += `<tr><td class="schedule-employee-cell">`;
-				if (emp.avatar) {
-					tbody += `<img src="/files/${emp.avatar}" class="schedule-avatar" alt="avatar">`;
-				} else {
-					tbody += `<span class="schedule-avatar" style="background:#e0e0e0;display:inline-block;"></span>`;
-				}
-				tbody += `<span>${emp.name}</span><br><small class="text-muted">${emp.designation || ''}</small></td>`;
+				// if (emp.avatar) {
+				// 	tbody += `<img src="/files/${emp.avatar}" class="schedule-avatar" alt="avatar">`;
+				// } else {
+				// 	tbody += `<span class="schedule-avatar" style="background:#e0e0e0;display:inline-block;"></span>`;
+				// }
+				const img = emp.avatar ? `/files/${emp.avatar}` : '/img/user2-160x160.jpg';
+				tbody += `<div class="d-flex">`
+				tbody += `<div class="ts-img d-flex justify-content-center align-items-center">`
+				tbody += `<img src="${img}" style="width: 40px; height: 40px; border-radius: 100em;" alt="avatar">`;
+				tbody += `</div>`
+				tbody += `<div class="col-auto ps-2">`
+				tbody += `<p class="ts-user-name mb-0">${emp.name}</p><p class="ts-designation mb-0">${emp.designation || ''}</p>`;
+				tbody += `</div>`
+				tbody += `</div>`
+				tbody += `</td>`
 				dateColumns.forEach(date => {
 					// Find schedules for this employee/date
 					const cellSchedules = schedules.filter(s => s.employee_id === emp.id && s.start_datetime.startsWith(date));
