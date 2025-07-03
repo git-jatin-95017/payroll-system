@@ -382,6 +382,9 @@
 								</p>
 							</div>
 						</div>
+						<div class="col">
+							<input type="text" id="schedule-employee-search" class="form-control" placeholder="Search employee name...">
+						</div>
 						<div class="col ps-0">
 							<div class="form-group">
 								<button type="submit" id="submit-button" class="btn btn-primary btn-search">Search</button>
@@ -713,6 +716,7 @@
 				data: {
 					start_datetime: startDate.format('YYYY-MM-DD 00:00:00'),
 					end_datetime: endDate.format('YYYY-MM-DD 23:59:59'),
+					search: $('#schedule-employee-search').val()
 				},
 				success: function(response) {
 					renderScheduleGrid(response.employees, response.schedules);

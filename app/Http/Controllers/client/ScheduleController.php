@@ -19,10 +19,14 @@ class ScheduleController extends Controller
         if ($request->ajax()) {
             $start = $request->input('start_datetime', now()->startOfWeek()->toDateTimeString());
             $end = $request->input('end_datetime', now()->endOfWeek()->toDateTimeString());
+            $search = $request->input('search');
             // Get all employees for the logged-in client
-            $employees = User::with('employeeProfile')
-                ->where('created_by', auth()->user()->id)
-                ->get()
+            $employeesQuery = User::with('employeeProfile')
+                ->where('created_by', auth()->user()->id);
+            if ($search) {
+                $employeesQuery->where('name', 'like', '%' . $search . '%');
+            }
+            $employees = $employeesQuery->get()
                 ->map(function($emp) {
                     return [
                         'id' => $emp->id,
