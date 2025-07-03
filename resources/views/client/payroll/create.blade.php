@@ -386,6 +386,11 @@
 							<div class="form-group">
 								<button type="submit" id="submit-button" class="btn btn-primary btn-search">Search</button>
 							</div>
+						</div>
+						<div class="d-flex col justify-content-end mb-2">
+							<button id="publish-schedule-btn" class="btn btn-success" type="button">
+								<span id="publish-btn-text">Publish</span>
+							</button>
 						</div>							
 					</div>
 					<!-- <input type="text" id="schedule-daterange" class="form-control" style="max-width: 250px;" readonly /> -->
@@ -410,7 +415,7 @@
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title" id="scheduleModalLabel">Add/Edit Schedule</h5>
+							<h5 class="modal-title" id="scheduleModalLabel">Job</h5>
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<form id="scheduleForm">
@@ -420,14 +425,14 @@
 								<input type="hidden" id="schedule_date" name="schedule_date">
 								<div class="mb-3">
 									<label for="title" class="form-label">Title</label>
-									<input type="text" class="form-control" id="title" name="title" required>
+									<input type="text" class="form-control" id="title" name="title" value="">
 								</div>
 								<div class="mb-3">
-									<label for="start_datetime" class="form-label">Start Date & Time</label>
+									<label for="start_datetime" class="form-label">Start</label>
 									<input type="datetime-local" class="form-control" id="start_datetime" name="start_datetime" required>
 								</div>
 								<div class="mb-3">
-									<label for="end_datetime" class="form-label">End Date & Time</label>
+									<label for="end_datetime" class="form-label">End</label>
 									<input type="datetime-local" class="form-control" id="end_datetime" name="end_datetime" required>
 								</div>
 								<div class="mb-3">
@@ -762,7 +767,20 @@
 					if (cellSchedules.length > 0) {
 						cellSchedules.forEach(sch => {
 							const color = pastelColor(sch.title+sch.id);
-							tbody += `<div class="schedule-event-chip edit-schedule-btn" data-schedule='${JSON.stringify(sch)}' style="background:${color}" title="${sch.title}\n${sch.start_datetime.substr(11,5)} - ${sch.end_datetime.substr(11,5)}\n${sch.description||''}">${sch.title} <span style='font-size:11px;'>${sch.start_datetime.substr(11,5)}-${sch.end_datetime.substr(11,5)}</span></div>`;
+							// Format time in 12-hour format with AM/PM
+							function format12hr(timeStr) {
+								if (!timeStr) return '';
+								const [h, m] = timeStr.split(':');
+								let hour = parseInt(h);
+								const min = m;
+								const ampm = hour >= 12 ? 'pm' : 'am';
+								hour = hour % 12;
+								if (hour === 0) hour = 12;
+								return `${hour}:${min}${ampm}`;
+							}
+							const startTime = format12hr(sch.start_datetime.substr(11,5));
+							const endTime = format12hr(sch.end_datetime.substr(11,5));
+							tbody += `<div class="schedule-event-chip edit-schedule-btn" data-schedule='${JSON.stringify(sch)}' style="background:${color}" title="${sch.title}\n${startTime} - ${endTime}\n${sch.description||''}"> <span style='font-size:11px;'>${startTime}-${endTime}</span></div>`;
 						});
 					}
 					tbody += `<button class="schedule-plus-btn add-schedule-btn" data-empid="${emp.id}" data-date="${date}" title="Add schedule">+</button>`;
@@ -783,7 +801,7 @@
 			$('#start_datetime').val($(this).data('date') + 'T09:00');
 			$('#end_datetime').val($(this).data('date') + 'T18:00');
 			$('#deleteScheduleBtn').addClass('d-none');
-			$('#scheduleModalLabel').text('Add Schedule');
+			$('#scheduleModalLabel').text('Job');
 			$('#scheduleModal').modal('show');
 		});
 		// Modal open for edit
@@ -798,7 +816,7 @@
 			$('#end_datetime').val(sch.end_datetime.replace(' ', 'T'));
 			$('#description').val(sch.description);
 			$('#deleteScheduleBtn').removeClass('d-none');
-			$('#scheduleModalLabel').text('Edit Schedule');
+			$('#scheduleModalLabel').text('Job');
 			$('#scheduleModal').modal('show');
 		});
 		// AJAX for save
@@ -818,7 +836,13 @@
 					loadScheduleGrid();
 				},
 				error: function(xhr) {
-					showToast('Error saving schedule','danger');
+					let msg = 'Error saving schedule';
+					if (xhr.responseJSON && xhr.responseJSON.errors) {
+						msg = Object.values(xhr.responseJSON.errors).flat().join('<br>');
+					} else if (xhr.responseJSON && xhr.responseJSON.message) {
+						msg = xhr.responseJSON.message;
+					}
+					showToast(msg, 'danger');
 				}
 			});
 		});
@@ -837,6 +861,55 @@
 				},
 				error: function() {
 					showToast('Error deleting schedule','danger');
+				}
+			});
+		});
+
+		// Add at the top of your $(document).ready(function() { ... });
+		let isPublished = false; // This should be set based on backend response
+
+		function updatePublishButton() {
+			if (isPublished) {
+				$('#publish-schedule-btn').prop('disabled', true);
+				$('#publish-btn-text').text('Published');
+			} else {
+				$('#publish-schedule-btn').prop('disabled', false);
+				$('#publish-btn-text').text('Publish');
+			}
+		}
+
+		// Call this after loading the grid, and after publishing
+		function checkPublishedStatus() {
+			$.ajax({
+				url: '/client/schedule/published-status',
+				method: 'GET',
+				data: {
+					start_datetime: startDate.format('YYYY-MM-DD 00:00:00'),
+					end_datetime: endDate.format('YYYY-MM-DD 23:59:59'),
+				},
+				success: function(response) {
+					isPublished = response.published;
+					updatePublishButton();
+				}
+			});
+		}
+
+		$('#publish-schedule-btn').on('click', function() {
+			if (!confirm('Are you sure you want to publish the schedule for this period?')) return;
+			$.ajax({
+				url: '/client/schedule/publish',
+				method: 'POST',
+				data: {
+					start_datetime: startDate.format('YYYY-MM-DD 00:00:00'),
+					end_datetime: endDate.format('YYYY-MM-DD 23:59:59'),
+				},
+				success: function() {
+					isPublished = true;
+					updatePublishButton();
+					showToast('Schedule published!','success');
+				},
+				error: function() {
+					showToast('Error publishing schedule','danger');
 				}
 			});
 		});

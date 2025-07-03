@@ -80,7 +80,7 @@ class ScheduleController extends Controller
     {
         $data = $request->validate([
             'employee_id' => 'required|exists:users,id',
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'start_datetime' => 'required|date',
             'end_datetime' => 'required|date|after_or_equal:start_datetime',
             'description' => 'nullable|string',
@@ -123,7 +123,7 @@ class ScheduleController extends Controller
     {
         $data = $request->validate([
             'employee_id' => 'required|exists:users,id',
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'start_datetime' => 'required|date',
             'end_datetime' => 'required|date|after_or_equal:start_datetime',
             'description' => 'nullable|string',
@@ -145,6 +145,40 @@ class ScheduleController extends Controller
     {
         $schedule = Schedule::findOrFail($id);
         $schedule->delete();
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Check if all schedules in the given range are published
+     */
+    public function publishedStatus(Request $request)
+    {
+        $start = $request->input('start_datetime');
+        $end = $request->input('end_datetime');
+        $employeeIds = User::where('created_by', auth()->user()->id)->pluck('id');
+        $count = Schedule::whereIn('employee_id', $employeeIds)
+            ->whereBetween('start_datetime', [$start, $end])
+            ->count();
+        $publishedCount = Schedule::whereIn('employee_id', $employeeIds)
+            ->whereBetween('start_datetime', [$start, $end])
+            ->where('published', true)
+            ->count();
+        $published = ($count > 0 && $count === $publishedCount);
+        return response()->json(['published' => $published]);
+    }
+
+    /**
+     * Publish all schedules in the given range
+     */
+    public function publish(Request $request)
+    {
+        $start = $request->input('start_datetime');
+        $end = $request->input('end_datetime');
+        $employeeIds = User::where('created_by', auth()->user()->id)->pluck('id');
+        $now = now();
+        Schedule::whereIn('employee_id', $employeeIds)
+            ->whereBetween('start_datetime', [$start, $end])
+            ->update(['published' => true, 'published_at' => $now]);
         return response()->json(['success' => true]);
     }
 }

@@ -188,6 +188,8 @@ Route::prefix('client')->group(function () {
 		Route::get('/download-leave-pdf', [PayrollReportController::class, 'downloadLeavePdf'])->name('download-leave-pdf');
 	});
 
+	Route::get('schedule/published-status', [App\Http\Controllers\client\ScheduleController::class, 'publishedStatus']);
+	Route::post('schedule/publish', [App\Http\Controllers\client\ScheduleController::class, 'publish']);
 	Route::resource('schedule', ScheduleController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
 
 });
