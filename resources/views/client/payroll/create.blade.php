@@ -382,9 +382,7 @@
 								</p>
 							</div>
 						</div>
-						<div class="col">
-							<input type="text" id="schedule-employee-search" class="form-control" placeholder="Search employee name...">
-						</div>
+						
 						<div class="col ps-0">
 							<div class="form-group">
 								<button type="submit" id="submit-button" class="btn btn-primary btn-search">Search</button>
@@ -738,7 +736,16 @@
 				current.add(1, 'days');
 			}
 			// Render table header
-			let thead = '<tr><th class="schedule-employee-cell" style="background-color: #4f4bc3;border-bottom: 2px solid #4f4bc3;"></th>';
+			let searchValue = $('#schedule-employee-search').val() || '';
+			let thead = `<tr><th class="schedule-employee-cell" style="background-color: #4f4bc3;border-bottom: 2px solid #4f4bc3;">
+				<p class="db-table-search position-relative mb-0">
+					<svg width="20px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+						<path fill-rule="evenodd" d="M14.53 15.59a8.25 8.25 0 111.06-1.06l5.69 5.69a.75.75 0 11-1.06 1.06l-5.69-5.69zM2.5 9.25a6.75 6.75 0 1111.74 4.547.746.746 0 00-.443.442A6.75 6.75 0 012.5 9.25z">
+						</path>
+					</svg>
+					<input type="text" id="schedule-employee-search" class="input-sm form-control" placeholder="Search ..." value="${searchValue}">
+				</p>
+			</th>`;
 			dateColumns.forEach((date, idx) => {
 				const d = moment(date);
 				thead += `<th class="date-header"><span style='font-weight:bold;font-size:12px;'>${d.format('ddd')}</span><br><span style='font-size:12px;'>${d.format('DD MMM')}</span></th>`;
@@ -795,7 +802,7 @@
 			$('#schedule-grid-table').addClass('schedule-calendar-table');
 			$('#schedule-grid-table tbody').html(tbody);
 		}
-
+		
 		// Modal open for add
 		$(document).on('click', '.add-schedule-btn', function() {
 			$('#scheduleForm')[0].reset();
@@ -893,7 +900,7 @@
 				},
 				success: function(response) {
 					isPublished = response.published;
-					updatePublishButton();
+					// updatePublishButton();
 				}
 			});
 		}
@@ -909,13 +916,22 @@
 				},
 				success: function() {
 					isPublished = true;
-					updatePublishButton();
+					// updatePublishButton();
 					showToast('Schedule published!','success');
 				},
 				error: function() {
 					showToast('Error publishing schedule','danger');
 				}
 			});
+		});
+
+		// Employee search functionality with event delegation
+		let searchTimeout;
+		$(document).on('input', '#schedule-employee-search', function() {
+			clearTimeout(searchTimeout);
+			searchTimeout = setTimeout(function() {
+				loadScheduleGrid();
+			}, 300); // 300ms debounce
 		});
 	});
 </script>
