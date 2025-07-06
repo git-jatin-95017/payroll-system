@@ -87,6 +87,9 @@ class PayrollController extends Controller
 
 			$query->where('employee_profile.first_name', 'like', '%' . $searchValue . '%');
 			$query->orWhere('employee_profile.last_name', 'like', '%' . $searchValue . '%');
+			$query->orWhere('employee_profile.department', 'like', '%' . $searchValue . '%');
+			$query->orWhere('employee_profile.designation', 'like', '%' . $searchValue . '%');
+			$query->orWhere('employee_profile.manager_position', 'like', '%' . $searchValue . '%');
 			$query->orWhere('departments.dep_name', 'like', '%' . $searchValue . '%');
 		}
 

@@ -29,7 +29,8 @@ class ScheduleController extends Controller
                     $q->where('name', 'like', '%' . $search . '%')
                       ->orWhereHas('employeeProfile', function($subQ) use ($search) {
                           $subQ->where('department', 'LIKE', '%' . $search . '%')
-                               ->orWhere('designation', 'LIKE', '%' . $search . '%');
+                               ->orWhere('designation', 'LIKE', '%' . $search . '%')
+                               ->orWhere('manager_position', 'LIKE', '%' . $search . '%');
                       });
                 });
             }

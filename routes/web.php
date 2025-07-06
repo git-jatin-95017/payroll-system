@@ -106,6 +106,7 @@ Route::prefix('client')->group(function () {
 	Route::resource('attendance', AttendanceController::class);
 	Route::get('register-entry', [PayrollController::class, 'registerEntry']);
 	Route::get('autocomplete', [PayrollController::class, 'search'])->name('search.autocomplete');
+	Route::post('payroll/create', [PayrollController::class, 'create'])->name('payroll.create.post');
 	Route::resource('payroll', PayrollController::class);
 
 	Route::get('department/getData/', [DepartmentController::class, 'getData'])->name('department.getData');

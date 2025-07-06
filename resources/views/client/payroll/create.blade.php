@@ -177,8 +177,9 @@
 					<div class="col-sm-12">
 						<div class="time-sheet-container" style="min-height: 400px">
 							<div>
-								<form class="" method="GET" action="{{ route('payroll.create') }}"
+								<form class="" method="POST" action="{{ route('payroll.create.post') }}"
 									id="filter-timesheet">
+									@csrf
 									<div class="row">
 										<div class="col daterange-container-main">
 											<div class="form-group">
@@ -213,7 +214,7 @@
 									</div>
 								</form>
 							</div>
-							<form class="form-horizontal" method="GET" action="{{ route('payroll.create') }}"
+							<form class="form-horizontal" method="POST" action="{{ route('payroll.create') }}"
 								id="fom-timesheet">
 								@csrf
 								<input type="hidden" name="daterangehidden" id="daterange-hidden" class="form-control"
