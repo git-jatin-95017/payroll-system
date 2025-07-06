@@ -20,12 +20,20 @@ class ScheduleController extends Controller
             $start = $request->input('start_datetime', now()->startOfWeek()->toDateTimeString());
             $end = $request->input('end_datetime', now()->endOfWeek()->toDateTimeString());
             $search = $request->input('search');
+            
             // Get all employees for the logged-in client
-            $employeesQuery = User::with('employeeProfile')
-                ->where('created_by', auth()->user()->id);
+            $employeesQuery = User::with('employeeProfile')->where('created_by', auth()->user()->id);
+            
             if ($search) {
-                $employeesQuery->where('name', 'like', '%' . $search . '%');
+                $employeesQuery->where(function($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%')
+                      ->orWhereHas('employeeProfile', function($subQ) use ($search) {
+                          $subQ->where('department', 'LIKE', '%' . $search . '%')
+                               ->orWhere('designation', 'LIKE', '%' . $search . '%');
+                      });
+                });
             }
+            
             $employees = $employeesQuery->get()
                 ->map(function($emp) {
                     return [
@@ -35,10 +43,12 @@ class ScheduleController extends Controller
                         'designation' => $emp->employeeProfile->designation ?? '',
                     ];
                 });
+            
             // Get all schedules for those employees in the date range
             $schedules = Schedule::whereIn('employee_id', $employees->pluck('id'))
                 ->whereBetween('start_datetime', [$start, $end])
                 ->get();
+                
             return response()->json([
                 'employees' => $employees,
                 'schedules' => $schedules

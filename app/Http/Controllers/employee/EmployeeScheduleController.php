@@ -25,7 +25,7 @@ class EmployeeScheduleController extends Controller
                       });
                 });
             })
-            ->where('is_published', 1)
+            ->where('published', 1)
             ->get();
 
         if ($request->ajax()) {
