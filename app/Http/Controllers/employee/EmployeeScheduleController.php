@@ -46,4 +46,23 @@ class EmployeeScheduleController extends Controller
 
         return response()->json($schedule);
     }
+
+    public function ajaxGrid(Request $request)
+    {
+        $employee = auth()->user();
+        $schedules = Schedule::where('employee_id', $employee->id)
+            ->where('published', 1)
+            ->when($request->filled('start_datetime') && $request->filled('end_datetime'), function($query) use ($request) {
+                return $query->where(function($q) use ($request) {
+                    $q->whereBetween('start_datetime', [$request->start_datetime, $request->end_datetime])
+                      ->orWhereBetween('end_datetime', [$request->start_datetime, $request->end_datetime])
+                      ->orWhere(function($subQ) use ($request) {
+                          $subQ->where('start_datetime', '<=', $request->start_datetime)
+                               ->where('end_datetime', '>=', $request->end_datetime);
+                      });
+                });
+            })
+            ->get();
+        return response()->json(['schedules' => $schedules]);
+    }
 } 

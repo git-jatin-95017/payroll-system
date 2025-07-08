@@ -220,6 +220,7 @@ Route::prefix('employee')->group(function () {
 	// Employee Schedules
 	Route::get('my-schedules', [App\Http\Controllers\employee\EmployeeScheduleController::class, 'index'])->name('my-schedules');
 	Route::get('my-schedules/{id}', [App\Http\Controllers\employee\EmployeeScheduleController::class, 'show'])->name('my-schedules.show');
+	Route::get('schedules/ajax', [App\Http\Controllers\Employee\EmployeeScheduleController::class, 'ajaxGrid'])->name('employee.schedules.ajax');
 });
 
 Route::resource('edit-my-profile', ProfileController::class);

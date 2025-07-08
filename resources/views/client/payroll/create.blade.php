@@ -928,11 +928,21 @@
 
 		// Employee search functionality with event delegation
 		let searchTimeout;
+		/*
 		$(document).on('input', '#schedule-employee-search', function() {
 			clearTimeout(searchTimeout);
 			searchTimeout = setTimeout(function() {
 				loadScheduleGrid();
 			}, 300); // 300ms debounce
+		});
+		*/
+		$(document).on('keydown', '#schedule-employee-search', function(event) {
+			if (event.key === 'Enter') {
+				clearTimeout(searchTimeout);
+				searchTimeout = setTimeout(function() {
+					loadScheduleGrid();
+				}, 300); // 300ms debounce
+			}
 		});
 	});
 </script>
