@@ -85,7 +85,7 @@
           <p id="modal-end-time" class="mb-0"></p>
         </div>
         <div class="mb-3">
-          <label class="form-label fw-bold">Description:</label>
+          <label class="form-label fw-bold">Comments:</label>
           <p id="modal-description" class="mb-0"></p>
         </div>
       </div>
@@ -115,7 +115,36 @@
     border-bottom: 2px solid #4f4bc3;
 }
 .schedule-calendar-table td { position: relative; height: 70px; }
-.schedule-employee-cell { text-align: left; min-width: 180px; background: #f8f9fb; font-weight: 500; border-right: 2px solid #bdbdbd; }
+.schedule-employee-cell { 
+    text-align: left; 
+    min-width: 250px;
+    max-width: 300px;
+    background: #f8f9fb; 
+    font-weight: 500; 
+    border-right: 2px solid #bdbdbd;
+    position: sticky;
+    left: 0;
+    z-index: 10;
+}
+.schedule-employee-cell .ts-user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #5e5adb;
+    text-transform: capitalize;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+.schedule-employee-cell .ts-designation {
+    font-size: 12px;
+    color: #595959;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
 .schedule-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; margin-right: 8px; }
 .schedule-event-chip { display: inline-block; background: #5e72e4; color: #fff; border-radius: 12px; padding: 2px 10px; font-size: 13px; margin-bottom: 2px; margin-right: 2px; white-space: nowrap; }
 </style>

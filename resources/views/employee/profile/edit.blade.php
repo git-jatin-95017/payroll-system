@@ -380,10 +380,10 @@
 										<label class="db-label" for="name">Identity Document</label>
 										<select class="form-control db-custom-input {{ $errors->has('identity_document') ? ' is-invalid' : '' }}" id="identity_document" name="identity_document" @if($disabledDrop) style="pointer-events: none;" @endif>
 											<option selected value disabled>Please Select</option>
-											<option @if($employee->employeeProfile->identity_document == "Voter Id") selected @endif value="Voter Id">Voter Id</option>
-											<option @if($employee->employeeProfile->identity_document == "Aadhar Card") selected @endif value="Aadhar Card">Aadhar Card</option>
+											<!-- <option @if($employee->employeeProfile->identity_document == "Voter Id") selected @endif value="Voter Id">Voter Id</option> -->
 											<option @if($employee->employeeProfile->identity_document == "Driving License") selected @endif value="Driving License">Driving License</option>
 											<option @if($employee->employeeProfile->identity_document == "Passport") selected @endif value="Passport">Passport</option>
+											<option @if($employee->employeeProfile->identity_document == "Other") selected @endif value="Other">Other</option>
 										</select>
 										@if ($errors->has('identity_document'))
 										<span class="text-danger">

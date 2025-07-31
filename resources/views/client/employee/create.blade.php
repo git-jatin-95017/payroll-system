@@ -319,10 +319,11 @@
 										<label class="db-label" for="name">Identity Document</label>
 										<select class="form-control db-custom-input {{ $errors->has('identity_document') ? ' is-invalid' : '' }}" id="identity_document" name="identity_document">
 											<option selected value="" disabled>Please Select</option>
-											<option value="Voter Id"  @if(old('identity_document') == 'Voter Id') selected @endif>Voter Id</option>
-											<option value="Aadhar Card"  @if(old('identity_document') == 'Aadhar Card') selected @endif>Aadhar Card</option>
+											<!-- <option value="Voter Id"  @if(old('identity_document') == 'Voter Id') selected @endif>Voter Id</option> -->
 											<option value="Driving License"  @if(old('identity_document') == 'Driving License') selected @endif>Driving License</option>
 											<option value="Passport"  @if(old('identity_document') == 'Passport') selected @endif>Passport</option>
+											<option value="Other"  @if(old('identity_document') == 'Other') selected @endif>Other</option>
+
 										</select>
 										@if ($errors->has('identity_document'))
 										<span class="text-danger">
@@ -527,7 +528,7 @@
 								<div class="col-4 mb-3">
 									<div class="form-group">
 										<label class="db-label" for="name">Amount</label>
-										<input id="pay_rate" type="number" class="form-control db-custom-input {{ $errors->has('pay_rate') ? ' is-invalid' : '' }}" name="pay_rate">
+										<input id="pay_rate" type="text" class="form-control db-custom-input {{ $errors->has('pay_rate') ? ' is-invalid' : '' }}" name="pay_rate">
 										@if ($errors->has('pay_rate'))
 										<span class="text-danger">
 											{{ $errors->first('pay_rate') }}

@@ -79,10 +79,33 @@
 	}
 	.schedule-employee-cell {
 		text-align: left;
-		min-width: 180px;
+		min-width: 250px;
+		max-width: 300px;
 		background: #f8f9fb;
 		font-weight: 500;
 		border-right: 2px solid #bdbdbd;
+		position: sticky;
+		left: 0;
+		z-index: 10;
+	}
+	.schedule-employee-cell .ts-user-name {
+		font-size: 14px;
+		font-weight: 600;
+		color: #5e5adb;
+		text-transform: capitalize;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 200px;
+	}
+	.schedule-employee-cell .ts-designation {
+		font-size: 12px;
+		color: #595959;
+		font-weight: 400;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 200px;
 	}
 	.schedule-avatar {
 		width: 32px; height: 32px; border-radius: 50%; object-fit: cover; margin-right: 8px;
@@ -341,7 +364,7 @@
 																name="dates[{{$v->id}}][{{ $dateToday }}]"
 																class="form-control typeahead payroll_date_cell {{$class}}"
 																placeholder="-" data-date="{{ $dateToday }}"
-																data-empid="{{ $v->id }}" value="{{ $xcellData ?? 0 }}"
+																data-empid="{{ $v->id }}" value="{{ $xcellData ? $xcellData : ($xcellData==0 ? '' : '') }}"
 																data-inputid="payroll_input_{{$v->id}}"
 																data-id="{{$v->id}}"
 																style="font-size: 12px !important;">
@@ -417,7 +440,7 @@
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title" id="scheduleModalLabel">Job</h5>
+							<h5 class="modal-title" id="scheduleModalLabel">Schedule Details</h5>
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<form id="scheduleForm">
@@ -438,7 +461,7 @@
 									<input type="datetime-local" class="form-control" id="end_datetime" name="end_datetime" required>
 								</div>
 								<div class="mb-3">
-									<label for="description" class="form-label">Notes</label>
+									<label for="description" class="form-label">Comments</label>
 									<textarea class="form-control" id="description" name="description"></textarea>
 								</div>
 							</div>
@@ -813,7 +836,7 @@
 			$('#start_datetime').val($(this).data('date') + 'T09:00');
 			$('#end_datetime').val($(this).data('date') + 'T18:00');
 			$('#deleteScheduleBtn').addClass('d-none');
-			$('#scheduleModalLabel').text('Job');
+			$('#scheduleModalLabel').text('Schedule Details');
 			$('#scheduleModal').modal('show');
 		});
 		// Modal open for edit
@@ -828,7 +851,7 @@
 			$('#end_datetime').val(sch.end_datetime.replace(' ', 'T'));
 			$('#description').val(sch.description);
 			$('#deleteScheduleBtn').removeClass('d-none');
-			$('#scheduleModalLabel').text('Job');
+			$('#scheduleModalLabel').text('Schedule Details');
 			$('#scheduleModal').modal('show');
 		});
 		// AJAX for save
