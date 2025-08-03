@@ -286,7 +286,7 @@
 									<div class="col-6 mb-3">
 										<div class="form-group">
 											<label class="db-label" for="name">Facebook URL</label>
-											<input id="fb_url" type="text" class="form-control db-custom-input {{ $errors->has('fb_url') ? ' is-invalid' : '' }}" name="fb_url" value="{{ $company->companyProfile->fb_url }}"  >
+											<input id="fb_url" type="text" class="form-control db-custom-input {{ $errors->has('fb_url') ? ' is-invalid' : '' }}" name="fb_url" value="{{ $company->companyProfile->fb_url?? NULL }}"  >
 											@if ($errors->has('fb_url'))
 												<span class="text-danger">
 													{{ $errors->first('fb_url') }}
@@ -297,7 +297,7 @@
 									<div class="col-6 mb-3">
 										<div class="form-group">
 											<label class="db-label" for="name">Linkedin URL</label>
-											<input id="linkden_url" type="text" class="form-control db-custom-input {{ $errors->has('linkden_url') ? ' is-invalid' : '' }}" name="linkden_url" value="{{ $company->companyProfile->linkden_url }}" >
+											<input id="linkden_url" type="text" class="form-control db-custom-input {{ $errors->has('linkden_url') ? ' is-invalid' : '' }}" name="linkden_url" value="{{ $company->companyProfile->linkden_url ?? NULL }}" >
 											@if ($errors->has('linkden_url'))
 												<span class="text-danger">
 													{{ $errors->first('linkden_url') }}
