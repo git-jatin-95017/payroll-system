@@ -93,12 +93,12 @@
                 </div>
                 <ul class="mb-0 p-0 d-flex align-items-center gap-3 employee-social-media">
 					<li>
-                        <a href="{{ $company->companyProfile->fb_url }}" target="_blank">
+                        <a href="{{ $company->companyProfile->fb_url ?? NULL }}" target="_blank">
                             <x-bxl-facebook-square class="w-24 h-24" />
                         </a>
                     </li>
                     <li>
-                        <a href="{{ $company->companyProfile->linkden_url }}"  target="_blank">
+                        <a href="{{ $company->companyProfile->linkden_url ?? NULL }}"  target="_blank">
                             <x-bxl-linkedin-square class="w-24 h-24" />
                         </a>
                     </li>
