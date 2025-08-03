@@ -1,7 +1,7 @@
 <div>
-	<div class="sb-menu-h pb-3">
+	<!-- <div class="sb-menu-h pb-3">
 		<span>Menu</span>
-	</div>
+	</div> -->
 	<ul class="list-unstyled main-navigation">
 		<li class="{{ Request::routeIs('client.dashboard') ? 'active' : '' }}">
 			<a href="{{ route('client.dashboard') }}">

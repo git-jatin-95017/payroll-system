@@ -46,8 +46,8 @@
         <div>
             <div class="d-flex flex-column justify-content-between h-100">
                 <div class="profile-name-container pt-5">
-                    <h3>{{ ucwords(auth()->user()->name) }}</h3>
-                    <!-- <p class="mt-4"></p> -->
+                    <h3>{{ $company->companyProfile->company_name ?? ''}}</h3>
+                    <p class="mt-4">{{ $company->companyProfile->designation ?? ''}}</p>
                 </div>
                 <div>
                     <ul class="nav nav-tabs nav-pills db-custom-tabs gap-5 employee-tabs" id="myTab" role="tablist">
@@ -104,8 +104,7 @@
             </div>
         </div>
         <div class="bg-white w-100 border-radius-15 p-4">
-			<form class="form-horizontal" method="POST" action="{{ route('client.store') }}" enctype="multipart/form-data">
-			@csrf
+			
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="company" role="tabpanel" aria-labelledby="company-tab">
                     <div class="max-w-md max-auto">
@@ -245,44 +244,67 @@
 								</div>
 							</div>
 							<div class="col-4 mb-3">
-								<div class="form-group">
-									<label class="db-label" for="name">Medical Benefits Registration No</label>
-									<input id="medical_no" type="text"
-										class="form-control db-custom-input {{ $errors->has('medical_no') ? ' is-invalid' : '' }}"
-										name="medical_no" value="{{ $company->companyProfile->medical_no ?? NULL}}">
-									@if ($errors->has('medical_no'))
-									<span class="text-danger">
-										{{ $errors->first('medical_no') }}
-									</span>
-									@endif
-								</div>
-							</div>
-							<div class="col-4 mb-3">
-								<div class="form-group">
-									<label class="db-label" for="name">Social Security Registration No </label>
-									<input id="ssr_no" type="text"
-										class="form-control db-custom-input {{ $errors->has('ssr_no') ? ' is-invalid' : '' }}"
-										name="ssr_no" value="{{ $company->companyProfile->ssr_no ?? NULL}}">
-									@if ($errors->has('ssr_no'))
-									<span class="text-danger">
-										{{ $errors->first('ssr_no') }}
-									</span>
-									@endif
-								</div>
-							</div>
-							<div class="col-4 mb-3">
-								<div class="form-group">
-									<label class="db-label" for="name">Education Levy ID No</label>
-									<input id="levy_id_no" type="text"
-										class="form-control db-custom-input {{ $errors->has('levy_id_no') ? ' is-invalid' : '' }}"
-										name="levy_id_no" value="{{ $company->companyProfile->levy_id_no?? NULL }}">
-									@if ($errors->has('levy_id_no'))
-									<span class="text-danger">
-										{{ $errors->first('levy_id_no') }}
-									</span>
-									@endif
-								</div>
-							</div>
+										<div class="form-group">
+											<label class="db-label" for="name">Medical Benefits Registration No.</label>
+											<input id="medical_no" type="text"
+												class="form-control db-custom-input {{ $errors->has('medical_no') ? ' is-invalid' : '' }}"
+												name="medical_no" value="{{ $company->companyProfile->medical_no ?? NULL}}">
+											@if ($errors->has('medical_no'))
+											<span class="text-danger">
+												{{ $errors->first('medical_no') }}
+											</span>
+											@endif
+										</div>
+									</div>
+									<div class="col-4 mb-3">
+										<div class="form-group">
+											<label class="db-label" for="name">Social Security Registration No. </label>
+											<input id="ssr_no" type="text"
+												class="form-control db-custom-input {{ $errors->has('ssr_no') ? ' is-invalid' : '' }}"
+												name="ssr_no" value="{{ $company->companyProfile->ssr_no ?? NULL}}">
+											@if ($errors->has('ssr_no'))
+											<span class="text-danger">
+												{{ $errors->first('ssr_no') }}
+											</span>
+											@endif
+										</div>
+									</div>
+									<div class="col-4 mb-3">
+										<div class="form-group">
+											<label class="db-label" for="name">Education Levy ID No.</label>
+											<input id="levy_id_no" type="text"
+												class="form-control db-custom-input {{ $errors->has('levy_id_no') ? ' is-invalid' : '' }}"
+												name="levy_id_no" value="{{ $company->companyProfile->levy_id_no?? NULL }}">
+											@if ($errors->has('levy_id_no'))
+											<span class="text-danger">
+												{{ $errors->first('levy_id_no') }}
+											</span>
+											@endif
+										</div>
+									</div>
+
+									<div class="col-6 mb-3">
+										<div class="form-group">
+											<label class="db-label" for="name">Facebook URL</label>
+											<input id="fb_url" type="text" class="form-control db-custom-input {{ $errors->has('fb_url') ? ' is-invalid' : '' }}" name="fb_url" value="{{ $company->companyProfile->fb_url }}"  >
+											@if ($errors->has('fb_url'))
+												<span class="text-danger">
+													{{ $errors->first('fb_url') }}
+												</span>
+											@endif
+										</div>
+									</div>
+									<div class="col-6 mb-3">
+										<div class="form-group">
+											<label class="db-label" for="name">Linkedin URL</label>
+											<input id="linkden_url" type="text" class="form-control db-custom-input {{ $errors->has('linkden_url') ? ' is-invalid' : '' }}" name="linkden_url" value="{{ $company->companyProfile->linkden_url }}" >
+											@if ($errors->has('linkden_url'))
+												<span class="text-danger">
+													{{ $errors->first('linkden_url') }}
+												</span>
+											@endif
+										</div>
+									</div>
 							<div class="col-12 text-end">
 								<button type="submit" class="btn btn-primary submit-btn">Submit</button>
 							</div>
@@ -588,7 +610,7 @@
                 </div> -->
 
             </div>
-			</form>
+			
         </div>
     </div>
 </section>

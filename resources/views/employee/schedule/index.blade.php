@@ -244,12 +244,7 @@ $(document).ready(function() {
         // Render table header
         let searchValue = "{{ auth()->user()->name }}";
         let thead = `<tr><th class="schedule-employee-cell" style="background-color: #4f4bc3;border-bottom: 2px solid #4f4bc3;">
-            <p class="db-table-search position-relative mb-0">
-                <svg width="20px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                    <path fill-rule="evenodd" d="M14.53 15.59a8.25 8.25 0 111.06-1.06l5.69 5.69a.75.75 0 11-1.06 1.06l-5.69-5.69zM2.5 9.25a6.75 6.75 0 1111.74 4.547.746.746 0 00-.443.442A6.75 6.75 0 012.5 9.25z"></path>
-                </svg>
-                <input type="text" id="employee-name-search" class="input-sm form-control" placeholder="Search employee name..." value="${searchValue}">
-            </p>
+            
             
         </th>`;
         dateColumns.forEach((date, idx) => {

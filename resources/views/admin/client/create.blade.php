@@ -44,7 +44,7 @@
         <div>
             <div class="d-flex flex-column justify-content-between h-100">
                 <div class="profile-name-container pt-5">
-                    <h3>{{ ucwords(auth()->user()->name) }}</h3>
+                    <h3>Company</h3>
                     <!-- <p class="mt-4"></p> -->
                 </div>
                 <div>

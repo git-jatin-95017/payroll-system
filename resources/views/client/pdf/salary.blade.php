@@ -246,7 +246,7 @@
                     }
         @endphp
             <tr>    
-                <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;color: #000;">{{ $val->leaveTypes->name}}</td>
+                <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;color: #000;">{{ $val->leaveType->name ?? 'N/A'}}</td>
                 <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($val->amount > 0 ? $ptoff/$val->amount : 0, 2)}}</td>
                 <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">{{$val->amount}}</td>
                 <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;  width: 50%;color: #000;">${{number_format(($val->amount > 0 ? $ptoff/$val->amount : 0) * $val->amount, 2)}}</td>

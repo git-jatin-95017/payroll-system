@@ -249,7 +249,7 @@
 									</div>
 									<div class="col-4 mb-3">
 										<div class="form-group">
-											<label class="db-label" for="name">Medical Benefits Registration No</label>
+											<label class="db-label" for="name">Medical Benefits Registration No.</label>
 											<input id="medical_no" type="text"
 												class="form-control db-custom-input {{ $errors->has('medical_no') ? ' is-invalid' : '' }}"
 												name="medical_no" value="{{ $company->companyProfile->medical_no ?? NULL}}">
@@ -262,7 +262,7 @@
 									</div>
 									<div class="col-4 mb-3">
 										<div class="form-group">
-											<label class="db-label" for="name">Social Security Registration No </label>
+											<label class="db-label" for="name">Social Security Registration No. </label>
 											<input id="ssr_no" type="text"
 												class="form-control db-custom-input {{ $errors->has('ssr_no') ? ' is-invalid' : '' }}"
 												name="ssr_no" value="{{ $company->companyProfile->ssr_no ?? NULL}}">
@@ -275,7 +275,7 @@
 									</div>
 									<div class="col-4 mb-3">
 										<div class="form-group">
-											<label class="db-label" for="name">Education Levy ID No</label>
+											<label class="db-label" for="name">Education Levy ID No.</label>
 											<input id="levy_id_no" type="text"
 												class="form-control db-custom-input {{ $errors->has('levy_id_no') ? ' is-invalid' : '' }}"
 												name="levy_id_no" value="{{ $company->companyProfile->levy_id_no?? NULL }}">

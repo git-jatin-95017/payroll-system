@@ -154,6 +154,8 @@ class ClientController extends Controller
 			'account_number' => !empty($request->account_number) ? $request->account_number : NULL,
 			'bank_address' => !empty($request->bank_address) ? $request->bank_address : NULL,
 			'routing_number' => !empty($request->routing_number) ? $request->routing_number : NULL,
+			'fb_url' => $request->fb_url ?? null,
+			'linkden_url' => $request->linkden_url ?? null,
 		];
 
 		//Logo
@@ -435,6 +437,8 @@ class ClientController extends Controller
 				'account_number' => !empty($request->account_number) ? $request->account_number : NULL,
 				'bank_address' => !empty($request->bank_address) ? $request->bank_address : NULL,
 				'routing_number' => !empty($request->routing_number) ? $request->routing_number : NULL,
+				'fb_url' => $request->fb_url ?? null,
+				'linkden_url' => $request->linkden_url ?? null,
 			];
 
 			//Logo

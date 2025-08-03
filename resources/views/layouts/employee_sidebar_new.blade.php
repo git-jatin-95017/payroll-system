@@ -18,7 +18,7 @@
 		<li class="{{ request()->is('employee/my-schedules*') ? 'active' : '' }}">
 			<a href="{{ route('my-schedules') }}">
 				<x-bxs-calendar class="w-20 h-20"/>
-				<span>My Schedules</span>
+				<span>Schedules</span>
 			</a>
 		</li>
 		<li class="{{ request()->is('employee/holidays*') ? 'active' : '' }}">

@@ -21,6 +21,7 @@
 	<link href=" {{ asset('css/payrollCss/bootstrap-material-datetimepicker.css') }}" rel="stylesheet">
     <link href=" {{ asset('css/payrollCss/style.css') }}" rel="stylesheet">
 	<link href=" {{ asset('css/payrollCss/print.css') }}" rel="stylesheet">
+    <link href=" {{ asset('css/sidebar-fix.css') }}" rel="stylesheet">
 
     <!-- You can change the theme colors from here -->
     <!-- <link href="css/colors/blue.css" id="theme" rel="stylesheet"> -->

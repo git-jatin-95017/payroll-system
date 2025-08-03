@@ -104,7 +104,7 @@
 										</div>
 										<div class="form-check form-check-inline custom-radio-btn">
 											<input name="type" type="radio" class="form-check-input with-gap duration" id="radio_3" data-value="More" value="More than One day">
-											<label class="form-check-label" for="inlineRadio3">Above a Day</label>
+											<label class="form-check-label" for="inlineRadio3">More than one day</label>
 										</div>
 										@if ($errors->has('type'))
 											<span class="text-danger">
