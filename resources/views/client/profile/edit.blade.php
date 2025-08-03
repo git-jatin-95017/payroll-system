@@ -80,7 +80,7 @@
                         <x-heroicon-o-map-pin class="w-20 h-20" />
                     </div>
                     <div>
-                        <p class="mb-0">{{ $company->companyProfile->country }} ({{ ucwords($company->companyProfile->city) }})</p>
+                        <p class="mb-0">{{ $company->companyProfile->country ?? '' }} ({{ ucwords($company->companyProfile->city ?? '') }})</p>
                     </div>
                 </div>
                 <div class="d-flex gap-2 employee-info align-items-center mb-3">
@@ -88,7 +88,7 @@
                         <x-heroicon-o-envelope class="w-20 h-20" />
                     </div>
                     <div>
-                        <p class="mb-0">{{$company->email}}</p>
+                        <p class="mb-0">{{$company->email ?? ''}}</p>
                     </div>
                 </div>
                 <ul class="mb-0 p-0 d-flex align-items-center gap-3 employee-social-media">
@@ -290,7 +290,7 @@
 									<div class="col-6 mb-3">
 										<div class="form-group">
 											<label class="db-label" for="name">Facebook URL</label>
-											<input id="fb_url" type="text" class="form-control db-custom-input {{ $errors->has('fb_url') ? ' is-invalid' : '' }}" name="fb_url" value="{{ $company->companyProfile->fb_url }}"  >
+											<input id="fb_url" type="text" class="form-control db-custom-input {{ $errors->has('fb_url') ? ' is-invalid' : '' }}" name="fb_url" value="{{ $company->companyProfile->fb_url ?? NULL }}"  >
 											@if ($errors->has('fb_url'))
 												<span class="text-danger">
 													{{ $errors->first('fb_url') }}
@@ -301,7 +301,7 @@
 									<div class="col-6 mb-3">
 										<div class="form-group">
 											<label class="db-label" for="name">Linkedin URL</label>
-											<input id="linkden_url" type="text" class="form-control db-custom-input {{ $errors->has('linkden_url') ? ' is-invalid' : '' }}" name="linkden_url" value="{{ $company->companyProfile->linkden_url }}" >
+											<input id="linkden_url" type="text" class="form-control db-custom-input {{ $errors->has('linkden_url') ? ' is-invalid' : '' }}" name="linkden_url" value="{{ $company->companyProfile->linkden_url ?? NULL }}" >
 											@if ($errors->has('linkden_url'))
 												<span class="text-danger">
 													{{ $errors->first('linkden_url') }}
