@@ -210,7 +210,7 @@
                     $('#hourAmount').show();
                 }
                 else if(duration =='Full'){
-                    $('#enddate').hide();  
+                    $('#enddate').show();  
                     $('#hourAmount').hide();  
                     $('#hourlyFix').text('Start date');  
                 }

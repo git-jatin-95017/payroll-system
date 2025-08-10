@@ -123,8 +123,8 @@ class ClientController extends Controller
 			'city' => ['required'],
 			'address' => ['required'],
 			'email_address' => ['required', 'email', 'max:191', Rule::unique('users', 'email')],	
-			'passwordc' => ['required', 'string', 'min:8'],
-			// 'password_confirmationc' => 'required_with:passwordc',
+			'password' => ['required', 'string', 'min:8'],
+			'password_confirmation' => 'required_with:passwordc',
 			'file' => 'nullable|mimes:png,jpg,jpeg|max:2048'
 		], [], [
 			'levy_id_no' => 'Education Levy ID Number',
@@ -135,7 +135,8 @@ class ClientController extends Controller
 			'name' => $request->company_name,
 			'email' => $request->email_address,
 			'phone_number' => $request->phone_number,
-			'password' => Hash::make( $request->passwordc),
+			// 'password' => Hash::make( $request->passwordc),
+			'password' => Hash::make($data['password_confirmation']),
 			'role_id' => 2,
 			'status' => 1,
 		]);		
@@ -156,7 +157,7 @@ class ClientController extends Controller
 			'routing_number' => !empty($request->routing_number) ? $request->routing_number : NULL,
 			'fb_url' => $request->fb_url ?? null,
 			'linkden_url' => $request->linkden_url ?? null,
-		];
+		];		
 
 		//Logo
 		if ($request->file('file')) {
@@ -252,7 +253,7 @@ class ClientController extends Controller
 				$user->name = $request->input('name')[$index];
 				$user->email = $request->input('email')[$index];
 				$user->password = Hash::make($request->input('password')[$index]);
-				$user->role_id = 2; //Company as admin
+				$user->role_id = 1; //Company as admin
 				$user->status = 1;
 				$user->save();
 			}

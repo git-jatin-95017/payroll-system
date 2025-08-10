@@ -61,10 +61,10 @@
                             <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button"
                                 role="tab" aria-controls="admin" aria-selected="false">Administrators</button>
                         </li>
-                        <!-- <li class="nav-item" role="presentation">
+						<li class="nav-item" role="presentation">
                             <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password" type="button"
                                 role="tab" aria-controls="password" aria-selected="false">Password</button>
-                        </li> -->
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -219,7 +219,7 @@
 									@endif
 								</div>
 							</div>
-							<div class="col-6 mb-3">
+							<!-- <div class="col-6 mb-3">
 								<div class="form-group">
 									<label class="db-label" for="email">Company Password</label>
 									<input id="passwordc" type="passwordc" class="db-custom-input form-control {{ $errors->has('passwordc') ? ' is-invalid' : '' }}" name="passwordc">
@@ -230,7 +230,7 @@
 									</span>
 									@endif
 								</div>
-							</div>
+							</div> -->
 							<div class="col-4 mb-3">
 								<div class="form-group">
 									<label class="db-label" for="name">Medical Benefits Registration No.</label>
@@ -569,15 +569,61 @@
 						</div>
 					</div>
                 </div>
-                <!-- <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
+                <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
 					<div class="max-w-md max-auto">
 						<div class="sub-text-heading pb-4 d-flex justify-content-between">
 							<div>
 								<h3 class="mb-1">Password</h3>
+								<!-- <p>Change password here</p> -->
 							</div>
 						</div>
+						
+							<div id="dynamicRowsContainer">
+								<div class="row">
+									<!-- <div class="col-6 mb-3">
+										<div class="form-group">
+											<label for="name" class="db-label">Current Password</label>
+											<div class="col-md-12">
+												<input id="old_password" type="password" class="form-control db-custom-input {{ $errors->has('old_password') ? ' is-invalid' : '' }}" name="old_password">
+												@if ($errors->has('old_password'))
+												<span class="text-danger">
+													{{ $errors->first('old_password') }}
+												</span>
+												@endif
+											</div>
+										</div>
+									</div> -->
+									<div class="col-6 mb-3">
+										<div class="form-group">
+											<label for="email" class="db-label">New Password</label>
+											<input id="password" type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password">
+											@if ($errors->has('password'))
+											<span class="text-danger">
+												{{ $errors->first('password') }}
+											</span>
+											@endif
+										</div>
+									</div>
+									<div class="col-6 mb-3">
+										<div class="form-group">
+											<label for="password" class="db-label">Confirm Password</label>
+											<input id="password-confirm" type="password" class="form-control" name="password_confirmation">
+
+											@if ($errors->has('password_confirmation'))
+											<span class="text-danger">
+												{{ $errors->first('password_confirmation') }}
+											</span>
+											@endif
+										</div>
+									</div>
+
+									<div class="col-md-12 text-end">
+										<button type="submit" class="btn btn-primary submit-btn">Submit</button>
+									</div>
+								</div>
+							</div>
 					</div>
-                </div> -->
+                </div>
 
             </div>
 			</form>
