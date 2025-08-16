@@ -44,13 +44,13 @@ class StatutoryDeductionsExport implements FromCollection, WithHeadings, WithMap
         return [
             $earning->user->name,
             date('M d, Y', strtotime($earning->start_date)) . ' - ' . date('M d, Y', strtotime($earning->end_date)),
-            number_format($earning->medical, 2),
-            number_format($earning->security, 2),
-            number_format($earning->edu_levy, 2),
-            number_format($earning->medical, 2),
-            number_format($earning->security, 2),
-            number_format($earning->edu_levy, 2),
-            number_format($total, 2)
+            $earning->medical,
+            $earning->security,
+            $earning->edu_levy,
+            $earning->medical,
+            $earning->security,
+            $earning->edu_levy,
+            $total
         ];
     }
 

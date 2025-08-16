@@ -41,9 +41,9 @@ class EmployeeGrossEarningsExport implements FromCollection, WithHeadings, WithM
             $earning->user->name ?? '',
             (isset($earning->start_date) && isset($earning->end_date)) ? Carbon::createFromFormat('Y-m-d', $earning->start_date)->format('M d, Y') . ' - ' . Carbon::createFromFormat('Y-m-d', $earning->end_date)->format('M d, Y') : '',
             $earning->user->employeeProfile->pay_type ?? '-',
-            number_format($earning->rate ?? 0, 2),
-            number_format($earning->hours ?? 0, 2),
-            number_format($earning->gross ?? 0, 2)
+            $earning->rate ?? 0,
+            $earning->hours ?? 0,
+            $earning->gross ?? 0
         ];
     }
 

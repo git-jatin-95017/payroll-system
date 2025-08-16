@@ -1,5 +1,92 @@
 @extends('layouts.new_layout')
 @section('content')
+<style>
+    /* Complete tab content isolation */
+    .tab-content {
+        position: relative;
+    }
+    
+    .tab-pane {
+        display: none !important;
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 0;
+        overflow: hidden;
+    }
+    
+    .tab-pane.active {
+        display: block !important;
+        opacity: 1;
+        visibility: visible;
+        position: relative;
+        height: auto;
+        overflow: visible;
+    }
+    
+    /* Ensure no content bleeding */
+    .tab-pane:not(.active) {
+        display: none !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        visibility: hidden !important;
+    }
+    
+    /* Fix container spacing */
+    .max-w-md.max-auto {
+        width: 100%;
+        max-width: none;
+    }
+    
+    /* Ensure forms are properly contained */
+    .tab-pane form {
+        margin: 0;
+        padding: 0;
+    }
+    
+    /* Force password tab isolation */
+    #password.tab-pane {
+        display: none !important;
+        height: 0 !important;
+        overflow: hidden !important;
+    }
+    
+    #password.tab-pane.active {
+        display: block !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+    
+    /* Additional isolation for all tabs */
+    .tab-pane[id="company"],
+    .tab-pane[id="payment"],
+    .tab-pane[id="admin"] {
+        display: none !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
+    
+    .tab-pane[id="company"].active,
+    .tab-pane[id="payment"].active,
+    .tab-pane[id="admin"].active,
+    .tab-pane[id="password"].active {
+        display: block !important;
+        height: auto !important;
+        overflow: visible !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    /* Force hide any content that might be bleeding */
+    .tab-pane:not(.active) * {
+        display: none !important;
+    }
+</style>
 <section>
     <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 		<div>
@@ -605,61 +692,52 @@
 
 					</div>
                 </div>
-                <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
+                
+				<div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
 					<div class="max-w-md max-auto">
-						<div class="sub-text-heading pb-4 d-flex justify-content-between">
-							<div>
-								<h3 class="mb-1">Password</h3>
-								<!-- <p>Change password here</p> -->
-							</div>
+						<div class="sub-text-heading pb-4">
+							<h3 class="mb-1">Change Password</h3>
+							<p class="mb-0">Update your login password here</p>
 						</div>
 						<form class="form-horizontal" method="POST"
 							action="{{ route('my-profile.update', auth()->user()->id) }}">
 							@csrf
 							{{ method_field('PUT') }}
 							<input type="hidden" name="update_request" value="changepwdown">
-							<div id="dynamicRowsContainer">
-								<div class="row">
-									<!-- <div class="col-6 mb-3">
-										<div class="form-group">
-											<label for="name" class="db-label">Current Password</label>
-											<div class="col-md-12">
-												<input id="old_password" type="password" class="form-control db-custom-input {{ $errors->has('old_password') ? ' is-invalid' : '' }}" name="old_password">
-												@if ($errors->has('old_password'))
-												<span class="text-danger">
-													{{ $errors->first('old_password') }}
-												</span>
-												@endif
-											</div>
-										</div>
-									</div> -->
-									<div class="col-6 mb-3">
-										<div class="form-group">
-											<label for="email" class="db-label">New Password</label>
-											<input id="password" type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password">
-											@if ($errors->has('password'))
-											<span class="text-danger">
-												{{ $errors->first('password') }}
-											</span>
-											@endif
-										</div>
+							
+							<div class="row">
+								<div class="col-md-6 mb-3">
+									<div class="form-group">
+										<label for="new_password" class="db-label">New Password</label>
+										<input id="new_password" type="password" 
+											class="form-control db-custom-input {{ $errors->has('password') ? ' is-invalid' : '' }}" 
+											name="password" required>
+										@if ($errors->has('password'))
+										<span class="text-danger">
+											{{ $errors->first('password') }}
+										</span>
+										@endif
 									</div>
-									<div class="col-6 mb-3">
-										<div class="form-group">
-											<label for="password" class="db-label">Confirm Password</label>
-											<input id="password-confirm" type="password" class="form-control" name="password_confirmation">
+								</div>
+								<div class="col-md-6 mb-3">
+									<div class="form-group">
+										<label for="confirm_password" class="db-label">Confirm Password</label>
+										<input id="confirm_password" type="password" 
+											class="form-control db-custom-input" 
+											name="password_confirmation" required>
 
-											@if ($errors->has('password_confirmation'))
-											<span class="text-danger">
-												{{ $errors->first('password_confirmation') }}
-											</span>
-											@endif
-										</div>
+										@if ($errors->has('password_confirmation'))
+										<span class="text-danger">
+											{{ $errors->first('password_confirmation') }}
+										</span>
+										@endif
 									</div>
-
-									<div class="col-md-12 text-end">
-										<button type="submit" class="btn btn-primary submit-btn">Submit</button>
-									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-12 text-end">
+									<button type="submit" class="btn btn-primary submit-btn">Submit</button>
 								</div>
 							</div>
 						</form>
@@ -675,6 +753,30 @@
 @push('page_scripts')
 <script>
 	$(document).ready(function () {
+		// Force complete tab isolation
+		function showTab(tabId) {
+			// Hide all tab panes completely
+			$('.tab-pane').removeClass('active').hide();
+			
+			// Show only the target tab
+			$(tabId).addClass('active').show();
+			
+			// Update tab button states
+			$('.nav-link').removeClass('active');
+			$('[data-bs-target="' + tabId + '"]').addClass('active');
+		}
+		
+		// Handle tab clicks
+		$('button[data-bs-toggle="tab"]').on('click', function (e) {
+			e.preventDefault();
+			var target = $(this).data('bs-target');
+			showTab(target);
+		});
+		
+		// Ensure only company tab is visible on page load
+		$('.tab-pane').removeClass('active').hide();
+		$('#company').addClass('active').show();
+		
 		var maxRows = 3;
 		var rowNum = 1;
 		$("#addNewRow").on("click", function () {
