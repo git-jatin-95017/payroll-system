@@ -60,6 +60,7 @@ Route::prefix('admin')->group(function () {
 
 	Route::post('login-as-client', [ClientController::class, 'loginAs'])->name('login-as-client');
 	Route::resource('client', ClientController::class);
+	Route::delete('client/{company_id}/admin/{admin_id}', [ClientController::class, 'deleteAdmin'])->name('client.admin.delete');
 
 	Route::get('attendance/getData/', [AttendanceController::class, 'getData'])->name('attendance.getData');
 	Route::resource('attendance', AttendanceController::class);

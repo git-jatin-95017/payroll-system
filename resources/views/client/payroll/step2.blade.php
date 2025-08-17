@@ -450,12 +450,18 @@
 		// For paid leave
 		$('.leave-hrs').each(function() {
 			let currentValue = parseFloat($(this).val()) || 0;
-			let empId = $(this).closest('.row-tr-js').find('[id^="balance-"]').attr('id')?.split('-')[1];
-			let leaveId = $(this).closest('.row-tr-js').find('[id^="balance-"]').attr('id')?.split('-')[2];
+			let leaveTypeData = $(this).attr('data-leavetype');
+			let [leaveId, empId] = leaveTypeData.split('-');
+			
+			console.log('Debug - leaveTypeData:', leaveTypeData, 'leaveId:', leaveId, 'empId:', empId);
 			
 			if (empId && leaveId) {
+				// Note: balance ID format is balance-empId-leaveId (different from data-leavetype)
 				let balanceElement = $(`#balance-${empId}-${leaveId}`);
+				console.log('Debug - balanceElement found:', balanceElement.length > 0, 'selector:', `#balance-${empId}-${leaveId}`);
+				
 				let currentBalance = parseFloat(balanceElement.html()) || 0;
+				console.log('Debug - currentBalance from HTML:', balanceElement.html(), 'parsed:', currentBalance);
 				
 				// Initialize with current database balance
 				balanceElement.data('previous-balance', currentBalance);
