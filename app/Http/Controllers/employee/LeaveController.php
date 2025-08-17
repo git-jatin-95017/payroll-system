@@ -120,7 +120,7 @@ class LeaveController extends Controller
 			                ->orWhere('leaves.apply_date', 'like', '%' . $searchValue . '%')
 			                ->orWhere('leave_types.name', 'like', '%' . $searchValue . '%')
 			                ->orWhere('leaves.start_date', 'like', '%' . $searchValue . '%')
-			                ->orWhere('leaves.end_date', 'like', '%' . $searchValue . '%');
+			                ->orWhere('leaves.end_date', 'like', '%');
 				})
 				->where(function ($query) {
 				    $query->where('leaves.user_id', auth()->user()->id);
@@ -175,13 +175,10 @@ class LeaveController extends Controller
 	{
 		if ($request->ajax()) {			
 			$employeeID = $request->employeeID;
-
             $leaveID = $request->leaveID;
-
             $year = date('Y');
             
             $daysTaken = $this->getEmpAssignLeaveType($employeeID, $leaveID, $year);
-            
             $leavetypes = LeaveType::findOrFail($leaveID);
 
             if (empty($daysTaken->hour)) {
@@ -190,21 +187,29 @@ class LeaveController extends Controller
                 $daysTakenval = $daysTaken->hour / 8;
             }
 
+            // Get carry over amount from leave_balances table
+            $carryOverAmount = 0;
+            $leaveBalance = \DB::table('leave_balances')
+                ->where('user_id', $employeeID)
+                ->where('leave_type_id', $leaveID)
+                ->first();
+                
+            if ($leaveBalance) {
+                $carryOverAmount = $leaveBalance->balance ?? 0;
+            }
+
             if ($leaveID =='5') {
             	// $earnTaken = $this->leave_model->emEarnselectByLeave($employeeID);
                 $totalday = 0;//'Earned Balance: '.($earnTaken->hour / 8).' Days';
             } else {
-                //$totalday   = $leavetypes->leave_day . '/' . ($daysTaken/8);
-                $totalday = 'Leave Balance: '.($leavetypes->leave_day - $daysTakenval).' Days Of '.$leavetypes->leave_day;
+                // Calculate total including carry over amount
+                $baseBalance = $leavetypes->leave_day - $daysTakenval;
+                $totalWithCarryOver = $baseBalance + ($carryOverAmount / 8); // Convert hours to days
+                
+                $totalday = 'Leave Balance: '.$baseBalance.' Days Of '.$leavetypes->leave_day.' + Carry Over: '.$carryOverAmount.' hours = Total: '.$totalWithCarryOver.' days';
             }
 
             return response()->json(['totalday' => $totalday]);
-
-           /* $daysTaken = $this->leave_model->GetemassignLeaveType('Sah1804', 2, 2018);
-            $leavetypes = $this->leave_model->GetleavetypeInfoid($leaveID);
-            // $totalday   = $leavetypes->leave_day . '/' . $daysTaken['0']->day;
-            echo $daysTaken['0']->day;
-            echo $leavetypes->leave_day;*/
 		} else {
 			$leavetypes = LeaveType::where('status', 1)->where('created_by', auth()->user()->role_id == 3 ? auth()->user()->created_by : auth()->user()->id)->get();		
 	   		return view('employee.leaves.create', compact('leavetypes'));

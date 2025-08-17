@@ -86,8 +86,9 @@
 									<div class="span pull-right">
 										<button class="btn btn-primary fetchLeaveTotal">Fetch Total Leave</button>
 									</div>
-									<span style="color:red" id="total"></span>
+									
 								</div>
+								<div class="col-12 mb-4" style="color:red" id="total"></div>
 							</div>
 
 							<div class="row">
