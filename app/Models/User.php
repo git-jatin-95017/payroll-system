@@ -92,10 +92,13 @@ class User extends Authenticatable
     {
         parent::boot();
 
-        // Event listener for creating a new department
+        // Event listener for creating a new user
         static::creating(function ($model) {
-            // Set the created_by field to the current user's ID
-            $model->created_by = auth()->user()->id;
+            // Only set created_by if it's not already set
+            // This allows controllers to manually set created_by when needed
+            if (!isset($model->created_by) || empty($model->created_by)) {
+                $model->created_by = auth()->user()->id;
+            }
         });
     }
 }

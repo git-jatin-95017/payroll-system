@@ -254,10 +254,26 @@
 																	<input type="hidden" value="{{$value->leave_type_id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_type_id]">
 																	<input type="hidden" id="paid-leave-balnce-{{$employee->id}}-{{$value->leave->id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_balance]">
 																	<input type="hidden" id="paid-time-off-{{$employee->id}}" value="0" name="input[{{$employee->id}}][paid_time_off]">
-																	<input type="text" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control db-custom-input fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" value="{{$amountPaidOff > 0 ? $amountPaidOff : $runningBalance->amount ?? 0;}}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totalday*8; ?>', '<?php echo $carryOverAmount; ?>')" min=0>
+																	<input type="text" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control db-custom-input fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" value="{{$amountPaidOff > 0 ? $amountPaidOff : $runningBalance->amount ?? 0;}}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo ($value->leave->leave_day * 8) + $carryOverAmount; ?>', '<?php echo $carryOverAmount; ?>')" min=0>
 																	<div class="ms-2 mt-2">
 																		<p class="mb-0">Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) + $carryOverAmount: 0}}</b>hrs</p>
-																		<p class="mb-0">Leave Balance | <b class="leave-balance-all" id="balance-{{$employee->id}}-{{$value->leave->id}}">{{$totalday*8}}</b>hrs</p>
+																		<p class="mb-0">Leave Balance | <b class="leave-balance-all" id="balance-{{$employee->id}}-{{$value->leave->id}}">
+																			@php
+																				// Check if we have a database balance for this employee and leave type
+																				$dbBalance = \App\Models\LeaveBalance::where('user_id', $employee->id)
+																					->where('leave_type_id', $value->leave_type_id)
+																					->where('leave_year', date('Y', strtotime($isDataExist->start_date)))
+																					->first();
+																				
+																				if ($dbBalance && $dbBalance->balance !== null) {
+																					// Show the database balance
+																					echo $dbBalance->balance;
+																				} else {
+																					// Fall back to calculated balance
+																					echo ($value->leave->leave_day * 8) + $carryOverAmount - ($amountPaidOff > 0 ? $amountPaidOff : 0);
+																				}
+																			@endphp
+																		</b>hrs</p>
 																		<?php
 																			if (!empty($employee->employeeProfile->doj)) {
 																				$todayDate = date('Y-m-d');
@@ -351,14 +367,14 @@
 																	<input type="hidden" id="unpaid-leave-balnce-{{$employee->id}}-{{$value->leave->id}}" name="input[{{$employee->id}}][earnings_unpaid][{{$key }}][leave_balance_unpaid]">
 	
 																	<input min=0 type="number" name="input[{{$employee->id}}][earnings_unpaid][{{$key }}][amount_unpaid]" min="0" class="db-custom-input form-control fixed-input leave-hrs-unpaid" value="{{$amountUnPaidOff > 0 ? $amountUnPaidOff : $runningBalance->amount ?? 0}}"
-																	onchange="calculateUnpaidOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $totaldayunpaid*8; ?>', '<?php echo $carryOverAmount; ?>')"
+																	onchange="calculateUnpaidOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo ($value->leave->leave_day * 8) + $carryOverAmount; ?>', '<?php echo $carryOverAmount; ?>')"
 																	>
 																	<div class="ms-2 mt-2">
 																		<p class="mb-0">
 																			Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) + $carryOverAmount : 0}}</b>
 																		</p>
 																		<p class="mb-0">
-																			Leave Balance | <b class="leave-balance-all-unpaids" id="balanceunpaid-{{$employee->id}}-{{$value->leave->id}}">{{$totaldayunpaid* 8}}</b>hrs
+																			Leave Balance | <b class="leave-balance-all-unpaids" id="balanceunpaid-{{$employee->id}}-{{$value->leave->id}}">{{($value->leave->leave_day * 8) + $carryOverAmount - ($amountUnPaidOff > 0 ? $amountUnPaidOff : 0)}}</b>hrs
 																		</p>
 																	</div>
 																</div>
@@ -421,18 +437,89 @@
 	});
 
 	$(document).ready(function() {
-		$('.leave-hrs').each(function() { $(this).trigger('change');})
-		$('.leave-hrs-unpaid').each(function() { $(this).trigger('change');})
+		// Initialize previous data for cumulative tracking
+		initializePreviousData();
+		
+		// Don't trigger change events on page load - this causes double calculation
+		// $('.leave-hrs').each(function() { $(this).trigger('change');})
+		// $('.leave-hrs-unpaid').each(function() { $(this).trigger('change');})
 	});
+	
+	// Function to initialize previous data for cumulative leave tracking
+	function initializePreviousData() {
+		// For paid leave
+		$('.leave-hrs').each(function() {
+			let currentValue = parseFloat($(this).val()) || 0;
+			let empId = $(this).closest('.row-tr-js').find('[id^="balance-"]').attr('id')?.split('-')[1];
+			let leaveId = $(this).closest('.row-tr-js').find('[id^="balance-"]').attr('id')?.split('-')[2];
+			
+			if (empId && leaveId) {
+				let balanceElement = $(`#balance-${empId}-${leaveId}`);
+				let currentBalance = parseFloat(balanceElement.html()) || 0;
+				
+				// Initialize with current database balance
+				balanceElement.data('previous-balance', currentBalance);
+				balanceElement.data('previous-input', currentValue);
+				balanceElement.data('original-input', currentValue);
+				balanceElement.data('has-previous-data', true); // Mark as having data
+				
+				console.log(`Initialized: Emp ${empId}, Leave ${leaveId}, Balance: ${currentBalance}, Input: ${currentValue}`);
+			}
+		});
+		
+		// For unpaid leave
+		$('.leave-hrs-unpaid').each(function() {
+			let currentValue = parseFloat($(this).val()) || 0;
+			let empId = $(this).closest('.row-tr-js').find('[id^="balanceunpaid-"]').attr('id')?.split('-')[1];
+			let leaveId = $(this).closest('.row-tr-js').find('[id^="balanceunpaid-"]').attr('id')?.split('-')[2];
+			
+			if (empId && leaveId) {
+				let balanceElement = $(`#balanceunpaid-${empId}-${leaveId}`);
+				let currentBalance = parseFloat(balanceElement.html()) || 0;
+				
+				// Initialize with current database balance
+				balanceElement.data('previous-balance', currentBalance);
+				balanceElement.data('previous-input', currentValue);
+				balanceElement.data('original-input', currentValue);
+				balanceElement.data('has-previous-data', true); // Mark as having data
+				
+				console.log(`Unpaid Initialized: Emp ${empId}, Leave ${leaveId}, Balance: ${currentBalance}, Input: ${currentValue}`);
+			}
+		});
+	}
 
-	function calculateOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary, leave_day_terms, leave_id, leave_balance, carry_over_amount) {
+	function calculateOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary, leave_day_terms, leave_id, initial_balance, carry_over_amount) {
 		// console.log(obj.value, emp_id, pay_type, row_key, rate_per_hour, salary);
 
-		let initial_enter_val = obj.value;
-
-		let final_balance = (leave_balance - initial_enter_val ) + Number(carry_over_amount);
-
+		let current_enter_val = parseFloat(obj.value) || 0;
+		
+		// Get the focused row first
 		var focusedRow = $(obj).closest('.row-tr-js');
+		
+		// Get previous amount from the same leave type in this payroll
+		let previousAmount = 0;
+		let previousBalanceElement = focusedRow.find(`[id="balance-${emp_id}-${leave_id}"]`);
+		
+		// Safety check - if element not found, use initial balance
+		if (previousBalanceElement.length === 0) {
+			console.warn(`Balance element not found for emp_id: ${emp_id}, leave_id: ${leave_id}`);
+			final_balance = (initial_balance - current_enter_val) + Number(carry_over_amount);
+		} else {
+			// Check if we have a previous balance stored (from previous payroll)
+			let previousBalance = parseFloat(previousBalanceElement.data('previous-balance')) || initial_balance;
+			let originalInput = parseFloat(previousBalanceElement.data('original-input')) || 0;
+			
+			// If this is an update (not first time), calculate the difference
+			if (previousBalanceElement.data('has-previous-data')) {
+				// Simply subtract current input from database balance
+				final_balance = previousBalance - current_enter_val;
+				console.log(`Update: DB Balance: ${previousBalance}, Current Input: ${current_enter_val}, Final Balance: ${final_balance}`);
+			} else {
+				// First time entry, calculate normally
+				final_balance = (initial_balance - current_enter_val) + Number(carry_over_amount);
+				console.log(`First time: Input: ${current_enter_val}, Balance: ${final_balance}`);
+			}
+		}
 
 		let entered_leave_hrs = 0;
 
@@ -461,7 +548,14 @@
 
 		focusedRow.find(`[id="payoff-${emp_id}"]`).html(paid_time_off.toFixed(2));
 		focusedRow.find(`[id="paid-time-off-${emp_id}"]`).val(paid_time_off.toFixed(2));
-		focusedRow.find(`[id="balance-${emp_id}-${leave_id}"]`).html(final_balance);
+		// Store current values for future reference
+		focusedRow.find(`[id="balance-${emp_id}-${leave_id}"]`)
+			.html(final_balance)
+			.data('previous-balance', final_balance)
+			.data('previous-input', current_enter_val)
+			.data('original-input', current_enter_val) // Store original input for cumulative tracking
+			.data('has-previous-data', true);
+			
 		focusedRow.find(`[id="paid-leave-balnce-${emp_id}-${leave_id}"]`).val(final_balance);
 
 		total_balance = 0;
@@ -495,11 +589,37 @@
 		form.submit();
 	});
 
-	function calculateUnpaidOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary, leave_day_terms, leave_id, leave_balance, carry_ovr_amnt) {
-		let initial_enter_val = obj.value;
-		let final_balance = (leave_balance - initial_enter_val) + Number(carry_ovr_amnt);
-
+	// ✅ Function to calculate unpaid leave balance (includes carry over)
+	function calculateUnpaidOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary, leave_day_terms, leave_id, initial_balance, carry_ovr_amnt) {
+		let current_enter_val = parseFloat(obj.value) || 0;
+		
+		// Get the focused row first
 		var focusedRow = $(obj).closest('.row-tr-js');
+		
+		// Get previous amount from the same leave type in this payroll
+		let previousAmount = 0;
+		let previousBalanceElement = focusedRow.find(`[id="balanceunpaid-${emp_id}-${leave_id}"]`);
+		
+		// Safety check - if element not found, use initial balance
+		if (previousBalanceElement.length === 0) {
+			console.warn(`Unpaid balance element not found for emp_id: ${emp_id}, leave_id: ${leave_id}`);
+			final_balance = (initial_balance - current_enter_val) + Number(carry_ovr_amnt);
+		} else {
+			// Check if we have a previous balance stored (from previous payroll)
+			let previousBalance = parseFloat(previousBalanceElement.data('previous-balance')) || initial_balance;
+			let originalInput = parseFloat(previousBalanceElement.data('original-input')) || 0;
+			
+			// If this is an update (not first time), calculate the difference
+			if (previousBalanceElement.data('has-previous-data')) {
+				// Simply subtract current input from database balance
+				final_balance = previousBalance - current_enter_val;
+				console.log(`Unpaid Update: DB Balance: ${previousBalance}, Current Input: ${current_enter_val}, Final Balance: ${final_balance}`);
+			} else {
+				// First time entry, calculate normally
+				final_balance = (initial_balance - current_enter_val) + Number(carry_ovr_amnt);
+				console.log(`Unpaid First time: Input: ${current_enter_val}, Balance: ${final_balance}`);
+			}
+		}
 
 		// let entered_leave_hrs = 0;
 
@@ -526,7 +646,14 @@
 		// 	// paid_time_off = leave_balance - paid_time_off;
 		// }
 
-		focusedRow.find(`[id="balanceunpaid-${emp_id}-${leave_id}"]`).html(final_balance);
+		// Store current values for future reference
+		focusedRow.find(`[id="balanceunpaid-${emp_id}-${leave_id}"]`)
+			.html(final_balance)
+			.data('previous-balance', final_balance)
+			.data('previous-input', current_enter_val)
+			.data('original-input', current_enter_val) // Store original input for cumulative tracking
+			.data('has-previous-data', true);
+			
 		focusedRow.find(`[id="unpaid-leave-balnce-${emp_id}-${leave_id}"]`).val(final_balance);
 	}
 </script>

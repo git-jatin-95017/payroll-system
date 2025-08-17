@@ -228,6 +228,7 @@ class RunPayrollController extends Controller
 									'leave_balance' => (float) $value['leave_balance'],							
 								]);		
 								
+								// ✅ Use Step 2 calculated balance directly (includes carry over)
 								LeaveBalance::updateOrCreate(
 									[
 										'user_id' => $payroll->user_id,
@@ -235,9 +236,9 @@ class RunPayrollController extends Controller
 										'leave_year' => date('Y', strtotime($payroll->start_date))
 									],
 									[
-										'balance' => $value['leave_balance'],
-										'amount' => (float) $value['amount'],
-										'updated_at' => now() // Optional: Only if you want to explicitly set the update time
+										'balance' => (float) $value['leave_balance'],  // Use Step 2 calculated value
+										'amount' => (float) $value['amount'],           // Leave taken in this payroll
+										'updated_at' => now()
 									]
 								);
 
@@ -258,6 +259,7 @@ class RunPayrollController extends Controller
 								'leave_balance' => (float) $value['leave_balance_unpaid'],				
 							]);
 
+							// ✅ Use Step 2 calculated balance for unpaid leave (includes carry over)
 							LeaveBalance::updateOrCreate(
 								[
 									'user_id' => $payroll->user_id,
@@ -265,9 +267,9 @@ class RunPayrollController extends Controller
 									'leave_year' => date('Y', strtotime($payroll->start_date))
 								],
 								[
-									'balance' => $value['leave_balance_unpaid'],
-									'amount' => (float) $value['amount_unpaid'],
-									'updated_at' => now() // Optional: Only if you want to explicitly set the update time
+									'balance' => (float) $value['leave_balance_unpaid'],  // Use Step 2 calculated value
+									'amount' => (float) $value['amount_unpaid'],           // Leave taken in this payroll
+									'updated_at' => now()
 								]
 							);
 						}
