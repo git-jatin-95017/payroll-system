@@ -168,6 +168,7 @@ class LeaveTypeController extends Controller
 
             $leave_type_id = $leaveType->id; // $data['leave_type_id'];
             $balance = $data['balance'] ?? 0;
+			$amount = $data['amount'] ?? 0;
             $leave_year = Carbon::now()->year;
 
             // Check if leave balance exists
@@ -179,6 +180,7 @@ class LeaveTypeController extends Controller
             if ($leaveBalance) {
                 $leaveBalance->update([
                     'balance' => $balance,
+					'amount' => $amount,
                     'updated_at' => now(),
                 ]);
             } else {
@@ -187,6 +189,7 @@ class LeaveTypeController extends Controller
                     'leave_type_id' => $leave_type_id,
                     'balance' => $balance,
                     'leave_year' => $leave_year,
+					'amount' => $amount,
                 ]);
             }
         }

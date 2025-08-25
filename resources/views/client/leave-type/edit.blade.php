@@ -199,6 +199,7 @@
 									<th class="border p-2">Select</th>
 									<th class="border p-2">Employee Name</th>
 									<th class="border p-2">Manual Balance</th>
+									<th class="border p-2">Leaves Taken</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -217,6 +218,9 @@
 								
 										<td class="border p-2">
 											<input value="{{ $leaveBalance->balance ?? 0 }}" type="number" name="users[{{ $employee->id }}][balance]" step="0.01" class="border p-2 w-full" placeholder="Enter Balance">
+										</td>
+										<td class="border p-2">
+											<input value="{{ $leaveBalance->amount ?? 0 }}" type="number" name="users[{{ $employee->id }}][amount]" step="0.01" class="border p-2 w-full" placeholder="Enter Amount">
 										</td>
 									</tr>
 								@endforeach
