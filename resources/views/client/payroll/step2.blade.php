@@ -375,8 +375,23 @@
 																			Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) + $carryOverAmount : 0}}</b>
 																		</p>
 																		<p class="mb-0">
-																			Leave Balance | <b class="leave-balance-all-unpaids" id="balanceunpaid-{{$employee->id}}-{{$value->leave->id}}">{{($value->leave->leave_day * 8) + $carryOverAmount - ($amountUnPaidOff > 0 ? $amountUnPaidOff : 0)}}</b>hrs
-																		</p>
+																			Leave Balance | <b class="leave-balance-all-unpaids" id="balanceunpaid-{{$employee->id}}-{{$value->leave->id}}">
+																				@php
+																					// Check if we have a database balance for this employee and leave type
+																					$dbBalance = \App\Models\LeaveBalance::where('user_id', $employee->id)
+																						->where('leave_type_id', $value->leave_type_id)
+																						->where('leave_year', date('Y', strtotime($isDataExist->start_date)))
+																						->first();
+																					
+																					if ($dbBalance && $dbBalance->balance !== null) {
+																						// Show the database balance
+																						echo $dbBalance->balance;
+																					} else {
+																						// Fall back to calculated balance - this should be the base allowance
+																						echo ($value->leave->leave_day * 8) + $carryOverAmount;
+																					}
+																				@endphp
+																			</b>hrs</p>
 																	</div>
 																</div>
 															</div>
@@ -436,6 +451,25 @@
 		style: 'currency',
 		currency: 'USD',
 	});
+
+	// ✅ Add the showToast function
+	function showToast(type = 'success', msg = '') {
+		let bgClass, textClass;
+		if (type === 'success') {
+			bgClass = 'bg-success';
+			textClass = 'text-white';
+		} else if (type === 'warning') {
+			bgClass = 'bg-warning';
+			textClass = 'text-dark';
+		} else {
+			bgClass = 'bg-danger';
+			textClass = 'text-white';
+		}
+		
+		const toast = $(`<div class='toast align-items-center ${bgClass} ${textClass} border-0 show' role='alert' aria-live='assertive' aria-atomic='true' style='position:fixed;top:20px;right:20px;z-index:9999;min-width:350px;max-width:500px;'><div class='d-flex'><div class='toast-body' style='flex:1;word-wrap:break-word;'>${msg}</div><button type='button' class='btn-close me-2 m-auto' data-bs-dismiss='toast' aria-label='Close'></button></div></div>`);
+		$('body').append(toast);
+		setTimeout(() => toast.fadeOut(400,()=>toast.remove()), 4000);
+	}
 
 	$(document).ready(function() {
 		console.log('Document ready - initializing leave balance system...');
@@ -558,6 +592,23 @@
 			console.log(`🔄 First time - stored original balance: ${originalBalance} from HTML: ${balanceElement.html()}`);
 		}
 		
+		// ✅ FIXED: Check if user is trying to take more leave than available
+		// Check if current balance is 0 and user is trying to take leave
+		let currentBalance = parseFloat(balanceElement.html()) || 0;
+		if (currentBalance === 0 && current_enter_val > 0) {
+			// Clear the input and show warning
+			obj.value = '';
+			showToast('warning', `No leave available! You have 0hrs remaining for this leave type.`);
+			console.log('🚫 Input blocked: No leave available');
+			return;
+		}
+		
+		// Additional check: if current balance is already 0, don't allow any changes
+		if (currentBalance === 0) {
+			console.log('🚫 Balance already 0 - no changes allowed');
+			return;
+		}
+		
 		// Calculate new balance: original balance minus current input
 		let newBalance = originalBalance - current_enter_val;
 		
@@ -640,6 +691,16 @@
 			let balanceElement = $(balanceSelector);
 			
 			if (balanceElement.length > 0) {
+				// Get current balance to check if it's already 0
+				let currentBalance = parseFloat(balanceElement.html()) || 0;
+				
+				// If current balance is 0, don't allow any restoration
+				if (currentBalance === 0) {
+					console.log(`🚫 Balance already 0 - no restoration allowed for ${isUnpaid ? 'unpaid' : 'paid'} leave`);
+					showToast('warning', `Leave balance is already 0. No changes can be made.`);
+					return;
+				}
+				
 				// If input is blank (0) or empty string, restore original balance
 				if (currentValue === 0 || obj.value === '') {
 					let originalBalance = parseFloat(balanceElement.data('original-balance')) || 0;
@@ -653,70 +714,72 @@
 
 	// Function to calculate unpaid time off
 	function calculateUnpaidOff(obj, emp_id, pay_type, row_key, rate_per_hour, salary, leave_day_terms, leave_id, initial_balance, carry_ovr_amnt) {
+		console.log('calculateUnpaidOff called with:', obj.value, 'emp_id:', emp_id, 'leave_id:', leave_id);
+
 		let current_enter_val = parseFloat(obj.value) || 0;
 		
 		// Get the focused row first
 		var focusedRow = $(obj).closest('.row-tr-js');
 		
-		// Get previous amount from the same leave type in this payroll
-		let previousAmount = 0;
-		let previousBalanceElement = focusedRow.find(`[id="balanceunpaid-${emp_id}-${leave_id}"]`);
+		// Get the balance element for this specific leave type
+		let balanceSelector = `#balanceunpaid-${emp_id}-${leave_id}`;
+		let balanceElement = focusedRow.find(balanceSelector);
+		
+		console.log('Debug - unpaid balanceSelector:', balanceSelector);
+		console.log('Debug - unpaid balanceElement found:', balanceElement.length > 0);
+		console.log('Debug - unpaid balanceElement HTML before:', balanceElement.html());
 		
 		// Safety check - if element not found, use initial balance
-		if (previousBalanceElement.length === 0) {
-			console.warn(`Unpaid balance element not found for emp_id: ${emp_id}, leave_id: ${leave_id}`);
-			final_balance = (initial_balance - current_enter_val) + Number(carry_ovr_amnt);
-		} else {
-			// Check if we have a previous balance stored (from previous payroll)
-			let previousBalance = parseFloat(previousBalanceElement.data('previous-balance')) || initial_balance;
-			let originalInput = parseFloat(previousBalanceElement.data('original-input')) || 0;
-			
-			// If this is an update (not first time), calculate the difference
-			if (previousBalanceElement.data('has-previous-data')) {
-				// Simply subtract current input from database balance
-				final_balance = previousBalance - current_enter_val;
-				console.log(`Unpaid Update: DB Balance: ${previousBalance}, Current Input: ${current_enter_val}, Final Balance: ${final_balance}`);
-			} else {
-				// First time entry, calculate normally
-				final_balance = (initial_balance - current_enter_val) + Number(carry_ovr_amnt);
-				console.log(`Unpaid First time: Input: ${current_enter_val}, Balance: ${final_balance}`);
-			}
+		if (balanceElement.length === 0) {
+			console.warn(`❌ Unpaid balance element not found for emp_id: ${emp_id}, leave_id: ${leave_id}`);
+			return;
 		}
-
-		// let entered_leave_hrs = 0;
-
-		// focusedRow.find(".leave-hrs-unpaid").each(function() {
-	  	// 	if ($.isNumeric(this.value)) {
-	  	// 		entered_leave_hrs += parseFloat(this.value);
-	  	// 	}
-	  	// });
-
-		// let hrs_inputted = entered_leave_hrs;
-
-		// let paid_time_off = 0;
-
-		// if (pay_type == 'hourly') {
-		// 	paid_time_off = rate_per_hour *  hrs_inputted;
-		// }  else if (pay_type == 'weekly') {
-		// 	paid_time_off = rate_per_hour *  hrs_inputted;
-		// }  else if (pay_type == 'bi-weekly') {
-		// 	paid_time_off = (((rate_per_hour * 26)/52)/40)*hrs_inputted;
-		// }  else if (pay_type == 'semi-monthly') {
-		// 	paid_time_off = (((rate_per_hour * 24)/52)/40)*hrs_inputted;
-		// }  else if (pay_type == 'monthly') {
-		// 	paid_time_off = (((rate_per_hour * 12)/52)/40)*hrs_inputted;
-		// 	// paid_time_off = leave_balance - paid_time_off;
-		// }
-
-		// Store current values for future reference
-		focusedRow.find(`[id="balanceunpaid-${emp_id}-${leave_id}"]`)
-			.html(final_balance)
-			.data('previous-balance', final_balance)
-			.data('previous-input', current_enter_val)
-			.data('original-input', current_enter_val) // Store original input for cumulative tracking
-			.data('has-previous-data', true);
-			
-		focusedRow.find(`[id="unpaid-leave-balnce-${emp_id}-${leave_id}"]`).val(final_balance);
+		
+		// Get the original balance (first time this is called)
+		let originalBalance = parseFloat(balanceElement.data('original-balance'));
+		console.log('Debug - unpaid originalBalance from data:', originalBalance);
+		
+		if (originalBalance === undefined || isNaN(originalBalance) || originalBalance === 0) {
+			// First time - store the original balance from HTML display
+			originalBalance = parseFloat(balanceElement.html()) || initial_balance;
+			balanceElement.data('original-balance', originalBalance);
+			console.log(`🔄 Unpaid First time - stored original balance: ${originalBalance} from HTML: ${balanceElement.html()}`);
+		}
+		
+		// ✅ FIXED: Check if user is trying to take more leave than available
+		// Check if current balance is 0 and user is trying to take leave
+		let currentBalance = parseFloat(balanceElement.html()) || 0;
+		if (currentBalance === 0 && current_enter_val > 0) {
+			// Clear the input and show warning
+			obj.value = '';
+			showToast('warning', `No unpaid leave available! You have 0hrs remaining for this leave type.`);
+			console.log('🚫 Unpaid input blocked: No leave available');
+			return;
+		}
+		
+		// Additional check: if current balance is already 0, don't allow any changes
+		if (currentBalance === 0) {
+			console.log('🚫 Unpaid balance already 0 - no changes allowed');
+			return;
+		}
+		
+		// Calculate new balance: original balance minus current input
+		let newBalance = originalBalance - current_enter_val;
+		
+		// Prevent negative balance
+		newBalance = Math.max(0, newBalance);
+		
+		// Update the balance display
+		balanceElement.html(newBalance.toFixed(2));
+		
+		// Store current input for next calculation
+		balanceElement.data('previous-input', current_enter_val);
+		
+		console.log(`✅ Unpaid Calculation: Original: ${originalBalance}, Current Input: ${current_enter_val}, New Balance: ${newBalance}`);
+		console.log('Debug - unpaid balanceElement HTML after:', balanceElement.html());
+		
+		// Update the hidden input for form submission
+		focusedRow.find(`[id="unpaid-leave-balnce-${emp_id}-${leave_id}"]`).val(newBalance);
 	}
 </script>
 
