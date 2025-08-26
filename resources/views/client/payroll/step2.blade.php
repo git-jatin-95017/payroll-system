@@ -265,12 +265,14 @@
 																					->where('leave_year', date('Y', strtotime($isDataExist->start_date)))
 																					->first();
 																				
-																				if ($dbBalance && $dbBalance->balance !== null) {
-																					// Show the database balance
+																				if ($dbBalance && $dbBalance->balance !== null && $dbBalance->amount > 0) {
+																					// Show the database balance only if some leave has been taken (amount > 0)
 																					echo $dbBalance->balance;
 																				} else {																				   
-																					// Fall back to calculated balance - this should be the base allowance
-																					echo ($value->leave->leave_day * 8) + $carryOverAmount;
+																					// For fresh payroll or when no leave has been taken - show base allowance
+																					$baseAllowance = ($value->leave->leave_day * 8);
+																					$totalAllowance = $baseAllowance + $carryOverAmount;
+																					echo $totalAllowance;
 																				}
 																			@endphp
 																		</b>hrs</p>
@@ -383,12 +385,14 @@
 																						->where('leave_year', date('Y', strtotime($isDataExist->start_date)))
 																						->first();
 																					
-																					if ($dbBalance && $dbBalance->balance !== null) {
-																						// Show the database balance
+																					if ($dbBalance && $dbBalance->balance !== null && $dbBalance->amount > 0) {
+																						// Show the database balance only if some leave has been taken (amount > 0)
 																						echo $dbBalance->balance;
 																					} else {
-																						// Fall back to calculated balance - this should be the base allowance
-																						echo ($value->leave->leave_day * 8) + $carryOverAmount;
+																						// For fresh payroll or when no leave has been taken - show base allowance
+																						$baseAllowance = ($value->leave->leave_day * 8);
+																						$totalAllowance = $baseAllowance + $carryOverAmount;
+																						echo $totalAllowance;
 																					}
 																				@endphp
 																			</b>hrs</p>
@@ -691,16 +695,6 @@
 			let balanceElement = $(balanceSelector);
 			
 			if (balanceElement.length > 0) {
-				// Get current balance to check if it's already 0
-				let currentBalance = parseFloat(balanceElement.html()) || 0;
-				
-				// If current balance is 0, don't allow any restoration
-				if (currentBalance === 0) {
-					console.log(`🚫 Balance already 0 - no restoration allowed for ${isUnpaid ? 'unpaid' : 'paid'} leave`);
-					showToast('warning', `Leave balance is already 0. No changes can be made.`);
-					return;
-				}
-				
 				// If input is blank (0) or empty string, restore original balance
 				if (currentValue === 0 || obj.value === '') {
 					let originalBalance = parseFloat(balanceElement.data('original-balance')) || 0;
