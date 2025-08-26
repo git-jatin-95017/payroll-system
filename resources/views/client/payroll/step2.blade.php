@@ -589,9 +589,10 @@
 		let originalBalance = parseFloat(balanceElement.data('original-balance'));
 		console.log('Debug - originalBalance from data:', originalBalance);
 		
-		if (originalBalance === undefined || isNaN(originalBalance) || originalBalance === 0) {
+		if (originalBalance === undefined || isNaN(originalBalance)) {
 			// First time - store the original balance from HTML display
-			originalBalance = parseFloat(balanceElement.html()) || initial_balance;
+			let htmlBalance = parseFloat(balanceElement.html());
+			originalBalance = (!isNaN(htmlBalance)) ? htmlBalance : initial_balance;
 			balanceElement.data('original-balance', originalBalance);
 			console.log(`🔄 First time - stored original balance: ${originalBalance} from HTML: ${balanceElement.html()}`);
 		}
@@ -733,9 +734,10 @@
 		let originalBalance = parseFloat(balanceElement.data('original-balance'));
 		console.log('Debug - unpaid originalBalance from data:', originalBalance);
 		
-		if (originalBalance === undefined || isNaN(originalBalance) || originalBalance === 0) {
+		if (originalBalance === undefined || isNaN(originalBalance)) {
 			// First time - store the original balance from HTML display
-			originalBalance = parseFloat(balanceElement.html()) || initial_balance;
+			let htmlBalance = parseFloat(balanceElement.html());
+			originalBalance = (!isNaN(htmlBalance)) ? htmlBalance : initial_balance;
 			balanceElement.data('original-balance', originalBalance);
 			console.log(`🔄 Unpaid First time - stored original balance: ${originalBalance} from HTML: ${balanceElement.html()}`);
 		}
