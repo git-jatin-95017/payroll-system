@@ -130,21 +130,20 @@
 								</div>
 							</div>
 
-						<div class="row">
-                              <div class="col-8 mb-3">
-                               <div class="form-group">
-                                 <label for="enddate" class="db-label">End Date</label>
-                                 <input type="date" name="enddate" class="form-control db-custom-input" id="recipient-name2">
+							<div class="row" id="enddate">
+								<div class="col-8 mb-3">
+									<div class="form-group">
+										<label for="enddate" class="db-label">End Date</label>
+										<input type="date" name="enddate" class="form-control db-custom-input" id="recipient-name2">
 
 										@if ($errors->has('enddate'))
 											<span class="text-danger">
 												{{ $errors->first('enddate') }}
 											</span>
 										@endif
-                               </div>
-                             </div>
-                         </div>
-
+									</div>
+								</div>
+							</div>
 
 							<div class="row" id="hourAmount">
 								<div class="col-8 mb-3">

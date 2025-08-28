@@ -67,7 +67,7 @@
                             <td>{{ $row->name }}</td>
                             <td>{{ $row->leave_subject }}</td>
                             <td>{{ date('m/d/Y', strtotime($row->start_date)) }}</td>
-							<td>{{ date('m/d/Y', strtotime($row->end_date)) }}</td>
+							<td>{{ !empty($row->end_date) ? date('m/d/Y', strtotime($row->end_date)) : date('m/d/Y', strtotime($row->start_date)) }}</td>
 							<td>{{ $row->leave_message }}</td>
 							<td>{{ $row->leave_name }}</td>
 							<td>{{ $row->leave_type }}</td>

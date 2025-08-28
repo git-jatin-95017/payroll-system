@@ -86,8 +86,9 @@
 									<div class="span pull-right">
 										<button class="btn btn-primary fetchLeaveTotal">Fetch Total Leave</button>
 									</div>
-									<span style="color:red" id="total"></span>
+									
 								</div>
+								<div class="col-12 mb-4" style="color:red" id="total"></div>
 							</div>
 
 							<div class="row">
@@ -130,10 +131,10 @@
 								</div>
 							</div>
 
-							<div class="row">
+							<div class="row" id="enddate">
 								<div class="col-8 mb-3">
 									<div class="form-group">
-										<label for="enddate" class="db-label" >End Date</label>
+										<label for="enddate" class="db-label">End Date</label>
 										<input type="date" name="enddate" class="form-control db-custom-input" id="recipient-name2" value="{{$leave->end_date}}">
 
 										@if ($errors->has('enddate'))

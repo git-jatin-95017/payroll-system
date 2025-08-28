@@ -42,7 +42,7 @@ class AdditionsDeductionsExport implements FromCollection, WithHeadings, WithMap
                 date('M d, Y', strtotime($earning->start_date)) . ' - ' . date('M d, Y', strtotime($earning->end_date)),
                 $additional->payhead->pay_label,
                 $additional->payhead->pay_type == 'nothing' ? 'Addition' : 'Deduction',
-                number_format($additional->amount, 2)
+                $additional->amount
             ];
         }
         return $data;

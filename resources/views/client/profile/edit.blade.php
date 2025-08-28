@@ -1,5 +1,92 @@
 @extends('layouts.new_layout')
 @section('content')
+<style>
+    /* Complete tab content isolation */
+    .tab-content {
+        position: relative;
+    }
+    
+    .tab-pane {
+        display: none !important;
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 0;
+        overflow: hidden;
+    }
+    
+    .tab-pane.active {
+        display: block !important;
+        opacity: 1;
+        visibility: visible;
+        position: relative;
+        height: auto;
+        overflow: visible;
+    }
+    
+    /* Ensure no content bleeding */
+    .tab-pane:not(.active) {
+        display: none !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        visibility: hidden !important;
+    }
+    
+    /* Fix container spacing */
+    .max-w-md.max-auto {
+        width: 100%;
+        max-width: none;
+    }
+    
+    /* Ensure forms are properly contained */
+    .tab-pane form {
+        margin: 0;
+        padding: 0;
+    }
+    
+    /* Force password tab isolation */
+    #password.tab-pane {
+        display: none !important;
+        height: 0 !important;
+        overflow: hidden !important;
+    }
+    
+    #password.tab-pane.active {
+        display: block !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+    
+    /* Additional isolation for all tabs */
+    .tab-pane[id="company"],
+    .tab-pane[id="payment"],
+    .tab-pane[id="admin"] {
+        display: none !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
+    
+    .tab-pane[id="company"].active,
+    .tab-pane[id="payment"].active,
+    .tab-pane[id="admin"].active,
+    .tab-pane[id="password"].active {
+        display: block !important;
+        height: auto !important;
+        overflow: visible !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    /* Force hide any content that might be bleeding */
+    .tab-pane:not(.active) * {
+        display: none !important;
+    }
+</style>
 <section>
     <div class="page-heading d-flex justify-content-between align-items-center gap-3 mb-3">
 		<div>
@@ -668,6 +755,30 @@
 @push('page_scripts')
 <script>
 	$(document).ready(function () {
+		// Force complete tab isolation
+		function showTab(tabId) {
+			// Hide all tab panes completely
+			$('.tab-pane').removeClass('active').hide();
+			
+			// Show only the target tab
+			$(tabId).addClass('active').show();
+			
+			// Update tab button states
+			$('.nav-link').removeClass('active');
+			$('[data-bs-target="' + tabId + '"]').addClass('active');
+		}
+		
+		// Handle tab clicks
+		$('button[data-bs-toggle="tab"]').on('click', function (e) {
+			e.preventDefault();
+			var target = $(this).data('bs-target');
+			showTab(target);
+		});
+		
+		// Ensure only company tab is visible on page load
+		$('.tab-pane').removeClass('active').hide();
+		$('#company').addClass('active').show();
+		
 		var maxRows = 3;
 		var rowNum = 1;
 		$("#addNewRow").on("click", function () {

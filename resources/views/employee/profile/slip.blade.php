@@ -244,7 +244,7 @@
                         <td></td>
                         <td></td>                                                    
                         <td>
-                            <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($totalEmployeePay, 2,'.','')}}</span><br>
+                            <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($totalEmployeePay, 2)}}</span><br>
                             <small style="color: #000 !important;font-weight: 600 !important;">Total Employee Pay</small>
                         </td>
                     </tr>        -->

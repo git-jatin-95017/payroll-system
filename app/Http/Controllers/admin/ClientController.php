@@ -297,9 +297,15 @@ class ClientController extends Controller
 	 */
 	public function edit($id)
 	{
-		$company = User::find($id);		
+		$company = User::find($id);
+		
+		// Fetch existing administrators for this company
+		$existingAdmins = User::where('created_by', $id)
+			->where('role_id', 1)
+			->select('id', 'name', 'email', 'created_at')
+			->get();
 
-		return view('admin.client.edit', compact('company'));
+		return view('admin.client.edit', compact('company', 'existingAdmins'));
 	}
 
 	/**
@@ -348,61 +354,118 @@ class ClientController extends Controller
 				$paymentdata
 			);
 		} else if ($data['update_request'] == 'changepwd') {
-			// Loop through the submitted data and validate
-			foreach ($request->input('name') as $index => $name) {
-				$userFriendlyIndex = $index + 1;
-
-				$this->validate($request, [
-					'name.' . $index => 'required|string|max:255',
-					'email.' . $index => 'required|email|unique:users,email',
-					'password.' . $index => ['required', 'string', 'min:8'],
-					'password_confirmation.' . $index => 'required_with:password.' . $index,
-				], [
-					'name.' . $index . '.required' => 'The name field is required for row ' . $userFriendlyIndex . '.',
-					'email.' . $index . '.required' => 'The email field is required for row ' . $userFriendlyIndex . '.',
-					'email.' . $index . '.email' => 'The email must be a valid email address for row ' . $userFriendlyIndex . '.',
-					'email.' . $index . '.unique' => 'The email has already been taken for row ' . $userFriendlyIndex . '.',
-					'password.' . $index . '.required' => 'The password field is required for row ' . $userFriendlyIndex . '.',
-					'password.' . $index . '.string' => 'The password must be a string for row ' . $userFriendlyIndex . '.',
-					'password.' . $index . '.min' => 'The password must be at least :min characters for row ' . $userFriendlyIndex . '.',
-					// 'password.' . $index . '.confirmed' => 'The password confirmation does not match for row ' . $userFriendlyIndex . '.',
-					'password_confirmation.' . $index . '.required_with' => 'The password confirmation field is required for row ' . $userFriendlyIndex . '.',
-				]);
-			}
-
-			// Manually compare password and password_confirmation
-			if ($request->input("password.$index") !== $request->input("password_confirmation.$index")) {
-				$validator = \Validator::make([], []); // Create an empty validator
-				$validator->errors()->add("password.$index", "The password confirmation does not match for row " . ($index + 1) . ".");
-				// throw new \Illuminate\Validation\ValidationException($validator);
-				return redirect()->back()->with('error', $validator);
-			}
-
-			foreach ($request->input('name') as $index => $name) {
-				$user = new User();
-				$user->name = $request->input('name')[$index];
-				$user->email = $request->input('email')[$index];
-				$user->password = Hash::make($request->input('password')[$index]);
-				$user->role_id = 2; //Company as admin
-				$user->status = 1; //Company as admin
-				$user->save();
-			}
-
-			/*
+			// Validate password change request (simpler structure like create.blade.php)
 			$request->validate([
-				'old_password' => ['required'],
-				'password' => ['required', 'string', 'min:8', 'confirmed'],
-				'password_confirmation' => 'required_with:password',
-			], [], [
-				'old_password' => 'current password'
+				'password' => ['required', 'string', 'min:8'],
+				'password_confirmation' => ['required', 'same:password'],
+			], [
+				'password.required' => 'New password is required.',
+				'password.string' => 'New password must be a string.',
+				'password.min' => 'New password must be at least 8 characters.',
+				'password_confirmation.required' => 'Password confirmation is required.',
+				'password_confirmation.same' => 'Password confirmation does not match.',
 			]);
 
-			unset($data['update_request']);
-
-			$company->password = Hash::make($data['password_confirmation']);
-			
+			// Update the client's password (no current password check needed for admin editing)
+			$company->password = Hash::make($request->password);
 			$company->save();
-			*/
+
+			return redirect()->back()->with('message', 'Password updated successfully!');
+		} else if ($data['update_request'] == 'admin') {
+			// Handle existing administrators updates
+			if ($request->has('existing_admin_id') && is_array($request->existing_admin_id)) {
+				// Validate existing admin data
+				foreach ($request->existing_admin_id as $index => $adminId) {
+					if (!empty($adminId)) {
+						$admin = User::find($adminId);
+						if ($admin && $admin->created_by == $id) {
+							// Validate existing admin fields
+							$this->validate($request, [
+								'existing_name.' . $index => 'required|string|max:255',
+								'existing_email.' . $index => 'required|email|unique:users,email,' . $adminId,
+							], [
+								'existing_name.' . $index . '.required' => 'The name field is required for existing administrator.',
+								'existing_name.' . $index . '.string' => 'The name must be a string.',
+								'existing_name.' . $index . '.max' => 'The name may not be greater than 255 characters.',
+								'existing_email.' . $index . '.required' => 'The email field is required for existing administrator.',
+								'existing_email.' . $index . '.email' => 'The email must be a valid email address.',
+								'existing_email.' . $index . '.unique' => 'The email has already been taken.',
+							]);
+						}
+					}
+				}
+				
+				// Update existing admins after validation
+				foreach ($request->existing_admin_id as $index => $adminId) {
+					if (!empty($adminId)) {
+						$admin = User::find($adminId);
+						if ($admin && $admin->created_by == $id) {
+							// Update existing admin
+							$admin->name = $request->existing_name[$index];
+							$admin->email = $request->existing_email[$index];
+							$admin->save();
+							
+							\Log::info('Updated existing admin', [
+								'admin_id' => $adminId,
+								'name' => $admin->name,
+								'email' => $admin->email,
+								'company_id' => $id
+							]);
+						}
+					}
+				}
+			}
+			
+			// Handle new administrators creation
+			if ($request->has('name') && is_array($request->name)) {
+				// Validate new admin data
+				foreach ($request->input('name') as $index => $name) {
+					if (!empty($name)) { // Only validate if name is not empty
+						$userFriendlyIndex = $index + 1;
+
+						$this->validate($request, [
+							'name.' . $index => 'required|string|max:255',
+							'email.' . $index => 'required|email|unique:users,email',
+							'password.' . $index => ['required', 'string', 'min:8'],
+							'password_confirmation.' . $index => 'required_with:password.' . $index,
+						], [
+							'name.' . $index . '.required' => 'The name field is required for row ' . $userFriendlyIndex . '.',
+							'email.' . $index . '.required' => 'The email field is required for row ' . $userFriendlyIndex . '.',
+							'email.' . $index . '.email' => 'The email must be a valid email address for row ' . $userFriendlyIndex . '.',
+							'email.' . $index . '.unique' => 'The email has already been taken for row ' . $userFriendlyIndex . '.',
+							'password.' . $index . '.required' => 'The password field is required for row ' . $userFriendlyIndex . '.',
+							'password.' . $index . '.string' => 'The password must be a string for row ' . $userFriendlyIndex . '.',
+							'password.' . $index . '.min' => 'The password must be at least :min characters for row ' . $userFriendlyIndex . '.',
+							'password_confirmation.' . $index . '.required_with' => 'The password confirmation field is required for row ' . $userFriendlyIndex . '.',
+						]);
+					}
+				}
+
+				// Create new admins
+				foreach ($request->input('name') as $index => $name) {
+					if (!empty($name)) { // Only create if name is not empty
+						$user = new User();
+						$user->name = $request->input('name')[$index];
+						$user->email = $request->input('email')[$index];
+						$user->password = Hash::make($request->input('password')[$index]);
+						$user->role_id = 1; //Company as admin
+						$user->status = 1; //Company as admin
+						$user->created_by = $id; // Set to the client company being edited
+						
+						// Debug: Log the created_by value
+						\Log::info('Creating new admin user', [
+							'name' => $user->name,
+							'email' => $user->email,
+							'created_by' => $user->created_by,
+							'company_id' => $id
+						]);
+						
+						$user->save();
+					}
+				}
+			}
+
+			return redirect()->back()->with('message', 'Administrators updated successfully!');
 		} else {
 			$request->validate([
 				'company_name' => ['required'],
@@ -537,6 +600,40 @@ class ClientController extends Controller
 			}
 		} 
 	} 
+
+	/**
+	 * Delete administrator method
+	 * 
+	 * @param int $company_id
+	 * @param int $admin_id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function deleteAdmin($company_id, $admin_id)
+	{
+		try {
+			$admin = User::findOrFail($admin_id);
+			
+			// Check if the admin belongs to the company being edited
+			if ($admin->created_by != $company_id) {
+				return response()->json([
+					'status' => false, 
+					'message' => 'Unauthorized to delete this administrator.'
+				], 403);
+			}
+			
+			$admin->delete();
+			
+			return response()->json([
+				'status' => true, 
+				'message' => 'Administrator deleted successfully.'
+			]);
+		} catch (\Exception $e) {
+			return response()->json([
+				'status' => false, 
+				'message' => 'Error deleting administrator: ' . $e->getMessage()
+			], 500);
+		}
+	}
 
 	/**
 	 * loginas client method
