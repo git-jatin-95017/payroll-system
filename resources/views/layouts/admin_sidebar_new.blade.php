@@ -31,6 +31,17 @@
 				<li><a href="{{ route('client.index') }}">List Of Client</a></li>
 			</ul>
 		</li>
+		<li class="has-sub {{ Request::routeIs('admin.permissions.*') ? 'active' : '' }}">
+			<a href="#">
+				<x-bxs-shield class="w-20 h-20"/>
+				<span>Permissions</span>
+			</a>
+			<ul class="list-unstyled">
+				<li><a href="{{ route('admin.permissions.index') }}">Manage Roles</a></li>
+				<li><a href="{{ route('admin.permissions.create-role') }}">Create Role</a></li>
+				<li><a href="{{ route('admin.permissions.create-permission') }}">Create Permission</a></li>
+			</ul>
+		</li>
 	</ul>
 </div>
 <div class="bottom-nav mt-auto">

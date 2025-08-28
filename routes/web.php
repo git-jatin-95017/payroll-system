@@ -80,6 +80,33 @@ Route::prefix('admin')->group(function () {
 	Route::get('settings/tax', [SettingController::class, 'create'])->name('settings.create');
 	Route::post('settings/tax', [SettingController::class, 'updateSettings'])->name('settings.update');
 
+	// Permission Management Routes
+	Route::prefix('permissions')->name('admin.permissions.')->group(function () {
+		Route::get('/', [App\Http\Controllers\Admin\PermissionController::class, 'index'])->name('index');
+		
+		// Role Management
+		Route::get('/create-role', [App\Http\Controllers\Admin\PermissionController::class, 'createRole'])->name('create-role');
+		Route::post('/create-role', [App\Http\Controllers\Admin\PermissionController::class, 'storeRole'])->name('store-role');
+		Route::get('/edit-role/{role}', [App\Http\Controllers\Admin\PermissionController::class, 'editRole'])->name('edit-role');
+		Route::put('/edit-role/{role}', [App\Http\Controllers\Admin\PermissionController::class, 'updateRole'])->name('update-role');
+		Route::delete('/delete-role/{role}', [App\Http\Controllers\Admin\PermissionController::class, 'destroyRole'])->name('destroy-role');
+		Route::get('/role-users/{role}', [App\Http\Controllers\Admin\PermissionController::class, 'roleUsers'])->name('role-users');
+		
+		// Permission Management
+		Route::get('/create-permission', [App\Http\Controllers\Admin\PermissionController::class, 'createPermission'])->name('create-permission');
+		Route::post('/create-permission', [App\Http\Controllers\Admin\PermissionController::class, 'storePermission'])->name('store-permission');
+		Route::get('/edit-permission/{permission}', [App\Http\Controllers\Admin\PermissionController::class, 'editPermission'])->name('edit-permission');
+		Route::put('/edit-permission/{permission}', [App\Http\Controllers\Admin\PermissionController::class, 'updatePermission'])->name('update-permission');
+		Route::delete('/delete-permission/{permission}', [App\Http\Controllers\Admin\PermissionController::class, 'destroyPermission'])->name('destroy-permission');
+		
+		// User Role Assignment
+		Route::post('/assign-role', [App\Http\Controllers\Admin\PermissionController::class, 'assignRole'])->name('assign-role');
+		Route::put('/remove-role/{user}', [App\Http\Controllers\Admin\PermissionController::class, 'removeRole'])->name('remove-role');
+		
+		// Permission Assignment
+		Route::post('/assign-permissions', [App\Http\Controllers\Admin\PermissionController::class, 'assignPermissions'])->name('assign-permissions');
+	});
+
 });
 
 Route::prefix('client')->group(function () {

@@ -88,6 +88,38 @@ class User extends Authenticatable
         return $this->hasMany(EmpLeavePolicy::class, 'user_id');
     }
 
+    /**
+     * Get the role that belongs to the user.
+     */
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * Check if user has a specific permission.
+     */
+    public function hasPermission($permissionSlug)
+    {
+        if (!$this->role) {
+            return false;
+        }
+        
+        return $this->role->hasPermission($permissionSlug);
+    }
+
+    /**
+     * Check if user has any permission from a module.
+     */
+    public function hasModulePermission($module)
+    {
+        if (!$this->role) {
+            return false;
+        }
+        
+        return $this->role->hasModulePermission($module);
+    }
+
     public static function boot()
     {
         parent::boot();
