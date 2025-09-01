@@ -118,7 +118,7 @@
 											//     return (float) $row->daily_hrs;
 											// }); 
 											//$isDataExist->total_hours;
-											$totalDays = collect($timeCardData)->count('daily_hrs');
+											$totalDays = collect($timeCardData)->whereNotNull('daily_hrs')->count();
 											$reimbursement = $isDataExist->reimbursement;
 											$overtimeHours = $isDataExist->overtime_hrs;
 											$dovertimeHours = $isDataExist->doubl_overtime_hrs;
@@ -144,7 +144,7 @@
 											$totalHours = collect($timeCardData)->sum(function ($row) {
 												return (float) $row->daily_hrs;
 											});
-											$totalDays = collect($timeCardData)->count('daily_hrs');
+											$totalDays = collect($timeCardData)->whereNotNull('daily_hrs')->count();
 											$reimbursement = 0;
 											$overtimeHours = 0;
 											$dovertimeHours = 0;
@@ -403,7 +403,7 @@
 													<td class="total-payment-gross">
 														<div data-maindiv="reg_hrs_div">
 															<small class="badge-payroll">Regular hours</small>
-															<span class="reg_hrs">0.00</span>
+															${{ number_format($gross , 2,'.','') }}
 														</div>
 														<div data-maindiv="overtime-div">
 															<small class="badge-payroll">OT</small>
@@ -449,7 +449,7 @@
 														</div>
 														<div data-maindiv="total-div">
 															<small class="badge-payroll">Gross Pay</small>
-															<span class="total">$0.00</span>
+															${{ number_format($gross , 2,'.','') }}
 														</div>
 														<input type="hidden" class="total-hidden"
 															name="input[{{$employee->id}}][gross]" value="{{ $gross }}">
@@ -533,7 +533,7 @@
 									<h3 class="mb-1">Confirm your amounts</h3>
 									<p class="text-center">To ensure accuracy, please review your payroll numbers above
 										and make sure they’re 100% correct</p>
-									<p class="total_amount_confirm mb-0">$0.00</p>
+									<b style="font-size: 36px; color: blue;">${{ number_format($gross , 2,'.','') }}</b>
 								</div>
 							</div>
 						</div>

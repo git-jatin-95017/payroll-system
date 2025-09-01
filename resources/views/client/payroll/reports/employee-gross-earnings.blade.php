@@ -140,9 +140,11 @@
                                         <td>{{ $earning->user->name }}</td>
                                         <td>{{ date('M d, Y', strtotime($earning->start_date)) }} - {{ date('M d, Y', strtotime($earning->end_date)) }}</td>
                                         <td>{{ $earning->user->employeeProfile->pay_type ?? '-' }}</td>
-                                        <td>${{ number_format($earning->rate ?? 0, 2,'.','') }}</td>
-                                        <td>{{ number_format($earning->hours ?? 0, 2,'.','') }}</td>
-                                        <td>${{ number_format($earning->gross, 2,'.','') }}</td>
+                                        <td>@if (!empty($earning->rate) && $earning->rate != 0)
+                                        ${{ number_format($earning->rate ?? 0, 2,'.','') }}
+                                         @endif</td>
+                                        <td>@if (!empty($earning->hours) && $earning->hours != 0){{ number_format($earning->hours ?? 0, 2,'.','') }} @endif </td>
+                                        <td>@if (!empty($earning->gross) && $earning->gross != 0) ${{ number_format($earning->gross, 2,'.','') }} @endif </td>
                                     </tr>
                                     @php
                                         $totalHours += $earning->hours ?? 0;
@@ -153,8 +155,8 @@
                             <tfoot>
                                 <tr class="fw-bold">
                                     <td colspan="4" class="text-end">Subtotals:</td>
-                                    <td>{{ number_format($totalHours, 2,'.','') }}</td>
-                                    <td>${{ number_format($totalAmount, 2,'.','') }}</td>
+                                    <td>@if (!empty($totalHours) && $totalHours != 0){{ number_format($totalHours, 2,'.','') }} @endif </td>
+                                    <td>@if (!empty($totalAmount) && $totalAmount != 0) ${{ number_format($totalAmount, 2,'.','') }} @endif </td>
                                 </tr>
                             </tfoot>
                         </table>

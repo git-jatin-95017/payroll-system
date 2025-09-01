@@ -428,7 +428,7 @@
 									</svg>
 									<h3>Confirm your amounts</h3>
 									<p class="text-center">To ensure accuracy, please review your payroll numbers above and make sure they’re 100% correct</p>
-									<b class="total_amount_confirm">${{$total}}</b>
+									<b class="total_amount_confirm">${{$total=number_format($total , 2)}}</b>
 								</div>
 							</div>
 						</div>

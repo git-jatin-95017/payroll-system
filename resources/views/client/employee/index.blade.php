@@ -160,7 +160,7 @@
                       <div class="form-group">
                          <div class="d-flex mb-2 justify-content-end align-items-center">
                              <!-- <label class="db-label" for="all_payheads"></label> -->
-                             <button type="button" id="selectHeads" class="btn btn-arrow-left">
+                             <button style="background-color:black; border:black;" type="button" id="selectHeads" class="btn btn-arrow-left">
                                  Add
                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
@@ -178,7 +178,7 @@
                      <div class="form-group">
                          <div class="d-flex mb-2 justify-content-end align-items-center">
                              <!-- <label class="db-label" for="selected_payheads"></label> -->
-                             <button type="button" id="removeHeads" class="btn btn-arrow-right">
+                             <button style="background-color:black; border:black;" type="button" id="removeHeads" class="btn btn-arrow-right">
                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
                                      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
                                  </svg>

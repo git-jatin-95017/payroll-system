@@ -463,7 +463,7 @@
                                         <th scope="col">Medical benefits</th>
                                         <th scope="col">Social Security</th>
                                         <th scope="col">Education levy</th>
-                                        <th scope="col">Addition to net pay</th>
+                                        <th scope="col">Addition</th>
                                         <th scope="col">Deductions</th>
                                         <!-- <th scope="col">Paid time off</th> -->
                                         <th scope="col">Employee Pay</th>
@@ -837,10 +837,11 @@
 <script>
     var dataFinal = @json($dataGraph);
     var grossFinal = @json(number_format($grossFinal, 2));
-    var totalEmployeePay = @json($TotalPayroll);
+    var totalEmployeePay = @json($totalEmployeePay);
     var totalTaxes = @json($TotalTaxes);
     var totalDeductions = @json($totalDeductions);
     var totalAdditions = @json($nothingAdditionTonetPayTotal);
+    var TotalPayroll = @json(number_format($TotalPayroll , 2));
     // setup
     const data = {
       labels: ['Employee Pay', 'Taxes', 'Deductions', 'Additions'],
@@ -879,7 +880,7 @@
             ctx.fillText("Total Pay:", x, y - 10); 
 
             // Second line
-            ctx.fillText(`$${grossFinal}`, x, y + 15);
+            ctx.fillText(`$${TotalPayroll}`, x, y + 15);
         }
     };
 

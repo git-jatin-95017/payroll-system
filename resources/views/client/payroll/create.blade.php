@@ -244,8 +244,8 @@
 									value="{{date('Y-m-d', strtotime($request->start_date)).' - '.date('Y-m-d', strtotime($request->end_date))}}">
 								<?php
 								$y = date('Y', strtotime($request->start_date));
-								$first_date = $request->start_date;
-							?>
+								$first_date = $request->start_date; 
+							?> 
 								<div class="p-0">
 									<div class="table-responsive">
 										<table class="table ts-custom-table">
@@ -258,9 +258,9 @@
 															
 														</div>
 													</th>
-													<th scope="col">
+													 <th scope="col">
 														
-														{{ date('m/d/Y', strtotime($request->start_date)).' - '.date('m/d/Y', strtotime($request->end_date)) }}
+														{{-- {{ date('m/d/Y', strtotime($request->start_date)).' - '.date('m/d/Y', strtotime($request->end_date)) }} --}}
 													</th>
 												
 													<?php
@@ -317,7 +317,7 @@
 														</div>
 														<!-- <button class="approval_btn">Approval</button> -->
 													</td>
-													<td>
+													<td style="position:sticky; left: 0; background-color: white; z-index: 1;">
 														<div class="d-flex">
 															<div
 																class="ts-img d-flex justify-content-center align-items-center">
@@ -374,7 +374,7 @@
 															// $two_week_days[] = date("d-m-Y", strtotime("+$i day", strtotime($first_date)));
 														}
 													?>
-													<td class="total" @if($result[$dateToday]['approval_status'] == 1) style="color:#33ba5d !important;"
+													<td class="total" @if(!empty($result[$dateToday] ['approval_status']) && $result[$dateToday]['approval_status']  == 1) style="color:#33ba5d !important;"
 														@endif>{{ $sum }}</td>
 												</tr>
 												@endforeach

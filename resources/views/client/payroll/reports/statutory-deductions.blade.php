@@ -127,9 +127,7 @@
                                     <th>Employee Medical Benefits</th>
                                     <th>Employee Social Security</th>
                                     <th>Employee Education Levy</th>
-                                    <th>Employer Medical Benefits</th>
-                                    <th>Employer Social Security</th>
-                                    <th>Employer Education Levy</th>
+
                                     <th>Total</th>
                                 </tr>
                             </thead>
@@ -138,9 +136,6 @@
                                     $totalEmployeeMedical = 0;
                                     $totalEmployeeSecurity = 0;
                                     $totalEmployeeEduLevy = 0;
-                                    $totalEmployerMedical = 0;
-                                    $totalEmployerSecurity = 0;
-                                    $totalEmployerEduLevy = 0;
                                     $totalOverall = 0;
                                 @endphp
                                 @foreach($earnings as $earning)
@@ -150,18 +145,12 @@
                                         <td>${{ number_format($earning->medical, 2,'.','') }}</td>
                                         <td>${{ number_format($earning->security, 2,'.','') }}</td>
                                         <td>${{ number_format($earning->edu_levy, 2,'.','') }}</td>
-                                        <td>${{ number_format($earning->medical, 2,'.','') }}</td>
-                                        <td>${{ number_format($earning->security, 2,'.','') }}</td>
-                                        <td>${{ number_format($earning->edu_levy, 2,'.','') }}</td>
                                         <td>${{ number_format($earning->medical * 2 + $earning->security * 2 + $earning->edu_levy * 2, 2,'.','') }}</td>
                                     </tr>
                                     @php
                                         $totalEmployeeMedical += $earning->medical;
                                         $totalEmployeeSecurity += $earning->security;
                                         $totalEmployeeEduLevy += $earning->edu_levy;
-                                        $totalEmployerMedical += $earning->medical;
-                                        $totalEmployerSecurity += $earning->security;
-                                        $totalEmployerEduLevy += $earning->edu_levy;
                                         $totalOverall += ($earning->medical * 2 + $earning->security * 2 + $earning->edu_levy * 2);
                                     @endphp
                                 @endforeach
@@ -172,9 +161,6 @@
                                     <td>${{ number_format($totalEmployeeMedical, 2,'.','') }}</td>
                                     <td>${{ number_format($totalEmployeeSecurity, 2,'.','') }}</td>
                                     <td>${{ number_format($totalEmployeeEduLevy, 2,'.','') }}</td>
-                                    <td>${{ number_format($totalEmployerMedical, 2,'.','') }}</td>
-                                    <td>${{ number_format($totalEmployerSecurity, 2,'.','') }}</td>
-                                    <td>${{ number_format($totalEmployerEduLevy, 2,'.','') }}</td>
                                     <td>${{ number_format($totalOverall, 2,'.','') }}</td>
                                 </tr>
                             </tfoot>
