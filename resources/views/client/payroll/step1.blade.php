@@ -794,7 +794,7 @@
 		focusedRow.find('.social-security').html(social_security);
 		focusedRow.find('.edu-levy').html(education_lvey.toFixed(2));
 		focusedRow.find('.net-pay').html(net_pay);
-		focusedRow.find('.total').html(final_gross);
+		focusedRow.find('.total').html('$' + final_gross.toFixed(2));
 
 		focusedRow.find('.total-hidden').val(final_gross);	 // gross
 		focusedRow.find('.overtime-hidden').val(overtime_hrs);
@@ -810,13 +810,14 @@
 
 		var total_confimr_amt = 0;
 		$(document).find(".total").each(function (index, value) {
-			// console.log($(value).text(), 33333);
-			if ($.isNumeric($(value).text())) {
-				total_confimr_amt += parseFloat($(value).text());
+			// Remove dollar sign and parse the numeric value
+			var textValue = $(value).text().replace('$', '').replace(',', '');
+			if ($.isNumeric(textValue)) {
+				total_confimr_amt += parseFloat(textValue);
 			}
 		});
 
-		$(document).find('.total_amount_confirm').html(formatter.format(total_confimr_amt));
+		$(document).find('.total_amount_confirm').html('$' + total_confimr_amt.toFixed(2));
 	}
 
 	$(document).ready(function () {

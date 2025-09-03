@@ -135,7 +135,7 @@
         // $totalAdditions += $earningsT;
         // $nothingAdditionTonetPayTTotal += $nothingAdditionTonetPayT;
 
-        $TotalPayroll += $employeePayT + $mbse_deductions + $row->security_employer;
+        $TotalPayroll += $employeePayT + $mbse_deductions + $row->security_employer + $medical_benefitsT;
 
         array_push($medical_benefits11T, $medical_benefitsT);
         array_push($social_security11T, $social_securityT);
@@ -400,9 +400,9 @@
                                     @endforeach
                                 <tbody>
                                     <tr>
-                                        <td>
-                                            <strong>Medical benefits</strong>
-                                        </td>
+                                        <th>
+                                            Medical benefits
+                                        </th>
                                         <td>${{number_format(array_sum($medical_benefits11), 2)}}</td>
                                         <td>${{number_format(array_sum($medical_benefits11), 2)}}</td>
                                     </tr>
@@ -463,7 +463,7 @@
                                         <th scope="col">Medical benefits</th>
                                         <th scope="col">Social Security</th>
                                         <th scope="col">Education levy</th>
-                                        <th scope="col">Addition to net pay</th>
+                                        <th scope="col">Additions</th>
                                         <th scope="col">Deductions</th>
                                         <!-- <th scope="col">Paid time off</th> -->
                                         <th scope="col">Employee Pay</th>
@@ -837,7 +837,7 @@
 <script>
     var dataFinal = @json($dataGraph);
     var grossFinal = @json(number_format($grossFinal, 2));
-    var totalEmployeePay = @json($TotalPayroll);
+    var totalEmployeePay = @json($totalEmployeePay);
     var totalTaxes = @json($TotalTaxes);
     var totalDeductions = @json($totalDeductions);
     var totalAdditions = @json($nothingAdditionTonetPayTotal);
@@ -879,7 +879,7 @@
             ctx.fillText("Total Pay:", x, y - 10); 
 
             // Second line
-            ctx.fillText(`$${grossFinal}`, x, y + 15);
+            ctx.fillText(`$${totalEmployeePay}`, x, y + 15);
         }
     };
 

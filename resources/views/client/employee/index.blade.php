@@ -922,9 +922,9 @@
 	                                    "selected": "selected"
 	                                })
 	                                .text(
-	                                    result.result[i].name + ' (' + jsUcfirst(result.result[i].pay_type) + ')'
+	                                    result.result[i].name //+ ' (' + jsUcfirst(result.result[i].pay_type) + ')'
 	                                )
-	                                .addClass((result.result[i].pay_type=='earnings'?'text-success':'text-danger'))
+	                                // .addClass((result.result[i].pay_type=='earnings'?'text-success':'text-danger'))
 	                            );
 	                            /*s
 	                            $('#selected_payamount').append($("<input />")

@@ -98,6 +98,38 @@
 		text-overflow: ellipsis;
 		max-width: 200px;
 	}
+	
+	/* Fix for frozen first column with search */
+	.schedule-calendar-table th.schedule-employee-cell,
+	#schedule-grid-table th.schedule-employee-cell {
+		position: sticky !important;
+		left: 0 !important;
+		z-index: 10 !important;
+		background-color: #4f4bc3 !important;
+		min-width: 200px !important;
+		width: 200px !important;
+	}
+	
+	.schedule-calendar-table td.schedule-employee-cell,
+	#schedule-grid-table td.schedule-employee-cell {
+		position: sticky !important;
+		left: 0 !important;
+		z-index: 10 !important;
+		background: #f8f9fb !important;
+	}
+	
+	.schedule-calendar-table th.schedule-employee-cell .db-table-search,
+	#schedule-grid-table th.schedule-employee-cell .db-table-search {
+		position: relative;
+		width: 100%;
+	}
+	
+	.schedule-calendar-table th.schedule-employee-cell .db-table-search input,
+	#schedule-grid-table th.schedule-employee-cell .db-table-search input {
+		width: 100%;
+		max-width: 180px;
+		box-sizing: border-box;
+	}
 	.schedule-employee-cell .ts-designation {
 		font-size: 12px;
 		color: #595959;
@@ -260,7 +292,7 @@
 													</th>
 													<th scope="col">
 														
-														{{ date('m/d/Y', strtotime($request->start_date)).' - '.date('m/d/Y', strtotime($request->end_date)) }}
+														{{-- date('m/d/Y', strtotime($request->start_date)).' - '.date('m/d/Y', strtotime($request->end_date)) --}}
 													</th>
 												
 													<?php
@@ -825,6 +857,25 @@
 			});
 			$('#schedule-grid-table').addClass('schedule-calendar-table');
 			$('#schedule-grid-table tbody').html(tbody);
+			
+			// Ensure sticky positioning is applied
+			setTimeout(function() {
+				$('#schedule-grid-table th.schedule-employee-cell').css({
+					'position': 'sticky',
+					'left': '0',
+					'z-index': '10',
+					'background-color': '#4f4bc3',
+					'min-width': '200px',
+					'width': '200px'
+				});
+				
+				$('#schedule-grid-table td.schedule-employee-cell').css({
+					'position': 'sticky',
+					'left': '0',
+					'z-index': '10',
+					'background': '#f8f9fb'
+				});
+			}, 100);
 		}
 		
 		// Modal open for add

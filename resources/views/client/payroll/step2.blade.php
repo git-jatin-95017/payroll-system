@@ -759,7 +759,7 @@
 	  		}
 	  	});
 
-	  	$(document).find('.total_amount_confirm').html(formatter.format(total_confimr_amt + Number(totalConfimrAmtStep1)));
+	  			$(document).find('.total_amount_confirm').html('$' + (total_confimr_amt + Number(totalConfimrAmtStep1)).toFixed(2));
 	}
 
 	// Function to handle when leave input goes blank
