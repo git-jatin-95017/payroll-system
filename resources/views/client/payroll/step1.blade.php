@@ -90,7 +90,7 @@
 									<tr>
 										<th scope="col">Employees</th>
 										<th scope="col">Hours Worked</th>
-										<th scope="col">Additional Earnings</th>
+										<th scope="col">Additional Earnings($)</th>
 										<th scope="col">Gross Pay</th>
 									</tr>
 								</thead>

@@ -198,11 +198,37 @@ class LeaveTypeController extends Controller
 	}   
 
 	protected function permanentDelete($id){
-		$trash = LeaveType::find($id);
+		try {
+			$leaveType = LeaveType::find($id);
+			
+			if (!$leaveType) {
+				return false;
+			}
 
-		$trash->delete();
+			// Check if there are any related leave_balances records
+			$relatedLeaveBalances = \App\Models\LeaveBalance::where('leave_type_id', $id)->count();
+			
+			if ($relatedLeaveBalances > 0) {
+				// Delete related leave_balances records first
+				\App\Models\LeaveBalance::where('leave_type_id', $id)->delete();
+			}
 
-		return true;
+			// Check if there are any related emp_leave_policies records
+			$relatedEmpPolicies = \App\Models\EmpLeavePolicy::where('leave_type_id', $id)->count();
+			
+			if ($relatedEmpPolicies > 0) {
+				// Delete related emp_leave_policies records
+				\App\Models\EmpLeavePolicy::where('leave_type_id', $id)->delete();
+			}
+
+			// Now delete the leave type
+			$leaveType->delete();
+
+			return true;
+		} catch (\Exception $e) {
+			\Log::error('Error deleting leave type: ' . $e->getMessage());
+			return false;
+		}
 	}
 
 	/**
@@ -214,9 +240,13 @@ class LeaveTypeController extends Controller
 	public function destroy(Request $request, $id)
 	{
 		if (request()->ajax()) {
-			 $trash = $this->permanentDelete($id);
+			$result = $this->permanentDelete($id);
 
-			return response()->json(['status'=>true, 'message'=>"Leave policy deleted successfully."]);
+			if ($result) {
+				return response()->json(['status'=>true, 'message'=>"Leave policy deleted successfully."]);
+			} else {
+				return response()->json(['status'=>false, 'message'=>"Failed to delete leave policy. It may be in use by employees."], 422);
+			}
 		}
 	}
 

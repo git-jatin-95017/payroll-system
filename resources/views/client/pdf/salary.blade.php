@@ -245,12 +245,14 @@
                         $ptoff = 0;
                     }
         @endphp
+        @if($val->amount > 0)
             <tr>    
                 <td style="padding:3px 5px; border-right: 1px solid #ddd; width: 50%;color: #000;">{{ $val->leaveType->name ?? 'N/A'}}</td>
                 <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($val->amount > 0 ? $ptoff/$val->amount : 0, 2)}}</td>
                 <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">{{$val->amount}}</td>
                 <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;  width: 50%;color: #000;">${{number_format(($val->amount > 0 ? $ptoff/$val->amount : 0) * $val->amount, 2)}}</td>
             </tr>
+        @endif
         @php                                                     
                 }
             }
@@ -332,8 +334,11 @@
                     $totalAe = 0;
                     if (count($data->additionalEarnings) > 0) {
                         foreach($data->additionalEarnings as $key => $val) {
-                            if($val->payhead->pay_type !='earnings') {
+                            //if($val->payhead->pay_type !='earnings') {
                                 $totalAe += $val->amount;
+                                if($val->payhead->pay_type =='deductions') {
+                                    $totalAe -= $val->amount;
+                                }
                     @endphp
 
                             @if($val->amount > 0)
@@ -354,7 +359,7 @@
                             @endif
                     @php
                             }
-                        }
+                        //}
                     }
                     @endphp
                     <tr>
@@ -380,10 +385,12 @@
             <th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">Description</th>
             <th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">Amount</th>
         </tr>
+        @if($grossFinal > 0)
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;color: #000;">Gross Earnings</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($grossFinal, 2)}}</td>
         </tr>
+        @endif
         @if($totalTaxes > 0)
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;color: #000;">Statutory deductions</td>

@@ -42,7 +42,8 @@
 		$education_levy_amt_5 = $row->education_levy_amt_5 > 0 ? $row->education_levy_amt_5 : $settings->education_levy_amt_5;
 
 		$bankName = ucfirst($row->user->paymentProfile->bank_name);
-
+		
+		if($row->user->paymentProfile->payment_method != 'check') {
 		$gross =0;
 		$employeePay =0;
 		$deductions = 0;
@@ -152,25 +153,27 @@
 		// $totalAdditions += $earnings;
 		// $nothingAdditionTonetPayTotal += $nothingAdditionTonetPay;
 		
-		// Group data by bank name
-        if (!isset($bankData[$bankName])) {
-            $bankData[$bankName] = [
-                'count' => 1,
-                'totalAmount' => $employeePay,
-            ];
-        } else {
-            $bankData[$bankName]['count']++;
-            $bankData[$bankName]['totalAmount'] += $employeePay;
-        }
-
-		$bankHTML.= '<tr>
-		    <td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->paymentProfile->bank_name) . '</td>
-		    <td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->employeeProfile->first_name) . '</td>
-		    <td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->employeeProfile->last_name) . '</td>
-		    <td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->paymentProfile->account_number) . '</td>
-		    <td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->paymentProfile->account_type) . '</td>
-		    <td style="padding: 3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">$' . number_format($employeePay, 2) . '</td>
-		</tr>';                 
+		
+			// Group data by bank name
+			if (!isset($bankData[$bankName])) {
+				$bankData[$bankName] = [
+					'count' => 1,
+					'totalAmount' => $employeePay,
+				];
+			} else {
+				$bankData[$bankName]['count']++;
+				$bankData[$bankName]['totalAmount'] += $employeePay;
+			}
+				
+			$bankHTML.= '<tr>
+				<td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->paymentProfile->bank_name) . '</td>
+				<td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->employeeProfile->first_name) . '</td>
+				<td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->employeeProfile->last_name) . '</td>
+				<td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->paymentProfile->account_number) . '</td>
+				<td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->paymentProfile->account_type) . '</td>
+				<td style="padding: 3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">$' . number_format($employeePay, 2) . '</td>
+			</tr>';    
+		}             
 	?>
 @endforeach
 <table style="width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 10px;">
