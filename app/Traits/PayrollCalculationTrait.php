@@ -21,9 +21,16 @@ trait PayrollCalculationTrait
         $earningsT = 0;
         $nothingAdditionTonetPayT = 0;
 
+        $payheadsList = [];
+
         // Calculate additional earnings and deductions
         if (count($row->additionalEarnings) > 0) {
             foreach($row->additionalEarnings as $val) {
+                $payheadsList[] = [
+                    'name' => $val->payhead->name,
+                    'pay_type' => $val->payhead->pay_type,
+                    'amount' => $val->amount
+                ];
                 if($val->payhead->pay_type == 'earnings') {
                     $earningsT += $val->amount;
                 }
@@ -98,7 +105,8 @@ trait PayrollCalculationTrait
             'nothing_addition' => $nothingAdditionTonetPayT,
             'net_pay' => $net_pay,
             'employee_pay' => $employeePayT,
-            'total_payroll' => $totalPayroll
+            'total_payroll' => $totalPayroll,
+            'payheads_list' => $payheadsList
         ];
     }
 } 

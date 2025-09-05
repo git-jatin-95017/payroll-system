@@ -89,7 +89,7 @@ class MyProfileController extends Controller
 			    $user->name = $request->input('name')[$index];
 			    $user->email = $request->input('email')[$index];
 			    $user->password = Hash::make($request->input('password')[$index]);
-			    $user->role_id = 2; //Company as admin
+			    $user->role_id = 1; //Company as admin
 			    $user->status = 1; //Company as admin
 			    $user->save();
 		    }

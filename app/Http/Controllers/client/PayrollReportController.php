@@ -206,6 +206,7 @@ dd($query);*/
         $i = 0;
         foreach ($payrolls as $payroll) {
             $amounts = $this->calculatePayrollAmounts($payroll, $settings);
+            $payrolls[$i]['payheads_list'] = $amounts['payheads_list'];
             $totalGrossPay += $amounts['gross'];
             $totalNetPay += $amounts['net_pay'];
             $totalPaidTimeOff += $payroll->paid_time_off;

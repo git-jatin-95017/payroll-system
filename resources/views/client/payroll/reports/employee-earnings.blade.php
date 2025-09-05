@@ -159,7 +159,15 @@
 									<tr>
 										<td>{{ $payroll->user->name }}</td>
 										<td>{{ date('M d, Y', strtotime($payroll->start_date)) }} - {{ date('M d, Y', strtotime($payroll->end_date)) }}</td>
-										<td>${{ number_format($payroll->gross, 2) }}</td>
+										<td>
+                                            <strong class="bg-primary text-white p-2 rounded-pill">${{ number_format($payroll->gross, 2) }}</strong>
+                                            <ul class="mt-2 list-unstyled">
+                                            
+                                            @foreach($payroll->payheads_list as $payhead)
+                                                <li><small class="text-muted"><strong>{{ $payhead['name'] }}</strong> - ${{ number_format($payhead['amount'], 2) }}</small></li>
+                                            @endforeach
+                                            </ul>
+                                        </td>
 										<td>${{ number_format($payroll->medical, 2) }}</td>
 										<td>${{ number_format($payroll->security, 2) }}</td>
 										<td>${{ number_format($payroll->edu_levy, 2) }}</td>
