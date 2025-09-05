@@ -20,7 +20,8 @@ trait PayrollCalculationTrait
         $deductionsT = 0;
         $earningsT = 0;
         $nothingAdditionTonetPayT = 0;
-
+        $paidTimeOffT = 0;
+        $regHrsT = 0;
         $payheadsList = [];
 
         // Calculate additional earnings and deductions
@@ -43,6 +44,8 @@ trait PayrollCalculationTrait
             }
         }
 
+        $regHrsT = $row->user->employeeProfile->pay_rate * $row->total_hours;
+        $paidTimeOffT = $row->paid_time_off;
         $grossT = $row->gross + $row->paid_time_off;
 
         $pay_type = $row->user->employeeProfile->pay_type;
@@ -106,7 +109,9 @@ trait PayrollCalculationTrait
             'net_pay' => $net_pay,
             'employee_pay' => $employeePayT,
             'total_payroll' => $totalPayroll,
-            'payheads_list' => $payheadsList
+            'payheads_list' => $payheadsList,
+            'reg_hrs' => $regHrsT,
+            'paid_time_off' => $paidTimeOffT
         ];
     }
 } 

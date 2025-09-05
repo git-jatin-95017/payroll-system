@@ -495,6 +495,9 @@
                                                 // $paidTimeOff = 0;
                                                 // $reimbursement = $row->reimbursement;
                                                 $nothingAdditionTonetPay = 0;
+                                                $payheadsList = [];
+                                                $paaidTimeOff = 0;
+                                                $regHrs = 0;
     
                                                 if (count($row->additionalEarnings) > 0) {
                                                     foreach($row->additionalEarnings as $key => $val) {
@@ -509,6 +512,11 @@
                                                         if($val->payhead->pay_type =='nothing') {
                                                             $nothingAdditionTonetPay += $val->amount;
                                                         }
+                                                        $payheadsList[] = [
+                                                            'name' => $val->payhead->name,
+                                                            'pay_type' => $val->payhead->pay_type,
+                                                            'amount' => $val->amount
+                                                        ];
                                                     }
                                                 }
     
@@ -518,9 +526,11 @@
                                                 //     }
                                                 // }
     
-                                                // $regHrs = $row->user->employeeProfile->pay_rate * $row->total_hours;
-    
+                                                $regHrs = $row->user->employeeProfile->pay_rate * $row->total_hours;
+                                                
                                                 $gross = $row->gross + $row->paid_time_off;
+
+                                                $paidTimeOff = $row->paid_time_off;
     
                                                 $pay_type = $row->user->employeeProfile->pay_type;
                                                 $diff = date_diff(date_create($row->user->employeeProfile->dob), date_create(date("Y-m-d")));
@@ -607,7 +617,22 @@
                                             ?>
                                             <tr>
                                                 <td>{{ucfirst($row->user->employeeProfile->first_name)}} {{ucfirst($row->user->employeeProfile->last_name)}}</td>
-                                                <td>${{number_format($gross, 2)}}</td> <?php //$gross; commented?>
+                                                <td>
+                                                    <strong class="bg-info text-white p-2 rounded-pill">${{number_format($gross, 2)}}</strong>
+                                                    <ul class="mt-2 list-unstyled">
+                                                        @if($regHrs > 0)
+                                                            <li><small class="text-muted"><strong>Regular Hours</strong> - ${{ number_format($regHrs, 2) }}</small></li>
+                                                        @endif
+                                                        @foreach($payheadsList as $payhead)
+                                                            @if($payhead['amount'] > 0)
+                                                                <li><small class="text-muted"><strong>{{ $payhead['name'] }}</strong> - ${{ number_format($payhead['amount'], 2) }}</small></li>
+                                                            @endif
+                                                        @endforeach
+                                                        @if($paidTimeOff > 0)
+                                                            <li><small class="text-muted"><strong>Paid Time Off</strong> - ${{ number_format($paidTimeOff, 2) }}</small></li>
+                                                        @endif
+                                                    </ul>
+                                                </td> <?php //$gross; commented?>
                                                 <td>${{number_format($medical_benefits, 2)}}</td>
                                                 <td>${{number_format($social_security, 2)}}</td>
                                                 <td>${{number_format($education_lvey, 2)}}</td>
@@ -879,7 +904,7 @@
             ctx.fillText("Total Pay:", x, y - 10); 
 
             // Second line
-            ctx.fillText(`$${totalEmployeePay}`, x, y + 15);
+            ctx.fillText(`$${totalEmployeePay.toFixed(2)}`, x, y + 15);
         }
     };
 

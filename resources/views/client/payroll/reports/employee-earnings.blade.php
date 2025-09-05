@@ -145,7 +145,7 @@
 							$deductions = 0;
 							$totalemppay = 0;
                                 foreach($payrolls as $payroll) {
-									$grosspay += $payroll->gross;
+									$grosspay += ($payroll->gross + $payroll->paid_time_off);
 									$medicalbenefits += $payroll->medical;
 									$socialsecurity += $payroll->security;
 									$educationlevy += $payroll->edu_levy;
@@ -160,11 +160,18 @@
 										<td>{{ $payroll->user->name }}</td>
 										<td>{{ date('M d, Y', strtotime($payroll->start_date)) }} - {{ date('M d, Y', strtotime($payroll->end_date)) }}</td>
 										<td>
-                                            <strong class="bg-primary text-white p-2 rounded-pill">${{ number_format($payroll->gross, 2) }}</strong>
+                                            <strong class="bg-primary text-white p-2 rounded-pill">${{ number_format($payroll->gross + $payroll->paid_time_off, 2) }}</strong>
                                             <ul class="mt-2 list-unstyled">
-                                            
+                                                @if($payroll->reg_hrs_temp > 0)
+                                                    <li><small class="text-muted"><strong>Regular Hours</strong> - ${{ number_format($payroll->reg_hrs_temp, 2) }}</small></li>
+                                                @endif
+                                                @if($payroll->paid_time_off > 0)
+                                                    <li><small class="text-muted"><strong>Paid Time Off</strong> - ${{ number_format($payroll->paid_time_off, 2) }}</small></li>
+                                                @endif
                                             @foreach($payroll->payheads_list as $payhead)
-                                                <li><small class="text-muted"><strong>{{ $payhead['name'] }}</strong> - ${{ number_format($payhead['amount'], 2) }}</small></li>
+                                                @if($payhead['amount'] > 0)
+                                                    <li><small class="text-muted"><strong>{{ $payhead['name'] }}</strong> - ${{ number_format($payhead['amount'], 2) }}</small></li>
+                                                @endif
                                             @endforeach
                                             </ul>
                                         </td>

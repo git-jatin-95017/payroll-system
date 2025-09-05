@@ -209,8 +209,10 @@ dd($query);*/
             $payrolls[$i]['payheads_list'] = $amounts['payheads_list'];
             $totalGrossPay += $amounts['gross'];
             $totalNetPay += $amounts['net_pay'];
-            $totalPaidTimeOff += $payroll->paid_time_off;
+            $totalPaidTimeOff += $amounts['paid_time_off'];
 			$payrolls[$i]['employee_pay'] = $amounts['employee_pay'];
+			$payrolls[$i]['reg_hrs_temp'] = $amounts['reg_hrs'];
+			$payrolls[$i]['paid_time_off'] = $amounts['paid_time_off'];
 			$i++;
         }
 
