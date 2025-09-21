@@ -1,5 +1,111 @@
 @extends('layouts.new_layout')
 @section('content')
+
+@push('styles')
+<style>
+.gross-pay-link {
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.gross-pay-link:hover {
+    opacity: 0.8;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1040;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal.show {
+    display: block !important;
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: 1.75rem auto;
+    max-width: 500px;
+}
+
+.modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: 0.3rem;
+    outline: 0;
+}
+
+.modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem 1rem;
+    border-bottom: 1px solid #dee2e6;
+    border-top-left-radius: calc(0.3rem - 1px);
+    border-top-right-radius: calc(0.3rem - 1px);
+}
+
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1rem;
+}
+
+.modal-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0.75rem;
+    border-top: 1px solid #dee2e6;
+    border-bottom-right-radius: calc(0.3rem - 1px);
+    border-bottom-left-radius: calc(0.3rem - 1px);
+}
+
+.modal-open {
+    overflow: hidden;
+}
+
+.close {
+    float: right;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    opacity: .5;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+}
+
+.close:hover {
+    opacity: .75;
+}
+</style>
+@endpush
 <div class="bg-white w-100 border-radius-15 p-4">
     <div class="row">
         <div class="col-12">
@@ -160,26 +266,167 @@
 										<td>{{ $payroll->user->name }}</td>
 										<td>{{ date('M d, Y', strtotime($payroll->start_date)) }} - {{ date('M d, Y', strtotime($payroll->end_date)) }}</td>
 										<td>
-                                            <strong class="bg-primary text-white p-2 rounded-pill">${{ number_format($payroll->gross + $payroll->paid_time_off, 2) }}</strong>
-                                            <ul class="mt-2 list-unstyled">
-                                                @if($payroll->reg_hrs_temp > 0)
-                                                    <li><small class="text-muted"><strong>Regular Hours</strong> - ${{ number_format($payroll->reg_hrs_temp, 2) }}</small></li>
-                                                @endif
-                                                @if($payroll->paid_time_off > 0)
-                                                    <li><small class="text-muted"><strong>Paid Time Off</strong> - ${{ number_format($payroll->paid_time_off, 2) }}</small></li>
-                                                @endif
-                                            @foreach($payroll->payheads_list as $payhead)
-                                                @if($payhead['amount'] > 0)
-                                                    <li><small class="text-muted"><strong>{{ $payhead['name'] }}</strong> - ${{ number_format($payhead['amount'], 2) }}</small></li>
-                                                @endif
-                                            @endforeach
-                                            </ul>
+                                            <a href="#" class="gross-pay-link" data-toggle="modal" data-target="#grossPayModal{{ $payroll->id }}" style="text-decoration: none;">
+                                                ${{ number_format($payroll->gross + $payroll->paid_time_off, 2) }}
+                                            </a>
+                                            
+                                            <!-- Gross Pay Details Modal -->
+                                            <div class="modal fade" id="grossPayModal{{ $payroll->id }}" tabindex="-1" role="dialog" aria-labelledby="grossPayModalLabel{{ $payroll->id }}" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="grossPayModalLabel{{ $payroll->id }}">
+                                                                Gross Pay Details - {{ $payroll->user->name }}
+                                                            </h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="text-center mb-3">
+                                                                <h4 class="text-primary">Total Gross Pay: ${{ number_format($payroll->gross + $payroll->paid_time_off, 2) }}</h4>
+                                                            </div>
+                                                            <hr>
+                                                            <h6 class="mb-3">Breakdown:</h6>
+                                                            <ul class="list-unstyled">
+                                                                @if($payroll->reg_hrs_temp > 0)
+                                                                    <li class="mb-2">
+                                                                        <div class="d-flex justify-content-between">
+                                                                            <span><strong>Regular Hours</strong></span>
+                                                                            <span class="text-success">${{ number_format($payroll->reg_hrs_temp, 2) }}</span>
+                                                                        </div>
+                                                                    </li>
+                                                                @endif
+                                                                @if($payroll->paid_time_off > 0)
+                                                                    <li class="mb-2">
+                                                                        <div class="d-flex justify-content-between">
+                                                                            <span><strong>Paid Time Off</strong></span>
+                                                                            <span class="text-success">${{ number_format($payroll->paid_time_off, 2) }}</span>
+                                                                        </div>
+                                                                    </li>
+                                                                @endif
+                                                                @foreach($payroll->payheads_list as $payhead)
+                                                                    @if($payhead['amount'] > 0)
+                                                                        <li class="mb-2">
+                                                                            <div class="d-flex justify-content-between">
+                                                                                <span><strong>{{ $payhead['name'] }}</strong></span>
+                                                                                <span class="text-success">${{ number_format($payhead['amount'], 2) }}</span>
+                                                                            </div>
+                                                                        </li>
+                                                                    @endif
+                                                                @endforeach
+                                                            </ul>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
 										<td>${{ number_format($payroll->medical, 2) }}</td>
 										<td>${{ number_format($payroll->security, 2) }}</td>
 										<td>${{ number_format($payroll->edu_levy, 2) }}</td>
-										<td>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2) }}</td>
-										<td>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2) }}</td>
+										<td>
+                                            <a href="#" class="additions-link" data-toggle="modal" data-target="#additionsModal{{ $payroll->id }}" style="text-decoration: none;">
+                                                ${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2) }}
+                                            </a>
+                                            
+                                            <!-- Additions Details Modal -->
+                                            <div class="modal fade" id="additionsModal{{ $payroll->id }}" tabindex="-1" role="dialog" aria-labelledby="additionsModalLabel{{ $payroll->id }}" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="additionsModalLabel{{ $payroll->id }}">
+                                                                Additions Details - {{ $payroll->user->name }}
+                                                            </h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="text-center mb-3">
+                                                                <h4 class="text-success">Total Additions: ${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2) }}</h4>
+                                                            </div>
+                                                            <hr>
+                                                            <h6 class="mb-3">Breakdown:</h6>
+                                                            <ul class="list-unstyled">
+                                                                @php
+                                                                    $additions = $payroll->additionalEarnings->where('payhead.pay_type', 'nothing');
+                                                                @endphp
+                                                                @if($additions->count() > 0)
+                                                                    @foreach($additions as $addition)
+                                                                        @if($addition->amount > 0)
+                                                                            <li class="mb-2">
+                                                                                <div class="d-flex justify-content-between">
+                                                                                    <span><strong>{{ $addition->payhead->name ?? 'Addition' }}</strong></span>
+                                                                                    <span class="text-success">${{ number_format($addition->amount, 2) }}</span>
+                                                                                </div>
+                                                                            </li>
+                                                                        @endif
+                                                                    @endforeach
+                                                                @else
+                                                                    <li class="text-muted">No additions for this period</li>
+                                                                @endif
+                                                            </ul>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="cursor: pointer;">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+										<td>
+                                            <a href="#" class="deductions-link" data-toggle="modal" data-target="#deductionsModal{{ $payroll->id }}" style="text-decoration: none;">
+                                                ${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2) }}
+                                            </a>
+                                            
+                                            <!-- Deductions Details Modal -->
+                                            <div class="modal fade" id="deductionsModal{{ $payroll->id }}" tabindex="-1" role="dialog" aria-labelledby="deductionsModalLabel{{ $payroll->id }}" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="deductionsModalLabel{{ $payroll->id }}">
+                                                                Deductions Details - {{ $payroll->user->name }}
+                                                            </h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="text-center mb-3">
+                                                                <h4 class="text-danger">Total Deductions: ${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2) }}</h4>
+                                                            </div>
+                                                            <hr>
+                                                            <h6 class="mb-3">Breakdown:</h6>
+                                                            <ul class="list-unstyled">
+                                                                @php
+                                                                    $deductions = $payroll->additionalEarnings->where('payhead.pay_type', 'deductions');
+                                                                @endphp
+                                                                @if($deductions->count() > 0)
+                                                                    @foreach($deductions as $deduction)
+                                                                        @if($deduction->amount > 0)
+                                                                            <li class="mb-2">
+                                                                                <div class="d-flex justify-content-between">
+                                                                                    <span><strong>{{ $deduction->payhead->name ?? 'Deduction' }}</strong></span>
+                                                                                    <span class="text-danger">${{ number_format($deduction->amount, 2) }}</span>
+                                                                                </div>
+                                                                            </li>
+                                                                        @endif
+                                                                    @endforeach
+                                                                @else
+                                                                    <li class="text-muted">No deductions for this period</li>
+                                                                @endif
+                                                            </ul>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="cursor: pointer;">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
 										<td>${{ number_format($payroll->employee_pay, 2) }}</td>
 									</tr>
 								@php
@@ -191,8 +438,8 @@
 									<td><strong>${{ number_format($medicalbenefits, 2) }}</strong></td>
 									<td><strong>${{ number_format($socialsecurity, 2) }}</strong></td>
 									<td><strong>${{ number_format($educationlevy, 2) }}</strong></td>
-									<td><strong>${{ number_format($additions) }}</strong></td>
-									<td><strong>${{ number_format($deductions, 2) }}</strong></td>
+									<td><strong>${{ number_format(is_numeric($additions) ? $additions : 0, 2) }}</strong></td>
+									<td><strong>${{ number_format(is_numeric($deductions) ? $deductions : 0, 2) }}</strong></td>
 									<td><strong>${{ number_format($totalemppay, 2) }}</strong></td>
 								</tr>
                             </tbody>
@@ -216,6 +463,105 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    // Handle modal clicks (gross pay, additions, deductions)
+    document.querySelectorAll('.gross-pay-link, .additions-link, .deductions-link').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            var targetModal = this.getAttribute('data-target');
+            var modal = document.querySelector(targetModal);
+            if (modal) {
+                // Show modal using Bootstrap modal
+                if (typeof bootstrap !== 'undefined') {
+                    var bsModal = new bootstrap.Modal(modal);
+                    bsModal.show();
+                } else if (typeof $ !== 'undefined' && $.fn.modal) {
+                    // Fallback to jQuery modal if Bootstrap JS is not available
+                    $(modal).modal('show');
+                } else {
+                    // Fallback to manual modal display
+                    // Create backdrop
+                    var backdrop = document.createElement('div');
+                    backdrop.className = 'modal-backdrop';
+                    backdrop.id = 'backdrop-' + modal.id;
+                    document.body.appendChild(backdrop);
+                    
+                    // Show modal
+                    modal.style.display = 'block';
+                    modal.classList.add('show');
+                    document.body.classList.add('modal-open');
+                }
+            }
+        });
+    });
+    
+    // Handle modal close buttons
+    document.querySelectorAll('[data-dismiss="modal"]').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var modal = this.closest('.modal');
+            if (modal) {
+                if (typeof bootstrap !== 'undefined') {
+                    var bsModal = bootstrap.Modal.getInstance(modal);
+                    if (bsModal) bsModal.hide();
+                } else if (typeof $ !== 'undefined' && $.fn.modal) {
+                    $(modal).modal('hide');
+                } else {
+                    // Remove backdrop
+                    var backdrop = document.getElementById('backdrop-' + modal.id);
+                    if (backdrop) {
+                        backdrop.remove();
+                    }
+                    
+                    // Hide modal
+                    modal.style.display = 'none';
+                    modal.classList.remove('show');
+                    document.body.classList.remove('modal-open');
+                }
+            }
+        });
+    });
+    
+    // Close modal when clicking outside
+    document.querySelectorAll('.modal').forEach(function(modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                if (typeof bootstrap !== 'undefined') {
+                    var bsModal = bootstrap.Modal.getInstance(this);
+                    if (bsModal) bsModal.hide();
+                } else if (typeof $ !== 'undefined' && $.fn.modal) {
+                    $(this).modal('hide');
+                } else {
+                    // Remove backdrop
+                    var backdrop = document.getElementById('backdrop-' + this.id);
+                    if (backdrop) {
+                        backdrop.remove();
+                    }
+                    
+                    // Hide modal
+                    this.style.display = 'none';
+                    this.classList.remove('show');
+                    document.body.classList.remove('modal-open');
+                }
+            }
+        });
+    });
+    
+    // Handle backdrop clicks
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal-backdrop')) {
+            var modalId = e.target.id.replace('backdrop-', '');
+            var modal = document.getElementById(modalId);
+            if (modal) {
+                // Remove backdrop
+                e.target.remove();
+                
+                // Hide modal
+                modal.style.display = 'none';
+                modal.classList.remove('show');
+                document.body.classList.remove('modal-open');
+            }
+        }
+    });
 });
 </script>
 @endpush 
