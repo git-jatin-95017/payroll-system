@@ -253,8 +253,9 @@ class ClientController extends Controller
 				$user->name = $request->input('name')[$index];
 				$user->email = $request->input('email')[$index];
 				$user->password = Hash::make($request->input('password')[$index]);
-				$user->role_id = 1; //Company as admin
-				$user->status = 1;
+				$user->role_id = 1; //Admin role - when admin adds admin, they become admin role
+				$user->status = 1; //Active status
+				$user->created_by = auth()->user()->id; // Set to the admin creating the user
 				$user->save();
 			}
 		}
@@ -300,7 +301,7 @@ class ClientController extends Controller
 		$company = User::find($id);
 		
 		// Fetch existing administrators for this company
-		$existingAdmins = User::where('created_by', $id)
+		$existingAdmins = User::where('created_by', auth()->user()->id)
 			->where('role_id', 1)
 			->select('id', 'name', 'email', 'created_at')
 			->get();
@@ -450,7 +451,7 @@ class ClientController extends Controller
 						$user->password = Hash::make($request->input('password')[$index]);
 						$user->role_id = 1; //Company as admin
 						$user->status = 1; //Company as admin
-						$user->created_by = $id; // Set to the client company being edited
+						$user->created_by = auth()->user()->id; // Set to the client company being edited
 						
 						// Debug: Log the created_by value
 						\Log::info('Creating new admin user', [
@@ -608,18 +609,18 @@ class ClientController extends Controller
 	 * @param int $admin_id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function deleteAdmin($company_id, $admin_id)
+	public function deleteAdmin($id)
 	{
 		try {
-			$admin = User::findOrFail($admin_id);
+			$admin = User::findOrFail($id);
 			
 			// Check if the admin belongs to the company being edited
-			if ($admin->created_by != $company_id) {
-				return response()->json([
-					'status' => false, 
-					'message' => 'Unauthorized to delete this administrator.'
-				], 403);
-			}
+			// if ($admin->created_by != $company_id) {
+			// 	return response()->json([
+			// 		'status' => false, 
+			// 		'message' => 'Unauthorized to delete this administrator.'
+			// 	], 403);
+			// }
 			
 			$admin->delete();
 			

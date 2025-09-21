@@ -350,7 +350,7 @@ class RunPayrollController extends Controller
 			->get()
 			->pluck('emp_id');
 
-		$data = PayrollAmount::where('start_date', '>=', $request->start_date)->where('end_date', '<=', $request->end_date)->where('status', !empty($request->is_green) ? 1 :0)->whereIn('user_id', $empIds)->get();
+		$data = PayrollAmount::where('start_date', '>=', $request->start_date)->where('end_date', '<=', $request->end_date)->whereIn('status', !empty($request->is_green) ? [1] : [0])->whereIn('user_id', $empIds)->get();
 
 		$totalPayroll = collect($data)->sum(function ($row) { return (float) $row->gross; });
 		

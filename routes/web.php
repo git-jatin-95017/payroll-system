@@ -60,7 +60,7 @@ Route::prefix('admin')->group(function () {
 
 	Route::post('login-as-client', [ClientController::class, 'loginAs'])->name('login-as-client');
 	Route::resource('client', ClientController::class);
-	Route::delete('client/{company_id}/admin/{admin_id}', [ClientController::class, 'deleteAdmin'])->name('client.admin.delete');
+	Route::delete('admin/{admin_id}', [ClientController::class, 'deleteAdmin'])->name('client.admin.delete');
 
 	Route::get('attendance/getData/', [AttendanceController::class, 'getData'])->name('attendance.getData');
 	Route::resource('attendance', AttendanceController::class);
@@ -146,6 +146,7 @@ Route::prefix('client')->group(function () {
 	Route::get('delete/payroll', [RunPayrollController::class, 'deletePayroll'])->name('delete.payroll');
 	Route::get('download-pdf', [RunPayrollController::class, 'downloadPdf'])->name('download.pdf');
 	Route::resource('my-profile', MPF::class);
+	Route::delete('my-profile/{admin_id}/admin', [MPF::class, 'deleteAdmin'])->name('my-profile.delete-admin');
 
 	Route::post('show-medical-form', [ReportController::class, 'showMedicalForm'])->name('report.showMedicalForm');
 	Route::resource('report', ReportController::class);

@@ -403,7 +403,7 @@
 													<td class="total-payment-gross">
 														<div data-maindiv="reg_hrs_div">
 															<small class="badge-payroll">Regular hours</small>
-															<span class="reg_hrs">0.00</span>
+															<span class="reg_hrs">$0.00</span>
 														</div>
 														<div data-maindiv="overtime-div">
 															<small class="badge-payroll">OT</small>
@@ -608,7 +608,7 @@
 					// console.log(focusedRow.find(`[data-payheadlast="${temp_attr}"]`), 77777);
 					if ($.isNumeric(this.value) && this.value > 0) {
 						focusedRow.find(`[id="${temp_attr}"]`).removeClass('d-none');
-						focusedRow.find(`[data-payheadlast="${temp_attr}"]`).html(this.value);
+						focusedRow.find(`[data-payheadlast="${temp_attr}"]`).html('$' + parseFloat(this.value).toFixed(2));
 					} else {
 						focusedRow.find(`[id="${temp_attr}"]`).addClass('d-none');
 					}
@@ -626,7 +626,7 @@
 					// console.log(focusedRow.find(`[data-payheadlast="${temp_attr}"]`), 77777);
 					if ($.isNumeric(this.value) && this.value > 0) {
 						focusedRow.find(`[id="${temp_attr}"]`).removeClass('d-none');
-						focusedRow.find(`[data-payheadlast="${temp_attr}"]`).html(this.value);
+						focusedRow.find(`[data-payheadlast="${temp_attr}"]`).html('$' + parseFloat(this.value).toFixed(2));
 					} else {
 						// focusedRow.find(`[id="${temp_attr}"]`).addClass('d-none');	
 					}
@@ -785,11 +785,11 @@
 			focusedRow.find('[data-maindiv="total-div"]').addClass('d-none');
 		}
 
-		focusedRow.find('.reg_hrs').html(regular_hrs * rate_per_hour); // changed
-		focusedRow.find('.holiday-pay-span').html(holiday_pay);
-		focusedRow.find('.additonal-earn-span').html(additionalHrsEarnings);
-		focusedRow.find('.overtime').html(overtime_hrs);
-		focusedRow.find('.double-overtime').html(double_overtime_hrs);
+		focusedRow.find('.reg_hrs').html('$' + (regular_hrs * rate_per_hour).toFixed(2)); // changed
+		focusedRow.find('.holiday-pay-span').html('$' + holiday_pay.toFixed(2));
+		focusedRow.find('.additonal-earn-span').html('$' + additionalHrsEarnings.toFixed(2));
+		focusedRow.find('.overtime').html('$' + overtime_hrs.toFixed(2));
+		focusedRow.find('.double-overtime').html('$' + double_overtime_hrs.toFixed(2));
 		focusedRow.find('.medical').html(medical_benefits);
 		focusedRow.find('.social-security').html(social_security);
 		focusedRow.find('.edu-levy').html(education_lvey.toFixed(2));

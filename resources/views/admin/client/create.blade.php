@@ -504,68 +504,73 @@
 					<div class="max-w-md max-auto">
 						<div class="sub-text-heading pb-4">
 							<h3 class="mb-1">Administrators</h3>
+							<p class="mb-0">Add administrators for this company</p>
 						</div>
-						<div id="dynamicRowsContainer">
-							<div class="row">
-								<div class="col-6 mb-3">
-									<div class="form-group">
-										<label for="name" class="db-label">Admin Name</label>
-										<div class="col-md-12">
-											<input id="name" type="text"
-												class="form-control db-custom-input {{ $errors->has('name') ? ' is-invalid' : '' }}"
-												name="name[]">
-
-											@if ($errors->has('name'))
-											<span class="text-danger">
+						
+						<!-- Add New Administrator Section -->
+						<div class="border-top pt-4">
+							<h5 class="mb-3 text-success">
+								<i class="fas fa-plus-circle"></i> Add New Administrator
+							</h5>
+							<p class="text-muted mb-3">Fill in the details below to add new administrators to this company.</p>
+							<div id="dynamicRowsContainer">
+								<div class="row">
+									<div class="col-6 mb-3">
+										<div class="form-group">
+											<label for="name" class="db-label">Admin Name</label>
+											<div class="col-md-12">
+												<input id="name" type="text"
+													class="form-control db-custom-input {{ $errors->has('name') ? ' is-invalid' : '' }}"
+													name="name[]">
+												@if ($errors->has('name'))
+												<span class="text-danger">
 												{{ $errors->first('name') }}
+												</span>
+												@endif
+											</div>
+										</div>
+									</div>
+									<div class="col-6 mb-3">
+										<div class="form-group">
+											<label for="email" class="db-label">Admin Email address</label>
+											<input type="text"
+												class="form-control db-custom-input {{ $errors->has('email') ? ' is-invalid' : '' }}"
+												name="email[]" value="">
+											@if ($errors->has('email'))
+											<span class="text-danger">
+											{{ $errors->first('email') }}
 											</span>
 											@endif
 										</div>
 									</div>
-								</div>
-								<div class="col-6 mb-3">
-									<div class="form-group">
-										<label for="email" class="db-label">Admin Email address</label>
-										<input type="text"
-											class="form-control db-custom-input {{ $errors->has('email') ? ' is-invalid' : '' }}"
-											name="email[]" value="">
-
-										@if ($errors->has('email'))
-										<span class="text-danger">
-											{{ $errors->first('email') }}
-										</span>
-										@endif
-									</div>
-								</div>
-								<div class="col-6 mb-3">
-									<div class="form-group">
-										<label for="password" class="db-label">Admin Login Password</label>
-										<input type="password"
-											class="form-control db-custom-input {{ $errors->has('password') ? ' is-invalid' : '' }}"
-											name="password[]">
-
-										@if ($errors->has('password'))
-										<span class="text-danger">
+									<div class="col-6 mb-3">
+										<div class="form-group">
+											<label for="password" class="db-label">Admin Login Password</label>
+											<input type="password"
+												class="form-control db-custom-input {{ $errors->has('password') ? ' is-invalid' : '' }}"
+												name="password[]">
+											@if ($errors->has('password'))
+											<span class="text-danger">
 											{{ $errors->first('password') }}
-										</span>
-										@endif
+											</span>
+											@endif
+										</div>
+									</div>
+									<div class="col-6 mb-3">
+										<div class="form-group">
+											<label for="password-confirm" class="db-label">Confirm Password</label>
+											<input type="password" class="form-control db-custom-input"
+												name="password_confirmation[]">
+										</div>
 									</div>
 								</div>
-								<div class="col-6 mb-3">
-									<div class="form-group">
-										<label for="password-confirm" class="db-label">Confirm Password</label>
-										<input type="password" class="form-control db-custom-input"
-											name="password_confirmation[]">
-									</div>
-								</div>
-								
 							</div>
-						</div>
-						<div class="col-md-12 text-end">
-							<button type="button" id="addNewRow" class="btn btn-primary submit-btn">
-								Add New
-							</button>
-							<button type="submit" class="btn btn-primary submit-btn">Submit</button>
+							<div class="col-md-12 text-end">
+								<button type="button" id="addNewRow" class="btn btn-primary submit-btn">
+									Add New
+								</button>
+								<button type="submit" class="btn btn-primary submit-btn">Submit</button>
+							</div>
 						</div>
 					</div>
                 </div>

@@ -221,6 +221,22 @@ class LeaveTypeController extends Controller
 				\App\Models\EmpLeavePolicy::where('leave_type_id', $id)->delete();
 			}
 
+			// Check if there are any related additional_paids records
+			$relatedAdditionalPaids = \App\Models\AdditionalPaid::where('leave_type_id', $id)->count();
+			
+			if ($relatedAdditionalPaids > 0) {
+				// Delete related additional_paids records
+				\App\Models\AdditionalPaid::where('leave_type_id', $id)->delete();
+			}
+
+			// Check if there are any related additional_unpaids records
+			$relatedAdditionalUnPaids = \App\Models\AdditionalUnPaid::where('leave_type_id', $id)->count();
+			
+			if ($relatedAdditionalUnPaids > 0) {
+				// Delete related additional_unpaids records
+				\App\Models\AdditionalUnPaid::where('leave_type_id', $id)->delete();
+			}
+
 			// Now delete the leave type
 			$leaveType->delete();
 

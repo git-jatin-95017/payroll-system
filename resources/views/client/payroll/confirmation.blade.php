@@ -263,7 +263,8 @@
                             <a href="{{ route('download.pdf', [
                                 'start_date' => Request::query('start_date'),
                                 'end_date' => Request::query('end_date'),
-                                'appoval_number'=> Request::query('appoval_number')
+                                'appoval_number'=> Request::query('appoval_number'),
+                                'is_green' => Request::query('is_green')
                             ]) }}" class="btn btn-primary  gap-2 px-3">
                             <svg class="w-64 h-64" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"></path>
@@ -866,6 +867,7 @@
     var totalTaxes = @json($TotalTaxes);
     var totalDeductions = @json($totalDeductions);
     var totalAdditions = @json($nothingAdditionTonetPayTotal);
+    var totalPayroll = @json($TotalPayroll);
     // setup
     const data = {
       labels: ['Employee Pay', 'Taxes', 'Deductions', 'Additions'],
@@ -901,10 +903,10 @@
             const y = chart.getDatasetMeta(0).data[0].y;
 
             // First line
-            ctx.fillText("Total Pay:", x, y - 10); 
+            ctx.fillText("Total Payroll:", x, y - 10); 
 
             // Second line
-            ctx.fillText(`$${totalEmployeePay.toFixed(2)}`, x, y + 15);
+            ctx.fillText(`$${totalPayroll.toFixed(2)}`, x, y + 15);
         }
     };
 

@@ -288,17 +288,17 @@
 																				$modifiedDate = date('Y-m-d', strtotime($joiningDate. " + {$startDaysAfter} days"));
 	
 																				if ($todayDate > $modifiedDate) {
-																					$statusTitle = 'Approved';
+																					$statusTitle = 'Eligible';
 																				} else {
-																					$statusTitle = 'Probation';
+																					$statusTitle = 'Ineligible';
 																				}
 																			} else {
-																				$statusTitle = 'Probation';
+																				$statusTitle = 'Ineligible';
 																			}
 																		?>
-																		<p class="payroll-status mb-1">
+																		<p class=" mb-1">
 																			<small>Status:</small> 
-																			<small>{{$statusTitle}}</small>
+																			<strong><small class="@if($statusTitle == 'Eligible') text-success @else text-danger @endif	">{{$statusTitle}}</small></strong>
 																		</p>
 																	</div>
 																</div>

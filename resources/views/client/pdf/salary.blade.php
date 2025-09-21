@@ -258,6 +258,29 @@
             }
         @endphp
 
+        @php
+            if (count($data->additionalEarnings) > 0) {
+                foreach($data->additionalEarnings as $key => $val) {
+                    if($val->payhead->pay_type =='earnings') {
+            @endphp
+
+                    @if($val->amount > 0)
+                    <tr>
+                        <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd;">Deduction from Net Pay</td> -->
+                        <td style="padding:3px 5px; border-right: 1px solid #ddd;color: #000;">ucfirst{{ $val->payhead->name}} | {{ ucfirst($val->payhead->pay_type)}}</td>
+                        <td style="padding:3px 5px; border-right: 1px solid #ddd;color: #000;"></td>
+                        <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;"></td>
+                        <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">
+                            ${{number_format($val->amount, 2)}}
+                        </td>
+                    </tr>
+                    @endif
+            @php
+                    }
+                }
+            }
+            @endphp
+            
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;color: #000;">Gross Earnings</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;"></td>
@@ -334,7 +357,7 @@
                     $totalAe = 0;
                     if (count($data->additionalEarnings) > 0) {
                         foreach($data->additionalEarnings as $key => $val) {
-                            //if($val->payhead->pay_type !='earnings') {
+                            if($val->payhead->pay_type !='earnings') {
                                 $totalAe += $val->amount;
                                 if($val->payhead->pay_type =='deductions') {
                                     $totalAe -= $val->amount;
@@ -359,7 +382,7 @@
                             @endif
                     @php
                             }
-                        //}
+                        }
                     }
                     @endphp
                     <tr>

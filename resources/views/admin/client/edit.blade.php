@@ -633,7 +633,7 @@
 		
 		if (confirm('Are you sure you want to delete administrator "' + adminName + '"?')) {
 			$.ajax({
-				url: '{{ route("client.admin.delete", [":company_id", ":admin_id"]) }}'.replace(':company_id', companyId).replace(':admin_id', adminId),
+				url: '{{ route("client.admin.delete", [":admin_id"]) }}'.replace(':admin_id', adminId),
 				type: 'DELETE',
 				data: {
 					_token: '{{ csrf_token() }}'

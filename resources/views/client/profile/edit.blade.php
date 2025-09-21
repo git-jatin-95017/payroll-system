@@ -619,74 +619,124 @@
 					<div class="max-w-md max-auto">
 						<div class="sub-text-heading pb-4">
 							<h3 class="mb-1">Administrators</h3>
-							<!-- <p>Add your payment method here</p> -->
+							<p class="mb-0">Manage administrators for your company</p>
 						</div>
 						<form class="form-horizontal" method="POST"
 							action="{{ route('my-profile.update', auth()->user()->id) }}">
 							@csrf
 							{{ method_field('PUT') }}
-							<input type="hidden" name="update_request" value="changepwd">
-							<div id="dynamicRowsContainer">
-								<div class="row">
-									<div class="col-6 mb-3">
+							<input type="hidden" name="update_request" value="admin">
+							
+							<!-- Existing Administrators as Pre-filled Form Fields -->
+							@if($existingAdmins && $existingAdmins->count() > 0)
+							<div class="mb-4">
+								<h5 class="mb-3 text-primary">
+									<i class="fas fa-users"></i> Existing Administrators
+								</h5>
+								<p class="text-muted mb-3">Edit the information for existing administrators below. Changes will be saved when you submit the form.</p>
+								@foreach($existingAdmins as $index => $admin)
+								<div class="row mb-3 border-bottom pb-3 bg-light p-3 rounded">
+									<div class="col-5">
 										<div class="form-group">
-											<label for="name" class="db-label">Admin Name</label>
-											<div class="col-md-12">
-												<input id="name" type="text"
-													class="form-control db-custom-input {{ $errors->has('name') ? ' is-invalid' : '' }}"
-													name="name[]">
-
-												@if ($errors->has('name'))
-												<span class="text-danger">
+											<label class="db-label">Admin Name</label>
+											<input type="text" class="form-control db-custom-input {{ $errors->has('existing_name.' . $index) ? ' is-invalid' : '' }}" 
+												name="existing_name[]" value="{{ $admin->name }}">
+											@if ($errors->has('existing_name.' . $index))
+											<span class="text-danger">
+											{{ $errors->first('existing_name.' . $index) }}
+											</span>
+											@endif
+											<input type="hidden" name="existing_admin_id[]" value="{{ $admin->id }}">
+										</div>
+									</div>
+									<div class="col-5">
+										<div class="form-group">
+											<label class="db-label">Admin Email</label>
+											<input type="text" class="form-control db-custom-input {{ $errors->has('existing_email.' . $index) ? ' is-invalid' : '' }}" 
+												name="existing_email[]" value="{{ $admin->email }}">
+											@if ($errors->has('existing_email.' . $index))
+											<span class="text-danger">
+											{{ $errors->first('existing_email.' . $index) }}
+											</span>
+											@endif
+										</div>
+									</div>
+									<div class="col-2 mt-4">
+										<button type="button" class="btn btn-sm btn-danger delete-admin" 
+											data-admin-id="{{ $admin->id }}" 
+											data-admin-name="{{ $admin->name }}">
+										<i class="fas fa-trash"></i>
+										</button>
+									</div>
+								</div>
+								@endforeach
+							</div>
+							@endif
+							
+							<!-- Add New Administrator Section -->
+							<div class="border-top pt-4">
+								<h5 class="mb-3 text-success">
+									<i class="fas fa-plus-circle"></i> Add New Administrator
+								</h5>
+								<p class="text-muted mb-3">Fill in the details below to add new administrators to this company.</p>
+								<div id="dynamicRowsContainer">
+									<div class="row">
+										<div class="col-6 mb-3">
+											<div class="form-group">
+												<label for="name" class="db-label">Admin Name</label>
+												<div class="col-md-12">
+													<input id="name" type="text"
+														class="form-control db-custom-input {{ $errors->has('name') ? ' is-invalid' : '' }}"
+														name="name[]">
+													@if ($errors->has('name'))
+													<span class="text-danger">
 													{{ $errors->first('name') }}
+													</span>
+													@endif
+												</div>
+											</div>
+										</div>
+										<div class="col-6 mb-3">
+											<div class="form-group">
+												<label for="email" class="db-label">Admin Email address</label>
+												<input type="text"
+													class="form-control db-custom-input {{ $errors->has('email') ? ' is-invalid' : '' }}"
+													name="email[]" value="">
+												@if ($errors->has('email'))
+												<span class="text-danger">
+												{{ $errors->first('email') }}
 												</span>
 												@endif
 											</div>
 										</div>
-									</div>
-									<div class="col-6 mb-3">
-										<div class="form-group">
-											<label for="email" class="db-label">Admin Email address</label>
-											<input type="text"
-												class="form-control db-custom-input {{ $errors->has('email') ? ' is-invalid' : '' }}"
-												name="email[]" value="">
-
-											@if ($errors->has('email'))
-											<span class="text-danger">
-												{{ $errors->first('email') }}
-											</span>
-											@endif
-										</div>
-									</div>
-									<div class="col-6 mb-3">
-										<div class="form-group">
-											<label for="password" class="db-label">Admin Login Password</label>
-											<input type="password"
-												class="form-control db-custom-input {{ $errors->has('password') ? ' is-invalid' : '' }}"
-												name="password[]">
-
-											@if ($errors->has('password'))
-											<span class="text-danger">
+										<div class="col-6 mb-3">
+											<div class="form-group">
+												<label for="password" class="db-label">Admin Login Password</label>
+												<input type="password"
+													class="form-control db-custom-input {{ $errors->has('password') ? ' is-invalid' : '' }}"
+													name="password[]">
+												@if ($errors->has('password'))
+												<span class="text-danger">
 												{{ $errors->first('password') }}
-											</span>
-											@endif
+												</span>
+												@endif
+											</div>
+										</div>
+										<div class="col-6 mb-3">
+											<div class="form-group">
+												<label for="password-confirm" class="db-label">Confirm Password</label>
+												<input type="password" class="form-control db-custom-input"
+													name="password_confirmation[]">
+											</div>
 										</div>
 									</div>
-									<div class="col-6 mb-3">
-										<div class="form-group">
-											<label for="password-confirm" class="db-label">Confirm Password</label>
-											<input type="password" class="form-control db-custom-input"
-												name="password_confirmation[]">
-										</div>
-									</div>
-
 								</div>
-							</div>
-							<div class="col-md-12 text-end">
-								<button type="button" id="addNewRow" class="btn btn-primary submit-btn">
-									Add New
-								</button>
-								<button type="submit" class="btn btn-primary submit-btn">Submit</button>
+								<div class="col-md-12 text-end">
+									<button type="button" id="addNewRow" class="btn btn-primary submit-btn">
+										Add New
+									</button>
+									<button type="submit" class="btn btn-primary submit-btn">Submit</button>
+								</div>
 							</div>
 						</form>
 
@@ -806,6 +856,34 @@
 				$("#dynamicRowsContainer").append(newRow);
 			} else {
 				alert('You cannot add more than ' + maxRows + ' admins.');
+			}
+		});
+
+		// Handle delete admin button click
+		$(document).on('click', '.delete-admin', function() {
+			var adminId = $(this).data('admin-id');
+			var adminName = $(this).data('admin-name');
+			
+			if (confirm('Are you sure you want to delete administrator "' + adminName + '"?')) {
+				$.ajax({
+					url: '{{ route("my-profile.delete-admin", ":admin_id") }}'.replace(':admin_id', adminId),
+					type: 'DELETE',
+					data: {
+						_token: '{{ csrf_token() }}'
+					},
+					success: function(response) {
+						if (response.status) {
+							alert(response.message);
+							location.reload(); // Reload the page to show updated list
+						} else {
+							alert('Error: ' + response.message);
+						}
+					},
+					error: function(xhr) {
+						var response = JSON.parse(xhr.responseText);
+						alert('Error: ' + response.message);
+					}
+				});
 			}
 		});
 	});
