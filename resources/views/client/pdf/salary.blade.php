@@ -267,7 +267,7 @@
                     @if($val->amount > 0)
                     <tr>
                         <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd;">Deduction from Net Pay</td> -->
-                        <td style="padding:3px 5px; border-right: 1px solid #ddd;color: #000;">ucfirst{{ $val->payhead->name}} | {{ ucfirst($val->payhead->pay_type)}}</td>
+                        <td style="padding:3px 5px; border-right: 1px solid #ddd;color: #000;">{{ ucfirst($val->payhead->name)}} | {{ ucfirst($val->payhead->pay_type)}}</td>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd;color: #000;"></td>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;"></td>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">
