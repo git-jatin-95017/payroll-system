@@ -22,11 +22,18 @@ class ScheduleController extends Controller
             $search = $request->input('search');
             
             // Get all employees for the logged-in client
-            $employeesQuery = User::with('employeeProfile')->where('created_by', auth()->user()->id);
+            $employeesQuery = User::with('employeeProfile')->where('users.role_id', 3)->where('users.created_by', auth()->user()->id);
+            
+            $employeesQuery->leftJoin('emp_departments', function($join) {
+                $join->on('users.id', '=', 'emp_departments.user_id');
+            })->leftJoin('departments', function($join) {
+                $join->on('departments.id', '=', 'emp_departments.department_id');
+            });
             
             if ($search) {
                 $employeesQuery->where(function($q) use ($search) {
-                    $q->where('name', 'like', '%' . $search . '%')
+                    $q->where('users.name', 'like', '%' . $search . '%')
+                      ->orWhere('departments.dep_name', 'like', '%' . $search . '%')
                       ->orWhereHas('employeeProfile', function($subQ) use ($search) {
                           $subQ->where('department', 'LIKE', '%' . $search . '%')
                                ->orWhere('designation', 'LIKE', '%' . $search . '%')

@@ -619,8 +619,70 @@
                                             <tr>
                                                 <td>{{ucfirst($row->user->employeeProfile->first_name)}} {{ucfirst($row->user->employeeProfile->last_name)}}</td>
                                                 <td>
-                                                    <strong class="bg-info text-white p-2 rounded-pill">${{number_format($gross, 2)}}</strong>
-                                                    <ul class="mt-2 list-unstyled">
+                                                    <span class="cursor-pointer" 
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#grossBreakdownModal{{ $row->id }}"
+                                                            style="cursor: pointer;">
+                                                        ${{number_format($gross, 2)}}
+                                                    </span>
+                                                    
+                                                    <!-- Gross Pay Breakdown Modal -->
+                                                    <div class="modal fade" id="grossBreakdownModal{{ $row->id }}" tabindex="-1" aria-labelledby="grossBreakdownModalLabel{{ $row->id }}" aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="grossBreakdownModalLabel{{ $row->id }}">
+                                                                        Gross Pay Breakdown - {{ucfirst($row->user->employeeProfile->first_name)}} {{ucfirst($row->user->employeeProfile->last_name)}}
+                                                                    </h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <table class="table table-striped">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Description</th>
+                                                                                <th class="text-end">Amount</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            @if($regHrs > 0)
+                                                                            <tr>
+                                                                                <td><strong>Regular Hours</strong></td>
+                                                                                <td class="text-end">${{ number_format($regHrs, 2) }}</td>
+                                                                            </tr>
+                                                                            @endif
+                                                                            @foreach($payheadsList as $payhead)
+                                                                                @if($payhead['amount'] > 0 && $payhead['pay_type'] == 'earnings')
+                                                                                <tr>
+                                                                                    <td><strong>{{ $payhead['name'] }}</strong></td>
+                                                                                    <td class="text-end">${{ number_format($payhead['amount'], 2) }}</td>
+                                                                                </tr>
+                                                                                @endif
+                                                                            @endforeach
+                                                                            @if($paidTimeOff > 0)
+                                                                            <tr>
+                                                                                <td><strong>Paid Time Off</strong></td>
+                                                                                <td class="text-end">${{ number_format($paidTimeOff, 2) }}</td>
+                                                                            </tr>
+                                                                            @endif
+                                                                        </tbody>
+                                                                        <tfoot>
+                                                                            <tr class="table-primary">
+                                                                                <td><strong>Total Gross Pay:</strong></td>
+                                                                                <td class="text-end"><strong>${{ number_format($gross, 2) }}</strong></td>
+                                                                            </tr>
+                                                                        </tfoot>
+                                                                    </table>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Quick breakdown preview (unchanged) -->
+                                                    <!-- <ul class="mt-2 list-unstyled">
                                                         @if($regHrs > 0)
                                                             <li><small class="text-muted"><strong>Regular Hours</strong> - ${{ number_format($regHrs, 2) }}</small></li>
                                                         @endif
@@ -632,13 +694,121 @@
                                                         @if($paidTimeOff > 0)
                                                             <li><small class="text-muted"><strong>Paid Time Off</strong> - ${{ number_format($paidTimeOff, 2) }}</small></li>
                                                         @endif
-                                                    </ul>
+                                                    </ul> -->
                                                 </td> <?php //$gross; commented?>
                                                 <td>${{number_format($medical_benefits, 2)}}</td>
                                                 <td>${{number_format($social_security, 2)}}</td>
                                                 <td>${{number_format($education_lvey, 2)}}</td>
-                                                <td>${{number_format($nothingAdditionTonetPay, 2)}}</td>
-                                                <td>${{number_format($deductions, 2)}}</td>
+                                                <td>
+                                                    @if($nothingAdditionTonetPay >= 0)
+                                                        <span class="cursor-pointer" 
+                                                                data-bs-toggle="modal" 
+                                                                data-bs-target="#additionsModal{{ $row->id }}"
+                                                                style="cursor: pointer;">
+                                                            ${{number_format($nothingAdditionTonetPay, 2)}}
+                                                        </span>
+                                                        
+                                                        <!-- Additions Breakdown Modal -->
+                                                        <div class="modal fade" id="additionsModal{{ $row->id }}" tabindex="-1" aria-labelledby="additionsModalLabel{{ $row->id }}" aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="additionsModalLabel{{ $row->id }}">
+                                                                            Additions Breakdown - {{ucfirst($row->user->employeeProfile->first_name)}} {{ucfirst($row->user->employeeProfile->last_name)}}
+                                                                        </h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <table class="table table-striped">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Description</th>
+                                                                                    <th class="text-end">Amount</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @foreach($payheadsList as $payhead)
+                                                                                    @if($payhead['amount'] > 0 && $payhead['pay_type'] == 'nothing')
+                                                                                    <tr>
+                                                                                        <td><strong>{{ $payhead['name'] }}</strong></td>
+                                                                                        <td class="text-end">${{ number_format($payhead['amount'], 2) }}</td>
+                                                                                    </tr>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            </tbody>
+                                                                            <tfoot>
+                                                                                <tr class="table-success">
+                                                                                    <td><strong>Total Additions:</strong></td>
+                                                                                    <td class="text-end"><strong>${{ number_format($nothingAdditionTonetPay, 2) }}</strong></td>
+                                                                                </tr>
+                                                                            </tfoot>
+                                                                        </table>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        <span class="text-muted">$0.00</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($deductions >= 0)
+                                                        <span class="cursor-pointer" 
+                                                                data-bs-toggle="modal" 
+                                                                data-bs-target="#deductionsModal{{ $row->id }}"
+                                                                style="cursor: pointer;">
+                                                            ${{number_format($deductions, 2)}}
+                                                        </span>
+                                                        
+                                                        <!-- Deductions Breakdown Modal -->
+                                                        <div class="modal fade" id="deductionsModal{{ $row->id }}" tabindex="-1" aria-labelledby="deductionsModalLabel{{ $row->id }}" aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="deductionsModalLabel{{ $row->id }}">
+                                                                            Deductions Breakdown - {{ucfirst($row->user->employeeProfile->first_name)}} {{ucfirst($row->user->employeeProfile->last_name)}}
+                                                                        </h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <table class="table table-striped">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Description</th>
+                                                                                    <th class="text-end">Amount</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @foreach($payheadsList as $payhead)
+                                                                                    @if($payhead['amount'] > 0 && $payhead['pay_type'] == 'deductions')
+                                                                                    <tr>
+                                                                                        <td><strong>{{ $payhead['name'] }}</strong></td>
+                                                                                        <td class="text-end">${{ number_format($payhead['amount'], 2) }}</td>
+                                                                                    </tr>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            </tbody>
+                                                                            <tfoot>
+                                                                                <tr class="table-danger">
+                                                                                    <td><strong>Total Deductions:</strong></td>
+                                                                                    <td class="text-end"><strong>${{ number_format($deductions, 2) }}</strong></td>
+                                                                                </tr>
+                                                                            </tfoot>
+                                                                        </table>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        <span class="text-muted">$0.00</span>
+                                                    @endif
+                                                </td>
                                                 <?php
                                                 /*
                                                 <td>{{$row->total_hours}}</td>
@@ -943,7 +1113,9 @@
 
     // Instantly assign Chart.js version
     const chartVersion = document.getElementById('chartVersion');
-    chartVersion.innerText = Chart.version;
+    if (chartVersion) {
+        chartVersion.innerText = Chart.version;
+    }
     </script>
 @endsection
 
