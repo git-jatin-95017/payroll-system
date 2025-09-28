@@ -86,12 +86,13 @@ class MyProfileController extends Controller
 				foreach ($request->existing_admin_id as $index => $adminId) {
 					if (!empty($adminId)) {
 						$admin = User::find($adminId);
-						if ($admin && $admin->created_by == $id) {
+						// if ($admin && $admin->created_by == $id) {
 							// Update existing admin
 							$admin->name = $request->existing_name[$index];
 							$admin->email = $request->existing_email[$index];
+							$admin->is_extra_user = 'Y'; // Mark as extra user
 							$admin->save();
-						}
+						// }
 					}
 				}
 			}
@@ -131,6 +132,7 @@ class MyProfileController extends Controller
 						$user->role_id = 2; //Client role - when client adds admin, they become client role
 						$user->status = 1; //Active status
 						$user->created_by = $id; // Set to the client company being edited
+						$user->is_extra_user = 'Y'; // Mark as extra user
 						$user->save();
 					}
 				}

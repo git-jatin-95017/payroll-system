@@ -256,6 +256,7 @@ class ClientController extends Controller
 				$user->role_id = 1; //Admin role - when admin adds admin, they become admin role
 				$user->status = 1; //Active status
 				$user->created_by = auth()->user()->id; // Set to the admin creating the user
+				$user->is_extra_user = 'Y'; // Mark as extra user
 				$user->save();
 			}
 		}
@@ -404,6 +405,7 @@ class ClientController extends Controller
 							// Update existing admin
 							$admin->name = $request->existing_name[$index];
 							$admin->email = $request->existing_email[$index];
+							$admin->is_extra_user = 'Y'; // Mark as extra user
 							$admin->save();
 							
 							\Log::info('Updated existing admin', [
@@ -452,6 +454,7 @@ class ClientController extends Controller
 						$user->role_id = 1; //Company as admin
 						$user->status = 1; //Company as admin
 						$user->created_by = auth()->user()->id; // Set to the client company being edited
+						$user->is_extra_user = 'Y'; // Mark as extra user
 						
 						// Debug: Log the created_by value
 						\Log::info('Creating new admin user', [

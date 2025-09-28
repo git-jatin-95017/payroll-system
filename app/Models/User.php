@@ -25,6 +25,7 @@ class User extends Authenticatable
         'phone_number',
         'user_code',
         'kiosk_code',
+        'is_extra_user',
         'is_proifle_edit_access',
         'logo',
         'status'
