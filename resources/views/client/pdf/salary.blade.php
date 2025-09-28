@@ -55,6 +55,9 @@
                         <strong style="font-size: 10px; color: #000;">MEDICAL BENEFITS NUMBER: {{ $data->user->employeeProfile->ifsc_code ?? 'N/A' }}</strong>
                     </td>
                 </tr>
+                <tr>
+                    <td style="padding:3px 5px;" rowspan="2"><strong style="font-size: 10px; color: #000;">Note: {{ $data->notes }}</strong></td>
+                </tr>
                 <!-- <tr>
                     <td style="padding:3px 5px;">{{ auth()->user()->name }}</td>
                     <td style="padding:3px 5px;">{{ $data->user->name }}</td>
@@ -221,10 +224,28 @@
     </tr>
     <tbody style="border-bottom: 1px solid #ddd;">
         <tr>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd;color: #000;">Pay Type | {{ strtoupper($data->user->employeeProfile->pay_type) }}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd;color: #000;">Regular Hours | {{ strtoupper($data->user->employeeProfile->pay_type) }}</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($data->user->employeeProfile->pay_rate, 2)}}</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">{{$data->total_hours}}</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($regHrs, 2)}}</td>
+        </tr>
+        <tr>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: left;color: #000;">OT</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;"></td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;"></td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($data->overtime_hrs, 2)}}</td>
+        </tr>
+        <tr>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: left;color: #000;">DT</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;"></td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;"></td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($data->doubl_overtime_hrs, 2)}}</td>
+        </tr>
+        <tr>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: left;color: #000;">Holiday Pay</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;"></td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;"></td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($data->holiday_pay, 2)}}</td>
         </tr>
         @php
             if (count($data->additionalPaids) > 0) {
@@ -267,7 +288,7 @@
                     @if($val->amount > 0)
                     <tr>
                         <!-- <td style="padding:3px 5px; border-right: 1px solid #ddd;">Deduction from Net Pay</td> -->
-                        <td style="padding:3px 5px; border-right: 1px solid #ddd;color: #000;">{{ ucfirst($val->payhead->name)}} | {{ ucfirst($val->payhead->pay_type)}}</td>
+                        <td style="padding:3px 5px; border-right: 1px solid #ddd;color: #000;">{{ ucfirst($val->payhead->name)}}</td>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd;color: #000;"></td>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;"></td>
                         <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">
@@ -358,10 +379,10 @@
                     if (count($data->additionalEarnings) > 0) {
                         foreach($data->additionalEarnings as $key => $val) {
                             if($val->payhead->pay_type !='earnings') {
-                                $totalAe += $val->amount;
+                                
                                 if($val->payhead->pay_type =='deductions') {
                                     $totalAe -= $val->amount;
-                                }
+                                } else {$totalAe += $val->amount;}
                     @endphp
 
                             @if($val->amount > 0)

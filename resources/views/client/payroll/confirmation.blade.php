@@ -628,7 +628,7 @@
                                                     
                                                     <!-- Gross Pay Breakdown Modal -->
                                                     <div class="modal fade" id="grossBreakdownModal{{ $row->id }}" tabindex="-1" aria-labelledby="grossBreakdownModalLabel{{ $row->id }}" aria-hidden="true">
-                                                        <div class="modal-dialog modal-lg">
+                                                        <div class="modal-dialog modal-xs modal-dialog-centered">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <h5 class="modal-title" id="grossBreakdownModalLabel{{ $row->id }}">
@@ -637,7 +637,7 @@
                                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <table class="table table-striped">
+                                                                    <table class="table table-bordered">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th>Description</th>
@@ -647,27 +647,39 @@
                                                                         <tbody>
                                                                             @if($regHrs > 0)
                                                                             <tr>
-                                                                                <td><strong>Regular Hours</strong></td>
+                                                                                <td>Regular Hours</td>
                                                                                 <td class="text-end">${{ number_format($regHrs, 2) }}</td>
+                                                                            </tr>
+                                                                            @endif
+                                                                            @if($row->overtime_hrs > 0)
+                                                                            <tr>
+                                                                                <td>Overtime</td>
+                                                                                <td class="text-end">${{ number_format($row->overtime_hrs, 2) }}</td>
+                                                                            </tr>
+                                                                            @endif
+                                                                            @if($row->doubl_overtime_hrs > 0)
+                                                                            <tr>
+                                                                                <td>Double Overtime</td>
+                                                                                <td class="text-end">${{ number_format($row->doubl_overtime_hrs, 2) }}</td>
+                                                                            </tr>
+                                                                            @endif
+                                                                            @if($row->holiday_pay > 0)
+                                                                            <tr>
+                                                                                <td>Holiday Pay</td>
+                                                                                <td class="text-end">${{ number_format($row->holiday_pay, 2) }}</td>
                                                                             </tr>
                                                                             @endif
                                                                             @foreach($payheadsList as $payhead)
                                                                                 @if($payhead['amount'] > 0 && $payhead['pay_type'] == 'earnings')
                                                                                 <tr>
-                                                                                    <td><strong>{{ $payhead['name'] }}</strong></td>
+                                                                                    <td>{{ ucfirst($payhead['name']) }}</td>
                                                                                     <td class="text-end">${{ number_format($payhead['amount'], 2) }}</td>
                                                                                 </tr>
                                                                                 @endif
                                                                             @endforeach
-                                                                            @if($paidTimeOff > 0)
-                                                                            <tr>
-                                                                                <td><strong>Paid Time Off</strong></td>
-                                                                                <td class="text-end">${{ number_format($paidTimeOff, 2) }}</td>
-                                                                            </tr>
-                                                                            @endif
                                                                         </tbody>
                                                                         <tfoot>
-                                                                            <tr class="table-primary">
+                                                                            <tr>
                                                                                 <td><strong>Total Gross Pay:</strong></td>
                                                                                 <td class="text-end"><strong>${{ number_format($gross, 2) }}</strong></td>
                                                                             </tr>
@@ -710,7 +722,7 @@
                                                         
                                                         <!-- Additions Breakdown Modal -->
                                                         <div class="modal fade" id="additionsModal{{ $row->id }}" tabindex="-1" aria-labelledby="additionsModalLabel{{ $row->id }}" aria-hidden="true">
-                                                            <div class="modal-dialog modal-lg">
+                                                            <div class="modal-dialog modal-xs modal-dialog-centered">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
                                                                         <h5 class="modal-title" id="additionsModalLabel{{ $row->id }}">
@@ -719,7 +731,7 @@
                                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                     </div>
                                                                     <div class="modal-body">
-                                                                        <table class="table table-striped">
+                                                                        <table class="table table-bordered">
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th>Description</th>
@@ -730,14 +742,14 @@
                                                                                 @foreach($payheadsList as $payhead)
                                                                                     @if($payhead['amount'] > 0 && $payhead['pay_type'] == 'nothing')
                                                                                     <tr>
-                                                                                        <td><strong>{{ $payhead['name'] }}</strong></td>
+                                                                                        <td>{{ $payhead['name'] }}</td>
                                                                                         <td class="text-end">${{ number_format($payhead['amount'], 2) }}</td>
                                                                                     </tr>
                                                                                     @endif
                                                                                 @endforeach
                                                                             </tbody>
                                                                             <tfoot>
-                                                                                <tr class="table-success">
+                                                                                <tr>
                                                                                     <td><strong>Total Additions:</strong></td>
                                                                                     <td class="text-end"><strong>${{ number_format($nothingAdditionTonetPay, 2) }}</strong></td>
                                                                                 </tr>
@@ -765,7 +777,7 @@
                                                         
                                                         <!-- Deductions Breakdown Modal -->
                                                         <div class="modal fade" id="deductionsModal{{ $row->id }}" tabindex="-1" aria-labelledby="deductionsModalLabel{{ $row->id }}" aria-hidden="true">
-                                                            <div class="modal-dialog modal-lg">
+                                                            <div class="modal-dialog modal-xs modal-dialog-centered">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
                                                                         <h5 class="modal-title" id="deductionsModalLabel{{ $row->id }}">
@@ -774,7 +786,7 @@
                                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                     </div>
                                                                     <div class="modal-body">
-                                                                        <table class="table table-striped">
+                                                                        <table class="table table-bordered">
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th>Description</th>
@@ -785,14 +797,14 @@
                                                                                 @foreach($payheadsList as $payhead)
                                                                                     @if($payhead['amount'] > 0 && $payhead['pay_type'] == 'deductions')
                                                                                     <tr>
-                                                                                        <td><strong>{{ $payhead['name'] }}</strong></td>
+                                                                                        <td>{{ ucfirst($payhead['name']) }}</td>
                                                                                         <td class="text-end">${{ number_format($payhead['amount'], 2) }}</td>
                                                                                     </tr>
                                                                                     @endif
                                                                                 @endforeach
                                                                             </tbody>
                                                                             <tfoot>
-                                                                                <tr class="table-danger">
+                                                                                <tr>
                                                                                     <td><strong>Total Deductions:</strong></td>
                                                                                     <td class="text-end"><strong>${{ number_format($deductions, 2) }}</strong></td>
                                                                                 </tr>
@@ -1098,6 +1110,13 @@
                         font: {
                            weight: 'normal'
                         },
+                     }
+                  },
+                  tooltip: {
+                     callbacks: {
+                        label: function(context) {
+                           return context.label + ': $' + context.parsed.toFixed(2);
+                        }
                      }
                   }
                }

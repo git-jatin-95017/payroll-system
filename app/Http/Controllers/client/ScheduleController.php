@@ -22,27 +22,26 @@ class ScheduleController extends Controller
             $search = $request->input('search');
             
             // Get all employees for the logged-in client
-            $employeesQuery = User::with('employeeProfile')->where('users.role_id', 3)->where('users.created_by', auth()->user()->id);
-            
-            $employeesQuery->leftJoin('emp_departments', function($join) {
-                $join->on('users.id', '=', 'emp_departments.user_id');
-            })->leftJoin('departments', function($join) {
-                $join->on('departments.id', '=', 'emp_departments.department_id');
-            });
+            $employeesQuery = User::with(['employeeProfile', 'departments.department'])
+                ->where('users.role_id', 3)
+                ->where('users.created_by', auth()->user()->id);
             
             if ($search) {
                 $employeesQuery->where(function($q) use ($search) {
                     $q->where('users.name', 'like', '%' . $search . '%')
-                      ->orWhere('departments.dep_name', 'like', '%' . $search . '%')
                       ->orWhereHas('employeeProfile', function($subQ) use ($search) {
                           $subQ->where('department', 'LIKE', '%' . $search . '%')
                                ->orWhere('designation', 'LIKE', '%' . $search . '%')
                                ->orWhere('manager_position', 'LIKE', '%' . $search . '%');
+                      })
+                      ->orWhereHas('departments.department', function($subQ) use ($search) {
+                          $subQ->where('dep_name', 'like', '%' . $search . '%');
                       });
                 });
             }
             
             $employees = $employeesQuery->get()
+                ->unique('id')
                 ->map(function($emp) {
                     return [
                         'id' => $emp->id,

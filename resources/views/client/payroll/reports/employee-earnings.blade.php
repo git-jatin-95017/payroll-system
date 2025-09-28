@@ -272,7 +272,7 @@
                                             
                                             <!-- Gross Pay Details Modal -->
                                             <div class="modal fade" id="grossPayModal{{ $payroll->id }}" tabindex="-1" role="dialog" aria-labelledby="grossPayModalLabel{{ $payroll->id }}" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
+                                                <div class="modal-dialog modal-xs modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="grossPayModalLabel{{ $payroll->id }}">
@@ -283,39 +283,62 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <div class="text-center mb-3">
-                                                                <h4 class="text-primary">Total Gross Pay: ${{ number_format($payroll->gross + $payroll->paid_time_off, 2) }}</h4>
-                                                            </div>
-                                                            <hr>
-                                                            <h6 class="mb-3">Breakdown:</h6>
-                                                            <ul class="list-unstyled">
-                                                                @if($payroll->reg_hrs_temp > 0)
-                                                                    <li class="mb-2">
-                                                                        <div class="d-flex justify-content-between">
-                                                                            <span><strong>Regular Hours</strong></span>
-                                                                            <span class="text-success">${{ number_format($payroll->reg_hrs_temp, 2) }}</span>
-                                                                        </div>
-                                                                    </li>
-                                                                @endif
-                                                                @if($payroll->paid_time_off > 0)
-                                                                    <li class="mb-2">
-                                                                        <div class="d-flex justify-content-between">
-                                                                            <span><strong>Paid Time Off</strong></span>
-                                                                            <span class="text-success">${{ number_format($payroll->paid_time_off, 2) }}</span>
-                                                                        </div>
-                                                                    </li>
-                                                                @endif
-                                                                @foreach($payroll->payheads_list as $payhead)
-                                                                    @if($payhead['amount'] > 0)
-                                                                        <li class="mb-2">
-                                                                            <div class="d-flex justify-content-between">
-                                                                                <span><strong>{{ $payhead['name'] }}</strong></span>
-                                                                                <span class="text-success">${{ number_format($payhead['amount'], 2) }}</span>
-                                                                            </div>
-                                                                        </li>
+                                                            <table class="table table-bordered db-custom-table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Description</th>
+                                                                            <th class="text-end">Amount</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                    @if($payroll->reg_hrs_temp > 0)
+                                                                        <tr>
+                                                                            <td>Regular Hours</td>
+                                                                            <td class="text-end">${{ number_format($payroll->reg_hrs_temp, 2) }}</td>
+                                                                        </tr>
                                                                     @endif
-                                                                @endforeach
-                                                            </ul>
+                                                                    @if($payroll->overtime_hrs > 0)
+                                                                    <tr>
+                                                                        <td>Overtime</td>
+                                                                        <td class="text-end">${{ number_format($payroll->overtime_hrs, 2) }}</td>
+                                                                    </tr>
+                                                                    @endif
+                                                                    @if($payroll->doubl_overtime_hrs > 0)
+                                                                    <tr>
+                                                                        <td>Double Overtime</td>
+                                                                        <td class="text-end">${{ number_format($payroll->doubl_overtime_hrs, 2) }}</td>
+                                                                    </tr>
+                                                                    @endif
+                                                                    @if($payroll->holiday_pay > 0)
+                                                                    <tr>
+                                                                        <td>Holiday Pay</td>
+                                                                        <td class="text-end">${{ number_format($payroll->holiday_pay, 2) }}</td>
+                                                                    </tr>
+                                                                    @endif
+                                                                    @if($payroll->paid_time_off > 0)
+                                                                        <!-- <li class="mb-2">
+                                                                            <div class="d-flex justify-content-between">
+                                                                                <span><strong>Paid Time Off</strong></span>
+                                                                                <span class="text-success">${{ number_format($payroll->paid_time_off, 2) }}</span>
+                                                                            </div>
+                                                                        </li> -->
+                                                                    @endif
+                                                                    @foreach($payroll->payheads_list as $payhead)
+                                                                        @if($payhead['amount'] > 0)
+                                                                            <tr>
+                                                                                <td>{{ ucfirst($payhead['name']) }}</td>
+                                                                                <td class="text-end">${{ number_format($payhead['amount'], 2) }}</td>
+                                                                            </tr>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </tbody>
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <td class="text-end"><strong>Total Gross Pay</strong></td>
+                                                                        <td class="text-end"><strong>${{ number_format($payroll->gross + $payroll->paid_time_off, 2) }}</strong></td>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -334,7 +357,7 @@
                                             
                                             <!-- Additions Details Modal -->
                                             <div class="modal fade" id="additionsModal{{ $payroll->id }}" tabindex="-1" role="dialog" aria-labelledby="additionsModalLabel{{ $payroll->id }}" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
+                                                <div class="modal-dialog modal-xs modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="additionsModalLabel{{ $payroll->id }}">
@@ -345,30 +368,39 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <div class="text-center mb-3">
-                                                                <h4 class="text-success">Total Additions: ${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2) }}</h4>
-                                                            </div>
-                                                            <hr>
-                                                            <h6 class="mb-3">Breakdown:</h6>
-                                                            <ul class="list-unstyled">
+                                                            <table class="table table-bordered db-custom-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Description</th>
+                                                                        <th class="text-end">Amount</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
                                                                 @php
                                                                     $additions = $payroll->additionalEarnings->where('payhead.pay_type', 'nothing');
                                                                 @endphp
                                                                 @if($additions->count() > 0)
                                                                     @foreach($additions as $addition)
                                                                         @if($addition->amount > 0)
-                                                                            <li class="mb-2">
-                                                                                <div class="d-flex justify-content-between">
-                                                                                    <span><strong>{{ $addition->payhead->name ?? 'Addition' }}</strong></span>
-                                                                                    <span class="text-success">${{ number_format($addition->amount, 2) }}</span>
-                                                                                </div>
-                                                                            </li>
+                                                                            <tr>
+                                                                                <td>{{ $addition->payhead->name ?? 'Addition' }}</td>
+                                                                                <td class="text-end">${{ number_format($addition->amount, 2) }}</td>
+                                                                            </tr>
                                                                         @endif
                                                                     @endforeach
                                                                 @else
-                                                                    <li class="text-muted">No additions for this period</li>
+                                                                    <tr>
+                                                                        <td class="text-end">No additions for this period</td>
+                                                                    </tr>
                                                                 @endif
-                                                            </ul>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <td class="text-end"><strong>Total Additions</strong></td>
+                                                                    <td class="text-end"><strong>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2) }}</strong></td>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal" style="cursor: pointer;">Close</button>
@@ -384,7 +416,7 @@
                                             
                                             <!-- Deductions Details Modal -->
                                             <div class="modal fade" id="deductionsModal{{ $payroll->id }}" tabindex="-1" role="dialog" aria-labelledby="deductionsModalLabel{{ $payroll->id }}" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
+                                                <div class="modal-dialog modal-xs modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="deductionsModalLabel{{ $payroll->id }}">
@@ -395,30 +427,39 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <div class="text-center mb-3">
-                                                                <h4 class="text-danger">Total Deductions: ${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2) }}</h4>
-                                                            </div>
-                                                            <hr>
-                                                            <h6 class="mb-3">Breakdown:</h6>
-                                                            <ul class="list-unstyled">
+                                                            <table class="table table-bordered db-custom-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Description</th>
+                                                                        <th class="text-end">Amount</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
                                                                 @php
                                                                     $deductions = $payroll->additionalEarnings->where('payhead.pay_type', 'deductions');
                                                                 @endphp
                                                                 @if($deductions->count() > 0)
                                                                     @foreach($deductions as $deduction)
                                                                         @if($deduction->amount > 0)
-                                                                            <li class="mb-2">
-                                                                                <div class="d-flex justify-content-between">
-                                                                                    <span><strong>{{ $deduction->payhead->name ?? 'Deduction' }}</strong></span>
-                                                                                    <span class="text-danger">${{ number_format($deduction->amount, 2) }}</span>
-                                                                                </div>
-                                                                            </li>
+                                                                            <tr>
+                                                                                <td>{{ $deduction->payhead->name ?? 'Deduction' }}</td>
+                                                                                <td class="text-end">${{ number_format($deduction->amount, 2) }}</td>
+                                                                            </tr>
                                                                         @endif
                                                                     @endforeach
                                                                 @else
-                                                                    <li class="text-muted">No deductions for this period</li>
+                                                                    <tr>
+                                                                        <td colspan="2" class="text-end">No deductions for this period</td>
+                                                                    </tr>
                                                                 @endif
-                                                            </ul>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <td class="text-end"><strong>Total Deductions</strong></td>
+                                                                    <td class="text-end"><strong>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2) }}</strong></td>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal" style="cursor: pointer;">Close</button>
