@@ -688,12 +688,6 @@
 			return;
 		}
 		
-		// If no value is entered, don't change the balance
-		if (current_enter_val === 0) {
-			console.log('No value entered - keeping current balance unchanged');
-			return;
-		}
-		
 		// Calculate new balance: current balance minus current input
 		let newBalance = currentBalance - current_enter_val;
 		
@@ -855,12 +849,6 @@
 		// Additional check: if current balance is already 0, don't allow any changes
 		if (currentBalance === 0) {
 			console.log('🚫 Unpaid balance already 0 - no changes allowed');
-			return;
-		}
-		
-		// If no value is entered, don't change the balance
-		if (current_enter_val === 0) {
-			console.log('No unpaid value entered - keeping current balance unchanged');
 			return;
 		}
 		

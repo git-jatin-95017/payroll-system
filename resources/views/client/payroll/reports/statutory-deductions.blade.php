@@ -78,12 +78,25 @@
     </div>
 
     <!-- Summary Statistics -->
+    @php
+        $totalMedical = 0;
+        $totalSecurity = 0;
+        $totalEduLevy = 0;
+        $totalSecurityEmployer = 0;
+        
+        foreach($earnings as $earning) {
+            $totalMedical += $earning->medical;
+            $totalSecurity += $earning->security;
+            $totalEduLevy += $earning->edu_levy;
+            $totalSecurityEmployer += $earning->security_employer;
+        }
+    @endphp
     <!-- <div class="row mb-4">
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
                     <h6 class="card-title">Total Employee Medical Benefits</h6>
-                    <h3 class="mb-0">${{ number_format($earnings->sum('medical'), 2) }}</h3>
+                    <h3 class="mb-0">${{ number_format($totalMedical, 2) }}</h3>
                 </div>
             </div>
         </div>
@@ -91,7 +104,7 @@
             <div class="card">
                 <div class="card-body">
                     <h6 class="card-title">Total Employee Social Security</h6>
-                    <h3 class="mb-0">${{ number_format($earnings->sum('security'), 2) }}</h3>
+                    <h3 class="mb-0">${{ number_format($totalSecurity, 2) }}</h3>
                 </div>
             </div>
         </div>
@@ -99,7 +112,7 @@
             <div class="card">
                 <div class="card-body">
                     <h6 class="card-title">Total Employee Education Levy</h6>
-                    <h3 class="mb-0">${{ number_format($earnings->sum('edu_levy'), 2) }}</h3>
+                    <h3 class="mb-0">${{ number_format($totalEduLevy, 2) }}</h3>
                 </div>
             </div>
         </div>
@@ -107,7 +120,7 @@
             <div class="card">
                 <div class="card-body">
                     <h6 class="card-title">Total Employer Contributions</h6>
-                    <h3 class="mb-0">${{ number_format($earnings->sum('medical') + $earnings->sum('security') + $earnings->sum('edu_levy'), 2) }}</h3>
+                    <h3 class="mb-0">${{ number_format($totalMedical + $totalSecurityEmployer + $totalEduLevy, 2) }}</h3>
                 </div>
             </div>
         </div>
@@ -151,18 +164,18 @@
                                         <td>${{ number_format($earning->security, 2) }}</td>
                                         <td>${{ number_format($earning->edu_levy, 2) }}</td>
                                         <td>${{ number_format($earning->medical, 2) }}</td>
-                                        <td>${{ number_format($earning->security, 2) }}</td>
+                                        <td>${{ number_format($earning->security_employer, 2) }}</td>
                                         <td>${{ number_format($earning->edu_levy, 2) }}</td>
-                                        <td>${{ number_format($earning->medical * 2 + $earning->security * 2 + $earning->edu_levy * 2, 2) }}</td>
+                                        <td>${{ number_format($earning->medical + $earning->security + $earning->edu_levy + $earning->medical + $earning->security_employer + $earning->edu_levy, 2) }}</td>
                                     </tr>
                                     @php
                                         $totalEmployeeMedical += $earning->medical;
                                         $totalEmployeeSecurity += $earning->security;
                                         $totalEmployeeEduLevy += $earning->edu_levy;
                                         $totalEmployerMedical += $earning->medical;
-                                        $totalEmployerSecurity += $earning->security;
+                                        $totalEmployerSecurity += $earning->security_employer;
                                         $totalEmployerEduLevy += $earning->edu_levy;
-                                        $totalOverall += ($earning->medical * 2 + $earning->security * 2 + $earning->edu_levy * 2);
+                                        $totalOverall += ($earning->medical + $earning->security + $earning->edu_levy + $earning->medical + $earning->security_employer + $earning->edu_levy);
                                     @endphp
                                 @endforeach
                             </tbody>

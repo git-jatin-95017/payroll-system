@@ -727,7 +727,30 @@ dd($query);*/
             $query->where('user_id', $request->employee_id);
         }
 
-        $earnings = $query->get();
+        $payrolls = $query->get();
+        $settings = Setting::first();
+        
+        // Calculate amounts using trait method for consistency
+        $earnings = [];
+        foreach ($payrolls as $payroll) {
+            $amounts = $this->calculatePayrollAmounts($payroll, $settings);
+            
+            // Create a new object with calculated values
+            $calculatedPayroll = (object) [
+                'id' => $payroll->id,
+                'user' => $payroll->user,
+                'start_date' => $payroll->start_date,
+                'end_date' => $payroll->end_date,
+                'medical' => $amounts['medical_benefits'],
+                'security' => $amounts['social_security'],
+                'edu_levy' => $amounts['education_levy'],
+                'security_employer' => $amounts['social_security_employer'],
+                'additionalEarnings' => $payroll->additionalEarnings
+            ];
+            
+            $earnings[] = $calculatedPayroll;
+        }
+        
         $departments = Department::where('created_by', auth()->user()->id)->get();
         $employees = User::where('role_id', 3)->where('created_by', auth()->user()->id)->get();
 
@@ -756,7 +779,29 @@ dd($query);*/
             $query->where('user_id', $request->employee_id);
         }
 
-        $earnings = $query->get();
+        $payrolls = $query->get();
+        $settings = Setting::first();
+        
+        // Calculate amounts using trait method for consistency
+        $earnings = [];
+        foreach ($payrolls as $payroll) {
+            $amounts = $this->calculatePayrollAmounts($payroll, $settings);
+            
+            // Create a new object with calculated values
+            $calculatedPayroll = (object) [
+                'id' => $payroll->id,
+                'user' => $payroll->user,
+                'start_date' => $payroll->start_date,
+                'end_date' => $payroll->end_date,
+                'medical' => $amounts['medical_benefits'],
+                'security' => $amounts['social_security'],
+                'edu_levy' => $amounts['education_levy'],
+                'security_employer' => $amounts['social_security_employer'],
+                'additionalEarnings' => $payroll->additionalEarnings
+            ];
+            
+            $earnings[] = $calculatedPayroll;
+        }
 
         return Excel::download(new StatutoryDeductionsExport($earnings), 'statutory-deductions.xlsx');
     }
@@ -783,7 +828,29 @@ dd($query);*/
             $query->where('user_id', $request->employee_id);
         }
 
-        $earnings = $query->get();
+        $payrolls = $query->get();
+        $settings = Setting::first();
+        
+        // Calculate amounts using trait method for consistency
+        $earnings = [];
+        foreach ($payrolls as $payroll) {
+            $amounts = $this->calculatePayrollAmounts($payroll, $settings);
+            
+            // Create a new object with calculated values
+            $calculatedPayroll = (object) [
+                'id' => $payroll->id,
+                'user' => $payroll->user,
+                'start_date' => $payroll->start_date,
+                'end_date' => $payroll->end_date,
+                'medical' => $amounts['medical_benefits'],
+                'security' => $amounts['social_security'],
+                'edu_levy' => $amounts['education_levy'],
+                'security_employer' => $amounts['social_security_employer'],
+                'additionalEarnings' => $payroll->additionalEarnings
+            ];
+            
+            $earnings[] = $calculatedPayroll;
+        }
 
         $pdf = PDF::loadView('client.payroll.reports.pdf.statutory-deductions-pdf', compact('earnings'));
         return $pdf->download('statutory-deductions.pdf');
