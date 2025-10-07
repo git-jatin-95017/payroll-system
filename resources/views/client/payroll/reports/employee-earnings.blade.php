@@ -105,6 +105,15 @@
     opacity: .75;
 }
 </style>
+<style>
+    .my-table td {
+        border-bottom-width: 0px !important;
+    }
+    .my-table th, .my-table tr, .my-table td {
+        background: none !important;
+        border-bottom: none !important;
+    }
+</style>
 @endpush
 <div class="bg-white w-100 border-radius-15 p-4">
     <div class="row">
@@ -252,9 +261,7 @@
 							$totalemppay = 0;
                                 foreach($payrolls as $payroll) {
 									$grosspay += ($payroll->gross + $payroll->paid_time_off);
-									$medicalbenefits += $payroll->medical;
-									$socialsecurity += $payroll->security;
-									$educationlevy += $payroll->edu_levy;
+									// Note: medicalbenefits, socialsecurity, educationlevy totals will be calculated in the loop below
 									$add =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2);
 									$ded =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2);
 									$nothing =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2);
@@ -276,14 +283,15 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="grossPayModalLabel{{ $payroll->id }}">
-                                                                Gross Pay Details - {{ $payroll->user->name }}
+                                                                Gross Pay Details
                                                             </h5>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <table class="table table-bordered db-custom-table">
+                                                            
+                                                            <table class="table my-table">
                                                                     <thead>
                                                                         <tr>
                                                                             <th>Description</th>
@@ -298,21 +306,46 @@
                                                                         </tr>
                                                                     @endif
                                                                     @if($payroll->overtime_hrs > 0)
+                                                                    @php
+                                                                        $pay_type = $payroll->user->employeeProfile->pay_type;
+                                                                        $rate_per_hour = $payroll->user->employeeProfile->pay_rate;
+                                                                        $PDT = 0;
+                                                                        
+                                                                        if ($pay_type == 'hourly') {
+                                                                            $PDT = $rate_per_hour;
+                                                                        } else if ($pay_type == 'weekly') {
+                                                                            $PDT = ($rate_per_hour / 40);
+                                                                        } else if ($pay_type == 'bi-weekly') {
+                                                                            $PDT = (((($rate_per_hour * 26)/52)/40));
+                                                                        } else if ($pay_type == 'semi-monthly') {
+                                                                            $PDT = (((($rate_per_hour * 24)/52)/40));
+                                                                        } else if ($pay_type == 'monthly') {
+                                                                            $PDT = (((($rate_per_hour * 12)/52)/40));
+                                                                        }
+                                                                        
+                                                                        $overtime_calc = ($PDT * 1.5) * $payroll->overtime_hrs;
+                                                                    @endphp
                                                                     <tr>
                                                                         <td>Overtime</td>
-                                                                        <td class="text-end">${{ number_format($payroll->overtime_hrs, 2) }}</td>
+                                                                        <td class="text-end">${{ number_format($overtime_calc, 2) }}</td>
                                                                     </tr>
                                                                     @endif
                                                                     @if($payroll->doubl_overtime_hrs > 0)
+                                                                    @php
+                                                                        $double_overtime_calc = ($PDT * 2) * $payroll->doubl_overtime_hrs;
+                                                                    @endphp
                                                                     <tr>
                                                                         <td>Double Overtime</td>
-                                                                        <td class="text-end">${{ number_format($payroll->doubl_overtime_hrs, 2) }}</td>
+                                                                        <td class="text-end">${{ number_format($double_overtime_calc, 2) }}</td>
                                                                     </tr>
                                                                     @endif
                                                                     @if($payroll->holiday_pay > 0)
+                                                                    @php
+                                                                        $holiday_pay_calc = ($PDT * 1.5) * $payroll->holiday_pay;
+                                                                    @endphp
                                                                     <tr>
                                                                         <td>Holiday Pay</td>
-                                                                        <td class="text-end">${{ number_format($payroll->holiday_pay, 2) }}</td>
+                                                                        <td class="text-end">${{ number_format($holiday_pay_calc, 2) }}</td>
                                                                     </tr>
                                                                     @endif
                                                                     @if($payroll->paid_time_off > 0)
@@ -324,7 +357,7 @@
                                                                         </li> -->
                                                                     @endif
                                                                     @foreach($payroll->payheads_list as $payhead)
-                                                                        @if($payhead['amount'] > 0)
+                                                                        @if($payhead['amount'] > 0 && $payhead['pay_type'] == 'earnings')
                                                                             <tr>
                                                                                 <td>{{ ucfirst($payhead['name']) }}</td>
                                                                                 <td class="text-end">${{ number_format($payhead['amount'], 2) }}</td>
@@ -334,7 +367,7 @@
                                                                 </tbody>
                                                                 <tfoot>
                                                                     <tr>
-                                                                        <td class="text-end"><strong>Total Gross Pay</strong></td>
+                                                                        <td class=""><strong>Total Gross Pay</strong></td>
                                                                         <td class="text-end"><strong>${{ number_format($payroll->gross + $payroll->paid_time_off, 2) }}</strong></td>
                                                                     </tr>
                                                                 </tfoot>
@@ -347,9 +380,20 @@
                                                 </div>
                                             </div>
                                         </td>
-										<td>${{ number_format($payroll->medical, 2) }}</td>
-										<td>${{ number_format($payroll->security, 2) }}</td>
-										<td>${{ number_format($payroll->edu_levy, 2) }}</td>
+										@php
+											// Use calculated values from the trait
+											$medical_benefits = $payroll->calculated_medical;
+											$social_security = $payroll->calculated_social_security;
+											$education_lvey = $payroll->calculated_education_levy;
+											
+											// Update totals
+											$medicalbenefits += $medical_benefits;
+											$socialsecurity += $social_security;
+											$educationlevy += $education_lvey;
+										@endphp
+										<td>${{ number_format($medical_benefits, 2) }}</td>
+										<td>${{ number_format($social_security, 2) }}</td>
+										<td>${{ number_format($education_lvey, 2) }}</td>
 										<td>
                                             <a href="#" class="additions-link" data-toggle="modal" data-target="#additionsModal{{ $payroll->id }}" style="text-decoration: none;">
                                                 ${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2) }}
@@ -361,14 +405,14 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="additionsModalLabel{{ $payroll->id }}">
-                                                                Additions Details - {{ $payroll->user->name }}
+                                                                Additions Details
                                                             </h5>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <table class="table table-bordered db-custom-table">
+                                                            <table class="table my-table">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>Description</th>
@@ -381,7 +425,7 @@
                                                                 @endphp
                                                                 @if($additions->count() > 0)
                                                                     @foreach($additions as $addition)
-                                                                        @if($addition->amount > 0)
+                                                                        @if($addition->amount > 0 && $addition->payhead->pay_type == 'nothing')
                                                                             <tr>
                                                                                 <td>{{ $addition->payhead->name ?? 'Addition' }}</td>
                                                                                 <td class="text-end">${{ number_format($addition->amount, 2) }}</td>
@@ -396,7 +440,7 @@
                                                             </tbody>
                                                             <tfoot>
                                                                 <tr>
-                                                                    <td class="text-end"><strong>Total Additions</strong></td>
+                                                                    <td class=""><strong>Total Additions</strong></td>
                                                                     <td class="text-end"><strong>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2) }}</strong></td>
                                                                 </tr>
                                                             </tfoot>
@@ -420,14 +464,14 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="deductionsModalLabel{{ $payroll->id }}">
-                                                                Deductions Details - {{ $payroll->user->name }}
+                                                                Deductions Details
                                                             </h5>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <table class="table table-bordered db-custom-table">
+                                                            <table class="table my-table">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>Description</th>
@@ -440,7 +484,7 @@
                                                                 @endphp
                                                                 @if($deductions->count() > 0)
                                                                     @foreach($deductions as $deduction)
-                                                                        @if($deduction->amount > 0)
+                                                                        @if($deduction->amount > 0 && $deduction->payhead->pay_type == 'deductions')
                                                                             <tr>
                                                                                 <td>{{ $deduction->payhead->name ?? 'Deduction' }}</td>
                                                                                 <td class="text-end">${{ number_format($deduction->amount, 2) }}</td>
@@ -455,7 +499,7 @@
                                                             </tbody>
                                                             <tfoot>
                                                                 <tr>
-                                                                    <td class="text-end"><strong>Total Deductions</strong></td>
+                                                                    <td class=""><strong>Total Deductions</strong></td>
                                                                     <td class="text-end"><strong>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2) }}</strong></td>
                                                                 </tr>
                                                             </tfoot>

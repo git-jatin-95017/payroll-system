@@ -213,6 +213,10 @@ dd($query);*/
 			$payrolls[$i]['employee_pay'] = $amounts['employee_pay'];
 			$payrolls[$i]['reg_hrs_temp'] = $amounts['reg_hrs'];
 			$payrolls[$i]['paid_time_off'] = $amounts['paid_time_off'];
+			// Add calculated statutory deductions
+			$payrolls[$i]['calculated_medical'] = $amounts['medical_benefits'];
+			$payrolls[$i]['calculated_social_security'] = $amounts['social_security'];
+			$payrolls[$i]['calculated_education_levy'] = $amounts['education_levy'];
 			$i++;
         }
 

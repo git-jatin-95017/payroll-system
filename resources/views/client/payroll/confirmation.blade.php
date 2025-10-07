@@ -632,14 +632,14 @@
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <h5 class="modal-title" id="grossBreakdownModalLabel{{ $row->id }}">
-                                                                        Gross Pay Breakdown - {{ucfirst($row->user->employeeProfile->first_name)}} {{ucfirst($row->user->employeeProfile->last_name)}}
+                                                                    Gross Pay Details
                                                                     </h5>
                                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <table class="table table-bordered">
+                                                                    <table class="table my-table">
                                                                         <thead>
-                                                                            <tr>
+                                                                            <tr style="background-color: #fff !important; border-bottom: none !important;">
                                                                                 <th>Description</th>
                                                                                 <th class="text-end">Amount</th>
                                                                             </tr>
@@ -652,21 +652,46 @@
                                                                             </tr>
                                                                             @endif
                                                                             @if($row->overtime_hrs > 0)
+                                                                            @php
+                                                                                $pay_type = $row->user->employeeProfile->pay_type;
+                                                                                $rate_per_hour = $row->user->employeeProfile->pay_rate;
+                                                                                $PDT = 0;
+                                                                                
+                                                                                if ($pay_type == 'hourly') {
+                                                                                    $PDT = $rate_per_hour;
+                                                                                } else if ($pay_type == 'weekly') {
+                                                                                    $PDT = ($rate_per_hour / 40);
+                                                                                } else if ($pay_type == 'bi-weekly') {
+                                                                                    $PDT = (((($rate_per_hour * 26)/52)/40));
+                                                                                } else if ($pay_type == 'semi-monthly') {
+                                                                                    $PDT = (((($rate_per_hour * 24)/52)/40));
+                                                                                } else if ($pay_type == 'monthly') {
+                                                                                    $PDT = (((($rate_per_hour * 12)/52)/40));
+                                                                                }
+                                                                                
+                                                                                $overtime_calc = ($PDT * 1.5) * $row->overtime_hrs;
+                                                                            @endphp
                                                                             <tr>
                                                                                 <td>Overtime</td>
-                                                                                <td class="text-end">${{ number_format($row->overtime_hrs, 2) }}</td>
-                                                                            </tr>
+                                                                                <td class="text-end">${{ number_format($overtime_calc, 2) }}</td>
+</tr>
                                                                             @endif
                                                                             @if($row->doubl_overtime_hrs > 0)
+                                                                            @php
+                                                                                $double_overtime_calc = ($PDT * 2) * $row->doubl_overtime_hrs;
+                                                                            @endphp
                                                                             <tr>
                                                                                 <td>Double Overtime</td>
-                                                                                <td class="text-end">${{ number_format($row->doubl_overtime_hrs, 2) }}</td>
+                                                                                <td class="text-end">${{ number_format($double_overtime_calc, 2) }}</td>
                                                                             </tr>
                                                                             @endif
                                                                             @if($row->holiday_pay > 0)
+                                                                            @php
+                                                                                $holiday_pay_calc = ($PDT * 1.5) * $row->holiday_pay;
+                                                                            @endphp
                                                                             <tr>
                                                                                 <td>Holiday Pay</td>
-                                                                                <td class="text-end">${{ number_format($row->holiday_pay, 2) }}</td>
+                                                                                <td class="text-end">${{ number_format($holiday_pay_calc, 2) }}</td>
                                                                             </tr>
                                                                             @endif
                                                                             @foreach($payheadsList as $payhead)
@@ -726,14 +751,14 @@
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
                                                                         <h5 class="modal-title" id="additionsModalLabel{{ $row->id }}">
-                                                                            Additions Breakdown - {{ucfirst($row->user->employeeProfile->first_name)}} {{ucfirst($row->user->employeeProfile->last_name)}}
+                                                                            Additions Details
                                                                         </h5>
                                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                     </div>
                                                                     <div class="modal-body">
-                                                                        <table class="table table-bordered">
+                                                                        <table class="table my-table">
                                                                             <thead>
-                                                                                <tr>
+                                                                                <tr style="background-color: #fff !important; border-bottom: none !important;">
                                                                                     <th>Description</th>
                                                                                     <th class="text-end">Amount</th>
                                                                                 </tr>
@@ -786,9 +811,9 @@
                                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                     </div>
                                                                     <div class="modal-body">
-                                                                        <table class="table table-bordered">
+                                                                        <table class="table my-table">
                                                                             <thead>
-                                                                                <tr>
+                                                                                <tr style="background-color: #fff !important; border-bottom: none !important;">
                                                                                     <th>Description</th>
                                                                                     <th class="text-end">Amount</th>
                                                                                 </tr>
@@ -1137,4 +1162,10 @@
     }
     </script>
 @endsection
-
+@push('styles')
+<style>
+    .my-table td {
+        border-bottom-width: 0px !important;
+    }
+</style>
+@endpush

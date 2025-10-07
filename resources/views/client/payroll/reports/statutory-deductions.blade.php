@@ -165,7 +165,8 @@
                                         <td>${{ number_format($earning->edu_levy, 2) }}</td>
                                         <td>${{ number_format($earning->medical, 2) }}</td>
                                         <td>${{ number_format($earning->security_employer, 2) }}</td>
-                                        <td>${{ number_format($earning->edu_levy, 2) }}</td>
+                                        <!-- <td>${{ number_format($earning->edu_levy, 2) }}</td> -->
+                                         <td>N/A</td>
                                         <td>${{ number_format($earning->medical + $earning->security + $earning->edu_levy + $earning->medical + $earning->security_employer + $earning->edu_levy, 2) }}</td>
                                     </tr>
                                     @php
@@ -187,7 +188,8 @@
                                     <td>${{ number_format($totalEmployeeEduLevy, 2) }}</td>
                                     <td>${{ number_format($totalEmployerMedical, 2) }}</td>
                                     <td>${{ number_format($totalEmployerSecurity, 2) }}</td>
-                                    <td>${{ number_format($totalEmployerEduLevy, 2) }}</td>
+                                    <!-- <td>${{ number_format($totalEmployerEduLevy, 2) }}</td> -->
+                                    <td>N/A</td>
                                     <td>${{ number_format($totalOverall, 2) }}</td>
                                 </tr>
                             </tfoot>

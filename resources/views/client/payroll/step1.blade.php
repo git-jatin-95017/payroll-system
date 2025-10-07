@@ -461,7 +461,7 @@
 															value="{{ $dotCalc }}">
 														<input type="hidden" class="holiday-pay-hidden"
 															name="input[{{$employee->id}}][holiday_pay]"
-															value="{{ $dotCalc }}">
+															value="{{ $holidayPayHrs }}">
 														<input type="hidden" class="medical-hidden"
 															name="input[{{$employee->id}}][medical]"
 															value="{{ $medical }}">
@@ -637,13 +637,28 @@
 
 		// console.log($(obj).attr('payhead'), obj.hasAttribute('data-payhead'), 22222222);
 
+		let paid_time_off = 0;
+
+		if (pay_type == 'hourly') {
+			paid_time_off = rate_per_hour;
+		}  else if (pay_type == 'weekly') {
+			paid_time_off = (rate_per_hour / 40) ;
+		}  else if (pay_type == 'bi-weekly') {
+			paid_time_off = (((rate_per_hour * 26)/52)/40);
+		}  else if (pay_type == 'semi-monthly') {
+			paid_time_off = (((rate_per_hour * 24)/52)/40);
+		}  else if (pay_type == 'monthly') {
+			paid_time_off = (((rate_per_hour * 12)/52)/40);
+			// paid_time_off = leave_balance - paid_time_off;
+		}
+
 		gross = amount = rate_per_hour * regular_hrs; //Gross
 
-		overtime_hrs = (overtime_hrs_val * 1.5) * rate_per_hour;
+		overtime_hrs = (paid_time_off * 1.5) * overtime_hrs_val;
 
-		holiday_pay = (holiday_pay_val * 1.5) * rate_per_hour;
+		holiday_pay = (paid_time_off * 1.5) * holiday_pay_val;
 
-		double_overtime_hrs = (double_overtime_hrs_val * 2) * rate_per_hour;
+		double_overtime_hrs = (paid_time_off * 2) * double_overtime_hrs_val;
 
 		if (pay_type == 'hourly' || pay_type == 'weekly') {
 
@@ -799,7 +814,7 @@
 		focusedRow.find('.total-hidden').val(final_gross);	 // gross
 		focusedRow.find('.overtime-hidden').val(overtime_hrs);
 		focusedRow.find('.double-overtime-hidden').val(double_overtime_hrs);
-		focusedRow.find('.holiday-pay-hidden').val(holiday_pay);
+		focusedRow.find('.holiday-pay-hidden').val(holiday_pay_val); // Save hours, not calculated amount
 		focusedRow.find('.medical-hidden').val(medical_benefits);
 		focusedRow.find('.social-security-hidden').val(social_security);
 		focusedRow.find('.social-security-employer-hidden').val(social_security_employer);
