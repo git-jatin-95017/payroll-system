@@ -250,6 +250,7 @@
                                 <input type="hidden" name="ids[]" value="{{$id}}">
                             @endforeach
                             <button class="btn btn-primary save_continue" type="submit">Submit Payroll</button>
+                            @if(!Request::query('is_green'))
                             <a href="{{ route('store.Step2', [
                                 'start_date' => Request::query('start_date'),
                                 'end_date' => Request::query('end_date'),
@@ -260,6 +261,7 @@
                             </svg>
                             Go Back
                             </a>
+                            @endif
                             <a href="{{ route('download.pdf', [
                                 'start_date' => Request::query('start_date'),
                                 'end_date' => Request::query('end_date'),

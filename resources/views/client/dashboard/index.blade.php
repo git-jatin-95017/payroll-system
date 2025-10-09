@@ -28,7 +28,7 @@
                 <div class="widget-icon d-flex justify-content-center align-items-center">
                     <x-bxs-user class="w-24 h-24" />
                 </div>
-                <p>Employees</p>
+                <p>People</p>
             </a>
         </div>
         <div class="widget-container">
