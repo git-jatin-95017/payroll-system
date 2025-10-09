@@ -308,8 +308,10 @@ class LeavesController extends Controller
 
         if($type == 'Hourly') {
             $duration = $hourAmount;
+            $appenddate = $appstartdate;
         } else if($type == 'Full Day') { 
             $duration = 8;
+            $appenddate = $appstartdate;
         } else { 
             $formattedStart = new \DateTime($appstartdate);
             $formattedEnd = new \DateTime($appenddate);

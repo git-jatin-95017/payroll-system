@@ -55,9 +55,7 @@
                         <strong style="font-size: 10px; color: #000;">MEDICAL BENEFITS NUMBER: {{ $data->user->employeeProfile->ifsc_code ?? 'N/A' }}</strong>
                     </td>
                 </tr>
-                <tr>
-                    <td style="padding:3px 5px;" rowspan="2"><strong style="font-size: 10px; color: #000;">Note: {{ $data->notes }}</strong></td>
-                </tr>
+                
                 <!-- <tr>
                     <td style="padding:3px 5px;">{{ auth()->user()->name }}</td>
                     <td style="padding:3px 5px;">{{ $data->user->name }}</td>
@@ -452,7 +450,17 @@
             <td style="padding:3px 5px; border-right: 1px solid #ddd;color: #000;">Net Pay </td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($grossFinal-$deductions-$totalTaxes, 2)}}</td>
         </tr>
+        <tr><td colspan="2"></td></tr>
+        <tr><td colspan="2"></td></tr>
+        
     </thead>
+</table>
+<table style="width: 100%; border-collapse: collapse; table-layout: fixed; text-align: left; vertical-align: middle; margin-bottom: 25px;">
+    <tbody>
+        <tr>
+            <td style="padding:3px 5px;" rowspan="2"><strong style="font-size: 14px; color: #000;">Note: {{ $data->notes }}</strong></td>
+        </tr>
+    </tbody>
 </table>
 </body>
 </html>

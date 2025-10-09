@@ -257,6 +257,7 @@ class ClientController extends Controller
 				$user->status = 1; //Active status
 				$user->created_by = auth()->user()->id; // Set to the admin creating the user
 				$user->is_extra_user = 'Y'; // Mark as extra user
+				$user->created_for_extra_user = $user->id; // Set to the client company being edited
 				$user->save();
 			}
 		}
@@ -304,6 +305,7 @@ class ClientController extends Controller
 		// Fetch existing administrators for this company
 		$existingAdmins = User::where('created_by', auth()->user()->id)
 			->where('role_id', 1)
+			->where('created_for_extra_user', $id)
 			->select('id', 'name', 'email', 'created_at')
 			->get();
 
@@ -406,6 +408,8 @@ class ClientController extends Controller
 							$admin->name = $request->existing_name[$index];
 							$admin->email = $request->existing_email[$index];
 							$admin->is_extra_user = 'Y'; // Mark as extra user
+							$admin->created_for_extra_user = $id; // Set to the client company being edited
+							$admin->created_by = auth()->user()->id; // Set to the admin creating the user
 							$admin->save();
 							
 							\Log::info('Updated existing admin', [
@@ -455,6 +459,7 @@ class ClientController extends Controller
 						$user->status = 1; //Company as admin
 						$user->created_by = auth()->user()->id; // Set to the client company being edited
 						$user->is_extra_user = 'Y'; // Mark as extra user
+						$user->created_for_extra_user = $id; // Set to the client company being edited
 						
 						// Debug: Log the created_by value
 						\Log::info('Creating new admin user', [

@@ -33,27 +33,32 @@ class LoginController extends Controller
 		$user = Auth::user();
 		
 		// Check if this is an extra user (created by another client)
-		if ($user->is_extra_user === 'Y' && $user->created_by) {
+		if ($user->is_extra_user === 'Y') {
 			// Log out the extra user
 			Auth::logout();
 			
-			// Find the creator user
-			$creatorUser = \App\Models\User::find($user->created_by);
+			// Check if created_for_extra_user is set, otherwise use created_by
+			$targetUserId = $user->created_for_extra_user ?? $user->created_by;
 			
-			if ($creatorUser) {
-				// Log in as the creator
-				Auth::login($creatorUser);
+			if ($targetUserId) {
+				// Find the target user
+				$targetUser = \App\Models\User::find($targetUserId);
 				
-				// Redirect based on creator's role
-				switch ($creatorUser->role_id) {
-					case 1:
-						return '/admin/dashboard';
-					case 2:
-						return '/client/dashboard';
-					case 3:
-						return '/employee/dashboard';
-					default:
-						return '/home';
+				if ($targetUser) {
+					// Log in as the target user
+					Auth::login($targetUser);
+					
+					// Redirect based on target user's role
+					switch ($targetUser->role_id) {
+						case 1:
+							return '/admin/dashboard';
+						case 2:
+							return '/client/dashboard';
+						case 3:
+							return '/employee/dashboard';
+						default:
+							return '/home';
+					}
 				}
 			}
 		}

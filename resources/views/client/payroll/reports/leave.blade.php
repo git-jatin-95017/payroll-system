@@ -151,7 +151,13 @@
                                         <td>{{ $request->requests }}</td>
                                         <td>
                                             <span class="badge bg-{{ $request->leave_status == 'approved' ? 'success' : ($request->leave_status == 'pending' ? 'warning' : 'danger') }}">
-                                                {{ ucfirst($request->leave_status) }}
+                                                @if($request->leave_status == 'approved')
+                                                    <span class="badge bg-success" style="font-size: 11px;">Eligible</span>
+                                                @elseif($request->leave_status == 'pending')
+                                                    <span class="badge bg-warning" style="font-size: 11px;">Ineligible</span>
+                                                @else
+                                                    <span class="badge bg-danger" style="font-size: 11px;">Rejected</span>
+                                                @endif
                                             </span>
                                         </td>
                                         <td>{{ $request->leave_type }}</td>

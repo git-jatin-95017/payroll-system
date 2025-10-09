@@ -28,6 +28,9 @@ class User extends Authenticatable
         'is_extra_user',
         'is_proifle_edit_access',
         'logo',
+        'created_for_extra_user',
+        'created_by',
+        'updated_by',
         'status'
     ];
 
