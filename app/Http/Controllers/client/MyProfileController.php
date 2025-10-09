@@ -29,6 +29,7 @@ class MyProfileController extends Controller
 		// Fetch existing administrators for this company
 		$existingAdmins = User::where('created_by', auth()->user()->id)
 			->where('role_id', 2) //Client role - admins created by client have client role
+			->where('is_extra_user', 'Y')
 			->select('id', 'name', 'email', 'created_at')
 			->get();
 

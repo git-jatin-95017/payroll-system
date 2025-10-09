@@ -30,7 +30,16 @@ class ProfileController extends Controller
 	 */
 	public function edit($id)
 	{
-		return view('admin.profile.edit');
+		// Fetch existing administrators for this admin
+		$admin = User::find($id);
+		$existingAdmins = User::where('created_by', auth()->user()->id)
+			->where('role_id', 2) //Client role - admins created by admin have client role
+			->where('is_extra_user', 'Y')
+			->select('id', 'name', 'email', 'created_at')
+			->get();
+		// dd($existingAdmins);
+
+		return view('admin.profile.edit', compact('existingAdmins'));
 	}
 
 	/**
@@ -63,8 +72,46 @@ class ProfileController extends Controller
 	   	// } else 
 		
 		if ($data['update_request'] == 'adminsadd') {
+			// Handle existing administrators updates
+			if ($request->has('existing_admin_id') && is_array($request->existing_admin_id)) {
+				// Validate existing admin data
+				foreach ($request->existing_admin_id as $index => $adminId) {
+					if (!empty($adminId)) {
+						$admin = User::find($adminId);
+						if ($admin && $admin->created_by == $id) {
+							// Validate existing admin fields
+							$this->validate($request, [
+								'existing_name.' . $index => 'required|string|max:255',
+								'existing_email.' . $index => 'required|email|unique:users,email,' . $adminId,
+							], [
+								'existing_name.' . $index . '.required' => 'The name field is required for existing administrator.',
+								'existing_name.' . $index . '.string' => 'The name must be a string.',
+								'existing_name.' . $index . '.max' => 'The name may not be greater than 255 characters.',
+								'existing_email.' . $index . '.required' => 'The email field is required for existing administrator.',
+								'existing_email.' . $index . '.email' => 'The email must be a valid email address.',
+								'existing_email.' . $index . '.unique' => 'The email has already been taken.',
+							]);
+						}
+					}
+				}
+				
+				// Update existing admins after validation
+				foreach ($request->existing_admin_id as $index => $adminId) {
+					if (!empty($adminId)) {
+						$admin = User::find($adminId);
+						// if ($admin && $admin->created_by == $id) {
+							$admin->update([
+								'name' => $request->input('existing_name')[$index],
+								'email' => $request->input('existing_email')[$index],
+								'is_extra_user' => 'Y',
+								'created_by' => auth()->user()->id,
+							]);
+						// }
+					}
+				}
+			}
 
-			// Loop through the submitted data and validate
+			// Loop through the submitted data and validate for new admins
 		    foreach ($request->input('name') as $index => $name) {
 		        $userFriendlyIndex = $index + 1;
 
@@ -102,6 +149,7 @@ class ProfileController extends Controller
 			    $user->role_id = 2; //Company as admin
 			    $user->status = 1; //Company as admin
 				$user->created_by = auth()->user()->id;
+				$user->is_extra_user = 'Y';
 			    $user->save();
 		    }
 		}  else if ($data['update_request'] == 'personal') {
@@ -156,5 +204,39 @@ class ProfileController extends Controller
 			'success' => true,
 			'message' => 'Password changed successfully!'
 		]);
+	}
+
+	/**
+	 * Delete admin
+	 *
+	 * @param  int  $admin_id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function deleteAdmin($admin_id)
+	{
+		try {
+			$admin = User::findOrFail($admin_id);
+			
+			// Check if the admin belongs to the current user
+			if ($admin->created_by != auth()->user()->id) {
+				return response()->json([
+					'success' => false,
+					'message' => 'You are not authorized to delete this administrator.'
+				], 403);
+			}
+			
+			$admin->delete();
+			
+			return response()->json([
+				'success' => true,
+				'message' => 'Administrator deleted successfully!'
+			]);
+			
+		} catch (\Exception $e) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Failed to delete administrator: ' . $e->getMessage()
+			], 500);
+		}
 	}
 }

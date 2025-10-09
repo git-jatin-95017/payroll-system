@@ -46,7 +46,7 @@ class ClientController extends Controller
 				$usersQuery->whereRaw("date(created_at) >= '" . $start_date . "' AND date(created_at) <= '" . $end_date . "'");
 			}
 
-			$data = $usersQuery->select('*')->where('role_id', 2);
+			$data = $usersQuery->select('*')->where('role_id', 2)->whereNull('is_extra_user');
 			
 			return Datatables::of($data)
 					->addIndexColumn()                   
@@ -81,6 +81,7 @@ class ClientController extends Controller
 		// Fetching data with search and pagination
 		$clients = User::orderBy('users.id', 'desc')
 			->where('role_id', 2)
+			->whereNull('is_extra_user')
 			->where(function ($query) use ($searchValue) {
 				$query->Where('users.name', 'like', '%' . $searchValue . '%')
 					->orWhere('users.email', 'like', '%' . $searchValue . '%');
