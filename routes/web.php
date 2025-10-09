@@ -226,6 +226,7 @@ Route::prefix('employee')->group(function () {
 });
 
 Route::resource('edit-my-profile', ProfileController::class);
+Route::post('set-user-pwd', [ProfileController::class, 'changeAdminPassword'])->name('set-user-pwd');
 
 Route::resource('punch', PunchController::class);
 

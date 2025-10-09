@@ -131,4 +131,30 @@ class ProfileController extends Controller
 
 		return back()->with('message','Profile updated successfully.');
 	}
+
+	/**
+	 * Change admin password
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function changeAdminPassword(Request $request)
+	{
+		$request->validate([
+			'admin_id' => 'required|exists:users,id',
+			'new_password' => 'required|string',
+			'confirm_password' => 'required|same:new_password'
+		]);
+
+		$admin = User::findOrFail($request->admin_id);
+		
+		$admin->update([
+			'password' => Hash::make($request->new_password)
+		]);
+
+		return response()->json([
+			'success' => true,
+			'message' => 'Password changed successfully!'
+		]);
+	}
 }

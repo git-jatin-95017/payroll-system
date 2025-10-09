@@ -455,11 +455,23 @@
 										</div>
 									</div>
 									<div class="col-2 mt-4">
-										<button type="button" class="btn btn-sm btn-danger delete-admin" 
-											data-admin-id="{{ $admin->id }}" 
-											data-admin-name="{{ $admin->name }}">
-										<i class="fas fa-trash"></i>
-										</button>
+										<div class="btn-group" role="group">
+											<button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+												<i class="fas fa-cog"></i> Actions
+											</button>
+											<ul class="dropdown-menu">
+												<li><a class="dropdown-item change-password-btn" href="#" data-admin-id="{{ $admin->id }}" data-admin-name="{{ $admin->name }}">
+													<i class="fas fa-key"></i> Change Password
+												</a></li>
+												<li><a class="dropdown-item permission-btn" href="#" data-admin-id="{{ $admin->id }}" data-admin-name="{{ $admin->name }}">
+													<i class="fas fa-shield-alt"></i> Permission
+												</a></li>
+												<li><hr class="dropdown-divider"></li>
+												<li><a class="dropdown-item text-danger delete-admin" href="#" data-admin-id="{{ $admin->id }}" data-admin-name="{{ $admin->name }}">
+													<i class="fas fa-trash"></i> Delete
+												</a></li>
+											</ul>
+										</div>
 									</div>
 								</div>
 								@endforeach
@@ -726,5 +738,207 @@
 			avatarElement.style.display = "block";
 		}
 	};
+</script>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form id="changePasswordForm">
+				<div class="modal-body">
+					<input type="hidden" id="password_admin_id" name="admin_id">
+					<div class="mb-3">
+						<label for="admin_name_display" class="form-label">Administrator</label>
+						<input type="text" class="form-control" id="admin_name_display" readonly>
+					</div>
+					<div class="mb-3">
+						<label for="new_password" class="form-label">New Password</label>
+						<input type="password" class="form-control" id="new_password" name="new_password" required>
+					</div>
+					<div class="mb-3">
+						<label for="confirm_password" class="form-label">Confirm Password</label>
+						<input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary">Change Password</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Permission Modal -->
+<div class="modal fade" id="permissionModal" tabindex="-1" aria-labelledby="permissionModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="permissionModalLabel">Manage Permissions</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form id="permissionForm">
+				<div class="modal-body">
+					<input type="hidden" id="permission_admin_id" name="admin_id">
+					<div class="mb-3">
+						<label for="permission_admin_name" class="form-label">Administrator</label>
+						<input type="text" class="form-control" id="permission_admin_name" readonly>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<h6>COMING SOON</h6>
+							<!-- <div class="form-check">
+								<input class="form-check-input" type="checkbox" id="dashboard_view" name="permissions[]" value="dashboard_view">
+								<label class="form-check-label" for="dashboard_view">View Dashboard</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="dashboard_edit" name="permissions[]" value="dashboard_edit">
+								<label class="form-check-label" for="dashboard_edit">Edit Dashboard</label>
+							</div> -->
+						</div>
+						<!-- <div class="col-md-6">
+							<h6>Employee Management</h6>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="employee_view" name="permissions[]" value="employee_view">
+								<label class="form-check-label" for="employee_view">View Employees</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="employee_create" name="permissions[]" value="employee_create">
+								<label class="form-check-label" for="employee_create">Create Employees</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="employee_edit" name="permissions[]" value="employee_edit">
+								<label class="form-check-label" for="employee_edit">Edit Employees</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="employee_delete" name="permissions[]" value="employee_delete">
+								<label class="form-check-label" for="employee_delete">Delete Employees</label>
+							</div>
+						</div> -->
+					</div>
+					<!-- <div class="row mt-3">
+						<div class="col-md-6">
+							<h6>Payroll Management</h6>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="payroll_view" name="permissions[]" value="payroll_view">
+								<label class="form-check-label" for="payroll_view">View Payroll</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="payroll_create" name="permissions[]" value="payroll_create">
+								<label class="form-check-label" for="payroll_create">Create Payroll</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="payroll_edit" name="permissions[]" value="payroll_edit">
+								<label class="form-check-label" for="payroll_edit">Edit Payroll</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<h6>Reports</h6>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="reports_view" name="permissions[]" value="reports_view">
+								<label class="form-check-label" for="reports_view">View Reports</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="reports_export" name="permissions[]" value="reports_export">
+								<label class="form-check-label" for="reports_export">Export Reports</label>
+							</div>
+						</div>
+					</div> -->
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary">Save Permissions</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+// Change Password functionality
+document.addEventListener('DOMContentLoaded', function() {
+	// Handle change password button clicks
+	document.querySelectorAll('.change-password-btn').forEach(function(button) {
+		button.addEventListener('click', function(e) {
+			e.preventDefault();
+			const adminId = this.getAttribute('data-admin-id');
+			const adminName = this.getAttribute('data-admin-name');
+			
+			document.getElementById('password_admin_id').value = adminId;
+			document.getElementById('admin_name_display').value = adminName;
+			
+			const modal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
+			modal.show();
+		});
+	});
+	
+	// Handle permission button clicks
+	document.querySelectorAll('.permission-btn').forEach(function(button) {
+		button.addEventListener('click', function(e) {
+			e.preventDefault();
+			const adminId = this.getAttribute('data-admin-id');
+			const adminName = this.getAttribute('data-admin-name');
+			
+			document.getElementById('permission_admin_id').value = adminId;
+			document.getElementById('permission_admin_name').value = adminName;
+			
+			const modal = new bootstrap.Modal(document.getElementById('permissionModal'));
+			modal.show();
+		});
+	});
+	
+	// Handle change password form submission
+	document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+		e.preventDefault();
+		
+		const newPassword = document.getElementById('new_password').value;
+		const confirmPassword = document.getElementById('confirm_password').value;
+		
+		if (newPassword !== confirmPassword) {
+			alert('Passwords do not match!');
+			return;
+		}
+		
+		// if (newPassword.length < 8) {
+		// 	alert('Password must be at least 8 characters long!');
+		// 	return;
+		// }
+		
+		const formData = new FormData(this);
+		
+		fetch('{{ route("set-user-pwd") }}', {
+			method: 'POST',
+			body: formData,
+			headers: {
+				'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+			}
+		})
+		.then(response => response.json())
+		.then(data => {
+			if (data.success) {
+				alert('Password changed successfully!');
+				const modal = bootstrap.Modal.getInstance(document.getElementById('changePasswordModal'));
+				modal.hide();
+				document.getElementById('changePasswordForm').reset();
+			} else {
+				alert('Error: ' + (data.message || 'Failed to change password'));
+			}
+		})
+		.catch(error => {
+			console.error('Error:', error);
+			alert('An error occurred while changing the password');
+		});
+	});
+	
+	// Handle permission form submission (disabled for now)
+	document.getElementById('permissionForm').addEventListener('submit', function(e) {
+		e.preventDefault();
+		alert('Permission management will be implemented later.');
+	});
+});
 </script>
 @endpush
