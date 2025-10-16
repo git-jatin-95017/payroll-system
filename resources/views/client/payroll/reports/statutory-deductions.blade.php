@@ -167,7 +167,7 @@
                                         <td>${{ number_format($earning->security_employer, 2) }}</td>
                                         <!-- <td>${{ number_format($earning->edu_levy, 2) }}</td> -->
                                          <td>N/A</td>
-                                        <td>${{ number_format($earning->medical + $earning->security + $earning->edu_levy + $earning->medical + $earning->security_employer + $earning->edu_levy, 2) }}</td>
+                                        <td>${{ number_format($earning->medical + $earning->security  + $earning->medical + $earning->security_employer + $earning->edu_levy, 2) }}</td>
                                     </tr>
                                     @php
                                         $totalEmployeeMedical += $earning->medical;
@@ -176,7 +176,7 @@
                                         $totalEmployerMedical += $earning->medical;
                                         $totalEmployerSecurity += $earning->security_employer;
                                         $totalEmployerEduLevy += $earning->edu_levy;
-                                        $totalOverall += ($earning->medical + $earning->security + $earning->edu_levy + $earning->medical + $earning->security_employer + $earning->edu_levy);
+                                        $totalOverall += ($earning->medical + $earning->security  + $earning->medical + $earning->security_employer + $earning->edu_levy);
                                     @endphp
                                 @endforeach
                             </tbody>

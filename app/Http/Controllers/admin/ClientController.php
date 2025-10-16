@@ -304,9 +304,24 @@ class ClientController extends Controller
 		$company = User::find($id);
 		
 		// Fetch existing administrators for this company
+		/*
 		$existingAdmins = User::where('created_by', auth()->user()->id)
-			->where('role_id', 1)
+			->where('role_id', 2)
 			->where('created_for_extra_user', $id)
+			->select('id', 'name', 'email', 'created_at')
+			->get();
+			*/
+
+		$existingAdmins = User::whereIn('role_id', [1, 2])
+			->where('is_extra_user', 'Y')
+			->where(function ($query) use ($id) {
+				$query->where(function ($subQuery) use ($id) {
+					// Admins created by current admin AND assigned to this client
+					$subQuery->where('created_by', auth()->user()->id)
+						->where('created_for_extra_user', $id);
+				})
+				->orWhere('created_by', $id);  // Admins created by the client themselves
+			})
 			->select('id', 'name', 'email', 'created_at')
 			->get();
 
@@ -410,7 +425,7 @@ class ClientController extends Controller
 							$admin->email = $request->existing_email[$index];
 							$admin->is_extra_user = 'Y'; // Mark as extra user
 							$admin->created_for_extra_user = $id; // Set to the client company being edited
-							$admin->created_by = auth()->user()->id; // Set to the admin creating the user
+							// $admin->created_by = auth()->user()->id; // Set to the admin creating the user
 							$admin->save();
 							
 							\Log::info('Updated existing admin', [

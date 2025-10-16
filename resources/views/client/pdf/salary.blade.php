@@ -117,9 +117,33 @@
 
     $regHrs = $data->user->employeeProfile->pay_rate * $data->total_hours;
 
-    $gross = $data->gross + $data->paid_time_off;
-
+    // Calculate paid_time_off rate based on pay type (same logic as step1)
     $pay_type = $data->user->employeeProfile->pay_type;
+    $rate_per_hour = $data->user->employeeProfile->pay_rate;
+    
+    if ($pay_type == 'hourly' || $pay_type == 'weekly') {
+        $paid_time_off_rate = $rate_per_hour;
+    } else if ($pay_type == 'bi-weekly') {
+        $paid_time_off_rate = (($rate_per_hour * 26)/52)/40;
+    } else if ($pay_type == 'semi-monthly') {
+        $paid_time_off_rate = (($rate_per_hour * 24)/52)/40;
+    } else if ($pay_type == 'monthly') {
+        $paid_time_off_rate = (($rate_per_hour * 12)/52)/40;
+    } else {
+        $paid_time_off_rate = $rate_per_hour;
+    }
+    
+    // Calculate OT, DT, and Holiday Pay using new logic
+    $overtime_hours = $data->overtime_hrs ?? 0; // Hours worked
+    $double_overtime_hours = $data->doubl_overtime_hrs ?? 0; // Hours worked
+    $holiday_pay_hours = $data->holiday_pay ?? 0; // Hours worked
+    
+    $overtime_amount = ($paid_time_off_rate * 1.5) * $overtime_hours;
+    $double_overtime_amount = ($paid_time_off_rate * 2) * $double_overtime_hours;
+    $holiday_pay_amount = ($paid_time_off_rate * 1.5) * $holiday_pay_hours;
+
+    // Calculate gross using new logic (same as step1)
+    $gross = $regHrs + $overtime_amount + $double_overtime_amount + $holiday_pay_amount + $earnings + $data->paid_time_off;
     $diff = date_diff(date_create($data->user->employeeProfile->dob), date_create(date("Y-m-d")));
     $dob = $diff->format('%y');
     $days = $data->total_hours;
@@ -227,24 +251,33 @@
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">{{$data->total_hours}}</td>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($regHrs, 2)}}</td>
         </tr>
+        
+        @if($overtime_hours > 0)
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: left;color: #000;">OT</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;"></td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;"></td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($data->overtime_hrs, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($paid_time_off_rate * 1.5, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">{{number_format($overtime_hours, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($overtime_amount, 2)}}</td>
         </tr>
+        @endif
+        
+        @if($double_overtime_hours > 0)
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: left;color: #000;">DT</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;"></td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;"></td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($data->doubl_overtime_hrs, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($paid_time_off_rate * 2, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">{{number_format($double_overtime_hours, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($double_overtime_amount, 2)}}</td>
         </tr>
+        @endif
+        
+        @if($holiday_pay_hours > 0)
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: left;color: #000;">Holiday Pay</td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;"></td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;"></td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($data->holiday_pay, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($paid_time_off_rate * 1.5, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">{{number_format($holiday_pay_hours, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($holiday_pay_amount, 2)}}</td>
         </tr>
+        @endif
         @php
             if (count($data->additionalPaids) > 0) {
                 foreach($data->additionalPaids as $key => $val) {
@@ -443,12 +476,12 @@
         @if($deductions > 0)
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;color: #000;">Employee additions/deductions </td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($deductions, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($totalAe, 2)}}</td>
         </tr>
         @endif
         <tr>
             <td style="padding:3px 5px; border-right: 1px solid #ddd;color: #000;">Net Pay </td>
-            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($grossFinal-$deductions-$totalTaxes, 2)}}</td>
+            <td style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right;color: #000;">${{number_format($grossFinal-$totalAe-$totalTaxes, 2)}}</td>
         </tr>
         <tr><td colspan="2"></td></tr>
         <tr><td colspan="2"></td></tr>

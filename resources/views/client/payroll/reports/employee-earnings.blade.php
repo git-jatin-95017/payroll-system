@@ -348,14 +348,7 @@
                                                                         <td class="text-end">${{ number_format($holiday_pay_calc, 2) }}</td>
                                                                     </tr>
                                                                     @endif
-                                                                    @if($payroll->paid_time_off > 0)
-                                                                        <!-- <li class="mb-2">
-                                                                            <div class="d-flex justify-content-between">
-                                                                                <span><strong>Paid Time Off</strong></span>
-                                                                                <span class="text-success">${{ number_format($payroll->paid_time_off, 2) }}</span>
-                                                                            </div>
-                                                                        </li> -->
-                                                                    @endif
+                                                                    
                                                                     @foreach($payroll->payheads_list as $payhead)
                                                                         @if($payhead['amount'] > 0 && $payhead['pay_type'] == 'earnings')
                                                                             <tr>
@@ -364,6 +357,13 @@
                                                                             </tr>
                                                                         @endif
                                                                     @endforeach
+
+                                                                    @if($payroll->paid_time_off > 0)
+                                                                        <tr>
+                                                                            <td>Paid Time Off ({{   implode(', ', $payroll->additionalPaids->pluck('leaveType.name')->toArray()) }})</td>
+                                                                            <td class="text-end">${{ number_format($payroll->paid_time_off, 2) }}</td>
+                                                                        </tr>
+                                                                    @endif
                                                                 </tbody>
                                                                 <tfoot>
                                                                     <tr>

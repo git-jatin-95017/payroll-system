@@ -696,6 +696,7 @@
                                                                                 <td class="text-end">${{ number_format($holiday_pay_calc, 2) }}</td>
                                                                             </tr>
                                                                             @endif
+                                                                            
                                                                             @foreach($payheadsList as $payhead)
                                                                                 @if($payhead['amount'] > 0 && $payhead['pay_type'] == 'earnings')
                                                                                 <tr>
@@ -704,6 +705,12 @@
                                                                                 </tr>
                                                                                 @endif
                                                                             @endforeach
+                                                                            @if($paidTimeOff > 0)   
+                                                                            <tr>
+                                                                                <td>Paid Time Off ({{   implode(', ', $row->additionalPaids->pluck('leaveType.name')->toArray()) }})</td>
+                                                                                <td class="text-end">${{ number_format($paidTimeOff, 2) }}</td>
+                                                                            </tr>
+                                                                            @endif
                                                                         </tbody>
                                                                         <tfoot>
                                                                             <tr>
