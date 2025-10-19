@@ -258,7 +258,7 @@
 																	@endphp
 																	<input type="hidden" id="paid-leave-balnce-{{$employee->id}}-{{$value->leave->id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_balance]" value="{{ $dbBalance ? $dbBalance->balance : (($value->leave->leave_day * 8) + $carryOverAmount) }}">
 																	<input type="hidden" id="paid-time-off-{{$employee->id}}" value="0" name="input[{{$employee->id}}][paid_time_off]">
-																	<input type="text" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control db-custom-input fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" value="" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo ($value->leave->leave_day * 8) + $carryOverAmount; ?>', '<?php echo $carryOverAmount; ?>')" onblur="handleLeaveInputBlur(this)" min=0>
+																	<input type="text" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control db-custom-input fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" value="{{ $amountPaidOff }}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo ($value->leave->leave_day * 8) + $carryOverAmount; ?>', '<?php echo $carryOverAmount; ?>')" onblur="handleLeaveInputBlur(this)" min=0>
 																	<div class="ms-2 mt-2">
 																		<p class="mb-0">Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) + $carryOverAmount: 0}}</b>hrs</p>
 																		<p class="mb-0">Leave Balance | <b class="leave-balance-all" id="balance-{{$employee->id}}-{{$value->leave->id}}" data-amount="{{ $dbBalance ? $dbBalance->amount : 0 }}">
@@ -378,7 +378,7 @@
 																	@endphp
 																	<input type="hidden" id="unpaid-leave-balnce-{{$employee->id}}-{{$value->leave->id}}" name="input[{{$employee->id}}][earnings_unpaid][{{$key }}][leave_balance_unpaid]" value="{{ $dbBalance ? $dbBalance->balance : (($value->leave->leave_day * 8) + $carryOverAmount) }}">
 	
-																	<input min=0 type="number" name="input[{{$employee->id}}][earnings_unpaid][{{$key }}][amount_unpaid]" min="0" class="db-custom-input form-control fixed-input leave-hrs-unpaid" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" value=""
+																	<input min=0 type="number" name="input[{{$employee->id}}][earnings_unpaid][{{$key }}][amount_unpaid]" min="0" class="db-custom-input form-control fixed-input leave-hrs-unpaid" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" value="{{ $amountUnPaidOff }}"
 																	onchange="calculateUnpaidOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo ($value->leave->leave_day * 8) + $carryOverAmount; ?>', '<?php echo $carryOverAmount; ?>')"
 																	onblur="handleLeaveInputBlur(this)"
 																	>
@@ -651,45 +651,20 @@
 			return;
 		}
 		
-		// Get the original balance (first time this is called)
-		let originalBalance = parseFloat(balanceElement.data('original-balance'));
-		console.log('Debug - originalBalance from data:', originalBalance);
+		// ✅ NEW LOGIC: Always calculate from Hours Allowed (initial_balance) instead of remaining balance
+		let hoursAllowed = parseFloat(initial_balance);
 		
-		if (originalBalance === undefined || isNaN(originalBalance)) {
-			// First time - store the full allowance (not the current balance)
-			originalBalance = parseFloat(initial_balance);
-			balanceElement.data('original-balance', originalBalance);
-			console.log(`🔄 First time - stored full allowance: ${originalBalance} (initial_balance)`);
-		}
-		
-		// ✅ FIXED: Check if user is trying to take more leave than available
-		// Check if current balance is 0 and user is trying to take leave
-		let currentBalance = parseFloat(balanceElement.html()) || 0;
-		if (currentBalance === 0 && current_enter_val > 0) {
+		// Check if user is trying to take more leave than Hours Allowed
+		if (current_enter_val > hoursAllowed) {
 			// Clear the input and show warning
 			obj.value = '';
-			showToast('warning', `No leave available! You have 0hrs remaining for this leave type.`);
-			console.log('🚫 Input blocked: No leave available');
+			showToast('warning', `Cannot take ${current_enter_val}hrs! Hours Allowed is only ${hoursAllowed}hrs.`);
+			console.log('🚫 Input blocked: Exceeds Hours Allowed');
 			return;
 		}
 		
-		// ✅ NEW: Check if user is trying to take more leave than available balance
-		if (current_enter_val > currentBalance) {
-			// Clear the input and show warning
-			obj.value = '';
-			showToast('warning', `Cannot take ${current_enter_val}hrs! You only have ${currentBalance}hrs remaining.`);
-			console.log('🚫 Input blocked: Exceeds available balance');
-			return;
-		}
-		
-		// Additional check: if current balance is already 0, don't allow any changes
-		if (currentBalance === 0) {
-			console.log('🚫 Balance already 0 - no changes allowed');
-			return;
-		}
-		
-		// Calculate new balance: current balance minus current input
-		let newBalance = currentBalance - current_enter_val;
+		// Calculate new balance: Hours Allowed minus current input
+		let newBalance = hoursAllowed - current_enter_val;
 		
 		// Prevent negative balance
 		newBalance = Math.max(0, newBalance);
@@ -697,11 +672,7 @@
 		// Update the balance display
 		balanceElement.html(newBalance.toFixed(2));
 		
-		// Store current input for next calculation
-		balanceElement.data('previous-input', current_enter_val);
-		
-		console.log(`✅ Calculation: Original: ${originalBalance}, Current Input: ${current_enter_val}, New Balance: ${newBalance}`);
-		console.log(`📊 Database Values - Amount: ${(originalBalance - newBalance).toFixed(2)}hrs, Balance: ${newBalance.toFixed(2)}hrs`);
+		console.log(`✅ NEW Calculation: Hours Allowed: ${hoursAllowed}, Current Input: ${current_enter_val}, New Balance: ${newBalance}`);
 		console.log('Debug - balanceElement HTML after:', balanceElement.html());
 		
 		// Update the hidden input for form submission
@@ -814,46 +785,20 @@
 			return;
 		}
 		
-		// Get the original balance (first time this is called)
-		let originalBalance = parseFloat(balanceElement.data('original-balance'));
-		console.log('Debug - unpaid originalBalance from data:', originalBalance);
+		// ✅ NEW LOGIC: Always calculate from Hours Allowed (initial_balance) instead of remaining balance
+		let hoursAllowed = parseFloat(initial_balance);
 		
-		if (originalBalance === undefined || isNaN(originalBalance)) {
-			// First time - store the original balance from HTML display
-			let htmlBalance = parseFloat(balanceElement.html());
-			originalBalance = (!isNaN(htmlBalance)) ? htmlBalance : initial_balance;
-			balanceElement.data('original-balance', originalBalance);
-			console.log(`🔄 Unpaid First time - stored original balance: ${originalBalance} from HTML: ${balanceElement.html()}`);
-		}
-		
-		// ✅ FIXED: Check if user is trying to take more leave than available
-		// Check if current balance is 0 and user is trying to take leave
-		let currentBalance = parseFloat(balanceElement.html()) || 0;
-		if (currentBalance === 0 && current_enter_val > 0) {
+		// Check if user is trying to take more leave than Hours Allowed
+		if (current_enter_val > hoursAllowed) {
 			// Clear the input and show warning
 			obj.value = '';
-			showToast('warning', `No unpaid leave available! You have 0hrs remaining for this leave type.`);
-			console.log('🚫 Unpaid input blocked: No leave available');
+			showToast('warning', `Cannot take ${current_enter_val}hrs! Hours Allowed is only ${hoursAllowed}hrs.`);
+			console.log('🚫 Unpaid input blocked: Exceeds Hours Allowed');
 			return;
 		}
 		
-		// ✅ NEW: Check if user is trying to take more leave than available balance
-		if (current_enter_val > currentBalance) {
-			// Clear the input and show warning
-			obj.value = '';
-			showToast('warning', `Cannot take ${current_enter_val}hrs! You only have ${currentBalance}hrs remaining.`);
-			console.log('🚫 Unpaid input blocked: Exceeds available balance');
-			return;
-		}
-		
-		// Additional check: if current balance is already 0, don't allow any changes
-		if (currentBalance === 0) {
-			console.log('🚫 Unpaid balance already 0 - no changes allowed');
-			return;
-		}
-		
-		// Calculate new balance: current balance minus current input
-		let newBalance = currentBalance - current_enter_val;
+		// Calculate new balance: Hours Allowed minus current input
+		let newBalance = hoursAllowed - current_enter_val;
 		
 		// Prevent negative balance
 		newBalance = Math.max(0, newBalance);
@@ -861,11 +806,7 @@
 		// Update the balance display
 		balanceElement.html(newBalance.toFixed(2));
 		
-		// Store current input for next calculation
-		balanceElement.data('previous-input', current_enter_val);
-		
-		console.log(`✅ Unpaid Calculation: Original: ${originalBalance}, Current Input: ${current_enter_val}, New Balance: ${newBalance}`);
-		console.log(`📊 Unpaid Database Values - Amount: ${(originalBalance - newBalance).toFixed(2)}hrs, Balance: ${newBalance.toFixed(2)}hrs`);
+		console.log(`✅ NEW Unpaid Calculation: Hours Allowed: ${hoursAllowed}, Current Input: ${current_enter_val}, New Balance: ${newBalance}`);
 		console.log('Debug - unpaid balanceElement HTML after:', balanceElement.html());
 		
 		// Update the hidden input for form submission
