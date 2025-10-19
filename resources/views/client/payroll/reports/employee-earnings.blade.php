@@ -256,8 +256,8 @@
 							$medicalbenefits =0;
 							$socialsecurity =0;
 							$educationlevy =0;
-							$additions = 0;
-							$deductions = 0;
+							$additionsClone = 0;
+							$deductionsClone = 0;
 							$totalemppay = 0;
                                 foreach($payrolls as $payroll) {
 									$grosspay += ($payroll->gross + $payroll->paid_time_off);
@@ -265,8 +265,8 @@
 									$add =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2);
 									$ded =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2);
 									$nothing =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2);
-									$additions += $add;
-									$deductions += $ded;
+									$additionsClone += $add;
+									$deductionsClone += $ded;
 									$totalemppay += $payroll->employee_pay; 
 							@endphp		
 									<tr>
@@ -523,8 +523,8 @@
 									<td><strong>${{ number_format($medicalbenefits, 2) }}</strong></td>
 									<td><strong>${{ number_format($socialsecurity, 2) }}</strong></td>
 									<td><strong>${{ number_format($educationlevy, 2) }}</strong></td>
-									<td><strong>${{ number_format(is_numeric($additions) ? $additions : 0, 2) }}</strong></td>
-									<td><strong>${{ number_format(is_numeric($deductions) ? $deductions : 0, 2) }}</strong></td>
+									<td><strong>${{ number_format(is_numeric($additionsClone) ? $additionsClone : 0, 2) }}</strong></td>
+									<td><strong>${{ number_format(is_numeric($deductionsClone) ? $deductionsClone : 0, 2) }}</strong></td>
 									<td><strong>${{ number_format($totalemppay, 2) }}</strong></td>
 								</tr>
                             </tbody>
