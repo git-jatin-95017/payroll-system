@@ -693,7 +693,7 @@
 		if (pay_type == 'hourly') {
 			paid_time_off = rate_per_hour *  hrs_inputted;
 		}  else if (pay_type == 'weekly') {
-			paid_time_off = rate_per_hour *  hrs_inputted;
+			paid_time_off = (rate_per_hour / 40) *  hrs_inputted;
 		}  else if (pay_type == 'bi-weekly') {
 			paid_time_off = (((rate_per_hour * 26)/52)/40)*hrs_inputted;
 		}  else if (pay_type == 'semi-monthly') {
