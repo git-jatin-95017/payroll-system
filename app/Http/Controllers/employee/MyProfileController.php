@@ -300,7 +300,10 @@ class MyProfileController extends Controller
 	private function generateDirectDepositPdf(Request $request, $empId) {
 		$settings = Setting::find(1);
 	    // Query by user_id (empId) for direct deposit
-	    $data2 = PayrollAmount::where('user_id', $empId)->where('id', $request->id)->get();
+	    $data2 = PayrollAmount::with(['user.employeeProfile', 'user.paymentProfile', 'additionalEarnings.payhead'])
+	    	->where('user_id', $empId)
+	    	->where('id', $request->id)
+	    	->get();
 
 	    $parameters = [
 	    	'data' => $data2,

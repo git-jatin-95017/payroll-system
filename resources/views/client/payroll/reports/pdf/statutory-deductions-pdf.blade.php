@@ -56,6 +56,10 @@
                 $totalOverall = 0;
             @endphp
             @foreach($earnings as $earning)
+                @php
+                    // Total = Employee Medical + Employee Security + Employee Education Levy + Employer Medical + Employer Security
+                    $rowTotal = $earning->medical + $earning->security + $earning->edu_levy + $earning->medical + $earning->security_employer;
+                @endphp
                 <tr>
                     <td>{{ $earning->user->name }}</td>
                     <td>{{ date('M d, Y', strtotime($earning->start_date)) }} - {{ date('M d, Y', strtotime($earning->end_date)) }}</td>
@@ -63,18 +67,18 @@
                     <td class="text-end">${{ number_format($earning->security, 2) }}</td>
                     <td class="text-end">${{ number_format($earning->edu_levy, 2) }}</td>
                     <td class="text-end">${{ number_format($earning->medical, 2) }}</td>
-                    <td class="text-end">${{ number_format($earning->security, 2) }}</td>
-                    <td class="text-end">${{ number_format($earning->edu_levy, 2) }}</td>
-                    <td class="text-end">${{ number_format($earning->medical * 2 + $earning->security * 2 + $earning->edu_levy * 2, 2) }}</td>
+                    <td class="text-end">${{ number_format($earning->security_employer, 2) }}</td>
+                    <td class="text-end">$0.00</td>
+                    <td class="text-end">${{ number_format($rowTotal, 2) }}</td>
                 </tr>
                 @php
                     $totalEmployeeMedical += $earning->medical;
                     $totalEmployeeSecurity += $earning->security;
                     $totalEmployeeEduLevy += $earning->edu_levy;
                     $totalEmployerMedical += $earning->medical;
-                    $totalEmployerSecurity += $earning->security;
-                    $totalEmployerEduLevy += $earning->edu_levy;
-                    $totalOverall += ($earning->medical * 2 + $earning->security * 2 + $earning->edu_levy * 2);
+                    $totalEmployerSecurity += $earning->security_employer;
+                    $totalEmployerEduLevy += 0; // Employer education levy is always 0
+                    $totalOverall += $rowTotal;
                 @endphp
             @endforeach
         </tbody>

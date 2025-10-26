@@ -41,9 +41,14 @@
 	    $education_levy_amt = $row->education_levy ?? $settings->education_levy;
 		$education_levy_amt_5 = $row->education_levy_amt_5 > 0 ? $row->education_levy_amt_5 : $settings->education_levy_amt_5;
 
-		$bankName = ucfirst($row->user->paymentProfile->bank_name);
+		// Only process employees with payment profile
+		if(!isset($row->user->paymentProfile) || !$row->user->paymentProfile) {
+			continue;
+		}
 		
-		if($row->user->paymentProfile->payment_method != 'check') {
+		$bankName = ucfirst($row->user->paymentProfile->bank_name ?? '');
+		
+		if(($row->user->paymentProfile->payment_method ?? '') != 'check') {
 		$gross =0;
 		$employeePay =0;
 		$deductions = 0;
@@ -166,11 +171,12 @@
 			}
 				
 			$bankHTML.= '<tr>
-				<td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->paymentProfile->bank_name) . '</td>
+				<td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->paymentProfile->bank_name ?? '') . '</td>
 				<td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->employeeProfile->first_name) . '</td>
 				<td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->employeeProfile->last_name) . '</td>
-				<td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->paymentProfile->account_number) . '</td>
-				<td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->paymentProfile->account_type) . '</td>
+				<td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ($row->user->paymentProfile->account_number ?? '') . '</td>
+				<td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ucfirst($row->user->paymentProfile->account_type ?? '') . '</td>
+				<td style="padding: 3px 5px; border-right: 1px solid #ddd;color: #000;">' . ($row->user->paymentProfile->routing_number ?? '') . '</td>
 				<td style="padding: 3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">$' . number_format($employeePay, 2) . '</td>
 			</tr>';    
 		}             
@@ -269,12 +275,14 @@ ${{number_format($totalEmployeePay, 2)}} and make the necessary transfers as det
 						<th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">LAST NAME</th>
 						<th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">BANK ACCOUNT NUMBER</th>
 						<th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">AC TYPE</th>
+						<th style="padding:3px 5px; border-right: 1px solid #ddd; color: #000;">ROUTING NUMBER</th>
 						<th style="padding:3px 5px; border-right: 1px solid #ddd; text-align: right; color: #000;">NET AMOUNT</th>                        
 					</tr>
 					<tbody>
     					{!! $bankHTML !!}
 						<tr>						
 							<td style="padding:3px 5px; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; border-right: 1px solid #ddd; color: #000;"><strong>Total</strong></td>
+							<td style="padding:3px 5px; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; border-right: 1px solid #ddd; color: #000;"></td>
 							<td style="padding:3px 5px; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; border-right: 1px solid #ddd; color: #000;"></td>
 							<td style="padding:3px 5px; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; border-right: 1px solid #ddd; color: #000;"></td>
 							<td style="padding:3px 5px; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; border-right: 1px solid #ddd; color: #000;"></td>

@@ -55,15 +55,15 @@
                 $totalSubtotal = 0;
             @endphp
 
-            @foreach($payrolls as $payroll)
+            @foreach($calculatedData as $item)
                 @php
-                    $gross = $payroll->gross + $payroll->paid_time_off;
-                    $mbse_deductions = $payroll->medical + $payroll->security + $payroll->edu_levy;
-                    $nothingAdditionTonetPay = $payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount');
-                    $deductions = $payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount');
-                    $employeePay = $gross - $mbse_deductions + $nothingAdditionTonetPay - $deductions;
-                    $employeeTaxes = $payroll->medical + $payroll->security + $payroll->edu_levy;
-                    $employerTaxes = $payroll->medical + $payroll->security_employer;
+                    $payroll = $item['row'];
+                    $amounts = $item['amounts'];
+                    
+                    // Use calculated values from trait for consistency
+                    $employeePay = $amounts['employee_pay'];
+                    $employeeTaxes = $amounts['medical_benefits'] + $amounts['social_security'] + $amounts['education_levy'];
+                    $employerTaxes = $amounts['medical_benefits'] + $amounts['social_security_employer'];
                     $subtotal = $employeePay + $employeeTaxes + $employerTaxes;
 
                     $totalEmployeePay += $employeePay;

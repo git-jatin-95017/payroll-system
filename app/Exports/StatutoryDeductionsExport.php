@@ -39,17 +39,25 @@ class StatutoryDeductionsExport implements FromCollection, WithHeadings, WithMap
 
     public function map($earning): array
     {
-        $total = ($earning->medical * 2) + ($earning->security * 2) + ($earning->edu_levy * 2);
+        // Use pre-calculated values that are already stored on the object
+        $medical = $earning->medical ?? 0;
+        $security = $earning->security ?? 0;
+        $edu_levy = $earning->edu_levy ?? 0;
+        $security_employer = $earning->security_employer ?? 0;
+        
+        // Total = (Employee Medical) + (Employee Security) + (Employee Education Levy) + (Employer Medical) + (Employer Security) + (Employer Education Levy)
+        // Since Employer Education Levy is 0, this simplifies to:
+        $total = ($medical * 2) + $security + $edu_levy + $security_employer;
         
         return [
             $earning->user->name,
             date('M d, Y', strtotime($earning->start_date)) . ' - ' . date('M d, Y', strtotime($earning->end_date)),
-            $earning->medical,
-            $earning->security,
-            $earning->edu_levy,
-            $earning->medical,
-            $earning->security,
-            $earning->edu_levy,
+            $medical,
+            $security,
+            $edu_levy,
+            $medical,
+            $security_employer,
+            0, // Education levy not applicable for employer
             $total
         ];
     }

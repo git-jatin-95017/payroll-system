@@ -132,21 +132,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($payrolls as $payroll)
+                                @foreach($calculatedData as $item)
                                 @php
-                                    $gross = $payroll->gross + $payroll->paid_time_off;
-                                    $mbse_deductions = $payroll->medical + $payroll->security + $payroll->edu_levy;
-                                    $nothingAdditionTonetPay = $payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount');
-                                    $deductions = $payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount');
-                                    $employeePay = $gross - $mbse_deductions + $nothingAdditionTonetPay - $deductions;
+                                    $payroll = $item['row'];
+                                    $amounts = $item['amounts'];
+                                    
+                                    // Use calculated values from trait for consistency
+                                    $employeePay = $amounts['employee_pay'];
+                                    $employeeTaxes = $amounts['medical_benefits'] + $amounts['social_security'] + $amounts['education_levy'];
+                                    $employerTaxes = $amounts['medical_benefits'] + $amounts['social_security_employer'];
+                                    $subtotal = $employeePay + $employeeTaxes + $employerTaxes;
                                 @endphp
                                 <tr>
                                     <td>{{ $payroll->user->name }}</td>
                                     <td>{{ date('M d, Y', strtotime($payroll->start_date)) }} - {{ date('M d, Y', strtotime($payroll->end_date)) }}</td>
                                     <td>${{ number_format($employeePay, 2) }}</td>
-                                    <td>${{ number_format($payroll->medical + $payroll->security + $payroll->edu_levy, 2) }}</td>
-                                    <td>${{ number_format($payroll->medical + $payroll->security_employer, 2) }}</td>
-                                    <td>${{ number_format($employeePay + $payroll->medical + $payroll->security + $payroll->edu_levy + $payroll->medical + $payroll->security_employer, 2) }}</td>
+                                    <td>${{ number_format($employeeTaxes, 2) }}</td>
+                                    <td>${{ number_format($employerTaxes, 2) }}</td>
+                                    <td>${{ number_format($subtotal, 2) }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>

@@ -8,14 +8,20 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Carbon\Carbon;
+use App\Models\Setting;
+use App\Traits\PayrollCalculationTrait;
 
 class EmployeeGrossEarningsExport implements FromCollection, WithHeadings, WithMapping, WithStyles
 {
+    use PayrollCalculationTrait;
+    
     protected $earnings;
+    protected $settings;
 
     public function __construct($earnings)
     {
         $this->earnings = $earnings;
+        $this->settings = Setting::find(1);
     }
 
     public function collection()
@@ -37,13 +43,17 @@ class EmployeeGrossEarningsExport implements FromCollection, WithHeadings, WithM
 
     public function map($earning): array
     {
+        // Use trait to calculate gross for consistency with confirmation page
+        $amounts = $this->calculatePayrollAmounts($earning, $this->settings);
+        $gross = $amounts['gross'];
+        
         return [
             $earning->user->name ?? '',
             (isset($earning->start_date) && isset($earning->end_date)) ? Carbon::createFromFormat('Y-m-d', $earning->start_date)->format('M d, Y') . ' - ' . Carbon::createFromFormat('Y-m-d', $earning->end_date)->format('M d, Y') : '',
             $earning->user->employeeProfile->pay_type ?? '-',
-            $earning->rate ?? 0,
-            $earning->hours ?? 0,
-            $earning->gross ?? 0
+            $earning->user->employeeProfile->pay_rate ?? 0,
+            $earning->total_hours ?? 0,
+            $gross
         ];
     }
 

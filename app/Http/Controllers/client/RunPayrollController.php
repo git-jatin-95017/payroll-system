@@ -574,7 +574,8 @@ class RunPayrollController extends Controller
 
 	private function generateDirectDepositPdf(Request $request, $empIds) {
 		$settings = Setting::find(1);
-	    $data2 = PayrollAmount::where('start_date', '>=', $request->start_date)
+	    $data2 = PayrollAmount::with(['user.employeeProfile', 'user.paymentProfile', 'additionalEarnings.payhead'])
+	    	->where('start_date', '>=', $request->start_date)
 	    	->where('end_date', '<=', $request->end_date)
 	    	->whereIn('status', [0,1])
 	    	->whereIn('user_id', $empIds)

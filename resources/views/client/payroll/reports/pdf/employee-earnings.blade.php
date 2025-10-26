@@ -82,29 +82,32 @@
 			$additions = 0;
 			$deductions = 0;
 			$totalemppay = 0;
-            if (count($payrolls) > 0) {
-                foreach($payrolls as $payroll) {
+            if (count($calculatedData) > 0) {
+                foreach($calculatedData as $item) {
+                    $payroll = $item['row'];
+                    $amounts = $item['amounts'];
                     
-					$grosspay += $payroll->gross;
-					$medicalbenefits += $payroll->medical;
-					$socialsecurity += $payroll->security;
-					$educationlevy += $payroll->edu_levy;
+					// Use calculated values from trait for consistency
+					$grosspay += $amounts['gross'];
+					$medicalbenefits += $amounts['medical_benefits'];
+					$socialsecurity += $amounts['social_security'];
+					$educationlevy += $amounts['education_levy'];
 					$add =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2);
 					$ded =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2);
 					$additions += $add;
 					$deductions += $ded;
-                    $totalemppay += $payroll->employee_pay; 
+                    $totalemppay += $amounts['employee_pay']; 
         @endphp
             <tr>    
                                     <td>{{ $payroll->user->name }}</td>
                                     <td>{{ date('M d, Y', strtotime($payroll->start_date)) }} - {{ date('M d, Y', strtotime($payroll->end_date)) }}</td>
-                                    <td>${{ number_format($payroll->gross, 2) }}</td>
-                                    <td>${{ number_format($payroll->medical, 2) }}</td>
-                                    <td>${{ number_format($payroll->security, 2) }}</td>
-                                    <td>${{ number_format($payroll->edu_levy, 2) }}</td>
+                                    <td>${{ number_format($amounts['gross'], 2) }}</td>
+                                    <td>${{ number_format($amounts['medical_benefits'], 2) }}</td>
+                                    <td>${{ number_format($amounts['social_security'], 2) }}</td>
+                                    <td>${{ number_format($amounts['education_levy'], 2) }}</td>
                                     <td>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2) }}</td>
                                     <td>${{ number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2) }}</td>
-									<td>${{ number_format($payroll->employee_pay, 2) }}</td>
+									<td>${{ number_format($amounts['employee_pay'], 2) }}</td>
             </tr>
         @php                                                     
                 }

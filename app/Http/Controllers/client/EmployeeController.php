@@ -483,6 +483,22 @@ class EmployeeController extends Controller
 			// Update employee profile
 			$employee->employeeProfile()->update($employeeData);
 
+			// Update payment details
+			if ($request->has(['routing_number', 'account_number', 'account_type', 'payment_method', 'bank_name'])) {
+				$paymentdata = [
+					'routing_number' => $request->routing_number ?? '',
+					'account_number' => $request->account_number ?? '',
+					'account_type' => $request->account_type ?? '',
+					'payment_method' => $request->payment_method ?? '',
+					'bank_name' => $request->bank_name ?? ''
+				];
+
+				PaymentDetail::updateOrCreate(
+					['user_id' => $employee->id],
+					$paymentdata
+				);
+			}
+
 			return redirect()->route('employee.index')
 				->with('success', 'Employee updated successfully');
 

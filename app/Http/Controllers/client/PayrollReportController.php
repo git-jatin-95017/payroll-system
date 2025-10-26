@@ -265,12 +265,18 @@ dd($query);*/
         $payrolls = $query->where('payroll_amounts.created_by', auth()->user()->id)->where('status', 1)->get();
         $settings = Setting::first();
         
+        // Calculate amounts using the trait for consistency
+        $calculatedData = [];
         $totalEmployerPayments = 0;
         $totalMedicalBenefits = 0;
         $totalSocialSecurityEmployer = 0;
 
         foreach ($payrolls as $payroll) {
             $amounts = $this->calculatePayrollAmounts($payroll, $settings);
+            $calculatedData[] = [
+                'row' => $payroll,
+                'amounts' => $amounts
+            ];
             $totalEmployerPayments += $amounts['total_payroll'];
             $totalMedicalBenefits += $amounts['medical_benefits'];
             $totalSocialSecurityEmployer += $amounts['social_security_employer'];
@@ -285,7 +291,9 @@ dd($query);*/
             'employees',
             'totalEmployerPayments',
             'totalMedicalBenefits',
-            'totalSocialSecurityEmployer'
+            'totalSocialSecurityEmployer',
+            'calculatedData',
+            'settings'
         ));
     }
 
@@ -313,20 +321,27 @@ dd($query);*/
 		
         $settings = Setting::first();
         
+        // Calculate amounts using the trait for consistency
+        $calculatedData = [];
+        foreach ($payrolls as $row) {
+            $amounts = $this->calculatePayrollAmounts($row, $settings);
+            $calculatedData[] = [
+                'row' => $row,
+                'amounts' => $amounts
+            ];
+        }
+        
         $totalGrossPay = 0;
         $totalNetPay = 0;
         $totalPaidTimeOff = 0;
         $totalEmployees = $payrolls->unique('user_id')->count();
 		$totalemppay = 0;
-		$i=0;
-        foreach ($payrolls as $payroll) {
-            $amounts = $this->calculatePayrollAmounts($payroll, $settings);
-			
+        foreach ($calculatedData as $item) {
+            $amounts = $item['amounts'];
             $totalGrossPay += $amounts['gross'];
             $totalNetPay += $amounts['net_pay'];
-            $totalPaidTimeOff += $payroll->paid_time_off;
-			$payrolls[$i]['employee_pay'] = $amounts['employee_pay'];
-			$i++;
+            $totalPaidTimeOff += $item['row']->paid_time_off;
+			$totalemppay += $amounts['employee_pay'];
         }
 
         $departments = Department::where('created_by', auth()->user()->id)->get();
@@ -338,7 +353,9 @@ dd($query);*/
             'totalGrossPay',
             'totalNetPay',
             'totalPaidTimeOff',
-            'totalEmployees'));
+            'totalEmployees',
+            'calculatedData',
+            'settings'));
         return $pdf->download($type . '-report.pdf');
     }
 	
@@ -372,15 +389,15 @@ dd($query);*/
         $payrolls = $query->where('payroll_amounts.created_by', auth()->user()->id)->where('status', 1)->get();
         
         if ($type === 'employer-payments') {
+            $settings = Setting::first();
             $data = [];
             foreach ($payrolls as $payroll) {
-                $gross = $payroll->gross + $payroll->paid_time_off;
-                $mbse_deductions = $payroll->medical + $payroll->security + $payroll->edu_levy;
-                $nothingAdditionTonetPay = $payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount');
-                $deductions = $payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount');
-                $employeePay = $gross - $mbse_deductions + $nothingAdditionTonetPay - $deductions;
-                $employeeTaxes = $payroll->medical + $payroll->security + $payroll->edu_levy;
-                $employerTaxes = $payroll->medical + $payroll->security_employer;
+                // Use trait to calculate amounts for consistency
+                $amounts = $this->calculatePayrollAmounts($payroll, $settings);
+                
+                $employeePay = $amounts['employee_pay'];
+                $employeeTaxes = $amounts['medical_benefits'] + $amounts['social_security'] + $amounts['education_levy'];
+                $employerTaxes = $amounts['medical_benefits'] + $amounts['social_security_employer'];
                 $subtotal = $employeePay + $employeeTaxes + $employerTaxes;
 
                 $data[] = [
@@ -403,7 +420,7 @@ dd($query);*/
         $totalEmployees = $payrolls->unique('user_id')->count();
 
 		
-		$data = [];
+        $data = [];
 		$grosspay =0;
 		$medicalbenefits =0;
 		$socialsecurity =0;
@@ -414,26 +431,28 @@ dd($query);*/
 		$i=0;
         foreach ($payrolls as $payroll) {
 		    $amounts = $this->calculatePayrollAmounts($payroll, $settings);
-			$grosspay += $payroll->gross;
-			$medicalbenefits += $payroll->medical;
-			$socialsecurity += $payroll->security;
-			$educationlevy += $payroll->edu_levy;
+			// Use calculated values from trait for consistency
+			$grosspay += $amounts['gross'];
+			$medicalbenefits += $amounts['medical_benefits'];
+			$socialsecurity += $amounts['social_security'];
+			$educationlevy += $amounts['education_levy'];
 			$add =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2);
 			$ded =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2);
 			$additions += $add;
 			$deductions += $ded;
 			//$payrolls[$i]['employee_pay'] = $amounts['employee_pay'];
 			
-			$totalemppay += $amounts['employee_pay']; 
+			$totalemppay += $amounts['employee_pay'];
 			
 			
             $item = [];
 			$item['Employee'] = $payroll->user->name;
 			$item["Pay Period"] = Carbon::createFromFormat('Y-m-d', $payroll->start_date)->format('M d, Y')  ."-".  Carbon::createFromFormat('Y-m-d', $payroll->end_date)->format('M d, Y');
-			$item["Gross Pay"] = number_format($payroll->gross, 2);
-			$item["Medical Benefits"] = number_format($payroll->medical, 2);
-			$item["Social Security"] = number_format($payroll->security, 2);
-			$item["Education Levy"] = number_format($payroll->edu_levy, 2);
+			// Use calculated values from trait for consistency
+			$item["Gross Pay"] = number_format($amounts['gross'], 2);
+			$item["Medical Benefits"] = number_format($amounts['medical_benefits'], 2);
+			$item["Social Security"] = number_format($amounts['social_security'], 2);
+			$item["Education Levy"] = number_format($amounts['education_levy'], 2);
 			$item["Additions"] = number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2);
 			$item["Deductions"] = number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2);
 			$item["Employee Pay"] = number_format($amounts['employee_pay'], 2);
@@ -480,7 +499,19 @@ dd($query);*/
         $payrolls = $query->where('payroll_amounts.created_by', auth()->user()->id)->where('status', 1)->get();
         
         if ($type === 'employer-payments') {
-            $pdf = PDF::loadView('client.payroll.reports.pdf.employer-payments', compact('payrolls'));
+            $settings = Setting::first();
+            
+            // Calculate amounts using the trait for consistency
+            $calculatedData = [];
+            foreach ($payrolls as $row) {
+                $amounts = $this->calculatePayrollAmounts($row, $settings);
+                $calculatedData[] = [
+                    'row' => $row,
+                    'amounts' => $amounts
+                ];
+            }
+            
+            $pdf = PDF::loadView('client.payroll.reports.pdf.employer-payments', compact('payrolls', 'calculatedData', 'settings'));
             return $pdf->download('employer-payments-report.pdf');
         }
         
@@ -648,10 +679,21 @@ dd($query);*/
         }
 
         $earnings = $query->get();
+        $settings = Setting::find(1);
+        
+        // Calculate amounts using the trait for consistency with confirmation page
+        $calculatedData = [];
+        foreach($earnings as $row) {
+            $calculatedData[] = [
+                'row' => $row,
+                'amounts' => $this->calculatePayrollAmounts($row, $settings)
+            ];
+        }
+        
         $departments = Department::where('created_by', auth()->user()->id)->get();
         $employees = User::where('role_id', 3)->where('created_by', auth()->user()->id)->get();
 
-        return view('client.payroll.reports.employee-gross-earnings', compact('earnings', 'departments', 'employees'));
+        return view('client.payroll.reports.employee-gross-earnings', compact('earnings', 'departments', 'employees', 'calculatedData', 'settings'));
     }
 
     public function downloadEmployeeGrossEarningsExcel(Request $request)
@@ -704,8 +746,18 @@ dd($query);*/
         }
 
         $earnings = $query->get();
+        $settings = Setting::find(1);
+        
+        // Calculate amounts using the trait for consistency with confirmation page
+        $calculatedData = [];
+        foreach($earnings as $row) {
+            $calculatedData[] = [
+                'row' => $row,
+                'amounts' => $this->calculatePayrollAmounts($row, $settings)
+            ];
+        }
 
-        $pdf = PDF::loadView('client.payroll.reports.employee-gross-earnings-pdf', compact('earnings'));
+        $pdf = PDF::loadView('client.payroll.reports.employee-gross-earnings-pdf', compact('earnings', 'calculatedData', 'settings'));
         return $pdf->download('employee-gross-earnings.pdf');
     }
 
@@ -807,7 +859,10 @@ dd($query);*/
             $earnings[] = $calculatedPayroll;
         }
 
-        return Excel::download(new StatutoryDeductionsExport($earnings), 'statutory-deductions.xlsx');
+        // Convert array to collection for export
+        $earningsCollection = collect($earnings);
+
+        return Excel::download(new StatutoryDeductionsExport($earningsCollection), 'statutory-deductions.xlsx');
     }
 
     public function downloadStatutoryDeductionsPdf(Request $request)

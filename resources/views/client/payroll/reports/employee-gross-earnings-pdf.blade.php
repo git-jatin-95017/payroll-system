@@ -47,18 +47,24 @@
                 $totalHours = 0;
                 $totalAmount = 0;
             @endphp
-            @foreach($earnings as $earning)
+            @foreach($calculatedData as $item)
+                @php
+                    $earning = $item['row'];
+                    $amounts = $item['amounts'];
+                    // Use pre-calculated gross from trait to match confirmation page
+                    $gross = $amounts['gross'];
+                @endphp
                 <tr>
                     <td>{{ $earning->user->name ?? '' }}</td>
                     <td>{{ date('M d, Y', strtotime($earning->start_date)) }} - {{ date('M d, Y', strtotime($earning->end_date)) }}</td>
                     <td>{{ $earning->user->employeeProfile->pay_type ?? '-' }}</td>
-                    <td class="text-end">{{ number_format($earning->rate ?? 0, 2) }}</td>
-                    <td class="text-end">{{ number_format($earning->hours ?? 0, 2) }}</td>
-                    <td class="text-end">${{ number_format($earning->gross ?? 0, 2) }}</td>
+                    <td class="text-end">${{ number_format($earning->user->employeeProfile->pay_rate ?? 0, 2) }}</td>
+                    <td class="text-end">{{ number_format($earning->total_hours ?? 0, 2) }}</td>
+                    <td class="text-end">${{ number_format($gross, 2) }}</td>
                 </tr>
                 @php
-                    $totalHours += $earning->hours ?? 0;
-                    $totalAmount += $earning->gross ?? 0;
+                    $totalHours += $earning->total_hours ?? 0;
+                    $totalAmount += $gross;
                 @endphp
             @endforeach
         </tbody>
