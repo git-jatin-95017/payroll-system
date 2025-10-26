@@ -1167,7 +1167,7 @@
     // Instantly assign Chart.js version
     const chartVersion = document.getElementById('chartVersion');
     if (chartVersion) {
-        chartVersion.innerText = Chart.version;
+    chartVersion.innerText = Chart.version;
     }
     </script>
 @endsection

@@ -216,7 +216,7 @@
 																*/
 															?>
 	
-															<?php
+																<?php
 																$amountPaidOff = 0;
 																if (!empty($isDataExist->additionalPaids)) {
 																	// $collection = collect($isDataExist->additionalPaids);
@@ -238,10 +238,22 @@
 																}
 																*/
 	
+																// Get balance from DB (this should be from the last CONFIRMED payroll)
 																$runningBalance = \App\Models\LeaveBalance::where('user_id', $employeeID)
 																	->where('leave_type_id', $value->leave_type_id)
 																	->where('leave_year', date('Y', strtotime($isDataExist->start_date)))
 																	->first();
+																
+																// Debug: Log what we're getting from DB
+																\Log::info("Debug Leave Balance for Paid", [
+																	'employee_id' => $employeeID,
+																	'leave_type_id' => $value->leave_type_id,
+																	'db_balance' => $runningBalance ? $runningBalance->balance : null,
+																	'db_amount' => $runningBalance ? $runningBalance->amount : null,
+																	'payroll_id' => $isDataExist->id,
+																	'payroll_status' => $isDataExist->status,
+																	'amountPaidOff' => $amountPaidOff
+																]);
 															?>
 															<div class="toggle-container">
 																<label class="cursor-pointer" data-bs-toggle="collapse" href="#bonus{{$employee->id}}{{$key}}" aria-expanded="false" aria-controls="bonus{{$employee->id}}{{$key}}">
@@ -255,28 +267,45 @@
 																	@php
 																		// Use the running balance that was already fetched
 																		$dbBalance = $runningBalance;
+																		
+																		// Calculate Hours Allowed
+																		$baseAllowance = ($value->leave->leave_day ?? 0) * 8;
+																		$totalAllowance = $baseAllowance + $carryOverAmount;
+																		
+																		// Determine starting balance:
+																		// Get balance from DB (from last confirmed payroll)
+																		// If this payroll has already been edited, ADD back the amount entered to get the starting balance
+																		if ($dbBalance && $dbBalance->amount > 0) {
+																			// Balance exists in DB
+																			// If we have AdditionalPaid records, this payroll has been edited
+																			// Add back the amount to get the original starting balance
+																			if ($amountPaidOff > 0) {
+																				// This payroll was previously edited: add back to get starting balance
+																				$startingBalance = $dbBalance->balance + $amountPaidOff;
+																			} else {
+																				// No edits yet in this payroll: DB balance is the starting balance
+																				$startingBalance = $dbBalance->balance;
+																			}
+																		} else {
+																			// First payroll or no leave taken yet: use Hours Allowed
+																			$startingBalance = $totalAllowance;
+																		}
+																		
+																		// Ensure starting balance doesn't exceed total allowance
+																		$startingBalance = min($startingBalance, $totalAllowance);
 																	@endphp
 																	<input type="hidden" id="paid-leave-balnce-{{$employee->id}}-{{$value->leave->id}}" name="input[{{$employee->id}}][earnings][{{$key }}][leave_balance]" value="{{ $dbBalance ? $dbBalance->balance : (($value->leave->leave_day * 8) + $carryOverAmount) }}">
 																	<input type="hidden" id="paid-time-off-{{$employee->id}}" value="0" name="input[{{$employee->id}}][paid_time_off]">
-																	<input type="text" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control db-custom-input fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" value="{{ $amountPaidOff }}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo ($value->leave->leave_day * 8) + $carryOverAmount; ?>', '<?php echo $carryOverAmount; ?>')" onblur="handleLeaveInputBlur(this)" min=0>
+																	<input type="text" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control db-custom-input fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" data-starting-balance="{{ $startingBalance }}" data-db-balance="{{ $dbBalance ? $dbBalance->balance : $totalAllowance }}" data-max-available="{{ ($dbBalance && $dbBalance->amount > 0) ? $dbBalance->balance : $totalAllowance }}" value="{{ $amountPaidOff }}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $startingBalance; ?>', '<?php echo $carryOverAmount; ?>')" onblur="handleLeaveInputBlur(this)" min=0>
 																	<div class="ms-2 mt-2">
-																		<p class="mb-0">Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) + $carryOverAmount: 0}}</b>hrs</p>
-																		<p class="mb-0">Leave Balance | <b class="leave-balance-all" id="balance-{{$employee->id}}-{{$value->leave->id}}" data-amount="{{ $dbBalance ? $dbBalance->amount : 0 }}">
+																		<p class="mb-0">Hours Allowed | <b>{{ $startingBalance }}</b>hrs</p>
+																		<p class="mb-0">Leave Balance | <b class="leave-balance-all" id="balance-{{$employee->id}}-{{$value->leave->id}}" data-amount="{{ $dbBalance ? $dbBalance->amount : 0 }}" data-starting-balance="{{ $startingBalance }}">
 																			@php
-																				// Use the running balance that was already fetched
-																				$dbBalance = $runningBalance;
-																				
-																				if ($dbBalance && $dbBalance->balance !== null && $dbBalance->balance > 0) {
-																					// Show the database balance if it exists and is greater than 0
-																					echo $dbBalance->balance;
-																				} else {																				   
-																					// Calculate remaining balance: Total allowance - Amount taken
-																					$baseAllowance = ($value->leave->leave_day * 8);
-																					$totalAllowance = $baseAllowance + $carryOverAmount;
-																					$amountTaken = $dbBalance ? $dbBalance->amount : 0;
-																					$remainingBalance = $totalAllowance - $amountTaken;
-																					echo $remainingBalance;
-																				}
+																				// Display running balance: DB balance minus any new entry
+																				// When editing, subtract current entry from DB balance to show net effect
+																				// When new payroll, DB balance is already net, so subtract current entry
+																				$displayBalance = $startingBalance - $amountPaidOff;
+																				echo number_format($displayBalance, 2);
 																			@endphp
 																		</b>hrs</p>
 																		<?php
@@ -375,37 +404,51 @@
 																			->where('leave_type_id', $value->leave_type_id)
 																			->where('leave_year', date('Y', strtotime($isDataExist->start_date)))
 																			->first();
+																		
+																		// Calculate Hours Allowed
+																		$baseAllowanceUnpaid = ($value->leave->leave_day ?? 0) * 8;
+																		$totalAllowanceUnpaid = $baseAllowanceUnpaid + $carryOverAmount;
+																		
+																		// Determine starting balance for unpaid leave:
+																		// Get balance from DB (from last confirmed payroll)
+																		// If this payroll has already been edited, ADD back the amount entered to get the starting balance
+																		if ($dbBalance && $dbBalance->amount > 0) {
+																			// Balance exists in DB
+																			// If we have AdditionalUnPaid records, this payroll has been edited
+																			// Add back the amount to get the original starting balance
+																			if ($amountUnPaidOff > 0) {
+																				// This payroll was previously edited: add back to get starting balance
+																				$startingBalanceUnpaid = $dbBalance->balance + $amountUnPaidOff;
+																			} else {
+																				// No edits yet in this payroll: DB balance is the starting balance
+																				$startingBalanceUnpaid = $dbBalance->balance;
+																			}
+																		} else {
+																			// First payroll or no leave taken yet: use Hours Allowed
+																			$startingBalanceUnpaid = $totalAllowanceUnpaid;
+																		}
+																		
+																		// Ensure starting balance doesn't exceed total allowance
+																		$startingBalanceUnpaid = min($startingBalanceUnpaid, $totalAllowanceUnpaid);
 																	@endphp
 																	<input type="hidden" id="unpaid-leave-balnce-{{$employee->id}}-{{$value->leave->id}}" name="input[{{$employee->id}}][earnings_unpaid][{{$key }}][leave_balance_unpaid]" value="{{ $dbBalance ? $dbBalance->balance : (($value->leave->leave_day * 8) + $carryOverAmount) }}">
 	
-																	<input min=0 type="number" name="input[{{$employee->id}}][earnings_unpaid][{{$key }}][amount_unpaid]" min="0" class="db-custom-input form-control fixed-input leave-hrs-unpaid" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" value="{{ $amountUnPaidOff }}"
-																	onchange="calculateUnpaidOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo ($value->leave->leave_day * 8) + $carryOverAmount; ?>', '<?php echo $carryOverAmount; ?>')"
+																	<input min=0 type="number" name="input[{{$employee->id}}][earnings_unpaid][{{$key }}][amount_unpaid]" min="0" class="db-custom-input form-control fixed-input leave-hrs-unpaid" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" data-starting-balance="{{ $startingBalanceUnpaid }}" data-db-balance="{{ $dbBalance ? $dbBalance->balance : $totalAllowanceUnpaid }}" data-max-available="{{ ($dbBalance && $dbBalance->amount > 0) ? $dbBalance->balance : $totalAllowanceUnpaid }}" value="{{ $amountUnPaidOff }}"
+																	onchange="calculateUnpaidOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $startingBalanceUnpaid; ?>', '<?php echo $carryOverAmount; ?>')"
 																	onblur="handleLeaveInputBlur(this)"
 																	>
 																	<div class="ms-2 mt-2">
 																		<p class="mb-0">
-																			Hours Allowed | <b>{{ !empty($value->leave->leave_day) ? ($value->leave->leave_day * 8 ) + $carryOverAmount : 0}}</b>
+																			Hours Allowed | <b>{{ $startingBalanceUnpaid }}</b>
 																		</p>
 																		<p class="mb-0">
-																			Leave Balance | <b class="leave-balance-all-unpaids" id="balanceunpaid-{{$employee->id}}-{{$value->leave->id}}" data-amount="{{ $dbBalance ? $dbBalance->amount : 0 }}">
+																			Leave Balance | <b class="leave-balance-all-unpaids" id="balanceunpaid-{{$employee->id}}-{{$value->leave->id}}" data-amount="{{ $dbBalance ? $dbBalance->amount : 0 }}" data-starting-balance="{{ $startingBalanceUnpaid }}">
 																				@php
-																					// Check if we have a database balance for this employee and leave type
-																					$dbBalance = \App\Models\LeaveBalance::where('user_id', $employee->id)
-																						->where('leave_type_id', $value->leave_type_id)
-																						->where('leave_year', date('Y', strtotime($isDataExist->start_date)))
-																						->first();
-																					
-																					if ($dbBalance && $dbBalance->balance !== null && $dbBalance->balance > 0) {
-																						// Show the database balance if it exists and is greater than 0
-																						echo $dbBalance->balance;
-																					} else {
-																						// Calculate remaining balance: Total allowance - Amount taken
-																						$baseAllowance = ($value->leave->leave_day * 8);
-																						$totalAllowance = $baseAllowance + $carryOverAmount;
-																						$amountTaken = $dbBalance ? $dbBalance->amount : 0;
-																						$remainingBalance = $totalAllowance - $amountTaken;
-																						echo $remainingBalance;
-																					}
+																					// Display running balance: DB balance minus any new entry
+																					// When editing, subtract current entry from DB balance to show net effect
+																					// When new payroll, DB balance is already net, so subtract current entry
+																					$displayBalanceUnpaid = $startingBalanceUnpaid - $amountUnPaidOff;
+																					echo number_format($displayBalanceUnpaid, 2);
 																				@endphp
 																			</b>hrs</p>
 																	</div>
@@ -487,14 +530,17 @@
 		setTimeout(() => toast.fadeOut(400,()=>toast.remove()), 4000);
 	}
 
+	let initializationCompleted = false;
+	
 	$(document).ready(function() {
 		console.log('Document ready - initializing leave balance system...');
 		
-		// Wait a bit for DOM to be fully rendered
-		setTimeout(function() {
+		// Initialize immediately (don't wait for setTimeout to avoid timing issues)
+		if (!initializationCompleted) {
 			// Initialize previous data for cumulative tracking
 			initializePreviousData();
-		}, 100);
+			initializationCompleted = true;
+		}
 		
 		// Add event listeners for debugging
 		$('.leave-hrs').on('input', function() {
@@ -562,7 +608,7 @@
 		
 		// For paid leave
 		$('.leave-hrs').each(function() {
-			let currentValue = parseFloat($(this).val()) || 0; // This will be 0 since input starts blank
+			let currentValue = parseFloat($(this).val()) || 0; // This could be 0 or existing value from DB
 			let leaveTypeData = $(this).attr('data-leavetype');
 			let [leaveId, empId] = leaveTypeData.split('-');
 			
@@ -577,20 +623,32 @@
 				console.log('Debug - balanceElement HTML:', balanceElement.html());
 				
 				if (balanceElement.length > 0) {
-					let currentBalance = parseFloat(balanceElement.html()) || 0;
-					let currentAmount = parseFloat(balanceElement.attr('data-amount')) || 0;
-					
-					// Set the original balance to the current displayed balance (what user sees on page load)
-					// This is the balance that should be restored when input is cleared
-					balanceElement.data('original-balance', currentBalance);
-					balanceElement.data('previous-balance', currentBalance);
-					balanceElement.data('previous-input', 0); // Start with 0 since input is blank
-					balanceElement.data('original-input', 0); // Start with 0 since input is blank
-					balanceElement.data('has-previous-data', true); // Mark as having data
-					
-					console.log(`✅ Initialized: Emp ${empId}, Leave ${leaveId}, Balance: ${currentBalance}, Input: ${currentValue} (blank)`);
-					console.log(`📊 Initial Database Values - Amount: ${currentAmount.toFixed(2)}hrs (leaves taken), Balance: ${currentBalance.toFixed(2)}hrs (remaining)`);
-					console.log(`🔧 Original Balance: ${currentBalance}hrs (from current displayed balance)`);
+					// Check if already initialized to avoid overwriting
+					if (!balanceElement.data('has-previous-data')) {
+						// ✅ Get starting balance from input's data attribute (this is the DB balance when payroll was opened)
+						let inputElement = $(this);
+						let startingBalance = parseFloat(inputElement.attr('data-starting-balance')) || 0;
+						
+						// ✅ CRITICAL: Use the balance that's ALREADY displayed in the HTML (server-calculated)
+						// Don't recalculate it, as the server already did it correctly
+						let displayBalance = parseFloat(balanceElement.html()) || 0;
+						
+						// Store values for JavaScript calculations
+						// KEY: Store the balance at the START of this payroll (before any edits)
+						balanceElement.data('payroll-start-balance', startingBalance);
+						balanceElement.data('previous-balance', displayBalance);
+						balanceElement.data('previous-input', currentValue);
+						balanceElement.data('original-input', currentValue);
+						balanceElement.data('has-previous-data', true);
+						balanceElement.data('current-running-balance', displayBalance);
+						
+						// Store the starting balance on the input element for reset purposes
+						$(this).data('payroll-start-balance', startingBalance);
+						
+						console.log(`✅ Initialized: Emp ${empId}, Leave ${leaveId}, Payroll Start Balance: ${startingBalance}, Display Balance: ${displayBalance}, Input: ${currentValue}`);
+					} else {
+						console.log(`⏭️ Already initialized: Emp ${empId}, Leave ${leaveId}`);
+					}
 				} else {
 					console.warn(`❌ Balance element not found for selector: ${balanceSelector}`);
 				}
@@ -599,7 +657,7 @@
 		
 		// For unpaid leave
 		$('.leave-hrs-unpaid').each(function() {
-			let currentValue = parseFloat($(this).val()) || 0; // This will be 0 since input starts blank
+			let currentValue = parseFloat($(this).val()) || 0; // This could be 0 or existing value from DB
 			let leaveTypeData = $(this).attr('data-leavetype');
 			let [leaveId, empId] = leaveTypeData.split('-');
 			
@@ -608,20 +666,32 @@
 				let balanceElement = $(balanceSelector);
 				
 				if (balanceElement.length > 0) {
-					let currentBalance = parseFloat(balanceElement.html()) || 0;
-					let currentAmount = parseFloat(balanceElement.attr('data-amount')) || 0;
-					
-					// Set the original balance to the current displayed balance (what user sees on page load)
-					// This is the balance that should be restored when input is cleared
-					balanceElement.data('original-balance', currentBalance);
-					balanceElement.data('previous-balance', currentBalance);
-					balanceElement.data('previous-input', 0); // Start with 0 since input is blank
-					balanceElement.data('original-input', 0); // Start with 0 since input is blank
-					balanceElement.data('has-previous-data', true); // Mark as having data
-					
-					console.log(`✅ Unpaid Initialized: Emp ${empId}, Leave ${leaveId}, Balance: ${currentBalance}, Input: ${currentValue} (blank)`);
-					console.log(`📊 Unpaid Initial Database Values - Amount: ${currentAmount.toFixed(2)}hrs (leaves taken), Balance: ${currentBalance.toFixed(2)}hrs (remaining)`);
-					console.log(`🔧 Unpaid Original Balance: ${currentBalance}hrs (from current displayed balance)`);
+					// Check if already initialized to avoid overwriting
+					if (!balanceElement.data('has-previous-data')) {
+						// ✅ Get starting balance from input's data attribute (this is the DB balance when payroll was opened)
+						let inputElement = $(this);
+						let startingBalance = parseFloat(inputElement.attr('data-starting-balance')) || 0;
+						
+						// ✅ CRITICAL: Use the balance that's ALREADY displayed in the HTML (server-calculated)
+						// Don't recalculate it, as the server already did it correctly
+						let displayBalance = parseFloat(balanceElement.html()) || 0;
+						
+						// Store values for JavaScript calculations
+						// KEY: Store the balance at the START of this payroll (before any edits)
+						balanceElement.data('payroll-start-balance', startingBalance);
+						balanceElement.data('previous-balance', displayBalance);
+						balanceElement.data('previous-input', currentValue);
+						balanceElement.data('original-input', currentValue);
+						balanceElement.data('has-previous-data', true);
+						balanceElement.data('current-running-balance', displayBalance);
+						
+						// Store the starting balance on the input element for reset purposes
+						$(this).data('payroll-start-balance', startingBalance);
+						
+						console.log(`✅ Unpaid Initialized: Emp ${empId}, Leave ${leaveId}, Payroll Start Balance: ${startingBalance}, Display Balance: ${displayBalance}, Input: ${currentValue}`);
+					} else {
+						console.log(`⏭️ Already initialized (unpaid): Emp ${empId}, Leave ${leaveId}`);
+					}
 				} else {
 					console.warn(`❌ Unpaid balance element not found for selector: ${balanceSelector}`);
 				}
@@ -633,6 +703,9 @@
 		console.log('calculateOff called with:', obj.value, 'emp_id:', emp_id, 'leave_id:', leave_id);
 
 		let current_enter_val = parseFloat(obj.value) || 0;
+		
+		// Debug: Log the current state
+		console.log(`📝 Current Input Value: ${current_enter_val}`);
 		
 		// Get the focused row first
 		var focusedRow = $(obj).closest('.row-tr-js');
@@ -651,20 +724,30 @@
 			return;
 		}
 		
-		// ✅ NEW LOGIC: Always calculate from Hours Allowed (initial_balance) instead of remaining balance
-		let hoursAllowed = parseFloat(initial_balance);
+		// ✅ CRITICAL: Get the balance at the START of this payroll (before any edits)
+		// This is what was loaded when the payroll was opened
+		let payrollStartBalance = $(obj).data('payroll-start-balance') || parseFloat($(obj).attr('data-starting-balance')) || parseFloat(initial_balance);
 		
-		// Check if user is trying to take more leave than Hours Allowed
-		if (current_enter_val > hoursAllowed) {
+		console.log(`🔍 Debug - payrollStartBalance from data: ${$(obj).data('payroll-start-balance')}`);
+		console.log(`🔍 Debug - data-starting-balance attr: ${$(obj).attr('data-starting-balance')}`);
+		console.log(`🔍 Debug - initial_balance param: ${initial_balance}`);
+		console.log(`📊 Final payrollStartBalance: ${payrollStartBalance}`);
+		
+		// ✅ Get max available balance (for validation - what's actually available to use)
+		let maxAvailable = parseFloat($(obj).attr('data-max-available')) || payrollStartBalance;
+		
+		// Validate against max available (prevent taking more than what's actually available)
+		if (current_enter_val > maxAvailable) {
 			// Clear the input and show warning
 			obj.value = '';
-			showToast('warning', `Cannot take ${current_enter_val}hrs! Hours Allowed is only ${hoursAllowed}hrs.`);
-			console.log('🚫 Input blocked: Exceeds Hours Allowed');
+			showToast('warning', `Cannot take ${current_enter_val}hrs! Available balance is only ${maxAvailable.toFixed(2)}hrs.`);
+			console.log('🚫 Input blocked: Exceeds available balance');
 			return;
 		}
 		
-		// Calculate new balance: Hours Allowed minus current input
-		let newBalance = hoursAllowed - current_enter_val;
+		// ✅ Calculate balance: Payroll Start Balance - current input
+		// This ensures we always calculate from the balance at the start of this payroll
+		let newBalance = payrollStartBalance - current_enter_val;
 		
 		// Prevent negative balance
 		newBalance = Math.max(0, newBalance);
@@ -672,7 +755,7 @@
 		// Update the balance display
 		balanceElement.html(newBalance.toFixed(2));
 		
-		console.log(`✅ NEW Calculation: Hours Allowed: ${hoursAllowed}, Current Input: ${current_enter_val}, New Balance: ${newBalance}`);
+		console.log(`✅ NEW Calculation: Payroll Start Balance: ${payrollStartBalance}, Input: ${current_enter_val}, New Balance: ${newBalance}`);
 		console.log('Debug - balanceElement HTML after:', balanceElement.html());
 		
 		// Update the hidden input for form submission
@@ -742,21 +825,25 @@
 			let balanceElement = $(balanceSelector);
 			
 			if (balanceElement.length > 0) {
-				// If input is blank (0) or empty string, restore the original balance
+				// If input is blank (0) or empty string, restore to the payroll start balance
 				if (currentValue === 0 || obj.value === '') {
-					let originalBalance = parseFloat(balanceElement.data('original-balance')) || 0;
-					balanceElement.html(originalBalance.toFixed(2));
-					balanceElement.data('previous-input', 0);
+					// ✅ CRITICAL: Restore to the balance at the START of this payroll (before any edits)
+					// This is the balance that was loaded when the payroll was first opened
+					let restoreValue = parseFloat($(obj).data('payroll-start-balance')) || parseFloat($(obj).attr('data-starting-balance')) || 0;
+					balanceElement.html(restoreValue.toFixed(2));
 					
 					// Update the hidden input for form submission
 					let focusedRow = $(obj).closest('.row-tr-js');
 					if (isUnpaid) {
-						focusedRow.find(`[id="unpaid-leave-balnce-${empId}-${leaveId}"]`).val(originalBalance);
+						focusedRow.find(`[id="unpaid-leave-balnce-${empId}-${leaveId}"]`).val(restoreValue);
 					} else {
-						focusedRow.find(`[id="paid-leave-balnce-${empId}-${leaveId}"]`).val(originalBalance);
+						focusedRow.find(`[id="paid-leave-balnce-${empId}-${leaveId}"]`).val(restoreValue);
 					}
 					
-					console.log(`Input blank/empty - restored original balance: ${originalBalance} for ${isUnpaid ? 'unpaid' : 'paid'} leave`);
+					// Update the stored balance data
+					balanceElement.data('previous-balance', restoreValue);
+					
+					console.log(`✅ Input cleared - restored to payroll start balance: ${restoreValue} for ${isUnpaid ? 'unpaid' : 'paid'} leave`);
 				}
 			}
 		}
@@ -785,20 +872,25 @@
 			return;
 		}
 		
-		// ✅ NEW LOGIC: Always calculate from Hours Allowed (initial_balance) instead of remaining balance
-		let hoursAllowed = parseFloat(initial_balance);
+		// ✅ CRITICAL: Get the balance at the START of this payroll (before any edits)
+		// This is what was loaded when the payroll was opened
+		let payrollStartBalance = $(obj).data('payroll-start-balance') || parseFloat($(obj).attr('data-starting-balance')) || parseFloat(initial_balance);
 		
-		// Check if user is trying to take more leave than Hours Allowed
-		if (current_enter_val > hoursAllowed) {
+		// ✅ Get max available balance (for validation - what's actually available to use)
+		let maxAvailable = parseFloat($(obj).attr('data-max-available')) || payrollStartBalance;
+		
+		// Validate against max available (prevent taking more than what's actually available)
+		if (current_enter_val > maxAvailable) {
 			// Clear the input and show warning
 			obj.value = '';
-			showToast('warning', `Cannot take ${current_enter_val}hrs! Hours Allowed is only ${hoursAllowed}hrs.`);
-			console.log('🚫 Unpaid input blocked: Exceeds Hours Allowed');
+			showToast('warning', `Cannot take ${current_enter_val}hrs! Available balance is only ${maxAvailable.toFixed(2)}hrs.`);
+			console.log('🚫 Unpaid input blocked: Exceeds available balance');
 			return;
 		}
 		
-		// Calculate new balance: Hours Allowed minus current input
-		let newBalance = hoursAllowed - current_enter_val;
+		// ✅ Calculate balance: Payroll Start Balance - current input
+		// This ensures we always calculate from the balance at the start of this payroll
+		let newBalance = payrollStartBalance - current_enter_val;
 		
 		// Prevent negative balance
 		newBalance = Math.max(0, newBalance);
@@ -806,7 +898,7 @@
 		// Update the balance display
 		balanceElement.html(newBalance.toFixed(2));
 		
-		console.log(`✅ NEW Unpaid Calculation: Hours Allowed: ${hoursAllowed}, Current Input: ${current_enter_val}, New Balance: ${newBalance}`);
+		console.log(`✅ NEW Unpaid Calculation: Payroll Start Balance: ${payrollStartBalance}, Input: ${current_enter_val}, New Balance: ${newBalance}`);
 		console.log('Debug - unpaid balanceElement HTML after:', balanceElement.html());
 		
 		// Update the hidden input for form submission

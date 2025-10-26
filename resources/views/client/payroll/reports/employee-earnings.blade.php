@@ -262,9 +262,9 @@
                                 foreach($payrolls as $payroll) {
 									$grosspay += ($payroll->gross + $payroll->paid_time_off);
 									// Note: medicalbenefits, socialsecurity, educationlevy totals will be calculated in the loop below
-									$add =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2);
-									$ded =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2);
-									$nothing =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2);
+									$add =  $payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount');
+									$ded =  $payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount');
+									$nothing =  $payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount');
 									$additionsClone += $add;
 									$deductionsClone += $ded;
 									$totalemppay += $payroll->employee_pay; 

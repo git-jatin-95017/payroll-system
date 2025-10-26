@@ -212,73 +212,101 @@ class RunPayrollController extends Controller
 
 					if (!empty($v['earnings'])) {
 						foreach($v['earnings'] as $key => $value) {
+							// Get old AdditionalPaid records before deleting (to subtract from cumulative)
+							$oldAdditionalPaid = AdditionalPaid::where('user_id', $k)
+								->where('payroll_amount_id', $payroll->id)
+								->where('leave_type_id', $value['leave_type_id'])
+								->first();
+							
+							$oldAmount = $oldAdditionalPaid ? (float) $oldAdditionalPaid->amount : 0;
+							
+							// Delete old records
 							AdditionalPaid::where('user_id', $k)->where('payroll_amount_id', $payroll->id)->where('leave_type_id', $value['leave_type_id'])->delete();
-							// if (!empty($value['id'])) {
-							// 	$ae =  AdditionalEarning::findOrFail($value['id']);
-							// 	$ae->update([
-							// 		// 'payroll_amount_id' => $run->id,
-							// 		// 'user_id' => $run->user_id,
-							// 			//'payhead_id' => $value['payhead_id'],
-							// 		'amount' => (float) $value['amount']
-							// 	]);					
-							// } else {
-								AdditionalPaid::create([
-									'payroll_amount_id' => $payroll->id,
+							
+							// Create new record
+							AdditionalPaid::create([
+								'payroll_amount_id' => $payroll->id,
+								'user_id' => $payroll->user_id,
+								'leave_type_id' => $value['leave_type_id'],
+								'amount' => (float) $value['amount'],
+							]);
+							
+							// Get the existing leave balance record
+							$existingLeaveBalance = LeaveBalance::where('user_id', $payroll->user_id)
+								->where('leave_type_id', $value['leave_type_id'])
+								->where('leave_year', date('Y', strtotime($payroll->start_date)))
+								->first();
+
+							// Calculate cumulative amount: existing - old amount + new amount
+							// This ensures editing doesn't double-count amounts
+							$existingAmount = $existingLeaveBalance ? $existingLeaveBalance->amount : 0;
+							$cumulativeAmount = $existingAmount - $oldAmount + (float) $value['amount'];
+							
+							// Get LeaveType to calculate Hours Allowed
+							$leaveType = LeaveType::find($value['leave_type_id']);
+							$hoursAllowed = $leaveType ? (($leaveType->leave_day ?? 0) * 8) : 0;
+							
+							// Calculate new balance: Hours Allowed - cumulative amount
+							$newBalance = $hoursAllowed - $cumulativeAmount;
+							$newBalance = max(0, $newBalance); // Prevent negative
+
+							LeaveBalance::updateOrCreate(
+								[
 									'user_id' => $payroll->user_id,
 									'leave_type_id' => $value['leave_type_id'],
-									'amount' => (float) $value['amount'],							
-									'leave_balance' => (float) $value['leave_balance'],							
-								]);		
-								
-								// ✅ Use Step 2 calculated balance directly (includes carry over)
-								// First, get the existing leave balance record to calculate cumulative amount
-								$existingLeaveBalance = LeaveBalance::where('user_id', $payroll->user_id)
-									->where('leave_type_id', $value['leave_type_id'])
-									->where('leave_year', date('Y', strtotime($payroll->start_date)))
-									->first();
+									'leave_year' => date('Y', strtotime($payroll->start_date))
+								],
+								[
+									'balance' => $newBalance,
+									'amount' => $cumulativeAmount,
+									'updated_at' => now()
+								]
+							);
 
-								// Calculate cumulative amount: existing + current payroll
-								$cumulativeAmount = ($existingLeaveBalance ? $existingLeaveBalance->amount : 0) + (float) $value['amount'];
-
-								LeaveBalance::updateOrCreate(
-									[
-										'user_id' => $payroll->user_id,
-										'leave_type_id' => $value['leave_type_id'],
-										'leave_year' => date('Y', strtotime($payroll->start_date))
-									],
-									[
-										'balance' => (float) $value['leave_balance'],  // Use Step 2 calculated value
-										'amount' => $cumulativeAmount,                  // Cumulative leave taken (existing + current)
-										'updated_at' => now()
-									]
-								);
-
-								$newGross += (float) $value['amount'];
-							// }
+							$newGross += (float) $value['amount'];
 						}
 					}
 					
 
 					if(array_key_exists('earnings_unpaid', $v) && count($v['earnings_unpaid']) > 0) {
 						foreach($v['earnings_unpaid'] as $key => $value) {
+							// Get old AdditionalUnPaid records before deleting (to subtract from cumulative)
+							$oldAdditionalUnPaid = AdditionalUnPaid::where('user_id', $k)
+								->where('payroll_amount_id', $payroll->id)
+								->where('leave_type_id', $value['leave_type_id_unpaid'])
+								->first();
+							
+							$oldUnpaidAmount = $oldAdditionalUnPaid ? (float) $oldAdditionalUnPaid->amount : 0;
+							
+							// Delete old records
 							AdditionalUnPaid::where('user_id', $k)->where('payroll_amount_id', $payroll->id)->where('leave_type_id', $value['leave_type_id_unpaid'])->delete();
+							
+							// Create new record
 							AdditionalUnPaid::create([
 								'payroll_amount_id' => $payroll->id,
 								'user_id' => $payroll->user_id,
 								'leave_type_id' => $value['leave_type_id_unpaid'],
-								'amount' => (float) $value['amount_unpaid'],	//hrs actual field name wrong in db by mistake			
-								'leave_balance' => (float) $value['leave_balance_unpaid'],				
+								'amount' => (float) $value['amount_unpaid'],
 							]);
 
-							// ✅ Use Step 2 calculated balance for unpaid leave (includes carry over)
-							// First, get the existing leave balance record to calculate cumulative amount
+							// Get the existing leave balance record
 							$existingUnpaidLeaveBalance = LeaveBalance::where('user_id', $payroll->user_id)
 								->where('leave_type_id', $value['leave_type_id_unpaid'])
 								->where('leave_year', date('Y', strtotime($payroll->start_date)))
 								->first();
 
-							// Calculate cumulative amount: existing + current payroll
-							$cumulativeUnpaidAmount = ($existingUnpaidLeaveBalance ? $existingUnpaidLeaveBalance->amount : 0) + (float) $value['amount_unpaid'];
+							// Calculate cumulative amount: existing - old amount + new amount
+							// This ensures editing doesn't double-count amounts
+							$existingUnpaidAmount = $existingUnpaidLeaveBalance ? $existingUnpaidLeaveBalance->amount : 0;
+							$cumulativeUnpaidAmount = $existingUnpaidAmount - $oldUnpaidAmount + (float) $value['amount_unpaid'];
+							
+							// Get LeaveType to calculate Hours Allowed
+							$leaveTypeUnpaid = LeaveType::find($value['leave_type_id_unpaid']);
+							$hoursAllowedUnpaid = $leaveTypeUnpaid ? (($leaveTypeUnpaid->leave_day ?? 0) * 8) : 0;
+							
+							// Calculate new balance: Hours Allowed - cumulative amount
+							$newUnpaidBalance = $hoursAllowedUnpaid - $cumulativeUnpaidAmount;
+							$newUnpaidBalance = max(0, $newUnpaidBalance); // Prevent negative
 
 							LeaveBalance::updateOrCreate(
 								[
@@ -287,8 +315,8 @@ class RunPayrollController extends Controller
 									'leave_year' => date('Y', strtotime($payroll->start_date))
 								],
 								[
-									'balance' => (float) $value['leave_balance_unpaid'],  // Use Step 2 calculated value
-									'amount' => $cumulativeUnpaidAmount,                   // Cumulative leave taken (existing + current)
+									'balance' => $newUnpaidBalance,
+									'amount' => $cumulativeUnpaidAmount,
 									'updated_at' => now()
 								]
 							);
@@ -335,6 +363,68 @@ class RunPayrollController extends Controller
 			->where('end_date', '<=', $date[1])->get();
 
 		foreach($pprecords as $k => $v) {
+			// ✅ Reverse leave balance impact before deleting payroll
+			// Get all AdditionalPaid records for this payroll
+			$additionalPaids = AdditionalPaid::where('payroll_amount_id', $v->id)->get();
+			foreach($additionalPaids as $paid) {
+				$existingLeaveBalance = LeaveBalance::where('user_id', $paid->user_id)
+					->where('leave_type_id', $paid->leave_type_id)
+					->where('leave_year', date('Y', strtotime($v->start_date)))
+					->first();
+				
+				if ($existingLeaveBalance) {
+					// Decrease the cumulative amount by this payroll's leave amount
+					$newAmount = $existingLeaveBalance->amount - (float) $paid->amount;
+					$newAmount = max(0, $newAmount);
+					
+					// Get LeaveType to calculate Hours Allowed
+					$leaveType = LeaveType::find($paid->leave_type_id);
+					$hoursAllowed = $leaveType ? (($leaveType->leave_day ?? 0) * 8) : 0;
+					
+					// Calculate new balance: Hours Allowed - cumulative amount
+					$newBalance = $hoursAllowed - $newAmount;
+					$newBalance = max(0, $newBalance);
+					
+					// Update leave balance (decrease amount, increase balance)
+					$existingLeaveBalance->update([
+						'amount' => $newAmount,
+						'balance' => $newBalance,
+						'updated_at' => now()
+					]);
+				}
+			}
+			
+			// Get all AdditionalUnPaid records for this payroll
+			$additionalUnPaids = AdditionalUnPaid::where('payroll_amount_id', $v->id)->get();
+			foreach($additionalUnPaids as $unpaid) {
+				$existingLeaveBalance = LeaveBalance::where('user_id', $unpaid->user_id)
+					->where('leave_type_id', $unpaid->leave_type_id)
+					->where('leave_year', date('Y', strtotime($v->start_date)))
+					->first();
+				
+				if ($existingLeaveBalance) {
+					// Decrease the cumulative amount by this payroll's leave amount
+					$newAmount = $existingLeaveBalance->amount - (float) $unpaid->amount;
+					$newAmount = max(0, $newAmount);
+					
+					// Get LeaveType to calculate Hours Allowed
+					$leaveType = LeaveType::find($unpaid->leave_type_id);
+					$hoursAllowed = $leaveType ? (($leaveType->leave_day ?? 0) * 8) : 0;
+					
+					// Calculate new balance: Hours Allowed - cumulative amount
+					$newBalance = $hoursAllowed - $newAmount;
+					$newBalance = max(0, $newBalance);
+					
+					// Update leave balance (decrease amount, increase balance)
+					$existingLeaveBalance->update([
+						'amount' => $newAmount,
+						'balance' => $newBalance,
+						'updated_at' => now()
+					]);
+				}
+			}
+			
+			// Now delete the payroll
 			$v->delete();
 		}
 
