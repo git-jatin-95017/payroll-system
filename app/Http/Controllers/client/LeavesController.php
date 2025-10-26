@@ -270,7 +270,7 @@ class LeavesController extends Controller
     {
         $leave = Leave::find($id);
 
-        $leavetypes = LeaveType::where('status', 1)->get();
+        $leavetypes = LeaveType::where('status', 1)->where('created_by', auth()->user()->id)->get();
 
         return view('client.leaves.edit', compact('leave', 'leavetypes', 'empId'));
     }

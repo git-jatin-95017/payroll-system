@@ -121,8 +121,10 @@
     $pay_type = $data->user->employeeProfile->pay_type;
     $rate_per_hour = $data->user->employeeProfile->pay_rate;
     
-    if ($pay_type == 'hourly' || $pay_type == 'weekly') {
+    if ($pay_type == 'hourly') {
         $paid_time_off_rate = $rate_per_hour;
+    } else if ($pay_type == 'weekly') {
+        $paid_time_off_rate = ($rate_per_hour / 40);
     } else if ($pay_type == 'bi-weekly') {
         $paid_time_off_rate = (($rate_per_hour * 26)/52)/40;
     } else if ($pay_type == 'semi-monthly') {

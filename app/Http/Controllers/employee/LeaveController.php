@@ -206,7 +206,8 @@ class LeaveController extends Controller
                 $baseBalance = $leavetypes->leave_day - $daysTakenval;
                 $totalWithCarryOver = $baseBalance + ($carryOverAmount / 8); // Convert hours to days
                 
-                $totalday = 'Leave Balance: '.$baseBalance.' Days Of '.$leavetypes->leave_day.' + Carry Over: '.$carryOverAmount.' hours = Total: '.$totalWithCarryOver.' days';
+                // $totalday = 'Leave Balance: '.$baseBalance.' Days Of '.$leavetypes->leave_day.' + Carry Over: '.$carryOverAmount.' hours = Total: '.$totalWithCarryOver.' days';
+                $totalday = 'leave balance left '.$totalWithCarryOver.' days ';
             }
 
             return response()->json(['totalday' => $totalday]);

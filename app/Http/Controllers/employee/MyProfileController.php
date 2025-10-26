@@ -20,9 +20,11 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use App\Models\Setting;
+use App\Traits\PayrollCalculationTrait;
 
 class MyProfileController extends Controller
 {
+	use PayrollCalculationTrait;
 	/**
 	 * Create a new controller instance.
 	 *
@@ -236,8 +238,17 @@ class MyProfileController extends Controller
 		$data = PayrollAmount::where('status', 1)->where('user_id', auth()->user()->id)->get();
 
 		$settings = Setting::find(1);
+		
+		// Calculate amounts using the trait for consistency
+		$calculatedData = [];
+		foreach($data as $row) {
+			$calculatedData[] = [
+				'row' => $row,
+				'amounts' => $this->calculatePayrollAmounts($row, $settings)
+			];
+		}
 
-		return view('employee.profile.slip', compact('data', 'settings'));
+		return view('employee.profile.slip', compact('data', 'settings', 'calculatedData'));
 	}
 
 
@@ -275,9 +286,11 @@ class MyProfileController extends Controller
 	    $zip->addFromString($filename, $pdf->output());
 	
     	
-    	// Add Direct Deposit PDF to the zip
-    	$pdf2 = $this->generateDirectDepositPdf($request, $empId);
-	    $zip->addFromString('Direct_Deposit_' . date('Y-m-d') . '.pdf', $pdf2->output());
+    	// Add Direct Deposit PDF to the zip only if not skipping
+    	if (!$request->has('no_dds_download')) {
+    		$pdf2 = $this->generateDirectDepositPdf($request, $empId);
+    		$zip->addFromString('Direct_Deposit_' . date('Y-m-d') . '.pdf', $pdf2->output());
+    	}
 
 	    $zip->close();
    
@@ -286,7 +299,8 @@ class MyProfileController extends Controller
 
 	private function generateDirectDepositPdf(Request $request, $empId) {
 		$settings = Setting::find(1);
-	    $data2 = PayrollAmount::where('id', $empId)->get();
+	    // Query by user_id (empId) for direct deposit
+	    $data2 = PayrollAmount::where('user_id', $empId)->where('id', $request->id)->get();
 
 	    $parameters = [
 	    	'data' => $data2,

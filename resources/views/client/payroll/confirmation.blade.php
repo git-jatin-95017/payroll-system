@@ -909,8 +909,10 @@
                                 </thead>
                                 <tbody>
                                     @php
-                                        $subtotal = 0;
-                                        $medical_benefits = $social_security = $education_lvey = $social_security_employer = 0;
+                                        $medical_benefits_ep_array = [];
+                                        $social_security_employer_ep_array = [];
+                                        $employeePayArray = [];
+                                        $mbse_deductionsArray = [];
                                     @endphp
                                     @foreach($data as $row)
                                         <?php
@@ -1039,7 +1041,11 @@
                                             // $totalAdditions += $earnings;
                                             // $nothingAdditionTonetPayTotal += $nothingAdditionTonetPay;
     
-                                            $subtotal += $employeePay + $mbse_deductions + $row->security_employer + $medical_benefits;
+                                            // Push to arrays for consistent calculation
+                                            array_push($employeePayArray, $employeePay);
+                                            array_push($mbse_deductionsArray, $mbse_deductions);
+                                            array_push($medical_benefits_ep_array, $medical_benefits);
+                                            array_push($social_security_employer_ep_array, $social_security_employer);
                                         ?>
                                         <tr>
                                             <td>{{ucfirst($row->user->employeeProfile->first_name)}} {{ucfirst($row->user->employeeProfile->last_name)}}</td>
@@ -1047,8 +1053,8 @@
                                                 ${{number_format($employeePay, 2)}}
                                             </td>
                                             <td>${{number_format($mbse_deductions, 2)}}</td>
-                                            <td>${{number_format($row->security_employer+$medical_benefits, 2)}}</td>
-                                            <td>${{number_format($employeePay + $mbse_deductions + $row->security_employer + $medical_benefits, 2)}}</td>
+                                            <td>${{number_format($social_security_employer+$medical_benefits, 2)}}</td>
+                                            <td>${{number_format($employeePay + $mbse_deductions + $social_security_employer + $medical_benefits, 2)}}</td>
                                         </tr>
                                     @endforeach
                                         <tr>
@@ -1057,7 +1063,7 @@
                                             <td></td>
                                             <td></td>
                                             <td>
-                                                <span style="color: #000 !important;font-weight: 700 !important;">${{number_format($subtotal, 2)}}</span><br>
+                                                <span style="color: #000 !important;font-weight: 700 !important;">${{number_format(array_sum($employeePayArray)+array_sum($mbse_deductionsArray)+array_sum($medical_benefits_ep_array)+array_sum($social_security_employer_ep_array), 2)}}</span><br>
                                                 <small style="color: #000 !important;font-weight: 600 !important;">Total Payroll</small>
                                             </td>
                                         </tr>
