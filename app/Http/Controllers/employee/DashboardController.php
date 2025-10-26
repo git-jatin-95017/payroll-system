@@ -304,8 +304,9 @@ class DashboardController extends Controller
 		$month = date('F jS Y', strtotime($row->start_date));
 
 		// Return final array with totals
+		// Employee dashboard should show only employee pay (without taxes)
 		return [
-			'total_amount' => $employeePayT + $mbse_deductions + $row->security_employer,
+			'total_amount' => $employeePayT,
 			'month' => $month,
 			'dateRange' => $dateRange
 		];
