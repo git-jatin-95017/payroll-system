@@ -298,7 +298,7 @@
 																	<input type="hidden" id="paid-time-off-{{$employee->id}}" value="0" name="input[{{$employee->id}}][paid_time_off]">
 																	<input type="text" name="input[{{$employee->id}}][earnings][{{$key }}][amount]" min="0" class="form-control db-custom-input fixed-input leave-hrs" data-leavetype="{{ $value->leave->id}}-{{$employee->id}}" data-starting-balance="{{ $startingBalance }}" data-db-balance="{{ $dbBalance ? $dbBalance->balance : $totalAllowance }}" data-max-available="{{ ($dbBalance && $dbBalance->amount > 0) ? $dbBalance->balance : $totalAllowance }}" value="{{ $amountPaidOff }}" onchange="calculateOff(this, '<?php echo $employee->id; ?>', '<?php echo $employee->employeeProfile->pay_type; ?>', '<?php echo $k; ?>', '<?php echo $employee->employeeProfile->pay_rate; ?>', '<?php echo $salary; ?>', '<?php echo $value->leave->leave_day??0; ?>', '<?php echo $value->leave->id; ?>', '<?php echo $startingBalance; ?>', '<?php echo $carryOverAmount; ?>')" onblur="handleLeaveInputBlur(this)" min=0>
 																	<div class="ms-2 mt-2">
-																		<p class="mb-0">Hours Allowed | <b>{{ $startingBalance }}</b>hrs</p>
+																		<p class="mb-0 d-none">Hours Allowed | <b>{{ $startingBalance }}</b>hrs</p>
 																		<p class="mb-0">Leave Balance | <b class="leave-balance-all" id="balance-{{$employee->id}}-{{$value->leave->id}}" data-amount="{{ $dbBalance ? $dbBalance->amount : 0 }}" data-starting-balance="{{ $startingBalance }}">
 																			@php
 																				// Display running balance: DB balance minus any new entry
