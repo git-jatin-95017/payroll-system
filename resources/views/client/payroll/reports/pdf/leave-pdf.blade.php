@@ -26,8 +26,8 @@
                 <th>Status</th>
                 <th>Paid/Unpaid</th>
                 <th>Leave Policy</th>
-                <th>Total Used</th>
-                <th>Total Remaining</th>
+                <th>Running Balance Used</th>
+                <th>Running Balance Remaining</th>
             </tr>
         </thead>
         <tbody>

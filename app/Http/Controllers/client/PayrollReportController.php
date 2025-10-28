@@ -1055,9 +1055,13 @@ dd($query);*/
             });
         }
 
-        $payrolls = $query->get();
+        $payrolls = $query->orderBy('start_date', 'asc')->get();
 
         $leaveRequests = collect();
+        
+        // Track running balances per user and leave type
+        $runningBalances = [];
+        
         foreach ($payrolls as $payroll) {
             $payPeriodStart = Carbon::parse($request->start_date)->format('Y-m-d'); //$payroll->start_date;
             $payPeriodEnd = Carbon::parse($request->end_date)->format('Y-m-d'); //$payroll->end_date;
@@ -1079,19 +1083,25 @@ dd($query);*/
                     })
                     ->count('id');
 
-                $total_used = \App\Models\Leave::where('user_id', $payroll->user_id)
-                    ->where('type_id', $paid->leave_type_id)
-                    // ->where('leave_status', 'approved')
-                    ->where(function($q) use ($payPeriodStart, $payPeriodEnd) {
-                        $q->whereBetween('start_date', [$payPeriodStart, $payPeriodEnd]);
-                    })
-                    ->sum('leave_duration');
+                // Get the amount debited for THIS pay period from additional_paids
+                $amount_debited_this_period = $paid->amount ?? 0;
+                
+                // Create a key to track balances per user and leave type
+                $balanceKey = $payroll->user_id . '_' . $paid->leave_type_id;
+                
+                // Initialize balance if this is the first time we see this user/leave type
+                if (!isset($runningBalances[$balanceKey])) {
+                    $runningBalances[$balanceKey] = $total_hours_allowed;
+                }
+                
+                // Calculate running balance: previous balance - current debit
+                $total_remaining = $runningBalances[$balanceKey] - $amount_debited_this_period;
+                
+                // Update running balance for next period
+                $runningBalances[$balanceKey] = $total_remaining;
 
-                // Leave Balance: from leave_balances table for this user, type, and year
-                $leaveBalance = \App\Models\LeaveBalance::where('user_id', $payroll->user_id)
-                    ->where('leave_type_id', $paid->leave_type_id)
-                    ->where('leave_year', $leaveYear)
-                    ->first();
+                // Total used is the amount debited for this specific pay period
+                $total_used = $amount_debited_this_period;
 
                 $leaveRequests->push((object)[
                     'user' => $payroll->user,
@@ -1102,7 +1112,7 @@ dd($query);*/
                     'leaveType' => $paid->leaveType,
                     'hours_allowed' => $total_hours_allowed,
                     'total_used' => $total_used,
-                    'leave_balance' => $leaveBalance ? $leaveBalance->balance : 0,
+                    'leave_balance' => $total_remaining,
                 ]);
             }
 
@@ -1121,18 +1131,25 @@ dd($query);*/
                     })
                     ->count('id');
 
-                $total_used = \App\Models\Leave::where('user_id', $payroll->user_id)
-                    ->where('type_id', $unpaid->leave_type_id)
-                    // ->where('leave_status', 'approved')
-                    ->where(function($q) use ($payPeriodStart, $payPeriodEnd) {
-                        $q->whereBetween('start_date', [$payPeriodStart, $payPeriodEnd]);
-                    })
-                    ->sum('leave_duration');
+                // Get the amount debited for THIS pay period from additional_unpaids
+                $amount_debited_this_period = $unpaid->amount ?? 0;
+                
+                // Create a key to track balances per user and leave type (prefixed with 'unpaid_')
+                $balanceKey = 'unpaid_' . $payroll->user_id . '_' . $unpaid->leave_type_id;
+                
+                // Initialize balance if this is the first time we see this user/leave type
+                if (!isset($runningBalances[$balanceKey])) {
+                    $runningBalances[$balanceKey] = $total_hours_allowed;
+                }
+                
+                // Calculate running balance: previous balance - current debit
+                $total_remaining = $runningBalances[$balanceKey] - $amount_debited_this_period;
+                
+                // Update running balance for next period
+                $runningBalances[$balanceKey] = $total_remaining;
 
-                $leaveBalance = \App\Models\LeaveBalance::where('user_id', $payroll->user_id)
-                    ->where('leave_type_id', $unpaid->leave_type_id)
-                    ->where('leave_year', $leaveYear)
-                    ->first();
+                // Total used is the amount debited for this specific pay period
+                $total_used = $amount_debited_this_period;
 
                 $leaveRequests->push((object)[
                     'user' => $payroll->user,
@@ -1143,7 +1160,7 @@ dd($query);*/
                     'leaveType' => $unpaid->leaveType,
                     'hours_allowed' => $total_hours_allowed,
                     'total_used' => $total_used,
-                    'leave_balance' => $leaveBalance ? $leaveBalance->balance : 0,
+                    'leave_balance' => $total_remaining,
                 ]);
             }
         }
@@ -1195,9 +1212,13 @@ dd($query);*/
             });
         }
 
-        $payrolls = $query->get();
+        $payrolls = $query->orderBy('start_date', 'asc')->get();
 
         $leaveRequests = collect();
+        
+        // Track running balances per user and leave type
+        $runningBalances = [];
+        
         foreach ($payrolls as $payroll) {
             $payPeriodStart = $request->filled('start_date') ? Carbon::parse($request->start_date)->format('Y-m-d') : $payroll->start_date;
             $payPeriodEnd = $request->filled('end_date') ? Carbon::parse($request->end_date)->format('Y-m-d') : $payroll->end_date;
@@ -1217,17 +1238,25 @@ dd($query);*/
                     })
                     ->count('id');
 
-                $total_used = \App\Models\Leave::where('user_id', $payroll->user_id)
-                    ->where('type_id', $paid->leave_type_id)
-                    ->where(function($q) use ($payPeriodStart, $payPeriodEnd) {
-                        $q->whereBetween('start_date', [$payPeriodStart, $payPeriodEnd]);
-                    })
-                    ->sum('leave_duration');
+                // Get the amount debited for THIS pay period from additional_paids
+                $amount_debited_this_period = $paid->amount ?? 0;
+                
+                // Create a key to track balances per user and leave type
+                $balanceKey = $payroll->user_id . '_' . $paid->leave_type_id;
+                
+                // Initialize balance if this is the first time we see this user/leave type
+                if (!isset($runningBalances[$balanceKey])) {
+                    $runningBalances[$balanceKey] = $total_hours_allowed;
+                }
+                
+                // Calculate running balance: previous balance - current debit
+                $total_remaining = $runningBalances[$balanceKey] - $amount_debited_this_period;
+                
+                // Update running balance for next period
+                $runningBalances[$balanceKey] = $total_remaining;
 
-                $leaveBalance = \App\Models\LeaveBalance::where('user_id', $payroll->user_id)
-                    ->where('leave_type_id', $paid->leave_type_id)
-                    ->where('leave_year', $leaveYear)
-                    ->first();
+                // Total used is the amount debited for this specific pay period
+                $total_used = $amount_debited_this_period;
 
                 $leaveRequests->push((object)[
                     'user' => $payroll->user,
@@ -1238,7 +1267,7 @@ dd($query);*/
                     'leaveType' => $paid->leaveType,
                     'hours_allowed' => $total_hours_allowed,
                     'total_used' => $total_used,
-                    'leave_balance' => $leaveBalance ? $leaveBalance->balance : 0,
+                    'leave_balance' => $total_remaining,
                 ]);
             }
 
@@ -1256,17 +1285,25 @@ dd($query);*/
                     })
                     ->count('id');
 
-                $total_used = \App\Models\Leave::where('user_id', $payroll->user_id)
-                    ->where('type_id', $unpaid->leave_type_id)
-                    ->where(function($q) use ($payPeriodStart, $payPeriodEnd) {
-                        $q->whereBetween('start_date', [$payPeriodStart, $payPeriodEnd]);
-                    })
-                    ->sum('leave_duration');
+                // Get the amount debited for THIS pay period from additional_unpaids
+                $amount_debited_this_period = $unpaid->amount ?? 0;
+                
+                // Create a key to track balances per user and leave type (prefixed with 'unpaid_')
+                $balanceKey = 'unpaid_' . $payroll->user_id . '_' . $unpaid->leave_type_id;
+                
+                // Initialize balance if this is the first time we see this user/leave type
+                if (!isset($runningBalances[$balanceKey])) {
+                    $runningBalances[$balanceKey] = $total_hours_allowed;
+                }
+                
+                // Calculate running balance: previous balance - current debit
+                $total_remaining = $runningBalances[$balanceKey] - $amount_debited_this_period;
+                
+                // Update running balance for next period
+                $runningBalances[$balanceKey] = $total_remaining;
 
-                $leaveBalance = \App\Models\LeaveBalance::where('user_id', $payroll->user_id)
-                    ->where('leave_type_id', $unpaid->leave_type_id)
-                    ->where('leave_year', $leaveYear)
-                    ->first();
+                // Total used is the amount debited for this specific pay period
+                $total_used = $amount_debited_this_period;
 
                 $leaveRequests->push((object)[
                     'user' => $payroll->user,
@@ -1277,7 +1314,7 @@ dd($query);*/
                     'leaveType' => $unpaid->leaveType,
                     'hours_allowed' => $total_hours_allowed,
                     'total_used' => $total_used,
-                    'leave_balance' => $leaveBalance ? $leaveBalance->balance : 0,
+                    'leave_balance' => $total_remaining,
                 ]);
             }
         }
@@ -1299,6 +1336,9 @@ dd($query);*/
             ->whereHas('user', function($q) {
                 $q->where('created_by', auth()->user()->id);
             });
+        
+        // Track running balances
+        $runningBalances = [];
 
         // Apply filters if any
         if ($request->filled('start_date')) {
@@ -1326,9 +1366,13 @@ dd($query);*/
             });
         }
 
-        $payrolls = $query->get();
+        $payrolls = $query->orderBy('start_date', 'asc')->get();
 
         $leaveRequests = collect();
+        
+        // Track running balances per user and leave type
+        $runningBalances = [];
+        
         foreach ($payrolls as $payroll) {
             $payPeriodStart = $request->filled('start_date') ? Carbon::parse($request->start_date)->format('Y-m-d') : $payroll->start_date;
             $payPeriodEnd = $request->filled('end_date') ? Carbon::parse($request->end_date)->format('Y-m-d') : $payroll->end_date;
@@ -1348,17 +1392,25 @@ dd($query);*/
                     })
                     ->count('id');
 
-                $total_used = \App\Models\Leave::where('user_id', $payroll->user_id)
-                    ->where('type_id', $paid->leave_type_id)
-                    ->where(function($q) use ($payPeriodStart, $payPeriodEnd) {
-                        $q->whereBetween('start_date', [$payPeriodStart, $payPeriodEnd]);
-                    })
-                    ->sum('leave_duration');
+                // Get the amount debited for THIS pay period from additional_paids
+                $amount_debited_this_period = $paid->amount ?? 0;
+                
+                // Create a key to track balances per user and leave type
+                $balanceKey = $payroll->user_id . '_' . $paid->leave_type_id;
+                
+                // Initialize balance if this is the first time we see this user/leave type
+                if (!isset($runningBalances[$balanceKey])) {
+                    $runningBalances[$balanceKey] = $total_hours_allowed;
+                }
+                
+                // Calculate running balance: previous balance - current debit
+                $total_remaining = $runningBalances[$balanceKey] - $amount_debited_this_period;
+                
+                // Update running balance for next period
+                $runningBalances[$balanceKey] = $total_remaining;
 
-                $leaveBalance = \App\Models\LeaveBalance::where('user_id', $payroll->user_id)
-                    ->where('leave_type_id', $paid->leave_type_id)
-                    ->where('leave_year', $leaveYear)
-                    ->first();
+                // Total used is the amount debited for this specific pay period
+                $total_used = $amount_debited_this_period;
 
                 $leaveRequests->push((object)[
                     'user' => $payroll->user,
@@ -1369,7 +1421,7 @@ dd($query);*/
                     'leaveType' => $paid->leaveType,
                     'hours_allowed' => $total_hours_allowed,
                     'total_used' => $total_used,
-                    'leave_balance' => $leaveBalance ? $leaveBalance->balance : 0,
+                    'leave_balance' => $total_remaining,
                 ]);
             }
 

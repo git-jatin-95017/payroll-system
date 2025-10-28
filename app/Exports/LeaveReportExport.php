@@ -31,8 +31,8 @@ class LeaveReportExport implements FromCollection, WithHeadings, WithMapping, Wi
             'Status',
             'Paid/Unpaid',
             'Leave Policy',
-            'Total Used',
-            'Total Remaining'
+            'Running Balance Used',
+            'Running Balance Remaining'
         ];
     }
 
