@@ -372,10 +372,10 @@ dd($query);*/
         
         // Apply the same filters as in the view
         if (request()->filled('start_date')) {
-            $query->whereDate('created_at', '>=', Carbon::parse(request('start_date')));
+            $query->whereDate('start_date', '>=', Carbon::parse(request('start_date')));
         }
         if (request()->filled('end_date')) {
-            $query->whereDate('created_at', '<=', Carbon::parse(request('end_date')));
+            $query->whereDate('end_date', '<=', Carbon::parse(request('end_date')));
         }
         if (request()->filled('department_id')) {
             $query->whereHas('user.departments', function($q) {
@@ -403,10 +403,10 @@ dd($query);*/
                 $data[] = [
                     'employee' => $payroll->user->name,
                     'pay_period' => Carbon::createFromFormat('Y-m-d', $payroll->start_date)->format('M d, Y') . ' - ' . Carbon::createFromFormat('Y-m-d', $payroll->end_date)->format('M d, Y'),
-                    'employee_pay' => number_format($employeePay, 2),
-                    'employee_taxes' => number_format($employeeTaxes, 2),
-                    'employer_taxes' => number_format($employerTaxes, 2),
-                    'subtotal' => number_format($subtotal, 2)
+                    'employee_pay' => number_format($employeePay, 2, '.', ''),
+                    'employee_taxes' => number_format($employeeTaxes, 2, '.', ''),
+                    'employer_taxes' => number_format($employerTaxes, 2, '.', ''),
+                    'subtotal' => number_format($subtotal, 2, '.', '')
                 ];
             }
             return Excel::download(new EmployerPaymentsExport($data), 'employer-payments-report.xlsx');
@@ -436,8 +436,8 @@ dd($query);*/
 			$medicalbenefits += $amounts['medical_benefits'];
 			$socialsecurity += $amounts['social_security'];
 			$educationlevy += $amounts['education_levy'];
-			$add =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2);
-			$ded =  number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2);
+			$add =  $payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount');
+			$ded =  $payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount');
 			$additions += $add;
 			$deductions += $ded;
 			//$payrolls[$i]['employee_pay'] = $amounts['employee_pay'];
@@ -449,26 +449,26 @@ dd($query);*/
 			$item['Employee'] = $payroll->user->name;
 			$item["Pay Period"] = Carbon::createFromFormat('Y-m-d', $payroll->start_date)->format('M d, Y')  ."-".  Carbon::createFromFormat('Y-m-d', $payroll->end_date)->format('M d, Y');
 			// Use calculated values from trait for consistency
-			$item["Gross Pay"] = number_format($amounts['gross'], 2);
-			$item["Medical Benefits"] = number_format($amounts['medical_benefits'], 2);
-			$item["Social Security"] = number_format($amounts['social_security'], 2);
-			$item["Education Levy"] = number_format($amounts['education_levy'], 2);
-			$item["Additions"] = number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2);
-			$item["Deductions"] = number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2);
-			$item["Employee Pay"] = number_format($amounts['employee_pay'], 2);
+			$item["Gross Pay"] = number_format($amounts['gross'], 2, '.', '');
+			$item["Medical Benefits"] = number_format($amounts['medical_benefits'], 2, '.', '');
+			$item["Social Security"] = number_format($amounts['social_security'], 2, '.', '');
+			$item["Education Levy"] = number_format($amounts['education_levy'], 2, '.', '');
+			$item["Additions"] = number_format($payroll->additionalEarnings->where('payhead.pay_type', 'nothing')->sum('amount'), 2, '.', '');
+			$item["Deductions"] = number_format($payroll->additionalEarnings->where('payhead.pay_type', 'deductions')->sum('amount'), 2, '.', '');
+			$item["Employee Pay"] = number_format($amounts['employee_pay'], 2, '.', '');
             $data[] = $item;
 			$i++;
         }
 		$item1 = [];
 		$item1['Employee'] = "";
 		$item1["Pay Period"] = "Total";
-		$item1["Gross Pay"] = number_format($grosspay, 2);
-		$item1["Medical Benefits"] = number_format($medicalbenefits, 2);
-		$item1["Social Security"] = number_format($socialsecurity, 2);
-		$item1["Education Levy"] = number_format($educationlevy, 2);
-		$item1["Additions"] = number_format($additions, 2);
-		$item1["Deductions"] = number_format($deductions, 2);
-		$item1["Employee Pay"] = number_format($totalemppay, 2);
+		$item1["Gross Pay"] = number_format($grosspay, 2, '.', '');
+		$item1["Medical Benefits"] = number_format($medicalbenefits, 2, '.', '');
+		$item1["Social Security"] = number_format($socialsecurity, 2, '.', '');
+		$item1["Education Levy"] = number_format($educationlevy, 2, '.', '');
+		$item1["Additions"] = number_format($additions, 2, '.', '');
+		$item1["Deductions"] = number_format($deductions, 2, '.', '');
+		$item1["Employee Pay"] = number_format($totalemppay, 2, '.', '');
 		$data[] = $item1;
         
         $headings = ["Employee", "Pay Period", "Gross Pay", "Medical Benefits", "Social Security", "Education Levy", "Additions", "Deductions","Employee Pay"];

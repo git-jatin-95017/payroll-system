@@ -135,7 +135,7 @@
         // $totalAdditions += $earningsT;
         // $nothingAdditionTonetPayTTotal += $nothingAdditionTonetPayT;
 
-        $TotalPayroll += $employeePayT + $mbse_deductions + $row->security_employer + $medical_benefitsT;
+        $TotalPayroll += $employeePayT + $mbse_deductions + $social_securityT_employer + $medical_benefitsT;
 
         array_push($medical_benefits11T, $medical_benefitsT);
         array_push($social_security11T, $social_securityT);

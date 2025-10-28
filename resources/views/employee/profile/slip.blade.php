@@ -117,7 +117,7 @@
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{$k}">
                                         <li>
-                                            <a href="{{ route('empdownload.pdf') }}?id={{$row->id}}&no_dds_download=1" class="dropdown-item">
+                                            <a href="{{ route('empdownload.pdf') }}?id={{$row->id}}&start_date={{$row->start_date}}&end_date={{$row->end_date}}&no_dds_download=1" class="dropdown-item">
                                                 <x-bx-map-alt class="w-16 h-16" /> Download
                                             </a>
                                         </li>

@@ -477,7 +477,7 @@ class RunPayrollController extends Controller
 
 		$paymentDetails = PaymentDetail::whereIn('user_id', $userIds)->get();
 
-		$directDeposits = collect($paymentDetails)->where('payment_method', 'Direct Deposit')->count();
+		$directDeposits = collect($paymentDetails)->where('payment_method', 'deposit')->count();
 		$cheques = collect($paymentDetails)->where('payment_method', 'check')->count();
 
 		$dataGraph = [$totalPayroll, $taxes, $deductions];

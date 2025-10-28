@@ -49,7 +49,7 @@
                 </tr>                
                 <tr>
                     <td style="padding:3px 5px;">
-                        <strong style="font-size: 10px; color: #000;">Pay Period: {{ date('F dS Y', strtotime($start_date))}} - {{ date('F dS Y', strtotime($end_date))}}</strong>
+                        <strong style="font-size: 10px; color: #000;">Pay Period: {{ !empty($start_date) ? date('F dS Y', strtotime($start_date)) : '' }} - {{ !empty($end_date) ? date('F dS Y', strtotime($end_date)) : '' }}</strong>
                     </td>
                     <td style="padding:3px 5px;">
                         <strong style="font-size: 10px; color: #000;">MEDICAL BENEFITS NUMBER: {{ $data->user->employeeProfile->ifsc_code ?? 'N/A' }}</strong>
@@ -288,7 +288,7 @@
                     if ($data->user->employeeProfile->pay_type == 'hourly') {
                         $ptoff = $data->user->employeeProfile->pay_rate *  $val->amount;
                     }  else if ($data->user->employeeProfile->pay_type == 'weekly') {
-                        $ptoff = $data->user->employeeProfile->pay_rate *  $val->amount;
+                        $ptoff = $data->user->employeeProfile->pay_rate/40 *  $val->amount;
                     }  else if ($data->user->employeeProfile->pay_type == 'bi-weekly') {
                         $ptoff = ((($data->user->employeeProfile->pay_rate * 26)/52)/40)*$val->amount;            
                     }  else if ($data->user->employeeProfile->pay_type == 'semi-monthly') {
