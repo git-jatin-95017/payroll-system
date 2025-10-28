@@ -336,7 +336,7 @@ class DashboardController extends Controller
 
 		// Return final array with totals
 		return [
-			'total_amount' => $employeePayT + $mbse_deductions + $row->security_employer + $medical_benefitsT,
+			'total_amount' => $employeePayT + $mbse_deductions + $social_securityT_employer + $medical_benefitsT,
 			'month' => $month,
 			'dateRange' => $dateRange
 		];
