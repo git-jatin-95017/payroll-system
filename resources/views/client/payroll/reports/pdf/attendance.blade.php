@@ -88,7 +88,7 @@
                 <td>{{ $attendance->checked_out_at ? date('h:i A', strtotime($attendance->checked_out_at)) : '-' }}</td>
                 <td>
                     @if($attendance->checked_in_at && $attendance->checked_out_at)
-                        {{ \Carbon\Carbon::parse($attendance->checked_in_at)->diffInHours(\Carbon\Carbon::parse($attendance->checked_out_at)) }} hours
+                        {{ \Carbon\Carbon::parse($attendance->checked_in_at)->diff(\Carbon\Carbon::parse($attendance->checked_out_at))->format('%h Hrs | %i Min') }}
                     @else
                         -
                     @endif
