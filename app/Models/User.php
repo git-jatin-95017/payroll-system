@@ -31,7 +31,8 @@ class User extends Authenticatable
         'created_for_extra_user',
         'created_by',
         'updated_by',
-        'status'
+        'status',
+        'is_proifle_edit_access'
     ];
 
     /**

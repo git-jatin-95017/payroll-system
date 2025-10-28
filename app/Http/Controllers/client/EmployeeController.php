@@ -415,6 +415,8 @@ class EmployeeController extends Controller
 				'email' => $request->email,
 				'phone_number' => $request->phone_number,
 				'kiosk_code' => $request->kiosk_code,
+				'is_proifle_edit_access' => $request->is_proifle_edit_access,
+				'status' => $request->status,
 			]);
 
 			$employeeData = [

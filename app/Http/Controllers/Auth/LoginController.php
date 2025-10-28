@@ -32,6 +32,14 @@ class LoginController extends Controller
 	public function redirectTo() {
 		$user = Auth::user();
 		
+		if ($user->is_proifle_edit_access == 1) {
+			Auth::logout();
+		}
+
+		if ($user->status == 0) {
+			Auth::logout();
+		}
+
 		// Check if this is an extra user (created by another client)
 		if ($user->is_extra_user === 'Y') {
 			// Log out the extra user
