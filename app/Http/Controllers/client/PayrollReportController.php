@@ -1069,6 +1069,11 @@ dd($query);*/
 
             // Paid leaves
             foreach ($payroll->additionalPaids as $paid) {
+                // Filter by leave_type_id if provided
+                if ($request->filled('leave_type_id') && $paid->leave_type_id != $request->leave_type_id) {
+                    continue;
+                }
+                
                 $leaveType = $paid->leaveType;
                 $carryOver = $leaveType->carry_over_amount ?? 0;
                 $leaveDays = $leaveType->leave_day ?? 0;
@@ -1121,6 +1126,11 @@ dd($query);*/
 
             // Unpaid leaves
             foreach ($payroll->additionalUnpaids as $unpaid) {
+                // Filter by leave_type_id if provided
+                if ($request->filled('leave_type_id') && $unpaid->leave_type_id != $request->leave_type_id) {
+                    continue;
+                }
+                
                 $leaveType = $unpaid->leaveType;
                 $carryOver = $leaveType->carry_over_amount ?? 0;
                 $leaveDays = $leaveType->leave_day ?? 0;
@@ -1232,6 +1242,11 @@ dd($query);*/
 
             // Paid leaves
             foreach ($payroll->additionalPaids as $paid) {
+                // Filter by leave_type_id if provided
+                if ($request->filled('leave_type_id') && $paid->leave_type_id != $request->leave_type_id) {
+                    continue;
+                }
+                
                 $leaveType = $paid->leaveType;
                 $carryOver = $leaveType->carry_over_amount ?? 0;
                 $leaveDays = $leaveType->leave_day ?? 0;
@@ -1282,6 +1297,11 @@ dd($query);*/
 
             // Unpaid leaves
             foreach ($payroll->additionalUnpaids as $unpaid) {
+                // Filter by leave_type_id if provided
+                if ($request->filled('leave_type_id') && $unpaid->leave_type_id != $request->leave_type_id) {
+                    continue;
+                }
+                
                 $leaveType = $unpaid->leaveType;
                 $carryOver = $leaveType->carry_over_amount ?? 0;
                 $leaveDays = $leaveType->leave_day ?? 0;
@@ -1392,6 +1412,11 @@ dd($query);*/
 
             // Paid leaves
             foreach ($payroll->additionalPaids as $paid) {
+                // Filter by leave_type_id if provided
+                if ($request->filled('leave_type_id') && $paid->leave_type_id != $request->leave_type_id) {
+                    continue;
+                }
+                
                 $leaveType = $paid->leaveType;
                 $carryOver = $leaveType->carry_over_amount ?? 0;
                 $leaveDays = $leaveType->leave_day ?? 0;
@@ -1442,6 +1467,11 @@ dd($query);*/
 
             // Unpaid leaves
             foreach ($payroll->additionalUnpaids as $unpaid) {
+                // Filter by leave_type_id if provided
+                if ($request->filled('leave_type_id') && $unpaid->leave_type_id != $request->leave_type_id) {
+                    continue;
+                }
+                
                 $leaveType = $unpaid->leaveType;
                 $carryOver = $leaveType->carry_over_amount ?? 0;
                 $leaveDays = $leaveType->leave_day ?? 0;
