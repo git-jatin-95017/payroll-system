@@ -11,10 +11,12 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class AdditionsDeductionsExport implements FromCollection, WithHeadings, WithMapping, WithStyles
 {
     protected $earnings;
+    protected $payLabelFilter;
 
-    public function __construct($earnings)
+    public function __construct($earnings, $payLabelFilter = null)
     {
         $this->earnings = $earnings;
+        $this->payLabelFilter = $payLabelFilter;
     }
 
     public function collection()
@@ -37,6 +39,10 @@ class AdditionsDeductionsExport implements FromCollection, WithHeadings, WithMap
     {
         $data = [];
         foreach ($earning->additionalEarnings as $additional) {
+            // Filter by pay_label if provided
+            if ($this->payLabelFilter && $additional->payhead_id != $this->payLabelFilter) {
+                continue;
+            }
             $data[] = [
                 $earning->user->name,
                 date('M d, Y', strtotime($earning->start_date)) . ' - ' . date('M d, Y', strtotime($earning->end_date)),

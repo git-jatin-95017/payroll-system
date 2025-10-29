@@ -27,6 +27,7 @@
             @php $totals = []; @endphp
             @foreach($earnings as $earning)
                 @foreach($earning->additionalEarnings as $additional)
+                    @if(!isset($payLabelFilter) || $additional->payhead_id == $payLabelFilter)
                     <tr>
                         <td>{{ $earning->user->name ?? '' }}</td>
                         <td>{{ date('M d, Y', strtotime($earning->start_date)) }} - {{ date('M d, Y', strtotime($earning->end_date)) }}</td>
@@ -38,6 +39,7 @@
                         $payLabel = $additional->payhead->pay_label ?? '';
                         $totals[$payLabel] = ($totals[$payLabel] ?? 0) + $additional->amount;
                     @endphp
+                    @endif
                 @endforeach
             @endforeach
         </tbody>

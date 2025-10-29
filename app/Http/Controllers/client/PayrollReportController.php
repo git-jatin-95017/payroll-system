@@ -43,8 +43,8 @@ class PayrollReportController extends Controller
             $query->whereDate('created_at', '<=', Carbon::parse($request->end_date));
         }
         if ($request->filled('department_id')) {
-            $query->whereHas('user.departments', function($q) use ($request) {
-                $q->where('department_id', $request->department_id);
+            $query->whereHas('user.departments.department', function($q) use ($request) {
+                $q->where('dep_name', 'LIKE', '%'.trim($request->department_id).'%');
             });
         }
         if ($request->filled('pay_type')) {
@@ -123,8 +123,8 @@ class PayrollReportController extends Controller
             });
         }
         if ($request->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) use ($request) {
-                $q->where('department', $request->department_id);
+            $query->whereHas('user.departments.department', function($q) use ($request) {
+                $q->where('dep_name', 'LIKE', '%'.trim($request->department_id).'%');
             });
         }
 
@@ -185,8 +185,8 @@ class PayrollReportController extends Controller
             $query->whereDate('end_date', '<=', $defaultDates['end_date']);
         }
         if ($request->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) use ($request) {
-                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            $query->whereHas('user.departments.department', function($q) use ($request) {
+                $q->where('dep_name', 'LIKE', '%'.trim($request->department_id).'%');
             });
         }
         if ($request->filled('employee_id')) {
@@ -254,8 +254,8 @@ dd($query);*/
             $query->whereDate('end_date', '<=', $defaultDates['end_date']);
         }
         if ($request->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) use ($request) {
-                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            $query->whereHas('user.departments.department', function($q) use ($request) {
+                $q->where('dep_name', 'LIKE', '%'.trim($request->department_id).'%');
             });
         }
         if ($request->filled('employee_id')) {
@@ -309,8 +309,8 @@ dd($query);*/
             $query->whereDate('created_at', '<=', Carbon::parse(request('end_date')));
         }
         if (request()->filled('department_id')) {
-            $query->whereHas('user.departments', function($q) {
-                $q->where('department_id', request('department_id'));
+            $query->whereHas('user.departments.department', function($q) {
+                $q->where('dep_name', 'LIKE', '%'.trim(request('department_id')).'%');
             });
         }
         if (request()->filled('employee_id')) {
@@ -378,8 +378,8 @@ dd($query);*/
             $query->whereDate('end_date', '<=', Carbon::parse(request('end_date')));
         }
         if (request()->filled('department_id')) {
-            $query->whereHas('user.departments', function($q) {
-                $q->where('department_id', request('department_id'));
+            $query->whereHas('user.departments.department', function($q) {
+                $q->where('dep_name', 'LIKE', '%'.trim(request('department_id')).'%');
             });
         }
         if (request()->filled('employee_id')) {
@@ -488,8 +488,8 @@ dd($query);*/
             $query->whereDate('created_at', '<=', Carbon::parse(request('end_date')));
         }
         if (request()->filled('department_id')) {
-            $query->whereHas('user.departments', function($q) {
-                $q->where('department_id', request('department_id'));
+            $query->whereHas('user.departments.department', function($q) {
+                $q->where('dep_name', 'LIKE', '%'.trim(request('department_id')).'%');
             });
         }
         if (request()->filled('employee_id')) {
@@ -556,8 +556,8 @@ dd($query);*/
 
         // Apply department filter
         if ($request->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) use ($request) {
-                $q->where('department', $request->department_id);
+            $query->whereHas('user.departments.department', function($q) use ($request) {
+                $q->where('dep_name', 'LIKE', '%'.trim($request->department_id).'%');
             });
         }
 
@@ -590,8 +590,8 @@ dd($query);*/
 
         // Apply department filter
         if (request()->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) {
-                $q->where('department', request('department_id'));
+            $query->whereHas('user.departments.department', function($q) {
+                $q->where('dep_name', 'LIKE', '%'.trim(request('department_id')).'%');
             });
         }
 
@@ -638,8 +638,8 @@ dd($query);*/
 
         // Apply department filter
         if (request()->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) {
-                $q->where('department', request('department_id'));
+            $query->whereHas('user.departments.department', function($q) {
+                $q->where('dep_name', 'LIKE', '%'.trim(request('department_id')).'%');
             });
         }
 
@@ -670,8 +670,8 @@ dd($query);*/
             $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
         if ($request->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) use ($request) {
-                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            $query->whereHas('user.departments.department', function($q) use ($request) {
+                $q->where('dep_name', 'LIKE', '%'.trim($request->department_id).'%');
             });
         }
         if ($request->filled('employee_id')) {
@@ -710,8 +710,8 @@ dd($query);*/
             $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
         if ($request->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) use ($request) {
-                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            $query->whereHas('user.departments.department', function($q) use ($request) {
+                $q->where('dep_name', 'LIKE', '%'.trim($request->department_id).'%');
             });
         }
         if ($request->filled('employee_id')) {
@@ -737,8 +737,8 @@ dd($query);*/
             $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
         if ($request->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) use ($request) {
-                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            $query->whereHas('user.departments.department', function($q) use ($request) {
+                $q->where('dep_name', 'LIKE', '%'.trim($request->department_id).'%');
             });
         }
         if ($request->filled('employee_id')) {
@@ -775,8 +775,8 @@ dd($query);*/
             $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
         if ($request->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) use ($request) {
-                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            $query->whereHas('user.departments.department', function($q) use ($request) {
+                $q->where('dep_name', 'LIKE', '%'.trim($request->department_id).'%');
             });
         }
         if ($request->filled('employee_id')) {
@@ -827,8 +827,8 @@ dd($query);*/
             $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
         if ($request->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) use ($request) {
-                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            $query->whereHas('user.departments.department', function($q) use ($request) {
+                $q->where('dep_name', 'LIKE', '%'.trim($request->department_id).'%');
             });
         }
         if ($request->filled('employee_id')) {
@@ -879,8 +879,8 @@ dd($query);*/
             $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
         if ($request->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) use ($request) {
-                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            $query->whereHas('user.departments.department', function($q) use ($request) {
+                $q->where('dep_name', 'LIKE', '%'.trim($request->department_id).'%');
             });
         }
         if ($request->filled('employee_id')) {
@@ -929,16 +929,16 @@ dd($query);*/
             $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
         if ($request->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) use ($request) {
-                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            $query->whereHas('user.departments.department', function($q) use ($request) {
+                $q->where('dep_name', 'LIKE', '%'.trim($request->department_id).'%');
             });
         }
         if ($request->filled('employee_id')) {
             $query->where('user_id', $request->employee_id);
         }
         if ($request->filled('pay_label')) {
-            $query->whereHas('additionalEarnings.payhead', function($q) use ($request) {
-                $q->where('id', $request->pay_label);
+            $query->whereHas('additionalEarnings', function($q) use ($request) {
+                $q->where('payhead_id', $request->pay_label);
             });
         }
 
@@ -964,22 +964,22 @@ dd($query);*/
             $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
         if ($request->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) use ($request) {
-                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            $query->whereHas('user.departments.department', function($q) use ($request) {
+                $q->where('dep_name', 'LIKE', '%'.trim($request->department_id).'%');
             });
         }
         if ($request->filled('employee_id')) {
             $query->where('user_id', $request->employee_id);
         }
         if ($request->filled('pay_label')) {
-            $query->whereHas('additionalEarnings.payhead', function($q) use ($request) {
-                $q->where('id', $request->pay_label);
+            $query->whereHas('additionalEarnings', function($q) use ($request) {
+                $q->where('payhead_id', $request->pay_label);
             });
         }
 
         $earnings = $query->get();
 
-        return Excel::download(new AdditionsDeductionsExport($earnings), 'additions-deductions.xlsx');
+        return Excel::download(new AdditionsDeductionsExport($earnings, $request->pay_label), 'additions-deductions.xlsx');
     }
 
     public function downloadAdditionsDeductionsPdf(Request $request)
@@ -996,22 +996,23 @@ dd($query);*/
             $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
         if ($request->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) use ($request) {
-                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            $query->whereHas('user.departments.department', function($q) use ($request) {
+                $q->where('dep_name', 'LIKE', '%'.trim($request->department_id).'%');
             });
         }
         if ($request->filled('employee_id')) {
             $query->where('user_id', $request->employee_id);
         }
         if ($request->filled('pay_label')) {
-            $query->whereHas('additionalEarnings.payhead', function($q) use ($request) {
-                $q->where('id', $request->pay_label);
+            $query->whereHas('additionalEarnings', function($q) use ($request) {
+                $q->where('payhead_id', $request->pay_label);
             });
         }
 
         $earnings = $query->get();
 
-        $pdf = PDF::loadView('client.payroll.reports.pdf.additions-deductions-pdf', compact('earnings'));
+        $payLabelFilter = $request->pay_label ?? null;
+        $pdf = PDF::loadView('client.payroll.reports.pdf.additions-deductions-pdf', compact('earnings', 'payLabelFilter'));
         return $pdf->download('additions-deductions.pdf');
     }
 
@@ -1037,8 +1038,8 @@ dd($query);*/
             $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
         if ($request->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) use ($request) {
-                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            $query->whereHas('user.departments.department', function($q) use ($request) {
+                $q->where('dep_name', 'LIKE', '%'.trim($request->department_id).'%');
             });
         }
         if ($request->filled('employee_id')) {
@@ -1210,8 +1211,8 @@ dd($query);*/
             $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
         if ($request->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) use ($request) {
-                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            $query->whereHas('user.departments.department', function($q) use ($request) {
+                $q->where('dep_name', 'LIKE', '%'.trim($request->department_id).'%');
             });
         }
         if ($request->filled('employee_id')) {
@@ -1380,8 +1381,8 @@ dd($query);*/
             $query->whereDate('end_date', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
         if ($request->filled('department_id')) {
-            $query->whereHas('user.employeeProfile', function($q) use ($request) {
-                $q->where('department', 'LIKE', '%'.$request->department_id.'%');
+            $query->whereHas('user.departments.department', function($q) use ($request) {
+                $q->where('dep_name', 'LIKE', '%'.trim($request->department_id).'%');
             });
         }
         if ($request->filled('employee_id')) {
