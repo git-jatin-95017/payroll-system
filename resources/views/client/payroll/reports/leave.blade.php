@@ -145,6 +145,7 @@
                             </thead>
                             <tbody>
                                 @foreach($leaveRequests as $request)
+                                    @if(($request->total_used ?? 0) > 0)
                                     <tr>
                                         <td>{{ $request->user->name }}</td>
                                         <td>{{ $request->pay_period }}</td>
@@ -165,6 +166,7 @@
                                         <td>{{ $request->total_used }} hrs</td>
                                         <td>{{ $request->leave_balance }} hrs</td>
                                     </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
