@@ -48,7 +48,7 @@ class DashboardController extends Controller
             ->select('leave_types.name as title', 'start_date as start', DB::raw('"leave" as type'))
 			->where('leave_status', 'approved')
 			->where('leave_types.is_visible_calendar', 1)
-			->where('users.created_by', auth()->user()->id)
+			// ->where('users.created_by', auth()->user()->id)
             ->get();
 
         $publicHolidays = DB::table('holidays')
